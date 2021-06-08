@@ -1,0 +1,42 @@
+defmodule Noizu.Scaffolding.V3.Schema.PersistenceLayer do
+  @vsn 1.0
+  @type t :: %__MODULE__{
+               layer: atom,
+               type: atom,
+               table: atom,
+
+               dirty?: boolean,
+               fragmented?: boolean,
+               require_transaction?: boolean,
+
+               load_fallback?: boolean,
+
+               cascade_create?: boolean,
+               cascade_delete?: boolean,
+               cascade_update?: boolean,
+               cascade_block?: boolean,
+
+               options: list,
+               vsn: float
+             }
+
+  defstruct [
+    layer: nil,
+    type: nil,
+    table: nil,
+
+    dirty?: false,
+    fragmented?: false,
+    require_transaction?: false,
+
+    load_fallback?: false,
+
+    cascade_create?: false,
+    cascade_delete?: false,
+    cascade_update?: false,
+    cascade_block?: false,
+
+    options: [],
+    vsn: @vsn
+  ]
+end
