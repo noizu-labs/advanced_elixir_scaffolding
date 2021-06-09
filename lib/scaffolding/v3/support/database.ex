@@ -31,4 +31,8 @@ defdatabase Noizu.Scaffolding.V3.Database do
                }
   end
 
+  deftable NmidGenerator, [:key, :incr], type: :ordered_set, index: [] do
+    @type t :: %NmidGenerator{key: integer, incr: integer}
+  end
+
 end

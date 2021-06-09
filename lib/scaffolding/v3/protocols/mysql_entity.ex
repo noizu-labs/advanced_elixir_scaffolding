@@ -17,8 +17,6 @@ end
 defimpl Noizu.MySQL.Entity, for: Any do
 
   defmacro __deriving__(module, struct, options) do
-
-
     quote do
       defimpl Noizu.MySQL.Entity, for: unquote(module) do
         def universal_reference?(_), do: false

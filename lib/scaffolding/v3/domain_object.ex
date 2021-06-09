@@ -1,64 +1,141 @@
 defmodule Noizu.DomainObject do
-  @doc false
-  defmacro __using__(_ \\ nil) do
+
+
+  defmacro __using__(options \\ nil) do
+    nmid_generator = options[:nmid_generator] || Noizu.Scaffolding.V3.NmidGenerator
+    nmid_sequencer = options[:nmid_sequencer]
+    nmid_index = options[:nmid_index] || 1
+    caller = __CALLER__
     quote do
-      import Noizu.DomainObject, only: [defentity: 1, defentity: 2, defrepo: 2, defrepo: 1, file_rel_dir: 1]
+      import Noizu.DomainObject, only: [file_rel_dir: 1]
       Module.register_attribute(__MODULE__, :persistence_layer, accumulate: true)
+      Module.register_attribute(__MODULE__, :__nzdo__meta, accumulate: true)
+
+      # Insure only referenced once.
+      if line = Module.get_attribute(__MODULE__, :__nzdo__base_definied) do
+        raise "#{file_rel_dir(unquote(caller.file))}:#{unquote(caller.line)} duplicate use Noizu.DomainObject reference. First defined on #{elem(line,0)}:#{elem(line,1)}"
+      end
+      @__nzdo__base_definied {file_rel_dir(unquote(caller.file)), unquote(caller.line)}
+
+      @__nzdo_nmid_generatoer unquote(nmid_generator)
+      @__nzdo_nmid_index unquote(nmid_index)
+      @__nzdo_nmid_sequencer (unquote(nmid_sequencer) || __MODULE__)
+
+      @before_compile {Noizu.DomainObject, :before_compile_domain_object__base}
     end
   end
 
+  defmacro before_compile_domain_object__base(_) do
+    quote do
+      def __noizu_info__(:type), do: :base
+      def __noizu_info__(:base), do: __MODULE__
+      def __noizu_info__(:entity), do: @__nzdo__entity
+      def __noizu_info__(:repo), do: @__nzdo__repo
+      def __noizu_info__(:sref), do: @__nzdo__sref
+
+      def __noizu_info__(:nmid_generator), do: @__nzdo_nmid_generatoer
+      def __noizu_info__(:nmid_index), do: @__nzdo_nmid_index
+      def __noizu_info__(:nmid_sequencer), do: @__nzdo_nmid_sequencer
+
+
+      def __noizu_info__(:fields), do: @__nzdo__entity.__noizu_info__(:fields)
+      def __noizu_info__(:field_types), do: @__nzdo__entity.__noizu_info__(:field_types)
+      def __noizu_info__(:persistence), do: @__nzdo__entity.__noizu_info__(:persistence)
+      @__nzdo__meta__map Map.new(@__nzdo__meta)
+      def __noizu_info__(:meta), do: @__nzdo__meta__map
+    end
+  end
+
+  defmacro before_compile_domain_object__entity(_) do
+    quote do
+      def __noizu_info__(:fields), do: @__nzdo__field_list
+      def __noizu_info__(:field_types), do: @__nzdo__field_types_map
+      def __noizu_info__(:persistence), do: @__nzdo_persistence
+      defdelegate __noizu_info__(report), to: @__nzdo__base
+    end
+  end
+  defmacro before_compile_domain_object__repo(_) do
+    quote do
+      defdelegate __noizu_info__(report), to: @__nzdo__base
+    end
+  end
+
+
   #--------------------------------------------
   #
   #--------------------------------------------
-  defmacro defentity(options \\ [], [do: block]) do
-    __defentity(__CALLER__, options, block)
+  defmacro noizu_entity(options \\ [], [do: block]) do
+    __noizu_entity(__CALLER__, options, block)
   end
 
   #--------------------------------------------
   #
   #--------------------------------------------
-  defp __defentity(caller, options, block) do
-    provider = options[:provider] || Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.Default
+  defp __noizu_entity(caller, options, block) do
+    erp_provider = options[:erp_imp] || Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultErpProvider
+    ecto_provider = options[:ecto_imp] || Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultEctoProvider
+    internal_provider = options[:internal_imp] || Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultInternalProvider
     process_config = quote do
-                       @domain_object Module.split(__MODULE__) |> Enum.slice(0..-2) |> Module.concat()
-                       @repo Module.concat(@domain_object, "Repo")
+                       import Noizu.DomainObject, only: [file_rel_dir: 1]
 
-                       if line = Module.get_attribute(__MODULE__, :noizu_entity_defined) do
-                         raise "#{file_rel_dir(unquote(caller.file))}:#{unquote(caller.line)} attempting to redefine #{__MODULE__}.defentity first defined on #{elem(line,0)}:#{elem(line,1)}"
+                       #---------------------
+                       # Insure Single Call
+                       #---------------------
+                       if line = Module.get_attribute(__MODULE__, :__nzdo__entity_definied) do
+                         raise "#{file_rel_dir(unquote(caller.file))}:#{unquote(caller.line)} attempting to redefine #{__MODULE__}.noizu_entity first defined on #{elem(line,0)}:#{elem(line,1)}"
+                       end
+                       @__nzdo__entity_definied {file_rel_dir(unquote(caller.file)), unquote(caller.line)}
+
+                       #---------------------
+                       # Find Base
+                       #---------------------
+                       @__nzdo__base Module.split(__MODULE__) |> Enum.slice(0..-2) |> Module.concat()
+                       if !Module.get_attribute(@__nzdo__base, :__nzdo__base_definied) do
+                         raise "#{@__nzdo__base} must include use Noizu.DomainObject call."
                        end
 
-                       if !Module.get_attribute(@domain_object, :sref_module) do
-                         raise "@sref_module must be defined before calling defentity"
+                       #---------------------
+                       # Insure sref set
+                       #---------------------
+                       if !Module.get_attribute(@__nzdo__base, :sref) do
+                         raise "@sref must be defined in base module #{@__ndzo__base} before calling defentity in submodule #{__MODULE__}"
                        end
 
-                       @sref_module Module.get_attribute(@domain_object, :sref_module)
-                       @provider unquote(provider)
-                       @noizu_entity_defined { file_rel_dir(unquote(caller.file)), unquote(caller.line)}
-                       Module.register_attribute(__MODULE__, :entity_fields, accumulate: true)
-                       Module.register_attribute(__MODULE__, :entity_fields_access_level, accumulate: true)
-                       Module.register_attribute(__MODULE__, :derive_list, accumulate: true)
-                       Module.register_attribute(__MODULE__, :entity_field_types, accumulate: true)
+                       #---------------------
+                       # Push details to Base, and read in required settings.
+                       #---------------------
+                       @__nzdo__repo Module.concat(@__nzdo__base, "Repo")
+                       @__nzdo__sref Module.get_attribute(@__nzdo__base, :sref)
+                       Module.put_attribute(@__nzdo__base, :__nzdo__entity, __MODULE__)
+                       Module.put_attribute(@__nzdo__base, :__nzdo__sref, @__nzdo__sref)
+
+                       @vsn (Module.get_attribute(@__nzdo__base, :vsn) || 1.0)
+
+                       Module.register_attribute(__MODULE__, :__nzdo__derive, accumulate: true)
+                       Module.register_attribute(__MODULE__, :__nzdo__fields, accumulate: true)
+                       Module.register_attribute(__MODULE__, :__nzdo__field_permissions, accumulate: true)
+                       Module.register_attribute(__MODULE__, :__nzdo__field_types, accumulate: true)
 
                        #----------------------
-                       #
+                       # Always hook into Noizu.ERP
                        #----------------------
-                       @derive_list Noizu.ERP
+                       @__nzdo__derive Noizu.ERP
 
                        #----------------------
-                       #
+                       # Load Persistence Settings from base, we need them to control some submodules.
                        #----------------------
-                       @vsn (Module.get_attribute(@domain_object, :vsn) || 1.0)
-
-
-                       #----------------------
-                       #
-                       #----------------------
-                       @persistence_layer_settings Noizu.DomainObject.expand_persistence_layers(Module.get_attribute(@domain_object, :persistence_layer), __MODULE__)
-                       @is_noizu_mysql_entity @persistence_layer_settings.ecto_entity && true || false
-                       if @is_noizu_mysql_entity do
-                         @derive_list Noizu.MySQL.Entity
+                       @__nzdo_persistence Noizu.DomainObject.expand_persistence_layers(Module.get_attribute(@__nzdo__base, :persistence_layer), __MODULE__)
+                       @__nzdo__field_types_map ((@__nzdo__field_types || []) |> Map.new())
+                       @__nzdo__field_list (Enum.map(@__nzdo__fields, fn({k,_}) -> k end) -- [:initial, :meta])
+                       @__nzdo_persistence__layers Enum.map(@__nzdo_persistence.layers, fn(layer) -> {layer.layer, layer} end) |> Map.new()
+                       @__nzdo_ecto_entity (@__nzdo_persistence.ecto_entity && true || false)
+                       if @__nzdo_ecto_entity do
+                         @derive_list Noizu.Ecto.Entity
                        end
 
+                       #----------------------
+                       # User block section (define, fields, constraints, json_mapping rules, etc.)
+                       #----------------------
                        try do
                          import Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity
                          unquote(block)
@@ -66,56 +143,98 @@ defmodule Noizu.DomainObject do
                          :ok
                        end
 
-                       # Universals
-                       Module.put_attribute(__MODULE__, :entity_fields, {:initial, nil})
-                       Module.put_attribute(__MODULE__, :entity_fields, {:meta, %{}})
-                       Module.put_attribute(__MODULE__, :entity_fields, {:vsn, @vsn})
+                       #----------------------
+                       # Universals Fields (always include)
+                       #----------------------
+                       Module.put_attribute(__MODULE__, :__nzdo_fields, {:initial, nil})
+                       Module.put_attribute(__MODULE__, :__nzdo_fields, {:meta, %{}})
+                       Module.put_attribute(__MODULE__, :__nzdo_fields, {:vsn, @vsn})
                      end
 
     generate = quote unquote: false do
+                 @derive @__nzdo__derive
+                 defstruct @__nzdo__fields
 
+
+
+
+                 #-----------------------------------
+                 #
+                 #-----------------------------------
+                 def vsn(), do: @vsn
+                 def __repo__(), do: @__nzdo__repo
+
+
+
+                 defoverridable [
+                   vsn: 0,
+                   __repo__: 0
+                 ]
                end
-
-    prepare_struct = quote do
-                       @derive @derive_list
-                       defstruct Enum.reverse(@entity_fields)
-                     end
 
     quote do
       unquote(process_config)
       unquote(generate)
-      unquote(prepare_struct)
+      use unquote(erp_provider)
+      use unquote(ecto_provider)
 
-      @before_compile unquote(provider)
-      @after_compile unquote(provider)
+      # Post User Logic Hook and checks.
+      @before_compile unquote(internal_provider)
+      @before_compile {Noizu.DomainObject, :before_compile_domain_object__entity}
+      @after_compile unquote(internal_provider)
     end
   end
 
   #--------------------------------------------
   #
   #--------------------------------------------
-  defmacro defrepo(options \\ [], [do: block]) do
-    __defrepo(__CALLER__, options, block)
+  defmacro noizu_repo(options \\ [], [do: block]) do
+    __noizu_repo(__CALLER__, options, block)
   end
 
   #--------------------------------------------
   #
   #--------------------------------------------
-  defp __defrepo(caller, options, block) do
-    provider = options[:provider] || Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.Default
+  defp __noizu_repo(caller, options, block) do
+    crud_provider = options[:erp_imp] || Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCrudProvider
+    internal_provider = options[:internal_imp] || Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultInternalProvider
     process_config = quote do
-                       use Amnesia
-                       require Amnesia.Fragment
-                       @domain_object Module.split(__MODULE__) |> Enum.slice(0..-2) |> Module.concat()
-                       @entity Module.concat(@domain_object, "Entity")
+                       import Noizu.DomainObject, only: [file_rel_dir: 1]
 
-                       if line = Module.get_attribute(__MODULE__, :noizu_repo_defined) do
-                         raise "#{file_rel_dir(unquote(caller.file))}:#{unquote(caller.line)} attempting to redefine #{__MODULE__}.defrepo first defined on #{elem(line,0)}:#{elem(line,1)}"
+                       #---------------------
+                       # Insure Single Call
+                       #---------------------
+                       if line = Module.get_attribute(__MODULE__, :__nzdo__repo_definied) do
+                         raise "#{file_rel_dir(unquote(caller.file))}:#{unquote(caller.line)} attempting to redefine #{__MODULE__}.noizu_repo first defined on #{elem(line,0)}:#{elem(line,1)}"
+                       end
+                       @__nzdo__repo_definied {file_rel_dir(unquote(caller.file)), unquote(caller.line)}
+
+                       #---------------------
+                       # Find Base
+                       #---------------------
+                       @__nzdo__base Module.split(__MODULE__) |> Enum.slice(0..-2) |> Module.concat()
+                       if !Module.get_attribute(@__nzdo__base, :__nzdo__base_definied) do
+                         raise "#{@__nzdo__base} must include use Noizu.DomainObject call."
                        end
 
-                       @provider unquote(provider)
-                       @noizu_repo_defined {file_rel_dir(unquote(caller.file)), unquote(caller.line)}
+                       #---------------------
+                       # Insure sref set
+                       #---------------------
+                       if !Module.get_attribute(@__nzdo__base, :sref) do
+                         raise "@sref must be defined in base module #{@__ndzo__base} before calling defentity in submodule #{__MODULE__}"
+                       end
 
+                       #---------------------
+                       # Push details to Base, and read in required settings.
+                       #---------------------
+                       Module.put_attribute(@__nzdo__base, :__nzdo__repo, __MODULE__)
+                       @__nzdo__entity Module.concat(@__nzdo__base, "Entity")
+                       @__nzdo__sref Module.get_attribute(@__nzdo__base, :sref)
+                       @vsn (Module.get_attribute(@__nzdo__base, :vsn) || 1.0)
+
+                       #----------------------
+                       # User block section (define, fields, constraints, json_mapping rules, etc.)
+                       #----------------------
                        try do
                          import Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo
                          unquote(block)
@@ -124,15 +243,14 @@ defmodule Noizu.DomainObject do
                        end
                      end
 
-    generate = quote unquote: false do
-
-               end
-
     quote do
       unquote(process_config)
-      unquote(generate)
-      @before_compile unquote(provider)
-      @after_compile unquote(provider)
+      use unquote(crud_provider)
+
+      # Post User Logic Hook and checks.
+      @before_compile unquote(internal_provider)
+      @before_compile {Noizu.DomainObject, :before_compile_domain_object__repo}
+      @after_compile unquote(internal_provider)
     end
   end
 
@@ -277,10 +395,6 @@ defmodule Noizu.DomainObject do
 
     metadata = provider.metadata()
 
-    type = case metadata do
-             %Noizu.Scaffolding.V3.Schema.EctoMetadata{} -> :ecto
-             %Amnesia.Metadata{} -> :mnesia
-           end
     type = case metadata do
              %Noizu.Scaffolding.V3.Schema.EctoMetadata{} -> :ecto
              %Amnesia.Metadata{} -> :mnesia

@@ -17,6 +17,21 @@ defimpl Noizu.ERP, for: Any do
   def entity(_entity, _options), do: nil
   def entity!(entity, options \\ nil)
   def entity!(_entity, _options), do: nil
+
+  defmacro __deriving__(module, struct, options) do
+    quote do
+      defimpl Noizu.ERP, for: unquote(module) do
+        def id(%{__struct__: m} = ref), do: m.erp_handler().id(ref)
+        def ref(%{__struct__: m} = ref), do: m.erp_handler().ref(ref)
+        def sref(%{__struct__: m} = ref), do: m.erp_handler().sref(ref)
+        def record(%{__struct__: m} = ref, options \\ nil), do: m.erp_handler().record(ref, options)
+        def record!(%{__struct__: m} = ref, options \\ nil), do: m.erp_handler().record!(ref, options)
+        def entity(%{__struct__: m} = ref, options \\ nil), do: m.erp_handler().entity(ref, options)
+        def entity!(%{__struct__: m} = ref, options \\ nil), do: m.erp_handler().entity!(ref, options)
+      end
+    end
+  end
+
 end # end defimpl EntityReferenceProtocol, for: Map
 
 

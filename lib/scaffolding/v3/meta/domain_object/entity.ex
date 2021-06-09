@@ -31,7 +31,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
   end
 
   def __mysql_identifier__(mod, _type, _opts) do
-    Module.put_attribute(mod, :mysql_identifier_field, true)
+    Module.put_attribute(mod, :__nzdo__has_mysql_field, true)
     __public_field__(mod, :mysql_identifier, nil, [])
   end
 
@@ -46,9 +46,9 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
   end
 
   def __public_field__(mod, field, default, opts) do
-    Module.put_attribute(mod, :entity_fields_access_level, {field, :public})
-    if (opts[:type]), do: Module.put_attribute(mod, :entity_field_types, {field, opts[:type]})
-    Module.put_attribute(mod, :entity_fields, {field, default})
+    Module.put_attribute(mod, :__nzdo__field_permissions, {field, :public})
+    if (opts[:type]), do: Module.put_attribute(mod, :__nzdo__field_types, {field, opts[:type]})
+    Module.put_attribute(mod, :__nzdo__fields, {field, default})
   end
 
   #--------------------------
@@ -75,9 +75,9 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
   end
 
   def __private_field__(mod, field, default, opts) do
-    Module.put_attribute(mod, :entity_fields_access_level, {field, :private})
-    if (opts[:type]), do: Module.put_attribute(mod, :entity_field_types, {field, opts[:type]})
-    Module.put_attribute(mod, :entity_fields, {field, default})
+    Module.put_attribute(mod, :__nzdo__field_permissions, {field, :private})
+    if (opts[:type]), do: Module.put_attribute(mod, :__nzdo__field_types, {field, opts[:type]})
+    Module.put_attribute(mod, :__nzdo__fields, {field, default})
   end
 
   #--------------------------
@@ -104,9 +104,9 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
   end
 
   def __internal_field__(mod, field, default, opts) do
-    Module.put_attribute(mod, :entity_fields_access_level, {field, :internal})
-    if (opts[:type]), do: Module.put_attribute(mod, :entity_field_types, {field, opts[:type]})
-    Module.put_attribute(mod, :entity_fields, {field, default})
+    Module.put_attribute(mod, :__nzdo__field_permissions, {field, :internal})
+    if (opts[:type]), do: Module.put_attribute(mod, :__nzdo__field_types, {field, opts[:type]})
+    Module.put_attribute(mod, :__nzdo__fields, {field, default})
   end
 
   #--------------------------
