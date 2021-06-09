@@ -202,7 +202,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
       #-----------------------------------
       def __sref_prefix__, do: "ref.#{@__nzdo__sref}."
 
-      def valid_identifier(), do: true
+      def valid_identifier(_), do: true
 
       #-----------------------------------
       # ERP
