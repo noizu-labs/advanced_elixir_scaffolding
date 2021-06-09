@@ -16,7 +16,8 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
     end
   end
 
-  def __identifier__(mod, _type, _opts) do
+  def __identifier__(mod, type, _opts) do
+    Module.put_attribute(mod, :__nzdo__identifier_type, type)
     __public_field__(mod, :identifier, nil, [])
   end
 

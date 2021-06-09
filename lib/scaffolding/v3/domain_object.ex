@@ -27,17 +27,24 @@ defmodule Noizu.DomainObject do
 
   defmacro before_compile_domain_object__base(_) do
     quote do
+
+      defdelegate id(ref), to: @__nzdo__entity
+      defdelegate ref(ref), to: @__nzdo__entity
+      defdelegate sref(ref), to: @__nzdo__entity
+      defdelegate entity(ref, options \\ nil), to: @__nzdo__entity
+      defdelegate entity!(ref, options \\ nil), to: @__nzdo__entity
+      defdelegate record(ref, options \\ nil), to: @__nzdo__entity
+      defdelegate record!(ref, options \\ nil), to: @__nzdo__entity
+      defdelegate __noizu_record__(type, ref, options \\ nil), to: @__nzdo__entity
+
       def __noizu_info__(:type), do: :base
       def __noizu_info__(:base), do: __MODULE__
       def __noizu_info__(:entity), do: @__nzdo__entity
       def __noizu_info__(:repo), do: @__nzdo__repo
       def __noizu_info__(:sref), do: @__nzdo__sref
-
       def __noizu_info__(:nmid_generator), do: @__nzdo_nmid_generatoer
       def __noizu_info__(:nmid_index), do: @__nzdo_nmid_index
       def __noizu_info__(:nmid_sequencer), do: @__nzdo_nmid_sequencer
-
-
       def __noizu_info__(:fields), do: @__nzdo__entity.__noizu_info__(:fields)
       def __noizu_info__(:field_types), do: @__nzdo__entity.__noizu_info__(:field_types)
       def __noizu_info__(:persistence), do: @__nzdo__entity.__noizu_info__(:persistence)
@@ -56,6 +63,14 @@ defmodule Noizu.DomainObject do
   end
   defmacro before_compile_domain_object__repo(_) do
     quote do
+      defdelegate id(ref), to: @__nzdo__base
+      defdelegate ref(ref), to: @__nzdo__base
+      defdelegate sref(ref), to: @__nzdo__base
+      defdelegate entity(ref, options \\ nil), to: @__nzdo__base
+      defdelegate entity!(ref, options \\ nil), to: @__nzdo__base
+      defdelegate record(ref, options \\ nil), to: @__nzdo__base
+      defdelegate record!(ref, options \\ nil), to: @__nzdo__base
+      defdelegate __noizu_record__(type, ref, options \\ nil), to: @__nzdo__base
       defdelegate __noizu_info__(report), to: @__nzdo__base
     end
   end
@@ -163,8 +178,8 @@ defmodule Noizu.DomainObject do
                  #-----------------------------------
                  def vsn(), do: @vsn
                  def __repo__(), do: @__nzdo__repo
-
-
+                 def __sref__(), do: @__nzdo__sref
+                 def __erp__(), do: __MODULE__
 
                  defoverridable [
                    vsn: 0,
