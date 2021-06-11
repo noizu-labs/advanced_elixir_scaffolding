@@ -1,7 +1,7 @@
 defmodule Noizu.Scaffolding.V3.Schema.PersistenceLayer do
   @vsn 1.0
   @type t :: %__MODULE__{
-               layer: atom,
+               schema: atom,
                type: atom,
                table: atom,
                id_map: any,
@@ -21,7 +21,7 @@ defmodule Noizu.Scaffolding.V3.Schema.PersistenceLayer do
              }
 
   defstruct [
-    layer: nil,
+    schema: nil,
     type: nil,
     table: nil,
     id_map: :same,

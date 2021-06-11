@@ -62,7 +62,12 @@ defmodule Noizu.DomainObject do
       def __noizu_info__(:persistence), do: @__nzdo__entity.__noizu_info__(:persistence)
       def __noizu_info__(:tables), do: @__nzdo__entity.__noizu_info__(:tables)
       def __noizu_info__(:associated_types), do: @__nzdo__entity.__noizu_info__(:associated_types)
-      @__nzdo__meta__map Map.new(@__nzdo__meta)
+      def __noizu_info__(:schema_field_types), do: @__nzdo__entity.__noizu_info__(:schema_field_types)
+
+
+
+
+      @__nzdo__meta__map Map.new(@__nzdo__meta || [])
       def __noizu_info__(:meta), do: @__nzdo__meta__map
     end
   end
@@ -82,9 +87,21 @@ defmodule Noizu.DomainObject do
       def __noizu_info__(:tables), do: @__nzdo_persistence__by_table
       @__nzdo_associated_types (Enum.map(@__nzdo_persistence__by_table || %{}, fn({k,v}) -> {k, v.type} end) ++ Enum.map(@__nzdo__poly_support || %{}, fn(k,v) -> {k, :poly} end) ) |> Map.new()
       def __noizu_info__(:associated_types), do: @__nzdo_associated_types
+
+
+      @__nzdo__schema_field_types Enum.map(
+                                    @__nzdo_persistence && @__nzdo_persistence.layers || [],
+                                    fn(layer) ->
+                                      key = {layer.schema, layer.table}
+                                      {key, Noizu.DomainObject.__unroll_field_types__(key, @__nzdo__field_types_map)}
+                                    end
+                                  )
+      def __noizu_info__(:schema_field_types), do: @__nzdo__schema_field_types
+
       defdelegate __noizu_info__(report), to: @__nzdo__base
     end
   end
+
   defmacro before_compile_domain_object__repo(_) do
     quote do
 
@@ -105,6 +122,19 @@ defmodule Noizu.DomainObject do
       defdelegate record!(ref, options \\ nil), to: @__nzdo__base
       defdelegate __noizu_record__(type, ref, options \\ nil), to: @__nzdo__base
       defdelegate __noizu_info__(report), to: @__nzdo__base
+    end
+  end
+
+
+  defmacro before_compile_domain_object__struct(_) do
+    quote do
+
+      def vsn(), do: @vsn
+
+      def __noizu_info__(:fields), do: @__nzdo__entity.__noizu_info__(:fields)
+      def __noizu_info__(:field_types), do: @__nzdo__entity.__noizu_info__(:field_types)
+      @__nzdo__meta__map Map.new(@__nzdo__meta || [])
+      def __noizu_info__(:meta), do: @__nzdo__meta__map
     end
   end
 
@@ -154,6 +184,7 @@ defmodule Noizu.DomainObject do
                        #---------------------
                        Module.register_attribute(__MODULE__, :__nzdo__derive, accumulate: true)
                        Module.register_attribute(__MODULE__, :__nzdo__fields, accumulate: true)
+                       Module.register_attribute(__MODULE__, :__nzdo__meta, accumulate: true)
                        Module.register_attribute(__MODULE__, :__nzdo__field_permissions, accumulate: true)
                        Module.register_attribute(__MODULE__, :__nzdo__field_types, accumulate: true)
 
@@ -234,9 +265,8 @@ defmodule Noizu.DomainObject do
                           @__nzdo__poly_base_open? && Module.get_attribute(@__nzdo__poly_base, :vsn) -> Noizu.DomainObject.expand_persistence_layers(Module.get_attribute(@__nzdo__poly_base, :persistence_layer), __MODULE__)
                           :else -> Noizu.DomainObject.expand_persistence_layers(nil, __MODULE__)
                         end)
-                       @__nzdo__field_types_map ((@__nzdo__field_types || []) |> Map.new())
-                       @__nzdo__field_list (Enum.map(@__nzdo__fields, fn({k,_}) -> k end) -- [:initial, :meta])
-                       @__nzdo_persistence__layers Enum.map(@__nzdo_persistence.layers, fn(layer) -> {layer.layer, layer} end) |> Map.new()
+
+                       @__nzdo_persistence__layers Enum.map(@__nzdo_persistence.layers, fn(layer) -> {layer.schema, layer} end) |> Map.new()
                        @__nzdo_persistence__by_table Enum.map(@__nzdo_persistence.layers, fn(layer) -> {layer.table, layer} end) |> Map.new()
                        @__nzdo_ecto_entity (@__nzdo_persistence.ecto_entity && true || false)
                        if @__nzdo_ecto_entity do
@@ -252,6 +282,12 @@ defmodule Noizu.DomainObject do
                        after
                          :ok
                        end
+
+                       #----------------------
+                       # fields meta data
+                       #----------------------
+                       @__nzdo__field_types_map ((@__nzdo__field_types || []) |> Map.new())
+                       @__nzdo__field_list (Enum.map(@__nzdo__fields, fn({k,_}) -> k end) -- [:initial, :meta])
 
                        #----------------------
                        # Universals Fields (always include)
@@ -278,6 +314,99 @@ defmodule Noizu.DomainObject do
       @before_compile unquote(internal_provider)
       @before_compile {Noizu.DomainObject, :before_compile_domain_object__entity}
       @after_compile unquote(internal_provider)
+    end
+  end
+
+
+  #--------------------------------------------
+  #
+  #--------------------------------------------
+  defmacro noizu_sphinx(options \\ [], [do: block]) do
+    __noizu_sphinx(__CALLER__, options, block)
+  end
+
+
+  defp __noizu_sphinx(caller, options, block) do
+    quote do
+
+
+    end
+  end
+
+
+
+  #--------------------------------------------
+  #
+  #--------------------------------------------
+  defmacro noizu_struct(options \\ [], [do: block]) do
+    __noizu_struct(__CALLER__, options, block)
+  end
+
+
+  defp __noizu_struct(caller, options, block) do
+    vsn = options[:vsn]
+    process_config = quote do
+      import Noizu.DomainObject, only: [file_rel_dir: 1]
+
+      #---------------------
+      # Insure Single Call
+      #---------------------
+      if line = Module.get_attribute(__MODULE__, :__nzdo__struct_definied) do
+        raise "#{file_rel_dir(unquote(caller.file))}:#{unquote(caller.line)} attempting to redefine #{__MODULE__}.noizu_struct first defined on #{elem(line,0)}:#{elem(line,1)}"
+      end
+      @__nzdo__struct_definied {file_rel_dir(unquote(caller.file)), unquote(caller.line)}
+
+      #---------------------
+      # Registerss
+      #---------------------
+      Module.register_attribute(__MODULE__, :__nzdo__derive, accumulate: true)
+      Module.register_attribute(__MODULE__, :__nzdo__fields, accumulate: true)
+      Module.register_attribute(__MODULE__, :__nzdo__field_permissions, accumulate: true)
+      Module.register_attribute(__MODULE__, :__nzdo__field_types, accumulate: true)
+
+      #---------------------
+      # Settings
+      #---------------------
+      @vsn (cond do
+              v = unquote(vsn) -> v
+              v = Module.get_attribute(__MODULE__, :vsn) -> v
+            end)
+
+
+
+
+      #----------------------
+      # User block section (define, fields, constraints, json_mapping rules, etc.)
+      #----------------------
+      try do
+        import Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity
+        unquote(block)
+      after
+        :ok
+      end
+
+      #----------------------
+      # fields meta data
+      #----------------------
+      @__nzdo__field_types_map ((@__nzdo__field_types || []) |> Map.new())
+      @__nzdo__field_list (Enum.map(@__nzdo__fields, fn({k,_}) -> k end))
+
+      #----------------------
+      # Universals Fields (always include)
+      #----------------------
+      Module.put_attribute(__MODULE__, :__nzdo_fields, {:vsn, @vsn})
+
+    end
+
+    generate = quote unquote: false do
+                 @derive @__nzdo__derive
+                 defstruct @__nzdo__fields
+               end
+
+    quote do
+      unquote(process_config)
+      unquote(generate)
+      @before_compile {Noizu.DomainObject, :before_compile_domain_object__entity}
     end
   end
 
@@ -547,7 +676,7 @@ defmodule Noizu.DomainObject do
                      end
 
     %Noizu.Scaffolding.V3.Schema.PersistenceLayer{
-      layer: provider,
+      schema: provider,
       type: type,
       table: table,
       id_map: id_map,
@@ -574,6 +703,25 @@ defmodule Noizu.DomainObject do
   def default_ecto_repo(module) do
     path = Module.split(module)
     Module.concat(["#{List.first(path)}" <> "Schema", "Repo"])
+  end
+
+
+  #-----------------------------------
+  #
+  #-----------------------------------
+  def __unroll_field_types__({_schema, _table} = key, field_types) do
+    Enum.map(
+      field_types || [],
+      fn({field, type}) ->
+        cond do
+          function_exported?(type, :__unroll__, 1) -> type.__unroll__(field)
+          function_exported?(type, :__unroll__, 2) -> type.__unroll__(key, field)
+          :else -> {field, [source: field]}
+        end
+      end)
+    |> List.flatten()
+    |> Enum.filter(&(&1))
+    |> Map.new()
   end
 
 end

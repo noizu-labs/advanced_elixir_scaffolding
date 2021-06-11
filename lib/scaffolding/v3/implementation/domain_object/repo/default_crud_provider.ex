@@ -36,7 +36,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
   def layer_create_callback(m, %{type: :ecto} = layer, entity, context, options) do
     cond do
       record = m.__entity__().__as_record__(layer.table, entity, options) ->
-        layer.layer.insert(record)
+        layer.schema.insert(record)
     end
     entity
   end
@@ -52,7 +52,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
   def layer_create_callback!(m, %{type: :ecto} = layer, entity, context, options) do
     cond do
       record = m.__entity__().__as_record__!(layer.table, entity, options) ->
-        layer.layer.insert(record)
+        layer.schema.insert(record)
     end
     entity
   end

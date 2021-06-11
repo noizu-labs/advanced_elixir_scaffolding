@@ -132,20 +132,26 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
     end
   end
 
+
   #-----------------------------------
   #
   #-----------------------------------
   def __as_mnesia_record__(m, table, entity, options) do
     context = Noizu.ElixirCore.CallingContext.admin()
-    field_types = m.__noizu_info__(:field_types)
     layer = m.__noizu_info__(:tables)[table]
+    field_types = m.__noizu_info__(:field_types)[{layer.schema, layer.table}]
+    unrolled = m.__noizu_info__(:schema_field_types)[{layer.schema, layer.table}]
     fields = (struct(table, %{}) |> Map.keys()) -- [:__struct__]
     values = Enum.map(fields, fn(field) ->
       cond do
-        type = field_types[field] -> {field, type.cast(get_in(entity, [Access.key(field)]), layer, context, options)}
-        :else -> {field, get_in(entity, [Access.key(field)])}
+        entry = unrolled[field] ->
+          type = field_types[entry[:source]]
+          type.handler.cast(entry[:source], entry[:segment], get_in(entity, [Access.key(entry[:source])]), type, layer, context, options)
+        Map.has_key?(entity, field) -> {field, get_in(entity, [Access.key(field)])}
+        :else -> nil
       end
-    end) |> Map.new()
+    end) |> List.flatten()
+         |> Map.new()
     record = %{struct(layer.table, values)| entity: entity}
   end
 
@@ -159,16 +165,19 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
   def __as_ecto_record__(m, table, entity, options) do
     context = Noizu.ElixirCore.CallingContext.admin()
     layer = m.__noizu_info__(:tables)[table]
-    field_types = m.__noizu_info__(:field_types)
-    ecto_fields = layer.table.__schema__(:fields) |> MapSet.new()
+    unrolled = m.__unroll_field_types__(layer.schema)
+    field_types = m.__noizu_info__(:field_types)[{layer.schema, layer.table}]
+    ecto_fields = Map.keys(struct(layer.table)) -- [:schema, :meta]
     values = Enum.map(m.__noizu_info__(:fields), fn(field) ->
       cond do
-        field == :identifier -> {:id, Noizu.MySQL.Entity.mysql_identifier(entity)}
-        !MapSet.member?(ecto_fields, field) -> nil
-        type = field_types[field] -> {field, type.cast(get_in(entity, [Access.key(field)]),layer,  context, options)}
-        :else -> {field, get_in(entity, [Access.key(field)])}
+        field == :identifier -> {:identifier, Noizu.MySQL.Entity.mysql_identifier(entity)}
+        entry = unrolled[field] ->
+          type = field_types[entry[:source]]
+          type.handler.cast(entry[:source], entry[:segment], get_in(entity, [Access.key(entry[:source])]), type, layer, context, options)
+        Map.has_key?(entity, field) -> {field, get_in(entity, [Access.key(field)])}
+        :else -> nil
       end
-    end) |> Enum.filter(&(&1)) |> Map.new()
+    end) |> List.flatten() |> Map.new()
     struct(layer.table, values)
   end
 
