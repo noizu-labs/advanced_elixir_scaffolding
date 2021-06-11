@@ -166,6 +166,14 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
       :else -> :ok
     end
 
+    # __nzdo__raw__json_format_settings
+    #Module.register_attribute(__MODULE__, :json, accumulate: true)
+    #Module.register_attribute(__MODULE__, :json_embed, accumulate: true)
+    #Module.register_attribute(__MODULE__, :json_ignore, accumulate: true)
+    #Module.register_attribute(__MODULE__, :json_restrict, accumulate: true)
+
+
+
     options = %{}
     options = cond do
                 (Module.has_attribute?(mod, :pii)) ->
@@ -179,4 +187,5 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
       Module.put_attribute(mod, :__nzdo__field_attributes, {field, options})
     end
   end
+
 end
