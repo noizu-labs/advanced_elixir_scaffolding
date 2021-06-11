@@ -6,7 +6,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultInt
     end
   end
 
-  def __after_compile__(env, _bytecode) do
+  def __after_compile__(_env, _bytecode) do
     # Validate Generated Object
     :ok
   end

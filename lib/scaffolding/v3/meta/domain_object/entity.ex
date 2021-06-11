@@ -25,16 +25,16 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
   #--------------------------
   #
   #--------------------------
-  defmacro mysql_identifier(type \\ :integer, opts \\ []) do
+  defmacro ecto_identifier(type \\ :integer, opts \\ []) do
     quote do
-      EntityMeta.__set_field_attributes__(__MODULE__, :mysql_identifier, unquote(opts))
-      EntityMeta.__mysql_identifier__(__MODULE__, unquote(type), unquote(opts))
+      EntityMeta.__set_field_attributes__(__MODULE__, :ecto_identifier, unquote(opts))
+      EntityMeta.__ecto_identifier__(__MODULE__, unquote(type), unquote(opts))
     end
   end
 
-  def __mysql_identifier__(mod, _type, _opts) do
-    Module.put_attribute(mod, :__nzdo__has_mysql_field, true)
-    __public_field__(mod, :mysql_identifier, nil, [])
+  def __ecto_identifier__(mod, _type, _opts) do
+    Module.put_attribute(mod, :__nzdo__ecto_identifier_field, true)
+    __public_field__(mod, :ecto_identifier, nil, [])
   end
 
   #--------------------------
@@ -47,24 +47,8 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
     end
   end
 
-  def __public_field__(mod, field, default, opts) do
+  def __public_field__(mod, field, default, _opts) do
     Module.put_attribute(mod, :__nzdo__field_permissions, {field, :public})
-    Module.put_attribute(mod, :__nzdo__fields, {field, default})
-  end
-
-
-  #--------------------------
-  #
-  #--------------------------
-  defmacro restricted_field(field, default \\ nil, opts \\ []) do
-    quote do
-      EntityMeta.__set_field_attributes__(__MODULE__, unquote(field), unquote(opts))
-      EntityMeta.__restricted_field__(__MODULE__, unquote(field), unquote(default), unquote(opts))
-    end
-  end
-
-  def __restricted_field__(mod, field, default, opts) do
-    Module.put_attribute(mod, :__nzdo__field_permissions, {field, :restricted})
     Module.put_attribute(mod, :__nzdo__fields, {field, default})
   end
 
@@ -85,6 +69,35 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
   #--------------------------
   #
   #--------------------------
+  defmacro restricted_field(field, default \\ nil, opts \\ []) do
+    quote do
+      EntityMeta.__set_field_attributes__(__MODULE__, unquote(field), unquote(opts))
+      EntityMeta.__restricted_field__(__MODULE__, unquote(field), unquote(default), unquote(opts))
+    end
+  end
+
+  def __restricted_field__(mod, field, default, _opts) do
+    Module.put_attribute(mod, :__nzdo__field_permissions, {field, :restricted})
+    Module.put_attribute(mod, :__nzdo__fields, {field, default})
+  end
+
+  #--------------------------
+  #
+  #--------------------------
+  defmacro restricted_fields(fields, opts \\ []) do
+    quote do
+      EntityMeta.__restricted_fields__(__MODULE__, unquote(fields), unquote(opts[:default] || nil), unquote(opts))
+    end
+  end
+  def __restricted_fields__(mod, fields, default, opts) do
+    Enum.map(fields, fn(field) ->
+      __restricted_field__(mod, field, default, opts)
+    end)
+  end
+
+  #--------------------------
+  #
+  #--------------------------
   defmacro private_field(field, default \\ nil, opts \\ []) do
     quote do
       EntityMeta.__set_field_attributes__(__MODULE__, unquote(field), unquote(opts))
@@ -92,7 +105,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
     end
   end
 
-  def __private_field__(mod, field, default, opts) do
+  def __private_field__(mod, field, default, _opts) do
     Module.put_attribute(mod, :__nzdo__field_permissions, {field, :private})
     Module.put_attribute(mod, :__nzdo__fields, {field, default})
   end
@@ -121,7 +134,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
     end
   end
 
-  def __internal_field__(mod, field, default, opts) do
+  def __internal_field__(mod, field, default, _opts) do
     Module.put_attribute(mod, :__nzdo__field_permissions, {field, :internal})
     Module.put_attribute(mod, :__nzdo__fields, {field, default})
   end

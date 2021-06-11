@@ -46,7 +46,7 @@ defmodule Noizu.Scaffolding.V3.Schema.UniversalRef do
     {:ok, v}
   end
   def dump(v) do
-    case Noizu.MySQL.Entity.universal_identifier(v) do
+    case Noizu.Ecto.Entity.universal_identifier(v) do
       nil -> {:ok, 0}
       v -> {:ok, v}
     end

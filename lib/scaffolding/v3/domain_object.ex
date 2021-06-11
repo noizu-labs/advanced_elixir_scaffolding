@@ -2,7 +2,7 @@ defmodule Noizu.DomainObject do
 
 
   defmacro __using__(options \\ nil) do
-    nmid_generator = options[:nmid_generator] || Noizu.Scaffolding.V3.NmidGenerator
+    nmid_generator = options[:nmid_generator] || Noizu.Scaffolding.V3.NmidV3Generator
     nmid_sequencer = options[:nmid_sequencer]
     nmid_index = options[:nmid_index] || 1
     caller = __CALLER__
@@ -24,6 +24,10 @@ defmodule Noizu.DomainObject do
       @before_compile {Noizu.DomainObject, :before_compile_domain_object__base}
     end
   end
+
+
+
+
 
   #--------------------------------------------
   #
@@ -61,7 +65,7 @@ defmodule Noizu.DomainObject do
                        #---------------------
                        @__nzdo__base unquote(base) || Module.get_attribute(__MODULE__, :domain_object) || (Module.split(__MODULE__) |> Enum.slice(0..-2) |> Module.concat())
                        @__nzdo__base_open? Module.open?(@__nzdo__base)
-                       if @__nzdo__base_open? && !Module.get_attribute(@__nzdo__base, :__nzdo__base_definied) do
+                       if !@__nzdo__base_open? && !Module.get_attribute(@__nzdo__base, :__nzdo__base_definied) do
                          raise "#{@__nzdo__base} must include use Noizu.DomainObject call."
                        end
 
@@ -129,6 +133,7 @@ defmodule Noizu.DomainObject do
                              end)
 
                        if @__nzdo__base_open? do
+                         Module.put_attribute(@__nzdo__base, :__nzdo__sref, @__nzdo__sref)
                          Module.put_attribute(@__nzdo__base, :__nzdo__entity, __MODULE__)
                          Module.put_attribute(@__nzdo__base, :__nzdo__poly_support, @__nzdo__poly_support)
                          Module.put_attribute(@__nzdo__base, :__nzdo__poly?, @__nzdo__poly?)
@@ -212,7 +217,7 @@ defmodule Noizu.DomainObject do
   end
 
 
-  defp __noizu_sphinx(caller, options, block) do
+  defp __noizu_sphinx(_caller, _options, _block) do
     quote do
 
 
@@ -397,7 +402,6 @@ defmodule Noizu.DomainObject do
   def expand_persistence_layers(nil, module), do: expand_persistence_layers([:mnesia], module)
   def expand_persistence_layers(layers, module) when is_atom(layers), do: expand_persistence_layers([layers], module)
   def expand_persistence_layers(layers, module) do
-
     layers = Enum.map(Enum.reverse(layers), fn(layer) ->
       case layer do
         v when is_atom(v) -> expand_layer(v, module, [])
@@ -406,11 +410,10 @@ defmodule Noizu.DomainObject do
         {v, t, o} when is_atom(t) and is_list(o) -> expand_layer(v,t,module,o)
       end
     end)
-    h = layers && List.first(layers)
+    h = Module.get_attribute(module, :persistence)
     ecto_entity = cond do
-                    h == nil -> false
-                    h.options[:ecto_entity] == false -> false
-                    h.options[:ecto_entity] && h.options[:ecto_entity] != true && is_atom(h.options[:ecto_entity]) -> h.options[:ecto_entity]
+                    is_list(h) && Keyword.has_key?(h, :ecto_entity) && h[:ecto_entity] != true -> h[:ecto_entity]
+                    is_map(h) && Map.has_key?(h, :ecto_entity) && h[:ecto_entity] != true -> h[:ecto_entity]
                     :else ->
                       Enum.reduce_while(layers, nil, fn(layer, acc) ->
                         cond do
@@ -419,16 +422,7 @@ defmodule Noizu.DomainObject do
                         end
                       end)
                   end
-    urm = cond do
-            h == nil -> false
-            h.options[:ref_module] == false -> false
-            :else -> true
-          end
-    uid = cond do
-            h == nil -> false
-            h.options[:universal?] == false -> false
-            :else -> true
-          end
+
     layers = Enum.map(layers, fn(layer) ->
       {_, layer} = pop_in(layer, [Access.key(:options), :ref_module])
       {_, layer} = pop_in(layer, [Access.key(:options), :universal?])
@@ -470,12 +464,39 @@ defmodule Noizu.DomainObject do
         end
     end)
 
+    enum_table = cond do
+                   v = Module.get_attribute(module, :enum_list, true) -> v
+                   :else -> false
+                 end
+    universal_identifier = cond do
+                             Module.has_attribute?(module, :universal_identifier) -> Module.get_attribute(module, :universal_identifier, true)
+                             enum_table -> false
+                             :else -> Application.get_env(:noizu_scaffolding, :universal_identifier_default, true)
+                           end
+    universal_lookup = cond do
+                         Module.has_attribute?(module, :universal_lookup) -> Module.get_attribute(module, :universal_lookup, true)
+                         enum_table -> false
+                         :else -> Application.get_env(:noizu_scaffolding, :universal_identifier_default, true)
+                       end
+
+    generate_reference_type = cond do
+                          Module.has_attribute?(module, :generate_reference_type) -> Module.get_attribute(module, :generate_reference_type, true)
+                          enum_table -> false
+                          :else -> Application.get_env(:noizu_scaffolding, :generate_reference_type_default, universal_lookup || universal_identifier)
+                        end
+
+    persistence_options = %{
+      enum_table: enum_table,
+      universal_identifier: universal_identifier,
+      universal_lookup: universal_lookup,
+      generate_reference_type: generate_reference_type,
+    }
+
     %Noizu.Scaffolding.V3.Schema.PersistenceSettings{
       layers: layers,
       mnesia_backend: mnesia_backend,
       ecto_entity: ecto_entity,
-      ref_module: urm,
-      universal?: uid,
+      options: persistence_options
     }
   end
 
@@ -584,7 +605,7 @@ defmodule Noizu.DomainObject do
 
   defmacro before_compile_domain_object__base(_) do
     quote do
-
+IO.puts "DEBUGGING . . .  #{inspect @__nzdo__entity}"
       defdelegate id(ref), to: @__nzdo__entity
       defdelegate ref(ref), to: @__nzdo__entity
       defdelegate sref(ref), to: @__nzdo__entity
@@ -609,7 +630,7 @@ defmodule Noizu.DomainObject do
       def __noizu_info__(:nmid_generator), do: @__nzdo_nmid_generatoer
       def __noizu_info__(:nmid_index), do: @__nzdo_nmid_index
       def __noizu_info__(:nmid_sequencer), do: @__nzdo_nmid_sequencer
-      def __noizu_info__(:poly?), do: @__nzdo__poly_type?
+      def __noizu_info__(:poly?), do: @__nzdo__poly?
       def __noizu_info__(:poly_support), do: @__nzdo__poly_support
       def __noizu_info__(:poly_base), do: @__nzdo__poly_base
 

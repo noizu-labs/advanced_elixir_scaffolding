@@ -4,7 +4,7 @@
 #-------------------------------------------------------------------------------
 
 defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo do
-  alias Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo, as: RepoMeta
+  #alias Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo, as: RepoMeta
 
 
 end

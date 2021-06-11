@@ -11,7 +11,7 @@ defmodule Noizu.UniversalRefBehaviour do
         {:ref, Noizu.UniversalReference, _id} -> {:ok, v}
         %{__struct__: ^e} -> {:ok, v}
         %Noizu.UniversalReference{} -> {:ok, v}
-        v when is_integer(v) -> {:ok, e.ref({:mysql_identifier, e, v})}
+        v when is_integer(v) -> {:ok, e.ref({:ecto_identifier, e, v})}
         _ -> :error
       end
     end
@@ -26,7 +26,7 @@ defmodule Noizu.UniversalRefBehaviour do
     def dump(_m, v) do
       cond do
         v == nil -> {:ok, 0}
-        v = Noizu.MySQL.Entity.mysql_identifier(v) -> {:ok, v}
+        v = Noizu.Ecto.Entity.ecto_identifier(v) -> {:ok, v}
         :else -> {:ok, 0}
       end
     end
@@ -40,7 +40,7 @@ defmodule Noizu.UniversalRefBehaviour do
         {:ref, Noizu.UniversalReference, _id} -> {:ok, v}
         %{__struct__: ^e} -> {:ok, v}
         %Noizu.UniversalReference{} -> {:ok, v}
-        v when is_integer(v) -> {:ok, e.ref({:mysql_identifier, e, v})}
+        v when is_integer(v) -> {:ok, e.ref({:ecto_identifier, e, v})}
         _ -> raise ArgumentError, "Unsupported #{m} - #{inspect v}"
       end
     end

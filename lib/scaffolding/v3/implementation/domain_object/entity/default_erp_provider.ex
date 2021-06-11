@@ -59,7 +59,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
 
   # entity load
   def entity(m, %{__struct__: m} = ref, _), do: ref
-  def entity(m, %{__struct__: s} = entity) do
+  def entity(m, %{__struct__: s} = entity,_) do
     cond do
       t = m.__noizu_info__(:associated_types)[s] ->
         cond do
@@ -79,8 +79,8 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
     end
   end
 
-  def entity(m, %{__struct__: m} = ref, _), do: ref
-  def entity(m, %{__struct__: s} = entity) do
+  def entity!(m, %{__struct__: m} = ref, _), do: ref
+  def entity!(m, %{__struct__: s} = entity, _) do
     cond do
       t = m.__noizu_info__(:associated_types)[s] ->
         cond do
@@ -91,7 +91,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
       :else -> nil
     end
   end
-  def entity(m, ref, options) do
+  def entity!(m, ref, options) do
     cond do
       ref = m.ref(ref) ->
         context = Noizu.ElixirCore.CallingContext.system(options[:context] || Process.get(:context))
@@ -108,8 +108,8 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
       entity = m.entity(ref, options) ->
         layer = m.__noizu__info(:tables)[table]
         cond do
-          layer.type == :mnesia -> m.__as_mnesia_record__(table, ref, options)
-          layer.type == :ecto -> m.__as_ecto_record__(table, ref, options)
+          layer.type == :mnesia -> m.__as_mnesia_record__(table, entity, options)
+          layer.type == :ecto -> m.__as_ecto_record__(table, entity, options)
           :else -> throw "#{m} as #{layer.type} record not supported"
         end
       :else -> nil
@@ -124,8 +124,8 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
       entity = m.entity!(ref, options) ->
         layer = m.__noizu__info(:tables)[table]
         cond do
-          layer.type == :mnesia -> m.__as_mnesia_record__!(table, ref, options)
-          layer.type == :ecto -> m.__as_ecto_record__!(table, ref, options)
+          layer.type == :mnesia -> m.__as_mnesia_record__!(table, entity, options)
+          layer.type == :ecto -> m.__as_ecto_record__!(table, entity, options)
           :else -> throw "#{m} as #{layer.type} record not supported"
         end
       :else -> nil
@@ -152,7 +152,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
       end
     end) |> List.flatten()
          |> Map.new()
-    record = %{struct(layer.table, values)| entity: entity}
+    %{struct(layer.table, values)| entity: entity}
   end
 
   def __as_mnesia_record__!(m, table, ref, options) do
@@ -167,10 +167,10 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
     layer = m.__noizu_info__(:tables)[table]
     unrolled = m.__unroll_field_types__(layer.schema)
     field_types = m.__noizu_info__(:field_types)[{layer.schema, layer.table}]
-    ecto_fields = Map.keys(struct(layer.table)) -- [:schema, :meta]
+    #ecto_fields = Map.keys(struct(layer.table)) -- [:schema, :meta]
     values = Enum.map(m.__noizu_info__(:fields), fn(field) ->
       cond do
-        field == :identifier -> {:identifier, Noizu.MySQL.Entity.mysql_identifier(entity)}
+        field == :identifier -> {:identifier, Noizu.Ecto.Entity.ecto_identifier(entity)}
         entry = unrolled[field] ->
           type = field_types[entry[:source]]
           type.handler.cast(entry[:source], entry[:segment], get_in(entity, [Access.key(entry[:source])]), type, layer, context, options)
@@ -188,11 +188,11 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
   #-----------------------------------
   #
   #-----------------------------------
-  def __from_record__(__MODULE__, type, %{entity: temp}, options) do
+  def __from_record__(__MODULE__, _type, %{entity: temp}, _options) do
     temp
   end
 
-  def __from_record__!(__MODULE__, type, %{entity: temp}, options) do
+  def __from_record__!(__MODULE__, _type, %{entity: temp}, _options) do
     temp
   end
 
@@ -337,8 +337,8 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
     end
   end
 
-  def record(_, ref, options), do: nil
-  def record!(_, ref, options), do: nil
+  def record(_, _ref, _options), do: nil
+  def record!(_, _ref, _options), do: nil
 
 
 
@@ -395,7 +395,6 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
       #---------------------
       #
       #---------------------
-      def __noizu_record__(type, ref, options \\ nil), do: @__nzdo__erp_imp.__noizu_record__(__MODULE__, type, ref, options)
       def sref_section_regex(type), do: @__nzdo__erp_imp.sref_section_regex(__MODULE__, type)
 
       def id_to_string(type, id), do: @__nzdo__erp_imp.id_to_string(__MODULE__, type, id)

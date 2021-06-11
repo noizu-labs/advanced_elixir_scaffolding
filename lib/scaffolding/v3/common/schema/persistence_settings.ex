@@ -4,8 +4,7 @@ defmodule Noizu.Scaffolding.V3.Schema.PersistenceSettings do
                layers: [Noizu.Scaffolding.V3.Schema.PersistenceLayer.t],
                ecto_entity: true | nil,
                mnesia_backend: nil | Map.t,
-               ref_module: boolean,
-               universal?: boolean,
+               options: nil | Map.t | Keyword.t,
                vsn: float
              }
 
@@ -13,8 +12,7 @@ defmodule Noizu.Scaffolding.V3.Schema.PersistenceSettings do
     layers: [],
     ecto_entity: nil,
     mnesia_backend: nil,
-    ref_module: false,
-    universal?: false,
+    options: nil,
     vsn: @vsn
   ]
 end

@@ -18,7 +18,7 @@ defimpl Noizu.ERP, for: Any do
   def entity!(entity, options \\ nil)
   def entity!(_entity, _options), do: nil
 
-  defmacro __deriving__(module, struct, options) do
+  defmacro __deriving__(module, _struct, _options) do
     quote do
       defimpl Noizu.ERP, for: unquote(module) do
         def id(%{__struct__: m} = ref), do: m.erp_handler().id(ref)

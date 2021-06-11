@@ -10,53 +10,53 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
     m.__noizu_info__(:nmid_generator).generate!(m.__noizu_info__(:nmid_sequencer))
   end
 
-  def get(m, ref, context, options) do
+  def get(_m, _ref, _context, _options) do
     IO.puts "TODO table or mnesia query - get"
   end
-  def get!(m, ref, context, options) do
+  def get!(_m, _ref, _context, _options) do
     IO.puts "TODO table or mnesia query - get!"
   end
 
-  def cache(m, ref, context, options) do
+  def cache(_m, ref, _context, _options) do
     IO.puts "TODO CACHE #{inspect ref}"
   end
-  def delete_cache(m, ref, context, options) do
+  def delete_cache(_m, ref, _context, _options) do
     IO.puts "TODO DELETE_CACHE #{inspect ref}"
   end
 
   def layer_pre_create_callback(_m, _layer, entity, _context, _options), do: entity
 
-  def layer_create_callback(m, %{type: :mnesia} = layer, entity, context, options) do
+  def layer_create_callback(m, %{type: :mnesia} = layer, entity, _context, options) do
     cond do
       record = m.__entity__().__as_record__(layer.table, entity, options) ->
         layer.table.write(record)
     end
     entity
   end
-  def layer_create_callback(m, %{type: :ecto} = layer, entity, context, options) do
+  def layer_create_callback(m, %{type: :ecto} = layer, entity, _context, options) do
     cond do
       record = m.__entity__().__as_record__(layer.table, entity, options) ->
         layer.schema.insert(record)
     end
     entity
   end
-  def layer_create_callback(m, _layer, entity, _context, _options), do: entity
+  def layer_create_callback(_m, _layer, entity, _context, _options), do: entity
 
-  def layer_create_callback!(m, %{type: :mnesia} = layer, entity, context, options) do
+  def layer_create_callback!(m, %{type: :mnesia} = layer, entity, _context, options) do
     cond do
       record = m.__entity__().__as_record__!(layer.table, entity, options) ->
         layer.table.write!(record)
     end
     entity
   end
-  def layer_create_callback!(m, %{type: :ecto} = layer, entity, context, options) do
+  def layer_create_callback!(m, %{type: :ecto} = layer, entity, _context, options) do
     cond do
       record = m.__entity__().__as_record__!(layer.table, entity, options) ->
         layer.schema.insert(record)
     end
     entity
   end
-  def layer_create_callback!(m, _layer, entity, _context, _options), do: entity
+  def layer_create_callback!(_m, _layer, entity, _context, _options), do: entity
 
   def layer_post_create_callback(_m, _layer, entity, _context, _options), do: entity
   def layer_create(m, layer, entity, context, options) do
@@ -119,7 +119,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
 
     # preprocess
     Enum.reduce(m.__noizu_info__(:field_types), entity,
-      fn({field, type}, acc) -> type.pre_create_callback(field, entity, context, options) end)
+      fn({field, type}, acc) -> type.pre_create_callback(field, acc, context, options) end)
   end
 
   def post_create_callback(_m, entity, _context, _options), do: entity
@@ -182,10 +182,10 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
             end
           end
         )
-        entity = cond do
-                   settings.mnesia_backend[:fragmented?] -> Amnesia.Fragment.async(fn -> m.post_create_callback(entity, context, options) end)
-                   :else -> Amnesia.async(fn -> m.post_create_callback(entity, context, options) end)
-                 end
+      cond do
+        settings.mnesia_backend[:fragmented?] -> Amnesia.Fragment.async(fn -> m.post_create_callback(entity, context, options) end)
+        :else -> Amnesia.async(fn -> m.post_create_callback(entity, context, options) end)
+      end
       :else ->
         cond do
           settings.mnesia_backend[:fragmented?] -> Amnesia.Fragment.async fn -> m.create(entity, context, options) end
@@ -194,21 +194,21 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
     end
   end
 
-  def update(m, entity, context, options) do
+  def update(_m, entity, _context, _options) do
     IO.puts "TODO UPDATE #{inspect entity}"
   end
-  def update!(m, entity, context, options) do
+  def update!(_m, entity, _context, _options) do
     IO.puts "TODO UPDATE! #{inspect entity}"
   end
-  def delete(m, entity, context, options) do
+  def delete(_m, entity, _context, _options) do
     IO.puts "TODO DELETE #{inspect entity}"
   end
-  def delete!(m, entity, context, options) do
+  def delete!(_m, entity, _context, _options) do
     IO.puts "TODO DELETE! #{inspect entity}"
   end
 
 
-  defmacro __using__(options \\ nil) do
+  defmacro __using__(_options \\ nil) do
     quote do
       @__nzdo__crud_imp Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCrudProvider
 

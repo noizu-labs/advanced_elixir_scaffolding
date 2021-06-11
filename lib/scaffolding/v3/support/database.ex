@@ -24,15 +24,15 @@ defdatabase Noizu.Scaffolding.V3.Database do
                }
   end
 
-  deftable MySQLIdentifierLookupTable, [:identifier, :mysql_identifier], type: :set, index: [] do
-    @type t :: %MySQLIdentifierLookupTable{
+  deftable EctoIdentifierLookupTable, [:identifier, :ecto_identifier], type: :set, index: [] do
+    @type t :: %EctoIdentifierLookupTable{
                  identifier: tuple,
-                 mysql_identifier: atom,
+                 ecto_identifier: atom,
                }
   end
 
-  deftable NmidGenerator, [:key, :incr], type: :ordered_set, index: [] do
-    @type t :: %NmidGenerator{key: integer, incr: integer}
+  deftable NmidV3Generator, [:key, :incr], type: :ordered_set, index: [] do
+    @type t :: %NmidV3Generator{key: integer, incr: integer}
   end
 
 end

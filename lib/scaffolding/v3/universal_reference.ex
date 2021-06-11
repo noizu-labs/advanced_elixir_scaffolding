@@ -23,16 +23,16 @@ defmodule Noizu.UniversalReference do
   def erp_handler(), do: __MODULE__
 
   #=============================================================================
-  # Noizu.MySQL.Entity Methods
+  # Noizu.Ecto.Entity Methods
   #=============================================================================
   def mysql_entity?(), do: true
-  def mysql_identifier(ref) do
+  def ecto_identifier(ref) do
     r = resolve(ref)
-    Noizu.MySQL.Entity.mysql_identifier(r)
+    Noizu.Ecto.Entity.ecto_identifier(r)
   end
   def source(ref) do
     r = resolve(ref)
-    Noizu.MySQL.Entity.source(r)
+    Noizu.Ecto.Entity.source(r)
   end
 
   #---------------------------
@@ -41,16 +41,16 @@ defmodule Noizu.UniversalReference do
   def universal_identifier(%__MODULE__{identifier: v}) when is_integer(v), do: v
   def universal_identifier(%__MODULE__{} = this) do
     cond do
-      v = (this.ref && Noizu.MySQL.Entity.universal_identifier(this.ref)) -> v
-      v = (this.identifier && Noizu.MySQL.Entity.universal_identifier(this.identifier)) -> v
+      v = (this.ref && Noizu.Ecto.Entity.universal_identifier(this.ref)) -> v
+      v = (this.identifier && Noizu.Ecto.Entity.universal_identifier(this.identifier)) -> v
     end
   end
   def universal_identifier({:ref, __MODULE__, v}) when is_integer(v), do: v
   def universal_identifier({:ref, __MODULE__, ref}) do
-    Noizu.MySQL.Entity.universal_identifier(ref)
+    Noizu.Ecto.Entity.universal_identifier(ref)
   end
   def universal_identifier(nil), do: nil
-  def universal_identifier(v), do: Noizu.MySQL.Entity.universal_identifier(v)
+  def universal_identifier(v), do: Noizu.Ecto.Entity.universal_identifier(v)
 
   #---------------------------
   #
@@ -73,7 +73,7 @@ defmodule Noizu.UniversalReference do
   def encode(rrid) when is_integer(rrid) do
     %__MODULE__{identifier: rrid}
   end
-  def encode(v = %{mysql_identifier: uid}) when is_integer(uid)  do
+  def encode(v = %{ecto_identifier: uid}) when is_integer(uid)  do
     %__MODULE__{identifier: uid, ref: v}
   end
   def encode(v = %{identifier: uid}) when is_integer(uid)  do
