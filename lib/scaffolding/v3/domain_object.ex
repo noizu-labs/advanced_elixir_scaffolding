@@ -37,6 +37,13 @@ defmodule Noizu.DomainObject do
       defdelegate record!(ref, options \\ nil), to: @__nzdo__entity
       defdelegate __noizu_record__(type, ref, options \\ nil), to: @__nzdo__entity
 
+
+      def vsn(), do: @vsn
+      def __entity__(), do: @__nzdo__entity
+      def __repo__(), do: @__nzdo__repo
+      def __sref__(), do: @__nzdo__sref
+      def __erp__(), do: @__nzdo__entity
+
       def __noizu_info__(:type), do: :base
       def __noizu_info__(:base), do: __MODULE__
       def __noizu_info__(:entity), do: @__nzdo__entity
@@ -45,9 +52,16 @@ defmodule Noizu.DomainObject do
       def __noizu_info__(:nmid_generator), do: @__nzdo_nmid_generatoer
       def __noizu_info__(:nmid_index), do: @__nzdo_nmid_index
       def __noizu_info__(:nmid_sequencer), do: @__nzdo_nmid_sequencer
+      def __noizu_info__(:poly?), do: @__nzdo__poly_type?
+      def __noizu_info__(:poly_support), do: @__nzdo__poly_support
+      def __noizu_info__(:poly_base), do: @__nzdo__poly_base
+
+      def __noizu_info__(:identifier_type), do: @__nzdo__entity.__noizu_info__(:identifier_type)
       def __noizu_info__(:fields), do: @__nzdo__entity.__noizu_info__(:fields)
       def __noizu_info__(:field_types), do: @__nzdo__entity.__noizu_info__(:field_types)
       def __noizu_info__(:persistence), do: @__nzdo__entity.__noizu_info__(:persistence)
+      def __noizu_info__(:tables), do: @__nzdo__entity.__noizu_info__(:tables)
+      def __noizu_info__(:associated_types), do: @__nzdo__entity.__noizu_info__(:associated_types)
       @__nzdo__meta__map Map.new(@__nzdo__meta)
       def __noizu_info__(:meta), do: @__nzdo__meta__map
     end
@@ -55,14 +69,33 @@ defmodule Noizu.DomainObject do
 
   defmacro before_compile_domain_object__entity(_) do
     quote do
+      defdelegate vsn(), to: @__nzdo__base
+      def __entity__(), do: __MODULE__
+      defdelegate __repo__(), to: @__nzdo__base
+      defdelegate __sref__(), to: @__nzdo__base
+      defdelegate __erp__(), to: @__nzdo__base
+
+      def __noizu_info__(:identifier_type), do: @__nzdo__identifier_type
       def __noizu_info__(:fields), do: @__nzdo__field_list
       def __noizu_info__(:field_types), do: @__nzdo__field_types_map
       def __noizu_info__(:persistence), do: @__nzdo_persistence
+      def __noizu_info__(:tables), do: @__nzdo_persistence__by_table
+      @__nzdo_associated_types (Enum.map(@__nzdo_persistence__by_table || %{}, fn({k,v}) -> {k, v.type} end) ++ Enum.map(@__nzdo__poly_support || %{}, fn(k,v) -> {k, :poly} end) ) |> Map.new()
+      def __noizu_info__(:associated_types), do: @__nzdo_associated_types
       defdelegate __noizu_info__(report), to: @__nzdo__base
     end
   end
   defmacro before_compile_domain_object__repo(_) do
     quote do
+
+      defdelegate vsn(), to: @__nzdo__base
+      defdelegate __entity__(), to: @__nzdo__base
+      def __repo__(), do: __MODULE__
+      defdelegate __sref__(), to: @__nzdo__base
+      defdelegate __erp__(), to: @__nzdo__base
+
+
+
       defdelegate id(ref), to: @__nzdo__base
       defdelegate ref(ref), to: @__nzdo__base
       defdelegate sref(ref), to: @__nzdo__base
@@ -90,6 +123,12 @@ defmodule Noizu.DomainObject do
     erp_provider = options[:erp_imp] || Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultErpProvider
     ecto_provider = options[:ecto_imp] || Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultEctoProvider
     internal_provider = options[:internal_imp] || Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultInternalProvider
+    base = options[:domain_object]
+    repo = options[:repo]
+    vsn = options[:vsn]
+    sref = options[:sref]
+    poly_base = options[:poly_base]
+    poly_support = options[:poly_support]
     process_config = quote do
                        import Noizu.DomainObject, only: [file_rel_dir: 1]
 
@@ -104,32 +143,81 @@ defmodule Noizu.DomainObject do
                        #---------------------
                        # Find Base
                        #---------------------
-                       @__nzdo__base Module.split(__MODULE__) |> Enum.slice(0..-2) |> Module.concat()
-                       if !Module.get_attribute(@__nzdo__base, :__nzdo__base_definied) do
+                       @__nzdo__base unquote(base) || Module.get_attribute(__MODULE__, :domain_object) || (Module.split(__MODULE__) |> Enum.slice(0..-2) |> Module.concat())
+                       @__nzdo__base_open? Module.open?(@__nzdo__base)
+                       if @__nzdo__base_open? && !Module.get_attribute(@__nzdo__base, :__nzdo__base_definied) do
                          raise "#{@__nzdo__base} must include use Noizu.DomainObject call."
                        end
 
                        #---------------------
-                       # Insure sref set
+                       # Registerss
                        #---------------------
-                       if !Module.get_attribute(@__nzdo__base, :sref) do
-                         raise "@sref must be defined in base module #{@__ndzo__base} before calling defentity in submodule #{__MODULE__}"
-                       end
-
-                       #---------------------
-                       # Push details to Base, and read in required settings.
-                       #---------------------
-                       @__nzdo__repo Module.concat(@__nzdo__base, "Repo")
-                       @__nzdo__sref Module.get_attribute(@__nzdo__base, :sref)
-                       Module.put_attribute(@__nzdo__base, :__nzdo__entity, __MODULE__)
-                       Module.put_attribute(@__nzdo__base, :__nzdo__sref, @__nzdo__sref)
-
-                       @vsn (Module.get_attribute(@__nzdo__base, :vsn) || 1.0)
-
                        Module.register_attribute(__MODULE__, :__nzdo__derive, accumulate: true)
                        Module.register_attribute(__MODULE__, :__nzdo__fields, accumulate: true)
                        Module.register_attribute(__MODULE__, :__nzdo__field_permissions, accumulate: true)
                        Module.register_attribute(__MODULE__, :__nzdo__field_types, accumulate: true)
+
+                       #---------------------
+                       # Push details to Base, and read in required settings.
+                       #---------------------
+                       @__nzdo__poly_base (cond do
+                                             v = unquote(poly_base) -> v
+                                             v = Module.get_attribute(__MODULE__, :poly_base) -> v
+                                             !@__nzdo__base_open? && @__nzdo__base.__noizu_info(:poly_base) -> @__nzdo__base.__noizu_info(:poly_base)
+                                             @__nzdo__base_open? -> (Module.get_attribute(@__nzdo__base, :poly_base) || @__nzdo__base)
+                                             :else -> @__nzdo__base
+                                           end)
+                       @__nzdo__poly_base_open? Module.open?(@__nzdo__poly_base)
+
+                       @__nzdo__poly_support (cond do
+                                                v = unquote(poly_support) -> v
+                                                v = Module.get_attribute(__MODULE__, :poly_support) -> v
+                                                !@__nzdo__base_open? && @__nzdo__base.__noizu_info(:poly_support) -> @__nzdo__base.__noizu_info(:poly_support)
+                                                @__nzdo__base_open? && Module.get_attribute(@__nzdo__base, :poly_support) -> Module.get_attribute(@__nzdo__base, :poly_support)
+                                                !@__nzdo__poly_base_open? && @__nzdo__poly_base.__noizu_info(:poly_support) -> @__nzdo__poly_base.__noizu_info(:poly_support)
+                                                @__nzdo__poly_base_open? && Module.get_attribute(@__nzdo__poly_base, :poly_support) -> Module.get_attribute(@__nzdo__poly_base, :poly_support)
+                                                :else -> nil
+                                              end)
+
+                       @__nzdo__poly? ((@__nzdo__poly_base != @__nzdo__base || @__nzdo__poly_support) && true || false)
+
+                       @__nzdo__repo (cond do
+                                        v = unquote(repo) -> v
+                                        v = Module.get_attribute(__MODULE__, :repo) -> v
+                                        !@__nzdo__base_open? && @__nzdo__base.__noizu_info(:repo) -> @__nzdo__base.__noizu_info(:repo)
+                                        @__nzdo__base_open? && Module.get_attribute(@__nzdo__base, :repo) -> Module.get_attribute(@__nzdo__base, :repo)
+                                        !@__nzdo__poly_base_open? && @__nzdo__poly_base.__noizu_info(:repo) -> @__nzdo__poly_base.__noizu_info(:repo)
+                                        @__nzdo__poly_base_open? && Module.get_attribute(@__nzdo__poly_base, :repo) -> Module.get_attribute(@__nzdo__poly_base, :repo)
+                                        :else -> Module.concat(@__nzdo__poly_base, "Repo")
+                                      end)
+
+                       @__nzdo__sref (cond do
+                                        v = unquote(sref) -> v
+                                        v = Module.get_attribute(__MODULE__, :sref) -> v
+                                        !@__nzdo__base_open? && @__nzdo__base.__noizu_info(:sref) -> @__nzdo__base.__noizu_info(:sref)
+                                        @__nzdo__base_open? && Module.get_attribute(@__nzdo__base, :sref) -> Module.get_attribute(@__nzdo__base, :sref)
+                                        !@__nzdo__poly_base_open? && @__nzdo__poly_base.__noizu_info(:sref) -> @__nzdo__poly_base.__noizu_info(:sref)
+                                        @__nzdo__poly_base_open? && Module.get_attribute(@__nzdo__poly_base, :sref) -> Module.get_attribute(@__nzdo__poly_base, :sref)
+                                        :else -> :unsupported
+                                      end)
+
+                       @vsn (cond do
+                               v = unquote(vsn) -> v
+                               v = Module.get_attribute(__MODULE__, :vsn) -> v
+                               !@__nzdo__base_open? && @__nzdo__base.__noizu_info(:vsn) -> @__nzdo__base.__noizu_info(:vsn)
+                               @__nzdo__base_open? && Module.get_attribute(@__nzdo__base, :vsn) -> Module.get_attribute(@__nzdo__base, :vsn)
+                               !@__nzdo__poly_base_open? && @__nzdo__poly_base.__noizu_info(:vsn) -> @__nzdo__poly_base.__noizu_info(:vsn)
+                               @__nzdo__poly_base_open? && Module.get_attribute(@__nzdo__poly_base, :vsn) -> Module.get_attribute(@__nzdo__poly_base, :vsn)
+                               :else -> 1.0
+                             end)
+
+                       if @__nzdo__base_open? do
+                         Module.put_attribute(@__nzdo__base, :__nzdo__entity, __MODULE__)
+                         Module.put_attribute(@__nzdo__base, :__nzdo__poly_support, @__nzdo__poly_support)
+                         Module.put_attribute(@__nzdo__base, :__nzdo__poly?, @__nzdo__poly?)
+                         Module.put_attribute(@__nzdo__base, :__nzdo__poly_base, @__nzdo__poly_base)
+                         Module.put_attribute(@__nzdo__base, :vsn, @vsn)
+                       end
 
                        #----------------------
                        # Always hook into Noizu.ERP
@@ -139,10 +227,17 @@ defmodule Noizu.DomainObject do
                        #----------------------
                        # Load Persistence Settings from base, we need them to control some submodules.
                        #----------------------
-                       @__nzdo_persistence Noizu.DomainObject.expand_persistence_layers(Module.get_attribute(@__nzdo__base, :persistence_layer), __MODULE__)
+                       @__nzdo_persistence (cond do
+                          !@__nzdo__base_open? && @__nzdo__base.__noizu_info(:persistence) -> @__nzdo__base.__noizu_info(:persistence)
+                          @__nzdo__base_open? && Module.get_attribute(@__nzdo__base, :vsn) -> Noizu.DomainObject.expand_persistence_layers(Module.get_attribute(@__nzdo__base, :persistence_layer), __MODULE__)
+                          !@__nzdo__poly_base_open? && @__nzdo__poly_base.__noizu_info(:vsn) -> @__nzdo__poly_base.__noizu_info(:persistence)
+                          @__nzdo__poly_base_open? && Module.get_attribute(@__nzdo__poly_base, :vsn) -> Noizu.DomainObject.expand_persistence_layers(Module.get_attribute(@__nzdo__poly_base, :persistence_layer), __MODULE__)
+                          :else -> Noizu.DomainObject.expand_persistence_layers(nil, __MODULE__)
+                        end)
                        @__nzdo__field_types_map ((@__nzdo__field_types || []) |> Map.new())
                        @__nzdo__field_list (Enum.map(@__nzdo__fields, fn({k,_}) -> k end) -- [:initial, :meta])
                        @__nzdo_persistence__layers Enum.map(@__nzdo_persistence.layers, fn(layer) -> {layer.layer, layer} end) |> Map.new()
+                       @__nzdo_persistence__by_table Enum.map(@__nzdo_persistence.layers, fn(layer) -> {layer.table, layer} end) |> Map.new()
                        @__nzdo_ecto_entity (@__nzdo_persistence.ecto_entity && true || false)
                        if @__nzdo_ecto_entity do
                          @derive_list Noizu.Ecto.Entity
@@ -171,20 +266,6 @@ defmodule Noizu.DomainObject do
                  defstruct @__nzdo__fields
 
 
-
-
-                 #-----------------------------------
-                 #
-                 #-----------------------------------
-                 def vsn(), do: @vsn
-                 def __repo__(), do: @__nzdo__repo
-                 def __sref__(), do: @__nzdo__sref
-                 def __erp__(), do: __MODULE__
-
-                 defoverridable [
-                   vsn: 0,
-                   __repo__: 0
-                 ]
                end
 
     quote do
@@ -415,6 +496,12 @@ defmodule Noizu.DomainObject do
              %Amnesia.Metadata{} -> :mnesia
            end
 
+    id_map = cond do
+               options[:id_map] == nil -> :same
+               options[:id_map] == false -> :unsupported
+               :else -> options[:id_map]
+             end
+
     dirty? = cond do
                options[:dirty?] == false -> false
                :else -> true
@@ -463,7 +550,7 @@ defmodule Noizu.DomainObject do
       layer: provider,
       type: type,
       table: table,
-
+      id_map: id_map,
       dirty?: dirty?,
       fragmented?: fragmented?,
       require_transaction?: require_transaction?,

@@ -11,10 +11,10 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
   end
 
   def get(m, ref, context, options) do
-    IO.puts "TODO GET #{inspect ref}"
+    IO.puts "TODO table or mnesia query - get"
   end
   def get!(m, ref, context, options) do
-    IO.puts "TODO GET! #{inspect ref}"
+    IO.puts "TODO table or mnesia query - get!"
   end
 
   def cache(m, ref, context, options) do
@@ -26,56 +26,39 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
 
   def layer_pre_create_callback(_m, _layer, entity, _context, _options), do: entity
 
-  def layer_create_callback!(m, %{type: :mnesia} = layer, entity, context, options) do
-    field_types = m.__noizu_info__(:field_types)
-    fields = (struct(layer.table, %{}) |> Map.keys()) -- [:__struct__]
-    values = Enum.map(fields, fn(field) ->
-      cond do
-        type = field_types[field] -> {field, type.cast(get_in(entity, [Access.key(field)]), layer, context, options)}
-        :else -> {field, get_in(entity, [Access.key(field)])}
-      end
-    end) |> Map.new()
-    record = %{struct(layer.table, values)| entity: entity}
-    layer.table.write!(record)
-    entity
-  end
-  def layer_create_callback!(m, layer, entity, context, options), do: m.layer_create_callback(layer, entity, context, options)
-
-
   def layer_create_callback(m, %{type: :mnesia} = layer, entity, context, options) do
-    field_types = m.__noizu_info__(:field_types)
-    fields = (struct(layer.table, %{}) |> Map.keys()) -- [:__struct__]
-    values = Enum.map(fields, fn(field) ->
-      cond do
-        type = field_types[field] -> {field, type.cast(get_in(entity, [Access.key(field)]), layer, context, options)}
-        :else -> {field, get_in(entity, [Access.key(field)])}
-      end
-    end) |> Map.new()
-    record = %{struct(layer.table, values)| entity: entity}
-    layer.table.write(record)
+    cond do
+      record = m.__entity__().__as_record__(layer.table, entity, options) ->
+        layer.table.write(record)
+    end
     entity
   end
   def layer_create_callback(m, %{type: :ecto} = layer, entity, context, options) do
-    field_types = m.__noizu_info__(:field_types)
-    ecto_fields = layer.table.__schema__(:fields) |> MapSet.new()
-    values = Enum.map(m.__noizu_info__(:fields), fn(field) ->
-      cond do
-        field == :identifier -> {:id, Noizu.MySQL.Entity.mysql_identifier(entity)}
-        !MapSet.member?(ecto_fields, field) -> nil
-        type = field_types[field] -> {field, type.cast(get_in(entity, [Access.key(field)]),layer,  context, options)}
-        :else -> {field, get_in(entity, [Access.key(field)])}
-      end
-    end) |> Enum.filter(&(&1)) |> Map.new()
-    record = struct(layer.table, values)
-
-    layer.layer.insert(record)
-
-    #  Universal Identifier Update
+    cond do
+      record = m.__entity__().__as_record__(layer.table, entity, options) ->
+        layer.layer.insert(record)
+    end
     entity
   end
   def layer_create_callback(m, _layer, entity, _context, _options), do: entity
-  def layer_post_create_callback(_m, _layer, entity, _context, _options), do: entity
 
+  def layer_create_callback!(m, %{type: :mnesia} = layer, entity, context, options) do
+    cond do
+      record = m.__entity__().__as_record__!(layer.table, entity, options) ->
+        layer.table.write!(record)
+    end
+    entity
+  end
+  def layer_create_callback!(m, %{type: :ecto} = layer, entity, context, options) do
+    cond do
+      record = m.__entity__().__as_record__!(layer.table, entity, options) ->
+        layer.layer.insert(record)
+    end
+    entity
+  end
+  def layer_create_callback!(m, _layer, entity, _context, _options), do: entity
+
+  def layer_post_create_callback(_m, _layer, entity, _context, _options), do: entity
   def layer_create(m, layer, entity, context, options) do
     entity = m.layer_pre_create_callback(layer, entity, context, options)
     entity = m.layer_create_callback(layer, entity, context, options)

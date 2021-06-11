@@ -4,7 +4,7 @@ defmodule Noizu.Scaffolding.V3.Schema.PersistenceLayer do
                layer: atom,
                type: atom,
                table: atom,
-
+               id_map: any,
                dirty?: boolean,
                fragmented?: boolean,
                require_transaction?: boolean,
@@ -24,7 +24,7 @@ defmodule Noizu.Scaffolding.V3.Schema.PersistenceLayer do
     layer: nil,
     type: nil,
     table: nil,
-
+    id_map: :same,
     dirty?: false,
     fragmented?: false,
     require_transaction?: false,

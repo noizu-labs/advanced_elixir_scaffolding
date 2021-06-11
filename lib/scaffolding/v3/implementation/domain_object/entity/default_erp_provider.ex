@@ -14,38 +14,177 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
   #------------------
   def ref(_, nil), do: nil
   def ref(m, %{__struct__: m, identifier: id}), do: {:ref, m, id}
+  def ref(m, %{__struct__: s} = entity) do
+    cond do
+      t = m.__noizu_info__(:associated_types)[s] ->
+        cond do
+          t == :poly -> s.ref(entity)
+          config = m.__noizu_info__(:tables)[s] && (t == :ecto || t == :mnesia) ->
+            id = case config.map_id do
+                   :same -> Map.get(entity, :identifier) || Map.get(entity, :id)
+                   :unsupported -> nil
+                   {m,f} -> apply(m,f, [entity])
+                   {m,f,a} when is_list(a) -> apply(m, f, [entity] ++ a)
+                   f when is_function(f,1) -> f.(entity)
+                   _ -> nil
+                 end
+            id && {:ref, m, entity.identifier}
+          :else -> nil
+        end
+      :else -> nil
+    end
+  end
   def ref(m, ref), do: m.valid_identifier(ref) && {:ref, m, ref}
 
   #------------------
   #
   #------------------
-  def sref(m, {:ref, m, id}) do
-    sid = m.identifier_to_string(id)
-    m.__sref_prefix__() <> sid
-  end
   def sref(m, ref) do
-    r = ref && m.ref(ref)
-    r && (r != ref) && m.sref(r) || nil
+    sref = m.__sref__()
+    cond do
+      sref == :undefined -> nil
+      id = m.id(ref) ->
+        id_str = m.id_to_string(id)
+        type = m.__noizu_info__(:identifier_type)
+        type = is_tuple(type) && elem(type, 0) || type
+        cond do
+          id_str == nil -> throw "id to string errror #{m}"
+          type == :ref -> "ref.#{sref}{#{id_str}}"
+          type == :list || type == :compound -> "ref.#{sref}#{id_str}"
+          :else ->  "ref.#{sref}.#{id_str}"
+        end
+      :else -> nil
+    end
   end
 
   # entity load
   def entity(m, %{__struct__: m} = ref, _), do: ref
-  def entity(_, _ref, _options) do
-    nil
+  def entity(m, %{__struct__: s} = entity) do
+    cond do
+      t = m.__noizu_info__(:associated_types)[s] ->
+        cond do
+          t == :poly -> entity
+          m.__noizu_info__(:tables)[s] -> m.__from_record__(s, entity)
+          :else -> nil
+        end
+      :else -> nil
+    end
   end
-  def entity!(m, %{__struct__: m} = ref, _), do: ref
-  def entity!(_, _ref, _options) do
-    nil
-  end
-  def record(_, _ref, _options) do
-    nil
-  end
-  def record!(_, _ref, _options) do
-    nil
+  def entity(m, ref, options) do
+    cond do
+      ref = m.ref(ref) ->
+        context = Noizu.ElixirCore.CallingContext.system(options[:context] || Process.get(:context))
+        m.__repo__().get(ref, context)
+      :else -> nil
+    end
   end
 
-  def __noizu_record__(__MODULE__, type, ref, options) do
+  def entity(m, %{__struct__: m} = ref, _), do: ref
+  def entity(m, %{__struct__: s} = entity) do
+    cond do
+      t = m.__noizu_info__(:associated_types)[s] ->
+        cond do
+          t == :poly -> entity
+          m.__noizu_info__(:tables)[s] -> m.__from_record__!(s, entity)
+          :else -> nil
+        end
+      :else -> nil
+    end
+  end
+  def entity(m, ref, options) do
+    cond do
+      ref = m.ref(ref) ->
+        context = Noizu.ElixirCore.CallingContext.system(options[:context] || Process.get(:context))
+        m.__repo__().get!(ref, context)
+      :else -> nil
+    end
+  end
 
+  #-----------------------------------
+  #
+  #-----------------------------------
+  def __as_record__(m, table, ref, options) do
+    cond do
+      entity = m.entity(ref, options) ->
+        layer = m.__noizu__info(:tables)[table]
+        cond do
+          layer.type == :mnesia -> m.__as_mnesia_record__(table, ref, options)
+          layer.type == :ecto -> m.__as_ecto_record__(table, ref, options)
+          :else -> throw "#{m} as #{layer.type} record not supported"
+        end
+      :else -> nil
+    end
+  end
+
+  #-----------------------------------
+  #
+  #-----------------------------------
+  def __as_record__!(m, table, ref, options) do
+    cond do
+      entity = m.entity!(ref, options) ->
+        layer = m.__noizu__info(:tables)[table]
+        cond do
+          layer.type == :mnesia -> m.__as_mnesia_record__!(table, ref, options)
+          layer.type == :ecto -> m.__as_ecto_record__!(table, ref, options)
+          :else -> throw "#{m} as #{layer.type} record not supported"
+        end
+      :else -> nil
+    end
+  end
+
+  #-----------------------------------
+  #
+  #-----------------------------------
+  def __as_mnesia_record__(m, table, entity, options) do
+    context = Noizu.ElixirCore.CallingContext.admin()
+    field_types = m.__noizu_info__(:field_types)
+    layer = m.__noizu_info__(:tables)[table]
+    fields = (struct(table, %{}) |> Map.keys()) -- [:__struct__]
+    values = Enum.map(fields, fn(field) ->
+      cond do
+        type = field_types[field] -> {field, type.cast(get_in(entity, [Access.key(field)]), layer, context, options)}
+        :else -> {field, get_in(entity, [Access.key(field)])}
+      end
+    end) |> Map.new()
+    record = %{struct(layer.table, values)| entity: entity}
+  end
+
+  def __as_mnesia_record__!(m, table, ref, options) do
+    m.__as_mnesia_record__(table, ref, options)
+  end
+
+  #-----------------------------------
+  #
+  #-----------------------------------
+  def __as_ecto_record__(m, table, entity, options) do
+    context = Noizu.ElixirCore.CallingContext.admin()
+    layer = m.__noizu_info__(:tables)[table]
+    field_types = m.__noizu_info__(:field_types)
+    ecto_fields = layer.table.__schema__(:fields) |> MapSet.new()
+    values = Enum.map(m.__noizu_info__(:fields), fn(field) ->
+      cond do
+        field == :identifier -> {:id, Noizu.MySQL.Entity.mysql_identifier(entity)}
+        !MapSet.member?(ecto_fields, field) -> nil
+        type = field_types[field] -> {field, type.cast(get_in(entity, [Access.key(field)]),layer,  context, options)}
+        :else -> {field, get_in(entity, [Access.key(field)])}
+      end
+    end) |> Enum.filter(&(&1)) |> Map.new()
+    struct(layer.table, values)
+  end
+
+  def __as_ecto_record__!(m, table, ref, options) do
+    m.__as_ecto_record__(table, ref, options)
+  end
+
+  #-----------------------------------
+  #
+  #-----------------------------------
+  def __from_record__(__MODULE__, type, %{entity: temp}, options) do
+    temp
+  end
+
+  def __from_record__!(__MODULE__, type, %{entity: temp}, options) do
+    temp
   end
 
   #-----------------------------------
@@ -82,23 +221,23 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
     end
   end
   def id_to_string(m, {:compound, template}, id) do
-      template_list = Tuple.to_list(template)
-      id_list = Tuple.to_list(id)
-      length(template_list) != length(id_list) && throw "invalid compound id #{inspect id}"
-      l = Enum.map_reduce(id_list, 0, &( {m.id_to_string(Enum.at(template_list, &2), &1), &2 + 1}))
-      "{" <> Enum.join(l, ",") <> "}"
+    template_list = Tuple.to_list(template)
+    id_list = Tuple.to_list(id)
+    length(template_list) != length(id_list) && throw "invalid compound id #{inspect id}"
+    l = Enum.map_reduce(id_list, 0, &( {m.id_to_string(Enum.at(template_list, &2), &1), &2 + 1}))
+    "{" <> Enum.join(l, ",") <> "}"
   end
   def id_to_string(_m, :atom, id), do: Atom.to_string(id)
   def id_to_string(_m, {:atom, :existing}, id), do: Atom.to_string(id)
   def id_to_string(_m, {:atom, constraint}, id) do
     sref = case constraint do
-      v when is_list(v) -> Enum.member?(v, id) && Atom.to_string(id) || throw "unsupported atom id #{inspect id}"
-      v = %MapSet{} -> Enum.member?(v, id) && Atom.to_string(id) || throw "unsupported atom id #{inspect id}"
-      v when is_function(v, 0) -> v.()[id] && Atom.to_string(id) || throw "unsupported atom id #{inspect id}"
-      v when is_function(v, 1) -> v.(id) && Atom.to_string(id) || throw "unsupported atom id #{inspect id}"
-      {m,f} -> apply(m, f, [id]) && Atom.to_string(id) || throw "unsupported atom id #{inspect id}"
-      _ -> throw "invalid atom constraint #{inspect constraint}"
-    end
+             v when is_list(v) -> Enum.member?(v, id) && Atom.to_string(id) || throw "unsupported atom id #{inspect id}"
+             v = %MapSet{} -> Enum.member?(v, id) && Atom.to_string(id) || throw "unsupported atom id #{inspect id}"
+             v when is_function(v, 0) -> v.()[id] && Atom.to_string(id) || throw "unsupported atom id #{inspect id}"
+             v when is_function(v, 1) -> v.(id) && Atom.to_string(id) || throw "unsupported atom id #{inspect id}"
+             {m,f} -> apply(m, f, [id]) && Atom.to_string(id) || throw "unsupported atom id #{inspect id}"
+             _ -> throw "invalid atom constraint #{inspect constraint}"
+           end
     "[#{sref}]"
   end
   def id_to_string(_m, :ref, id), do: Noizu.ERP.sref(id) || throw "invalid ref"
@@ -128,13 +267,13 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
   def string_to_id(_m, :hash, id), do: id
   def string_to_id(_m, :uuid, id), do: UUID.string_to_binary!(id)
   def string_to_id(m, {:list, template}, id) do
-      r = Regex.compile(m.sref_section_regex(template))
-      case Regex.split(r, id, :include_captures) do
-        v when is_list(v) and length(v) > 0 ->
-          Enum.filter(v, &(!Enum.member?(["[", ",", "]"], &1)) )
-          |> Enum.map(&(m.string_to_id(template, &1)))
-        _ -> throw "invalid sref id part #{inspect id}"
-      end
+    r = Regex.compile(m.sref_section_regex(template))
+    case Regex.split(r, id, :include_captures) do
+      v when is_list(v) and length(v) > 0 ->
+        Enum.filter(v, &(!Enum.member?(["[", ",", "]"], &1)) )
+        |> Enum.map(&(m.string_to_id(template, &1)))
+      _ -> throw "invalid sref id part #{inspect id}"
+    end
   end
   def string_to_id(m, {:compound, template, prep}, id) do
     formatted = m.string_to_id({:compound, template}, id)
@@ -189,7 +328,8 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
     end
   end
 
-
+  def record(_, ref, options), do: nil
+  def record!(_, ref, options), do: nil
 
 
 
@@ -255,6 +395,16 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
       def string_to_id(id), do: @__nzdo__erp_imp.string_to_id(__MODULE__, @__nzdo__identifier_type, id)
       def string_to_id(type, id), do: @__nzdo__erp_imp.string_to_id(__MODULE__, type, id)
 
+
+      def __as_record__(table, entity, options \\ nil), do:  @__nzdo__erp_imp.__as_record__(__MODULE__, table, entity, options)
+      def __as_record__!(table, entity, options \\ nil), do:  @__nzdo__erp_imp.__as_record__!(__MODULE__, table, entity, options)
+      def __as_mnesia_record__(table, entity, options \\ nil), do:  @__nzdo__erp_imp.__as_mnesia_record__(__MODULE__, table, entity, options)
+      def __as_mnesia_record__!(table, entity, options \\ nil), do:  @__nzdo__erp_imp.__as_mnesia_record__!(__MODULE__, table, entity, options)
+      def __as_ecto_record__(table, entity, options \\ nil), do:  @__nzdo__erp_imp.__as_ecto_record__(__MODULE__, table, entity, options)
+      def __as_ecto_record__!(table, entity, options \\ nil), do:  @__nzdo__erp_imp.__as_ecto_record__!(__MODULE__, table, entity, options)
+      def __from_record__(type, record, options \\ nil), do:  @__nzdo__erp_imp.__from_record__(__MODULE__, type, record, options)
+      def __from_record__!(type, record, options \\ nil), do:  @__nzdo__erp_imp.__from_record__!(__MODULE__, type, record, options)
+
       defoverridable [
         id: 1,
         ref: 1,
@@ -272,6 +422,23 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
         id_to_string: 2,
         string_to_id: 1,
         string_to_id: 2,
+
+        __as_record__: 2,
+        __as_record__: 3,
+        __as_record__!: 2,
+        __as_record__!: 3,
+        __as_mnesia_record__: 2,
+        __as_mnesia_record__: 3,
+        __as_mnesia_record__!: 2,
+        __as_mnesia_record__!: 3,
+        __as_ecto_record__: 2,
+        __as_ecto_record__: 3,
+        __as_ecto_record__!: 2,
+        __as_ecto_record__!: 3,
+        __from_record__: 2,
+        __from_record__: 3,
+        __from_record__!: 2,
+        __from_record__!: 3,
       ]
     end
   end
