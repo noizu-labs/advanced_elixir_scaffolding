@@ -49,6 +49,8 @@ defmodule Noizu.DomainObject do
     sref = options[:sref]
     poly_base = options[:poly_base]
     poly_support = options[:poly_support]
+    json_provider = options[:json_provider]
+    json_format = options[:json_format]
     process_config = quote do
                        import Noizu.DomainObject, only: [file_rel_dir: 1]
 
@@ -148,6 +150,35 @@ defmodule Noizu.DomainObject do
                        #----------------------
                        @__nzdo__derive Noizu.ERP
 
+                       @__nzdo__json_provider (cond do
+                               v = unquote(json_provider) -> v
+                               v = Module.has_attribute?(__MODULE__, :json_provider) -> Module.get_attribute(__MODULE__, :json_provider)
+                               !@__nzdo__base_open? && @__nzdo__base.__noizu_info(:json_provider) -> @__nzdo__base.__noizu_info(:json_provider)
+                               @__nzdo__base_open? && Module.has_attribute?(@__nzdo__base, :json_provider) -> Module.get_attribute(@__nzdo__base, :json_provider)
+                               !@__nzdo__poly_base_open? && @__nzdo__poly_base.__noizu_info(:json_provider) -> @__nzdo__poly_base.__noizu_info(:json_provider)
+                               @__nzdo__poly_base_open? && Module.has_attribute?(@__nzdo__poly_base, :json_provider) -> Module.get_attribute(@__nzdo__poly_base, :json_provider)
+                               :else -> Noizu.Scaffolding.V3.Jason.Encoder
+                             end)
+
+
+                       if (@__nzdo__base_open?) do
+                         Module.put_attribute(@__nzdo__base, :__nzdo__json_provider, @__nzdo__json_provider)
+                       end
+
+                       @__nzdo__json_format (cond do
+                                                 v = unquote(json_format) -> v
+                                                 v = Module.has_attribute?(__MODULE__, :json_format) -> Module.get_attribute(__MODULE__, :json_format)
+                                                 !@__nzdo__base_open? && @__nzdo__base.__noizu_info(:json_format) -> @__nzdo__base.__noizu_info(:json_format)
+                                                 @__nzdo__base_open? && Module.has_attribute?(@__nzdo__base, :json_format) -> Module.get_attribute(@__nzdo__base, :json_format)
+                                                 !@__nzdo__poly_base_open? && @__nzdo__poly_base.__noizu_info(:json_format) -> @__nzdo__poly_base.__noizu_info(:json_format)
+                                                 @__nzdo__poly_base_open? && Module.has_attribute?(@__nzdo__poly_base, :json_provider) -> Module.get_attribute(@__nzdo__poly_base, :json_provider)
+                                                 :else -> :default
+                                               end)
+
+                       if (@__nzdo__base_open?) do
+                         Module.put_attribute(@__nzdo__base, :__nzdo__json_format, @__nzdo__json_format)
+                       end
+
                        #----------------------
                        # Load Persistence Settings from base, we need them to control some submodules.
                        #----------------------
@@ -193,6 +224,13 @@ defmodule Noizu.DomainObject do
     generate = quote unquote: false do
                  @derive @__nzdo__derive
                  defstruct @__nzdo__fields
+
+                 if (@__nzdo__json_provider) do
+                   __nzdo__json_provider = @__nzdo__json_provider
+                   defimpl Jason.Encoder  do
+                     defdelegate encode(entity, options \\ nil), to: __nzdo__json_provider
+                   end
+                 end
 
 
                end
@@ -634,6 +672,10 @@ defmodule Noizu.DomainObject do
       def __noizu_info__(:poly?), do: @__nzdo__poly?
       def __noizu_info__(:poly_support), do: @__nzdo__poly_support
       def __noizu_info__(:poly_base), do: @__nzdo__poly_base
+
+      def __noizu_info__(:auto_expand?), do: %{default: true}  # feature pending - track annotation
+      def __noizu_info__(:json_format), do: @__nzdo__json_format
+      def __noizu_info__(:json_provider), do: @__nzdo__json_provider
 
       def __noizu_info__(:identifier_type), do: @__nzdo__entity.__noizu_info__(:identifier_type)
       def __noizu_info__(:fields), do: @__nzdo__entity.__noizu_info__(:fields)

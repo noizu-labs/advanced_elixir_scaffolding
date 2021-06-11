@@ -204,7 +204,11 @@ defmodule Noizu.Scaffolding.Helpers do
       [] ->
         conn
         |> Plug.Conn.put_resp_header("x-request-id", context.token)
-    end |> send_resp(200, "application/json", Poison.encode_to_iodata!(response, options))
+    end |> send_resp(200, "application/json", json_library().encode_to_iodata!(response, options))
+  end
+
+  def json_library() do
+    Application.get_env(:elixir_Scaffolding, :json_library, Application.get_env(:phoenix, :json_library, Poison))
   end
 
   #-------------------------
@@ -231,16 +235,27 @@ defmodule Noizu.Scaffolding.Helpers do
   #-------------------------
   # format_to_atom
   #-------------------------
+  @default_json_formats [
+    :standard,
+    :admin,
+    :verbose,
+    :compact,
+    :mobile,
+    :verbose_mobile
+  ]
+
+  @json_formats Application.get_env(:noizu_scaffolding, :json_formats, @default_json_formats)
+  @formats Map.new(@json_formats,
+             fn(f) ->
+               case f do
+                 {k,v} when is_atom(k) and is_bitstring(v) -> {v,k}
+                 {k,v} when is_atom(v) and is_bitstring(k) -> {v,v}
+                 k when is_atom(k) -> {Atom.to_string(k), k}
+               end
+             end)
+
   def format_to_atom(v, default) do
-    case v do
-      "standard" -> :standard
-      "admin" -> :admin
-      "verbose" -> :verbose
-      "compact" -> :compact
-      "mobile" -> :mobile
-      "verbose_mobile" -> :verbose_mobile
-      _ -> default
-    end
+    @formats[v] || default
   end
 
   #-------------------------
@@ -421,4 +436,60 @@ defmodule Noizu.Scaffolding.Helpers do
         put_in(entity, path, v)
     end
   end
+
+
+  defmodule CustomHelper do
+    defmacro __using__(_ \\ nil) do
+      quote do
+        import Noizu.Scaffolding.Helpers
+
+        defdelegate banner_text(header, msg, len \\ 120, pad \\ 0), to: Noizu.Scaffolding.Helpers
+        defdelegate request_pagination(params, default_page, default_results_per_page), to: Noizu.Scaffolding.Helpers
+        defdelegate page(page, query), to: Noizu.Scaffolding.Helpers
+        defdelegate update_options(entity, options), to: Noizu.Scaffolding.Helpers
+        defdelegate update_expand_options(entity, options), to: Noizu.Scaffolding.Helpers
+        defdelegate expand_ref?(options), to: Noizu.Scaffolding.Helpers
+        defdelegate expand_ref?(path, depth, options \\ nil), to: Noizu.Scaffolding.Helpers
+        defdelegate api_response(conn, response,  context, options), to: Noizu.Scaffolding.Helpers
+        defdelegate json_library(), to: Noizu.Scaffolding.Helpers
+        defdelegate send_resp(conn, default_status, default_content_type, body), to: Noizu.Scaffolding.Helpers
+        defdelegate ensure_resp_content_type(conn, content_type), to: Noizu.Scaffolding.Helpers
+        defdelegate format_to_atom(v, default), to: Noizu.Scaffolding.Helpers
+        defdelegate default_get_context__json_format(conn, params, get_context_provider, options), to: Noizu.Scaffolding.Helpers
+        defdelegate default_get_context__json_formats(conn, params, get_context_provider, options), to: Noizu.Scaffolding.Helpers
+        defdelegate default_get_context__expand_all_refs(conn, params, get_context_provider, options), to: Noizu.Scaffolding.Helpers
+        defdelegate default_get_context__expand_refs(conn, params, get_context_provider, options), to: Noizu.Scaffolding.Helpers
+        defdelegate default_get_context__token_reason_options(conn, params, get_context_provider, opts), to: Noizu.Scaffolding.Helpers
+        defdelegate get_ip(conn), to: Noizu.Scaffolding.Helpers
+        defdelegate force_put(entity, path, value), to: Noizu.Scaffolding.Helpers
+
+        defoverridable [
+          banner_text: 2,
+          banner_text: 3,
+          banner_text: 4,
+          request_pagination: 3,
+          page: 2,
+          update_options: 2,
+          update_expand_options: 2,
+          expand_ref?: 1,
+          expand_ref?: 2,
+          expand_ref?: 3,
+          api_response: 4,
+          json_library: 0,
+          send_resp: 4,
+          ensure_resp_content_type: 2,
+          format_to_atom: 2,
+          default_get_context__json_format: 4,
+          default_get_context__json_formats: 4,
+          default_get_context__expand_all_refs: 4,
+          default_get_context__expand_refs: 4,
+          default_get_context__token_reason_options: 4,
+          get_ip: 1,
+          force_put: 3,
+        ]
+      end
+    end
+  end
+
+
 end
