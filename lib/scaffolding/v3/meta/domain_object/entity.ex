@@ -161,8 +161,22 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
       nil == opts -> :ok
       [] == opts -> :ok
       is_atom(opts) -> Module.put_attribute(mod, :__nzdo__field_types, {field, %{handler: opts}})
-      (is_list(opts) || is_map(opts)) && opts[:type] -> Module.put_attribute(mod, :__nzdo__field_types, {field, %{handler: opts[:type]}})
+      (is_list(opts) || is_map(opts)) && opts[:type] ->
+        Module.put_attribute(mod, :__nzdo__field_types, {field, %{handler: opts[:type]}})
       :else -> :ok
+    end
+
+    options = %{}
+    options = cond do
+                (Module.has_attribute?(mod, :pii)) ->
+                  o = put_in(options, [:pii], Module.get_attribute(mod, :pii))
+                  Module.delete_attribute(mod, :pii)
+                  o
+                :else -> options
+              end
+
+    if options != %{} do
+      Module.put_attribute(mod, :__nzdo__field_attributes, {field, options})
     end
   end
 end

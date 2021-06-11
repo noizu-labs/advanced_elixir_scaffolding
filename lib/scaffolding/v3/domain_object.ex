@@ -77,6 +77,8 @@ defmodule Noizu.DomainObject do
                        Module.register_attribute(__MODULE__, :__nzdo__meta, accumulate: true)
                        Module.register_attribute(__MODULE__, :__nzdo__field_permissions, accumulate: true)
                        Module.register_attribute(__MODULE__, :__nzdo__field_types, accumulate: true)
+                       Module.register_attribute(__MODULE__, :__nzdo__field_attributes, accumulate: true)
+
 
                        #---------------------
                        # Push details to Base, and read in required settings.
@@ -605,7 +607,6 @@ defmodule Noizu.DomainObject do
 
   defmacro before_compile_domain_object__base(_) do
     quote do
-IO.puts "DEBUGGING . . .  #{inspect @__nzdo__entity}"
       defdelegate id(ref), to: @__nzdo__entity
       defdelegate ref(ref), to: @__nzdo__entity
       defdelegate sref(ref), to: @__nzdo__entity
@@ -636,6 +637,7 @@ IO.puts "DEBUGGING . . .  #{inspect @__nzdo__entity}"
 
       def __noizu_info__(:identifier_type), do: @__nzdo__entity.__noizu_info__(:identifier_type)
       def __noizu_info__(:fields), do: @__nzdo__entity.__noizu_info__(:fields)
+      def __noizu_info__(:field_attributes), do: @__nzdo__entity.__noizu_info__(:field_attributes)
       def __noizu_info__(:field_types), do: @__nzdo__entity.__noizu_info__(:field_types)
       def __noizu_info__(:persistence), do: @__nzdo__entity.__noizu_info__(:persistence)
       def __noizu_info__(:tables), do: @__nzdo__entity.__noizu_info__(:tables)
@@ -666,6 +668,9 @@ IO.puts "DEBUGGING . . .  #{inspect @__nzdo__entity}"
       @__nzdo_associated_types (Enum.map(@__nzdo_persistence__by_table || %{}, fn({k,v}) -> {k, v.type} end) ++ Enum.map(@__nzdo__poly_support || %{}, fn(k,v) -> {k, :poly} end) ) |> Map.new()
       def __noizu_info__(:associated_types), do: @__nzdo_associated_types
 
+
+      @__nzdo__field_attributes_map Map.new(@__nzdo__field_attributes)
+      def __noizu_info__(:field_attributes), do: @__nzdo__field_attributes_map
 
       @__nzdo__schema_field_types Enum.map(
                                     @__nzdo_persistence && @__nzdo_persistence.layers || [],
