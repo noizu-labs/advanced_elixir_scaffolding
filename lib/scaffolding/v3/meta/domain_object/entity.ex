@@ -11,6 +11,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
   #--------------------------
   defmacro identifier(type \\ :integer, opts \\ []) do
     quote do
+      EntityMeta.__set_field_attributes__(__MODULE__, :identifier, unquote(opts))
       EntityMeta.__identifier__(__MODULE__, unquote(type), unquote(opts))
     end
   end
@@ -26,6 +27,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
   #--------------------------
   defmacro mysql_identifier(type \\ :integer, opts \\ []) do
     quote do
+      EntityMeta.__set_field_attributes__(__MODULE__, :mysql_identifier, unquote(opts))
       EntityMeta.__mysql_identifier__(__MODULE__, unquote(type), unquote(opts))
     end
   end
@@ -142,7 +144,12 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
   #
   #--------------------------
   def __set_field_attributes__(mod, field, opts) do
-      if (opts[:type]), do: Module.put_attribute(mod, :__nzdo__field_types, {field, %{handler: opts[:type]}})
+    cond do
+      nil == opts -> :ok
+      [] == opts -> :ok
+      is_atom(opts) -> Module.put_attribute(mod, :__nzdo__field_types, {field, %{handler: opts}})
+      (is_list(opts) || is_map(opts)) && opts[:type] -> Module.put_attribute(mod, :__nzdo__field_types, {field, %{handler: opts[:type]}})
+      :else -> :ok
+    end
   end
-
 end

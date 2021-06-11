@@ -25,120 +25,6 @@ defmodule Noizu.DomainObject do
     end
   end
 
-  defmacro before_compile_domain_object__base(_) do
-    quote do
-
-      defdelegate id(ref), to: @__nzdo__entity
-      defdelegate ref(ref), to: @__nzdo__entity
-      defdelegate sref(ref), to: @__nzdo__entity
-      defdelegate entity(ref, options \\ nil), to: @__nzdo__entity
-      defdelegate entity!(ref, options \\ nil), to: @__nzdo__entity
-      defdelegate record(ref, options \\ nil), to: @__nzdo__entity
-      defdelegate record!(ref, options \\ nil), to: @__nzdo__entity
-      defdelegate __noizu_record__(type, ref, options \\ nil), to: @__nzdo__entity
-
-
-      def vsn(), do: @vsn
-      def __entity__(), do: @__nzdo__entity
-      def __repo__(), do: @__nzdo__repo
-      def __sref__(), do: @__nzdo__sref
-      def __erp__(), do: @__nzdo__entity
-
-      def __noizu_info__(:type), do: :base
-      def __noizu_info__(:base), do: __MODULE__
-      def __noizu_info__(:entity), do: @__nzdo__entity
-      def __noizu_info__(:repo), do: @__nzdo__repo
-      def __noizu_info__(:sref), do: @__nzdo__sref
-      def __noizu_info__(:nmid_generator), do: @__nzdo_nmid_generatoer
-      def __noizu_info__(:nmid_index), do: @__nzdo_nmid_index
-      def __noizu_info__(:nmid_sequencer), do: @__nzdo_nmid_sequencer
-      def __noizu_info__(:poly?), do: @__nzdo__poly_type?
-      def __noizu_info__(:poly_support), do: @__nzdo__poly_support
-      def __noizu_info__(:poly_base), do: @__nzdo__poly_base
-
-      def __noizu_info__(:identifier_type), do: @__nzdo__entity.__noizu_info__(:identifier_type)
-      def __noizu_info__(:fields), do: @__nzdo__entity.__noizu_info__(:fields)
-      def __noizu_info__(:field_types), do: @__nzdo__entity.__noizu_info__(:field_types)
-      def __noizu_info__(:persistence), do: @__nzdo__entity.__noizu_info__(:persistence)
-      def __noizu_info__(:tables), do: @__nzdo__entity.__noizu_info__(:tables)
-      def __noizu_info__(:associated_types), do: @__nzdo__entity.__noizu_info__(:associated_types)
-      def __noizu_info__(:schema_field_types), do: @__nzdo__entity.__noizu_info__(:schema_field_types)
-
-
-
-
-      @__nzdo__meta__map Map.new(@__nzdo__meta || [])
-      def __noizu_info__(:meta), do: @__nzdo__meta__map
-    end
-  end
-
-  defmacro before_compile_domain_object__entity(_) do
-    quote do
-      defdelegate vsn(), to: @__nzdo__base
-      def __entity__(), do: __MODULE__
-      defdelegate __repo__(), to: @__nzdo__base
-      defdelegate __sref__(), to: @__nzdo__base
-      defdelegate __erp__(), to: @__nzdo__base
-
-      def __noizu_info__(:identifier_type), do: @__nzdo__identifier_type
-      def __noizu_info__(:fields), do: @__nzdo__field_list
-      def __noizu_info__(:field_types), do: @__nzdo__field_types_map
-      def __noizu_info__(:persistence), do: @__nzdo_persistence
-      def __noizu_info__(:tables), do: @__nzdo_persistence__by_table
-      @__nzdo_associated_types (Enum.map(@__nzdo_persistence__by_table || %{}, fn({k,v}) -> {k, v.type} end) ++ Enum.map(@__nzdo__poly_support || %{}, fn(k,v) -> {k, :poly} end) ) |> Map.new()
-      def __noizu_info__(:associated_types), do: @__nzdo_associated_types
-
-
-      @__nzdo__schema_field_types Enum.map(
-                                    @__nzdo_persistence && @__nzdo_persistence.layers || [],
-                                    fn(layer) ->
-                                      key = {layer.schema, layer.table}
-                                      {key, Noizu.DomainObject.__unroll_field_types__(key, @__nzdo__field_types_map)}
-                                    end
-                                  )
-      def __noizu_info__(:schema_field_types), do: @__nzdo__schema_field_types
-
-      defdelegate __noizu_info__(report), to: @__nzdo__base
-    end
-  end
-
-  defmacro before_compile_domain_object__repo(_) do
-    quote do
-
-      defdelegate vsn(), to: @__nzdo__base
-      defdelegate __entity__(), to: @__nzdo__base
-      def __repo__(), do: __MODULE__
-      defdelegate __sref__(), to: @__nzdo__base
-      defdelegate __erp__(), to: @__nzdo__base
-
-
-
-      defdelegate id(ref), to: @__nzdo__base
-      defdelegate ref(ref), to: @__nzdo__base
-      defdelegate sref(ref), to: @__nzdo__base
-      defdelegate entity(ref, options \\ nil), to: @__nzdo__base
-      defdelegate entity!(ref, options \\ nil), to: @__nzdo__base
-      defdelegate record(ref, options \\ nil), to: @__nzdo__base
-      defdelegate record!(ref, options \\ nil), to: @__nzdo__base
-      defdelegate __noizu_record__(type, ref, options \\ nil), to: @__nzdo__base
-      defdelegate __noizu_info__(report), to: @__nzdo__base
-    end
-  end
-
-
-  defmacro before_compile_domain_object__struct(_) do
-    quote do
-
-      def vsn(), do: @vsn
-
-      def __noizu_info__(:fields), do: @__nzdo__entity.__noizu_info__(:fields)
-      def __noizu_info__(:field_types), do: @__nzdo__entity.__noizu_info__(:field_types)
-      @__nzdo__meta__map Map.new(@__nzdo__meta || [])
-      def __noizu_info__(:meta), do: @__nzdo__meta__map
-    end
-  end
-
-
   #--------------------------------------------
   #
   #--------------------------------------------
@@ -695,6 +581,122 @@ defmodule Noizu.DomainObject do
     }
   end
 
+
+  defmacro before_compile_domain_object__base(_) do
+    quote do
+
+      defdelegate id(ref), to: @__nzdo__entity
+      defdelegate ref(ref), to: @__nzdo__entity
+      defdelegate sref(ref), to: @__nzdo__entity
+      defdelegate entity(ref, options \\ nil), to: @__nzdo__entity
+      defdelegate entity!(ref, options \\ nil), to: @__nzdo__entity
+      defdelegate record(ref, options \\ nil), to: @__nzdo__entity
+      defdelegate record!(ref, options \\ nil), to: @__nzdo__entity
+      defdelegate __noizu_record__(type, ref, options \\ nil), to: @__nzdo__entity
+
+
+      def vsn(), do: @vsn
+      def __entity__(), do: @__nzdo__entity
+      def __repo__(), do: @__nzdo__repo
+      def __sref__(), do: @__nzdo__sref
+      def __erp__(), do: @__nzdo__entity
+
+      def __noizu_info__(:type), do: :base
+      def __noizu_info__(:base), do: __MODULE__
+      def __noizu_info__(:entity), do: @__nzdo__entity
+      def __noizu_info__(:repo), do: @__nzdo__repo
+      def __noizu_info__(:sref), do: @__nzdo__sref
+      def __noizu_info__(:nmid_generator), do: @__nzdo_nmid_generatoer
+      def __noizu_info__(:nmid_index), do: @__nzdo_nmid_index
+      def __noizu_info__(:nmid_sequencer), do: @__nzdo_nmid_sequencer
+      def __noizu_info__(:poly?), do: @__nzdo__poly_type?
+      def __noizu_info__(:poly_support), do: @__nzdo__poly_support
+      def __noizu_info__(:poly_base), do: @__nzdo__poly_base
+
+      def __noizu_info__(:identifier_type), do: @__nzdo__entity.__noizu_info__(:identifier_type)
+      def __noizu_info__(:fields), do: @__nzdo__entity.__noizu_info__(:fields)
+      def __noizu_info__(:field_types), do: @__nzdo__entity.__noizu_info__(:field_types)
+      def __noizu_info__(:persistence), do: @__nzdo__entity.__noizu_info__(:persistence)
+      def __noizu_info__(:tables), do: @__nzdo__entity.__noizu_info__(:tables)
+      def __noizu_info__(:associated_types), do: @__nzdo__entity.__noizu_info__(:associated_types)
+      def __noizu_info__(:schema_field_types), do: @__nzdo__entity.__noizu_info__(:schema_field_types)
+
+
+
+
+      @__nzdo__meta__map Map.new(@__nzdo__meta || [])
+      def __noizu_info__(:meta), do: @__nzdo__meta__map
+    end
+  end
+
+  defmacro before_compile_domain_object__entity(_) do
+    quote do
+      defdelegate vsn(), to: @__nzdo__base
+      def __entity__(), do: __MODULE__
+      defdelegate __repo__(), to: @__nzdo__base
+      defdelegate __sref__(), to: @__nzdo__base
+      defdelegate __erp__(), to: @__nzdo__base
+
+      def __noizu_info__(:identifier_type), do: @__nzdo__identifier_type
+      def __noizu_info__(:fields), do: @__nzdo__field_list
+      def __noizu_info__(:field_types), do: @__nzdo__field_types_map
+      def __noizu_info__(:persistence), do: @__nzdo_persistence
+      def __noizu_info__(:tables), do: @__nzdo_persistence__by_table
+      @__nzdo_associated_types (Enum.map(@__nzdo_persistence__by_table || %{}, fn({k,v}) -> {k, v.type} end) ++ Enum.map(@__nzdo__poly_support || %{}, fn(k,v) -> {k, :poly} end) ) |> Map.new()
+      def __noizu_info__(:associated_types), do: @__nzdo_associated_types
+
+
+      @__nzdo__schema_field_types Enum.map(
+                                    @__nzdo_persistence && @__nzdo_persistence.layers || [],
+                                    fn(layer) ->
+                                      key = {layer.schema, layer.table}
+                                      {key, Noizu.DomainObject.__unroll_field_types__(key, @__nzdo__field_types_map)}
+                                    end
+                                  )
+      def __noizu_info__(:schema_field_types), do: @__nzdo__schema_field_types
+
+      defdelegate __noizu_info__(report), to: @__nzdo__base
+    end
+  end
+
+  defmacro before_compile_domain_object__repo(_) do
+    quote do
+
+      defdelegate vsn(), to: @__nzdo__base
+      defdelegate __entity__(), to: @__nzdo__base
+      def __repo__(), do: __MODULE__
+      defdelegate __sref__(), to: @__nzdo__base
+      defdelegate __erp__(), to: @__nzdo__base
+
+
+
+      defdelegate id(ref), to: @__nzdo__base
+      defdelegate ref(ref), to: @__nzdo__base
+      defdelegate sref(ref), to: @__nzdo__base
+      defdelegate entity(ref, options \\ nil), to: @__nzdo__base
+      defdelegate entity!(ref, options \\ nil), to: @__nzdo__base
+      defdelegate record(ref, options \\ nil), to: @__nzdo__base
+      defdelegate record!(ref, options \\ nil), to: @__nzdo__base
+      defdelegate __noizu_record__(type, ref, options \\ nil), to: @__nzdo__base
+      defdelegate __noizu_info__(report), to: @__nzdo__base
+    end
+  end
+
+
+  defmacro before_compile_domain_object__struct(_) do
+    quote do
+
+      def vsn(), do: @vsn
+
+      def __noizu_info__(:fields), do: @__nzdo__entity.__noizu_info__(:fields)
+      def __noizu_info__(:field_types), do: @__nzdo__entity.__noizu_info__(:field_types)
+      @__nzdo__meta__map Map.new(@__nzdo__meta || [])
+      def __noizu_info__(:meta), do: @__nzdo__meta__map
+    end
+  end
+
+
+
   def default_mnesia_database(module) do
     path = Module.split(module)
     Module.concat(["#{List.first(path)}" <> "Schema", "Database"])
@@ -714,8 +716,7 @@ defmodule Noizu.DomainObject do
       field_types || [],
       fn({field, type}) ->
         cond do
-          function_exported?(type, :__unroll__, 1) -> type.__unroll__(field)
-          function_exported?(type, :__unroll__, 2) -> type.__unroll__(key, field)
+          function_exported?(type.handler, :__unroll__, 1) -> type.__unroll__([field: field, type: type, key: key])
           :else -> {field, [source: field]}
         end
       end)
