@@ -812,6 +812,7 @@ defmodule Noizu.DomainObject do
       defdelegate __sref__(), to: @__nzdo__base
       defdelegate __erp__(), to: @__nzdo__base
 
+      def __noizu_info__(:type), do: :entity
       def __noizu_info__(:identifier_type), do: @__nzdo__identifier_type
       def __noizu_info__(:fields), do: @__nzdo__field_list
       def __noizu_info__(:field_types), do: @__nzdo__field_types_map
