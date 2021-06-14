@@ -51,7 +51,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
 
        cond do
          @__nzdo_persistence.options[:universal_identifier] ->
-           def universal_identifier(ref), do: __MODULE__.identifier(ref)
+           def universal_identifier(ref), do: __MODULE__.id(ref)
          @__nzdo_persistence.options[:universal_lookup] ->
            def universal_identifier(ref), do: @__nzdo__ecto_imp.universal_identifier_lookup(__MODULE__, ref)
          :else ->
@@ -59,10 +59,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
        end
 
        if @__nzdo_persistence.options[:generate_reference_type] do
-         m = __MODULE__
-         defmodule UniversalRef do
-           use Noizu.UniversalRefBehaviour, entity: m
-         end
+         Module.put_attribute(@__nzdo__base, :__nzdo_universal_ref, true)
        end
 
      else
@@ -73,25 +70,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
      end
 
      if options = Module.get_attribute(@__nzdo__base, :enum_list) do
-       domain_object = @__nzdo__base
-       defmodule EnumField do
-         {values,default_value,ecto_type} = case options do
-                    {v,options} ->
-                      {v,
-                        options[:default_value] || Module.get_attribute(domain_object, :default_value) || :none,
-                        options[:ecto_type] || Module.get_attribute(domain_object, :ecto_type) || :integer
-                      }
-                      v when is_list(v) ->
-                        {v,
-                          Module.get_attribute(domain_object, :default_value) || :none,
-                          Module.get_attribute(domain_object, :ecto_type) || :integer
-                        }
-                  end
-         use Noizu.EnumFieldBehaviour,
-             values: values,
-             default: default_value,
-             ecto_type: ecto_type
-       end
+       Module.put_attribute(@__nzdo__base, :__nzdo_enum_field, options)
      end
 
      defoverridable [

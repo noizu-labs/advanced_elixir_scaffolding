@@ -801,6 +801,43 @@ defmodule Noizu.DomainObject do
 
       @__nzdo__meta__map Map.new(@__nzdo__meta || [])
       def __noizu_info__(:meta), do: @__nzdo__meta__map
+
+
+
+      #--------------------
+      # UniversalRef
+      #--------------------
+      if Module.get_attribute(__MODULE__, :__nzdo_universal_ref) do
+        m = @__nzdo__entity
+        defmodule UniversalRef do
+          use Noizu.UniversalRefBehaviour, entity: m
+        end
+      end
+
+      #--------------------
+      # EnumType
+      #--------------------
+      if options = Module.get_attribute(__MODULE__, :__nzdo_enum_field) do
+        domain_object = __MODULE__
+        defmodule EnumField do
+          {values,default_value,ecto_type} = case options do
+                                               {v,options} ->
+                                                 {v,
+                                                   options[:default_value] || Module.get_attribute(domain_object, :default_value) || :none,
+                                                   options[:ecto_type] || Module.get_attribute(domain_object, :ecto_type) || :integer
+                                                 }
+                                               v when is_list(v) ->
+                                                 {v,
+                                                   Module.get_attribute(domain_object, :default_value) || :none,
+                                                   Module.get_attribute(domain_object, :ecto_type) || :integer
+                                                 }
+                                             end
+          use Noizu.EnumFieldBehaviour,
+              values: values,
+              default: default_value,
+              ecto_type: ecto_type
+        end
+      end
     end
   end
 
@@ -837,6 +874,13 @@ defmodule Noizu.DomainObject do
       def __noizu_info__(:schema_field_types), do: @__nzdo__schema_field_types
 
       defdelegate __noizu_info__(report), to: @__nzdo__base
+
+
+
+
+
+
+
     end
   end
 
