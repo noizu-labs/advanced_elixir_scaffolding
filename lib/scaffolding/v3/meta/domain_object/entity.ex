@@ -294,6 +294,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
         fn(s, acc) ->
           case s do
             :expand -> __set_option__(acc, selectors, fields, {:expand, true})
+            :sref -> __set_option__(acc, selectors, fields, {:sref, true})
             :ignore -> __set_option__(acc, selectors, fields, {:include, false})
             :include -> __set_option__(acc, selectors, fields, {:include, true})
             {:format, _} -> __set_option__(acc, selectors, fields, s)

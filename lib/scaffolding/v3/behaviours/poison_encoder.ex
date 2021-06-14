@@ -5,6 +5,7 @@ defmodule Noizu.Scaffolding.V3.Poison.Encoder do
     {json_format, options} = Noizu.Scaffolding.Helpers.update_options(noizu_entity, options)
     context = options[:context]
 
+
     {entity, options}  = cond do
                            options[:__nzdo__restricted?] && options[:__nzdo__expanded?] -> {noizu_entity, options}
                            !options[:__nzdo__restricted?] ->
@@ -21,7 +22,7 @@ defmodule Noizu.Scaffolding.V3.Poison.Encoder do
              |> List.flatten()
              |> Enum.filter(fn({_,v}) -> v && true end)
              |> Map.new()
-             |> put_in([:kind], entity.__struct__)
+             |> put_in([:kind], entity.__struct__.__sref__)
              |> put_in([:json_format], json_format)
              |> Poison.Encoder.encode(options)
   end
@@ -40,33 +41,60 @@ defmodule Noizu.Scaffolding.V3.Poison.Encoder do
               end
 
     if include do
-      # - Embed
-      # - Format
-      value = field_settings[:expand] && Noizu.V3.EntityProtocol.expand!(value, context, options) || value
+      {expanded, v} = cond do
+            field_settings[:sref] -> {false, Noizu.ERP.sref(value)}
+            options[:__nzdo__expanded?] -> {true, value}
+            field_settings[:expand] -> {true, Noizu.V3.EntityProtocol.expand!(value, context, options)}
+            :else -> {false, value}
+          end
 
       cond do
         embed = field_settings[:embed] ->
-          if (value) do
+          if (v) do
+            v = cond do
+                  expanded -> v
+                  :else -> Noizu.V3.EntityProtocol.expand!(value, context, options) # switch back to value not v incase sref was used.
+                end
+
               Enum.map(embed, fn(e) ->
                 case e do
-                  {f, true} -> {f, get_in(value, [Access.key(f)])}
+                  {f, true} -> {f, get_in(v, [Access.key(f)])}
                   {f, c} ->
                     as = c[:as] || f
-                    v = get_in(value, [Access.key(f)])
-                    v = case c[:format] do
-                          :iso8601 -> v && DateTime.to_iso8601(v)
-                          _ -> v
+                    v2 = get_in(v, [Access.key(f)])
+                    v2 = cond do
+                          c[:sref] -> Noizu.ERP.sref(v2) # @todo allow explicit override by caller options
+                          c[:expand] -> Noizu.V3.EntityProtocol.expand!(v2, context, options)
+                          c[:format] ->
+                            case c[:format] do
+                              :iso8601 ->
+                                case v2 do
+                                  %DateTime{} -> DateTime.to_iso8601(v2)
+                                  _ -> v2
+                                end
+                              _ -> v2
+                            end
+                          :else -> v2
                         end
-                    {as, v}
+                    {as, v2}
                 end
               end)
           end
-        format = field_settings[:format] ->
-            case format do
-              :iso8601 -> value && DateTime.to_iso8601(value)
-              _ -> {field, value}
-            end
-        :else -> {field, value}
+        :else ->
+          as = field_settings[:as] || field
+          v = cond do
+                field_settings[:format] ->
+                  case field_settings[:format] do
+                    :iso8601 ->
+                      case v do
+                        %DateTime{} -> DateTime.to_iso8601(v)
+                        _ -> v
+                      end
+                    _ -> v
+                  end
+                :else -> v
+              end
+          {as, v}
       end
     end
   end
