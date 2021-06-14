@@ -153,6 +153,23 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
     end)
   end
 
+
+  #--------------------------
+  #
+  #--------------------------
+  def __set_field_attributes__(mod, field, opts) do
+    cond do
+      json_attributes = Module.get_attribute(mod, :json)
+      json_embed = Module.get_attribute(mod, :json)
+      json_ignore = Module.get_attribute(mod, :json)
+      json_restrict = Module.get_attribute(mod, :json)
+
+
+
+
+    end
+  end
+
   #--------------------------
   #
   #--------------------------
@@ -166,13 +183,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
       :else -> :ok
     end
 
-    # __nzdo__raw__json_format_settings
-    #Module.register_attribute(__MODULE__, :json, accumulate: true)
-    #Module.register_attribute(__MODULE__, :json_embed, accumulate: true)
-    #Module.register_attribute(__MODULE__, :json_ignore, accumulate: true)
-    #Module.register_attribute(__MODULE__, :json_restrict, accumulate: true)
-
-
+    EntityMeta.__set_json_settings__(mod, field, opts)
 
     options = %{}
     options = cond do
@@ -188,4 +199,85 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
     end
   end
 
-end
+
+  def __set_json_settings__(mod, field, opts) do
+    settings = @__nzdo__raw__json_format_settings
+               |>     EntityMeta.__extract_json_settings__(:json, mod, field, @__nzdo__json_config, opts)
+               |>     EntityMeta.__extract_json_settings__(:json_embed, mod, field, @__nzdo__json_config, opts)
+               |>     EntityMeta.__extract_json_settings__(:json_ignore, mod, field, @__nzdo__json_config, opts)
+               |>     EntityMeta.__extract_json_settings__(:json_restrict, mod, field, @__nzdo__json_config, opts)
+    Module.put_attribute(mod, :__nzdo__raw__json_format_settings, settings)
+  end
+
+
+  # Selector Expansion
+  # :* -> set of all supported formats from config map -> [list]
+  # :alias (is supported or a predefined json_formatting group -> [list]
+  # [aliases] -> set of format groups or formants flatten to bigger list
+  # rules override in sequence however the different tags are processe3d in a different order
+  # json < json_embed < json_ignore < json_restrict
+
+  # include flag if not specified defaults to global settings (White list or black list, or white_list with set, or black list with set)
+
+  # output_data structure
+  # %{
+  #    mobile: %{
+  #                expand?: true | false,
+  #                embed: nil | [rules]
+  #                restrict: [set in of restrictions]
+  #                format: {format, Keyword.T}
+  #                include: true | false, # if false don't include output
+
+
+  def __expand_json_selector__(selector, config, opts) do
+    []
+  end
+
+  def __expand_json_field_list__(field_set, config, opts) do
+    []
+  endnges
+
+t ps
+  def __extract_json_settings__(acc, section = :json, mod, field, config, opts) dockouta
+    entries = Module.get_attribute(mod, section)
+    Module.delete_attribute(mod, section)
+    # {selector, expand}
+    # {selector, format: _}
+    # {[selectors], ..}
+    # {selector, as: "RenameTo"}
+    acc
+  end
+
+  def __extract_json_settings__(acc, section = json_embed, mod, field, config, opts) do
+    entries = Module.get_attribute(mod, section)
+    Module.delete_attribute(mod, section)
+     # {selector, [embed_list|  :field, {field, as: _}]}
+
+    acc
+  end
+
+  def __extract_json_settings__(acc, section = :json_ignore, mod, field, config, opts) do
+    entries = Module.get_attribute(mod, section)
+    Module.delete_attribute(mod, section)
+      # {selector}
+      # {selectors}
+      # {selector(s), field_list}
+    acc
+  end
+
+  def __extract_json_settings__(acc, section = :json_restrict, mod, field, config, opts) do
+    entries = Module.get_attribute(mod, section)
+    Module.delete_attribute(mod, section)
+
+      # Add flags to check during Restrict View implementation.
+      # @json_restrict :owner
+      # @json_restrict :admin
+      # @json_restrict :system
+      # @json_restrict :user_defined, Strategy
+      # @json_restrict {{setting}, [fields]}
+    acc
+  end
+
+
+
+  end

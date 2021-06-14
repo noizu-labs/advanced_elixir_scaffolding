@@ -11,6 +11,7 @@ defmodule Noizu.DomainObject do
       Module.register_attribute(__MODULE__, :persistence_layer, accumulate: true)
       Module.register_attribute(__MODULE__, :__nzdo__meta, accumulate: true)
       Module.register_attribute(__MODULE__, :json_format_group, accumulate: true)
+      Module.register_attribute(__MODULE__, :json_field_group, accumulate: true)
 
       # Insure only referenced once.
       if line = Module.get_attribute(__MODULE__, :__nzdo__base_definied) do
@@ -48,6 +49,7 @@ defmodule Noizu.DomainObject do
     poly_support = options[:poly_support]
     json_provider = options[:json_provider]
     json_format = options[:json_format]
+    json_white_list = options[:json_White_list]
     process_config = quote do
                        import Noizu.DomainObject, only: [file_rel_dir: 1]
 
@@ -84,7 +86,8 @@ defmodule Noizu.DomainObject do
                        Module.register_attribute(__MODULE__, :json_embed, accumulate: true)
                        Module.register_attribute(__MODULE__, :json_ignore, accumulate: true)
                        Module.register_attribute(__MODULE__, :json_restrict, accumulate: true)
-                       Module.register_attribute(__MODULE__, :__nzdo__raw__json_format_settings, accumulate: true)
+                       Module.register_attribute(__MODULE__, :__nzdo__raw__json_format_settings, accumulate: false)
+                       Module.put_attribute(__MODULE_, :__nzdo__raw__json_format_settings, %{})
 
                        #---------------------
                        # Push details to Base, and read in required settings.
@@ -229,7 +232,7 @@ defmodule Noizu.DomainObject do
 
                        @__nzdo__json_format_groups (
                                                      cond do
-                                                       !@__nzdo__base_open? && @__nzdo__base.__noizu_info(:sref) -> @__nzdo__base.__noizu_info(:json_format_groups)
+                                                       !@__nzdo__base_open? && @__nzdo__base.__noizu_info(:json_format_group) -> @__nzdo__base.__noizu_info(:json_format_groups)
                                                        @__nzdo__base_open? && Module.get_attribute(@__nzdo__base, :json_format_group) -> Module.get_attribute(@__nzdo__base, :json_format_group)
                                                        !@__nzdo__poly_base_open? && @__nzdo__poly_base.__noizu_info(:json_format_group) -> @__nzdo__poly_base.__noizu_info(:json_format_group)
                                                        @__nzdo__poly_base_open? && Module.get_attribute(@__nzdo__poly_base, :json_format_group) -> Module.get_attribute(@__nzdo__poly_base, :json_format_group)
@@ -247,11 +250,62 @@ defmodule Noizu.DomainObject do
                                                      )
 
                        if (@__nzdo__base_open?) do
-                         Module.put_attribute(@__nzdo__base, :__nzdo__json_format, @__nzdo__json_format_groups)
+                         Module.put_attribute(@__nzdo__base, :__nzdo__json_format_groups, @__nzdo__json_format_groups)
+                       end
+
+                       @__nzdo__json_field_groups (
+                                                     cond do
+                                                       !@__nzdo__base_open? && @__nzdo__base.__noizu_info(:json_field_group) -> @__nzdo__base.__noizu_info(:json_field_group)
+                                                       @__nzdo__base_open? && Module.get_attribute(@__nzdo__base, :json_field_group) -> Module.get_attribute(@__nzdo__base, :json_field_group)
+                                                       !@__nzdo__poly_base_open? && @__nzdo__poly_base.__noizu_info(:json_field_group) -> @__nzdo__poly_base.__noizu_info(:json_field_group)
+                                                       @__nzdo__poly_base_open? && Module.get_attribute(@__nzdo__poly_base, :json_field_group) -> Module.get_attribute(@__nzdo__poly_base, :json_field_group)
+                                                       :else -> []
+                                                     end |> Enum.map(
+                                                              fn(group) ->
+                                                                case group do
+                                                                  {alias, member} when is_atom(member) -> {alias, [members: [member]]}
+                                                                  {alias, members} when is_list(members) -> {alias, [members: members]}
+                                                                  {alias, member, defaults} when is_atom(member) -> {alias, [members: [member], defaults: defaults]}
+                                                                  {alias, members, defaults} when is_list(members) -> {alias, [members: members, defaults: defaults]}
+                                                                  _ -> raise "Invalid @json_field_group entry #{inspect group}"
+                                                                end
+                                                              end) |> Map.new()
+                                                     )
+
+                       if (@__nzdo__base_open?) do
+                         Module.put_attribute(@__nzdo__base, :__nzdo__json_field_groups, @__nzdo__json_field_group)
                        end
 
 
 
+
+
+
+
+
+
+                       @__nzdo__json_white_list (cond do
+                                                   unquote(json_white_list) == false -> false
+                                                   v = unquote(json_white_list) -> v
+
+                                                   v = Module.has_attribute?(__MODULE__, :json_white_list) -> Module.get_attribute(__MODULE__, :json_white_list)
+                                                   !@__nzdo__base_open? && @__nzdo__base.__noizu_info(:json_white_list) -> @__nzdo__base.__noizu_info(:json_white_list)
+                                                   @__nzdo__base_open? && Module.has_attribute?(@__nzdo__base, :json_white_list) -> Module.get_attribute(@__nzdo__base, :json_white_list)
+                                                   !@__nzdo__poly_base_open? && @__nzdo__poly_base.__noizu_info(:json_white_list) -> @__nzdo__poly_base.__noizu_info(:json_white_list)
+                                                   @__nzdo__poly_base_open? && Module.has_attribute?(@__nzdo__poly_base, :json_white_list) -> Module.get_attribute(@__nzdo__poly_base, :json_white_list)
+                                                   :else -> :false
+                                                 end)
+
+                       if (@__nzdo__base_open?) do
+                         Module.put_attribute(@__nzdo__base, :__nzdo__json_white_list, @__nzdo__json_white_list)
+                       end
+
+
+                       @__nzdo__json_config %{
+                         white_list: @__nzdo__json_white_list,
+                         groups: @__nzdo__json_format_group,
+                         supported: @__nzdo__json_supported_formats
+                       }
 
                        #----------------------
                        # User block section (define, fields, constraints, json_mapping rules, etc.)
