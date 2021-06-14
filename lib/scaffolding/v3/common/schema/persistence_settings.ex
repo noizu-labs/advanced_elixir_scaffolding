@@ -2,6 +2,7 @@ defmodule Noizu.Scaffolding.V3.Schema.PersistenceSettings do
   @vsn 1.0
   @type t :: %__MODULE__{
                layers: [Noizu.Scaffolding.V3.Schema.PersistenceLayer.t],
+               schemas: Map.t,
                ecto_entity: true | nil,
                mnesia_backend: nil | Map.t,
                options: nil | Map.t | Keyword.t,
@@ -10,6 +11,7 @@ defmodule Noizu.Scaffolding.V3.Schema.PersistenceSettings do
 
   defstruct [
     layers: [],
+    schemas: %{},
     ecto_entity: nil,
     mnesia_backend: nil,
     options: nil,

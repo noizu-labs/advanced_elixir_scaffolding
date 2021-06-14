@@ -9,7 +9,7 @@ defmodule Noizu.DomainObject do
     quote do
       import Noizu.DomainObject, only: [file_rel_dir: 1]
       Module.register_attribute(__MODULE__, :persistence_layer, accumulate: true)
-      Module.register_attribute(__MODULE__, :__nzdo__meta, accumulate: true)
+      Module.register_attribute(__MODULE__, :__nzdo__meta, accumulate: false)
       Module.register_attribute(__MODULE__, :json_white_list, accumulate: false)
       Module.register_attribute(__MODULE__, :json_format_group, accumulate: true)
       Module.register_attribute(__MODULE__, :json_field_group, accumulate: true)
@@ -74,9 +74,10 @@ defmodule Noizu.DomainObject do
                        #---------------------
                        # Registerss
                        #---------------------
+                       Module.register_attribute(__MODULE__, :meta, accumulate: true)
                        Module.register_attribute(__MODULE__, :__nzdo__derive, accumulate: true)
                        Module.register_attribute(__MODULE__, :__nzdo__fields, accumulate: true)
-                       Module.register_attribute(__MODULE__, :__nzdo__meta, accumulate: true)
+                       Module.register_attribute(__MODULE__, :__nzdo__meta, accumulate: false)
                        Module.register_attribute(__MODULE__, :__nzdo__field_permissions, accumulate: true)
                        Module.register_attribute(__MODULE__, :__nzdo__field_types, accumulate: true)
                        Module.register_attribute(__MODULE__, :__nzdo__field_attributes, accumulate: true)
@@ -314,6 +315,11 @@ defmodule Noizu.DomainObject do
                          :ok
                        end
 
+                       # Set Meta
+                       base_meta = Module.has_attribute?(@__nzdo__base, :meta) && Module.get_attribute(@__nzdo__base, :meta) || []
+                       meta =  (base_meta) ++ (Module.has_attribute?(__MODULE__, :meta) && Module.get_attribute(__MODULE__, :meta) || [])
+                       Module.put_attribute(@__nzdo__base, :__nzdo__meta, meta)
+
                        #----------------------
                        # fields meta data
                        #----------------------
@@ -504,6 +510,11 @@ defmodule Noizu.DomainObject do
                        after
                          :ok
                        end
+
+
+
+
+
                      end
 
     quote do
@@ -642,8 +653,11 @@ defmodule Noizu.DomainObject do
       generate_reference_type: generate_reference_type,
     }
 
+    schemas = Enum.map(layers || [], fn(v) -> {v.schema, v} end)
+
     %Noizu.Scaffolding.V3.Schema.PersistenceSettings{
       layers: layers,
+      schemas: schemas,
       mnesia_backend: mnesia_backend,
       ecto_entity: ecto_entity,
       options: persistence_options
