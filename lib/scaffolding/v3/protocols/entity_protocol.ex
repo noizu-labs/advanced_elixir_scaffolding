@@ -5,24 +5,24 @@ end
 
 defimpl Noizu.V3.EntityProtocol, for: Any do
   defmacro __deriving__(module, struct, options) do
-    deriving(module, struct, __CALLER__, options)
+    deriving(module, struct, options)
   end
 
-  def deriving(module, _struct, caller, options) do
+  def deriving(module, _struct, options) do
     only = options[:only]
     except = options[:except]
     provider = options[:provider] || Noizu.V3.EntityProtocol.Derive.NoizuStruct
     quote do
       defimpl Noizu.V3.EntityProtocol, for: unquote(module) do
         def expand!(entity, context, options) do
-          deriving = [only: unquote(only), except: unquote(except), caller: unquote(caller)]
-          unquote(provider).expand!(deriving, entity, context, put_in(options || [], :deriving, deriving))
+          deriving = [only: unquote(only), except: unquote(except)]
+          unquote(provider).expand!(entity, context, put_in(options || [], [:deriving], deriving))
         end
       end
     end
   end
 
-  def expand(entity, _context, _options), do: entity
+  def expand!(entity, _context, _options), do: entity
 end
 
 defimpl Noizu.V3.EntityProtocol, for: List do
@@ -127,37 +127,25 @@ defimpl Noizu.V3.EntityProtocol, for: Map do
 end
 
 defmodule Noizu.V3.EntityProtocol.Derive.NoizuStruct do
+
+  def expand_field?(field, mod, json_format, deriving) do
+    cond do
+      is_list(deriving[:only]) -> Enum.member?(deriving[:only], field)
+      is_list(deriving[:except]) -> !Enum.member?(deriving[:except], field)
+      function_exported?(mod, :__noizu_info__, 1) -> mod.__noizu_info__(:json_configuration)[:format_settings][json_format][field][:expand]
+      :else -> true
+    end
+  end
+
   def expand!(entity, context, options) do
     {deriving, options} = pop_in(options, [:deriving])
     {json_format, options} = Noizu.Scaffolding.V3.Helpers.update_options(entity, context, options)
-    expand_keys = cond do
-                    v = deriving[:only] -> v
-                    v = deriving[:except] -> Map.keys!(entity) -- v
-                    function_exported?(entity.__struct__, :__noizu_info__, 1) ->
-                      case entity.__struct__.__noizu_info__(:auto_expand?)[json_format] do
-                        v when is_list(v) -> v
-                        v = %MapSet{} -> v
-                        :all -> Map.keys!(entity)
-                        true -> Map.keys!(entity)
-                        false -> []
-                        _else ->
-                          case json_format != :default && entity.__struct__.__noizu_info__(:auto_expand?)[:default] do
-                            v when is_list(v) -> v
-                            v = %MapSet{} -> v
-                            :all -> Map.keys!(entity)
-                            true -> Map.keys!(entity)
-                            _else -> []
-                          end
-                      end
-                    :else -> Map.keys!(entity)
-                  end |> MapSet.new()
-
-    v = Enum.map(
+    v = Enum.map(Map.from_struct(entity),
       fn({k,v}) ->
         v = cond do
-              is_map(v) && Enum.member?(expand_keys, k) -> Noizu.V3.EntityProtocol.expand!(v, context, options)
-              is_list(v) && Enum.member?(expand_keys, k) -> Noizu.V3.EntityProtocol.expand!(v, context, options)
-              is_tuple(v) && Enum.member?(expand_keys, k) -> Noizu.V3.EntityProtocol.expand!(v, context, options)
+              is_map(v) && expand_field?(k, entity.__struct__, json_format, deriving) -> Noizu.V3.EntityProtocol.expand!(v, context, options)
+              is_list(v) && expand_field?(k, entity.__struct__, json_format, deriving) -> Noizu.V3.EntityProtocol.expand!(v, context, options)
+              is_tuple(v) && expand_field?(k, entity.__struct__, json_format, deriving) -> Noizu.V3.EntityProtocol.expand!(v, context, options)
               :else -> v
             end
         {k, v}

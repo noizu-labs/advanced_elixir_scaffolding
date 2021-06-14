@@ -82,12 +82,12 @@ defmodule Noizu.Scaffolding.Helpers do
     Update Poison Format/Expansion options.
   """
   def update_options(entity, options) when is_atom(entity) do
-    json_format = options[:json_formats][entity] || options[:json_formats][entity.poly_base()] || options[:json_format] || :mobile
+    json_format = options[:json_formats][entity] || options[:json_formats][entity.__noizu_info__(:poly)[:base]] || options[:json_format] || :mobile
     {json_format, update_expand_options(entity, options)}
   end
 
   def update_options(%{__struct__: m} = entity, options) do
-    json_format = options[:json_formats][m] || options[:json_formats][m.poly_base()] || options[:json_format] || :mobile
+    json_format = options[:json_formats][m] || options[m.__noizu_info__(:poly)[:base]] || options[:json_format] || :mobile
     {json_format, update_expand_options(entity, options)}
   end
 

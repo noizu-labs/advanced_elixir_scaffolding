@@ -35,7 +35,7 @@ defmodule Noizu.Scaffolding.V3.Helpers do
       cond do
         entity == nil -> :default
         format = options[:json_formats][entity] -> format
-        format = options[:json_formats][entity.__noizu_info__(:poly_base)] -> format
+        format = options[:json_formats][entity.__noizu_info__(:poly)][:base] -> format
         format = options[:json_format] -> format
         format = entity.__noizu_info__(:json_format) -> format
         :else -> :default

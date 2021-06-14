@@ -91,24 +91,24 @@ end
 defmodule Noizu.V3.RestrictedProtocol.Derive.Struct do
   def restricted_view(entity, context, options) do
     cond do
-      !function_exported?(entity, :__noizu_info__, 1) -> entity
-      m = entity.__noizu_info__(:custom_restrict) -> m.restricted_view(entity, context, options)
+      !function_exported?(entity.__struct__, :__noizu_info__, 1) -> entity
+      m = entity.__struct__.__noizu_info__(:restrict_provider) -> m.restricted_view(entity, context, options)
       :else -> Noizu.V3.RestrictedProtocol.Derive.NoizuStruct.restricted_view(entity, context, options)
     end
   end
 
   def restricted_edit(entity, current, context, options) do
     cond do
-      !function_exported?(entity, :__noizu_info__, 1) -> entity
-      m = entity.__noizu_info__(:custom_restrict) -> m.restricted_view(entity, current, context, options)
+      !function_exported?(entity.__struct__, :__noizu_info__, 1) -> entity
+      m = entity.__struct__.__noizu_info__(:restrict_provider) -> m.restricted_view(entity, current, context, options)
       :else -> Noizu.V3.RestrictedProtocol.Derive.NoizuStruct.restricted_view(entity, current, context, options)
     end
   end
 
   def restricted_create(entity, context, options) do
     cond do
-      !function_exported?(entity, :__noizu_info__, 1) -> entity
-      m = entity.__noizu_info__(:custom_restrict) -> m.restricted_create(entity, context, options)
+      !function_exported?(entity.__struct__, :__noizu_info__, 1) -> entity
+      m = entity.__struct__.__noizu_info__(:restrict_provider) -> m.restricted_create(entity, context, options)
       :else -> Noizu.V3.RestrictedProtocol.Derive.NoizuStruct.restricted_create(entity, context, options)
     end
   end

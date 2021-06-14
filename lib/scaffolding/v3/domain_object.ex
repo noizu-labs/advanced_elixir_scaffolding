@@ -10,6 +10,7 @@ defmodule Noizu.DomainObject do
       import Noizu.DomainObject, only: [file_rel_dir: 1]
       Module.register_attribute(__MODULE__, :persistence_layer, accumulate: true)
       Module.register_attribute(__MODULE__, :__nzdo__meta, accumulate: true)
+      Module.register_attribute(__MODULE__, :json_white_list, accumulate: false)
       Module.register_attribute(__MODULE__, :json_format_group, accumulate: true)
       Module.register_attribute(__MODULE__, :json_field_group, accumulate: true)
 
@@ -49,7 +50,7 @@ defmodule Noizu.DomainObject do
     poly_support = options[:poly_support]
     json_provider = options[:json_provider]
     json_format = options[:json_format]
-    json_white_list = options[:json_White_list]
+    json_white_list = options[:json_white_list]
     process_config = quote do
                        import Noizu.DomainObject, only: [file_rel_dir: 1]
 
@@ -87,7 +88,7 @@ defmodule Noizu.DomainObject do
                        Module.register_attribute(__MODULE__, :json_ignore, accumulate: true)
                        Module.register_attribute(__MODULE__, :json_restrict, accumulate: true)
                        Module.register_attribute(__MODULE__, :__nzdo__raw__json_format_settings, accumulate: false)
-                       Module.put_attribute(__MODULE_, :__nzdo__raw__json_format_settings, %{})
+                       Module.put_attribute(__MODULE__, :__nzdo__raw__json_format_settings, %{})
 
                        #---------------------
                        # Push details to Base, and read in required settings.
@@ -156,6 +157,7 @@ defmodule Noizu.DomainObject do
                        # Always hook into Noizu.ERP
                        #----------------------
                        @__nzdo__derive Noizu.ERP
+                       @__nzdo__derive Noizu.V3.EntityProtocol
 
                        #----------------------
                        # Load Persistence Settings from base, we need them to control some submodules.
@@ -187,7 +189,7 @@ defmodule Noizu.DomainObject do
                                                  @__nzdo__base_open? && Module.has_attribute?(@__nzdo__base, :json_provider) -> Module.get_attribute(@__nzdo__base, :json_provider)
                                                  !@__nzdo__poly_base_open? && @__nzdo__poly_base.__noizu_info(:json_provider) -> @__nzdo__poly_base.__noizu_info(:json_provider)
                                                  @__nzdo__poly_base_open? && Module.has_attribute?(@__nzdo__poly_base, :json_provider) -> Module.get_attribute(@__nzdo__poly_base, :json_provider)
-                                                 :else -> Noizu.Scaffolding.V3.Jason.Encoder
+                                                 :else -> Noizu.Scaffolding.V3.Poison.Encoder
                                                end)
 
 
@@ -273,27 +275,18 @@ defmodule Noizu.DomainObject do
                                                      )
 
                        if (@__nzdo__base_open?) do
-                         Module.put_attribute(@__nzdo__base, :__nzdo__json_field_groups, @__nzdo__json_field_group)
+                         Module.put_attribute(@__nzdo__base, :__nzdo__json_field_groups, @__nzdo__json_field_groups)
                        end
-
-
-
-
-
-
-
-
 
                        @__nzdo__json_white_list (cond do
                                                    unquote(json_white_list) == false -> false
                                                    v = unquote(json_white_list) -> v
-
                                                    v = Module.has_attribute?(__MODULE__, :json_white_list) -> Module.get_attribute(__MODULE__, :json_white_list)
                                                    !@__nzdo__base_open? && @__nzdo__base.__noizu_info(:json_white_list) -> @__nzdo__base.__noizu_info(:json_white_list)
                                                    @__nzdo__base_open? && Module.has_attribute?(@__nzdo__base, :json_white_list) -> Module.get_attribute(@__nzdo__base, :json_white_list)
                                                    !@__nzdo__poly_base_open? && @__nzdo__poly_base.__noizu_info(:json_white_list) -> @__nzdo__poly_base.__noizu_info(:json_white_list)
                                                    @__nzdo__poly_base_open? && Module.has_attribute?(@__nzdo__poly_base, :json_white_list) -> Module.get_attribute(@__nzdo__poly_base, :json_white_list)
-                                                   :else -> :false
+                                                   :else -> false
                                                  end)
 
                        if (@__nzdo__base_open?) do
@@ -301,11 +294,15 @@ defmodule Noizu.DomainObject do
                        end
 
 
-                       @__nzdo__json_config %{
+                       __nzdo__json_config = %{
+                         provider: @__nzdo__json_provider,
+                         defualt_format: @__nzdo__json_format,
                          white_list: @__nzdo__json_white_list,
-                         groups: @__nzdo__json_format_group,
+                         selection_groups: @__nzdo__json_format_groups,
+                         field_groups: @__nzdo__json_field_groups,
                          supported: @__nzdo__json_supported_formats
                        }
+                       Module.put_attribute(__MODULE__, :__nzdo__json_config, __nzdo__json_config)
 
                        #----------------------
                        # User block section (define, fields, constraints, json_mapping rules, etc.)
@@ -337,7 +334,7 @@ defmodule Noizu.DomainObject do
 
                  if (@__nzdo__json_provider) do
                    __nzdo__json_provider = @__nzdo__json_provider
-                   defimpl Jason.Encoder  do
+                   defimpl Poison.Encoder  do
                      defdelegate encode(entity, options \\ nil), to: __nzdo__json_provider
                    end
                  end
@@ -776,19 +773,20 @@ defmodule Noizu.DomainObject do
       def __noizu_info__(:entity), do: @__nzdo__entity
       def __noizu_info__(:repo), do: @__nzdo__repo
       def __noizu_info__(:sref), do: @__nzdo__sref
+      def __noizu_info__(:restrict_provider), do: nil
       def __noizu_info__(:nmid_generator), do: @__nzdo_nmid_generatoer
       def __noizu_info__(:nmid_index), do: @__nzdo_nmid_index
       def __noizu_info__(:nmid_sequencer), do: @__nzdo_nmid_sequencer
-      def __noizu_info__(:poly?), do: @__nzdo__poly?
-      def __noizu_info__(:poly_support), do: @__nzdo__poly_support
-      def __noizu_info__(:poly_base), do: @__nzdo__poly_base
 
-      def __noizu_info__(:auto_expand?), do: %{default: true}  # - should use json_format_settings[format][field][:expand?]
-      def __noizu_info__(:json_format), do: @__nzdo__json_format
-      def __noizu_info__(:json_supported_formats), do: @__nzdo__json_supported_formats
-      def __noizu_info__(:json_format_settings), do: @__nzdo__json_format_settings
-      def __noizu_info__(:json_provider), do: @__nzdo__json_provider
-      def __noizu_info__(:json_format_groups), do: @__nzdo__json_format_groups
+
+      @__nzdo__poly_settings  %{
+        poly: @__nzdo__poly?,
+        support: @__nzdo__poly_support,
+        base: @__nzdo__poly_base
+      }
+
+      def __noizu_info__(:poly), do: @__nzdo__poly_settings
+      def __noizu_info__(:json_configuration), do: @__nzdo__entity.__noizu_info__(:json_configuration)
       def __noizu_info__(:identifier_type), do: @__nzdo__entity.__noizu_info__(:identifier_type)
       def __noizu_info__(:fields), do: @__nzdo__entity.__noizu_info__(:fields)
       def __noizu_info__(:field_attributes), do: @__nzdo__entity.__noizu_info__(:field_attributes)
@@ -797,9 +795,6 @@ defmodule Noizu.DomainObject do
       def __noizu_info__(:tables), do: @__nzdo__entity.__noizu_info__(:tables)
       def __noizu_info__(:associated_types), do: @__nzdo__entity.__noizu_info__(:associated_types)
       def __noizu_info__(:schema_field_types), do: @__nzdo__entity.__noizu_info__(:schema_field_types)
-
-
-
 
       @__nzdo__meta__map Map.new(@__nzdo__meta || [])
       def __noizu_info__(:meta), do: @__nzdo__meta__map
@@ -822,6 +817,8 @@ defmodule Noizu.DomainObject do
       @__nzdo_associated_types (Enum.map(@__nzdo_persistence__by_table || %{}, fn({k,v}) -> {k, v.type} end) ++ Enum.map(@__nzdo__poly_support || %{}, fn(k,v) -> {k, :poly} end) ) |> Map.new()
       def __noizu_info__(:associated_types), do: @__nzdo_associated_types
 
+      @__nzdo__json_config put_in(@__nzdo__json_config, [:format_settings], @__nzdo__raw__json_format_settings)
+      def __noizu_info__(:json_configuration), do: @__nzdo__json_config
 
       @__nzdo__field_attributes_map Map.new(@__nzdo__field_attributes)
       def __noizu_info__(:field_attributes), do: @__nzdo__field_attributes_map
