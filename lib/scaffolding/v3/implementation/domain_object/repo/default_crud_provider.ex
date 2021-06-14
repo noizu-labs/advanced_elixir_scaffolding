@@ -3,11 +3,11 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
   require Amnesia.Fragment
 
   def generate_identifier!(m) do
-    m.__noizu_info__(:nmid_generator).generate(m.__noizu_info__(:nmid_sequencer))
+    m.__noizu_info__(:nmid_generator).generate!(m.__noizu_info__(:nmid_sequencer))
   end
 
   def generate_identifier(m) do
-    m.__noizu_info__(:nmid_generator).generate!(m.__noizu_info__(:nmid_sequencer))
+    m.__noizu_info__(:nmid_generator).generate(m.__noizu_info__(:nmid_sequencer))
   end
 
   def get(_m, _ref, _context, _options) do
@@ -119,7 +119,9 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
 
     # preprocess
     Enum.reduce(m.__noizu_info__(:field_types), entity,
-      fn({field, type}, acc) -> type.pre_create_callback(field, acc, context, options) end)
+      fn({field, type}, acc) ->
+        type.handler.pre_create_callback(field, acc, context, options)
+      end)
   end
 
   def post_create_callback(_m, entity, _context, _options), do: entity
@@ -161,7 +163,6 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
             end
         end
       settings.mnesia_backend[:dirty?] ->
-      IO.puts "DIRT CREATE"
         entity = cond do
                    settings.mnesia_backend[:fragmented?] -> Amnesia.Fragment.async(fn -> m.pre_create_callback(entity, context, options) end)
                    :else -> Amnesia.async(fn -> m.pre_create_callback(entity, context, options) end)

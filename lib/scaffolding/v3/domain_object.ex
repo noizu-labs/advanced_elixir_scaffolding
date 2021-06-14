@@ -2,7 +2,7 @@ defmodule Noizu.DomainObject do
 
 
   defmacro __using__(options \\ nil) do
-    nmid_generator = options[:nmid_generator] || Noizu.Scaffolding.V3.NmidV3Generator
+    nmid_generator = options[:nmid_generator] || Application.get_env(:noizu_scaffolding, :default_nmid_generator, Noizu.Scaffolding.V3.NmidGenerator)
     nmid_sequencer = options[:nmid_sequencer]
     nmid_index = options[:nmid_index] || 1
     caller = __CALLER__
@@ -51,6 +51,7 @@ defmodule Noizu.DomainObject do
     json_provider = options[:json_provider]
     json_format = options[:json_format]
     json_white_list = options[:json_white_list]
+    noizu_domain_object_schema = options[:noizu_domain_object_schema] || Application.get_env(:noizu_scaffolding, :domain_object_schema)
     process_config = quote do
                        import Noizu.DomainObject, only: [file_rel_dir: 1]
 
@@ -94,6 +95,8 @@ defmodule Noizu.DomainObject do
                        #---------------------
                        # Push details to Base, and read in required settings.
                        #---------------------
+                       @__nzdo__schema_helper unquote(noizu_domain_object_schema) || raise "#{__MODULE__} you must pass in noizu_domain_object_schema or set {:noizu_scaffolding, :domain_object_schema} config value."
+
                        @__nzdo__poly_base (cond do
                                              v = unquote(poly_base) -> v
                                              v = Module.get_attribute(__MODULE__, :poly_base) -> v
@@ -779,6 +782,16 @@ defmodule Noizu.DomainObject do
       defdelegate __noizu_record__(type, ref, options \\ nil), to: @__nzdo__entity
 
 
+
+      @__nzdo__poly_settings  %{
+        poly: @__nzdo__poly?,
+        support: @__nzdo__poly_support,
+        base: @__nzdo__poly_base
+      }
+
+      @__nzdo__meta__map Map.new(@__nzdo__meta || [])
+
+
       def vsn(), do: @vsn
       def __entity__(), do: @__nzdo__entity
       def __repo__(), do: @__nzdo__repo
@@ -792,17 +805,10 @@ defmodule Noizu.DomainObject do
       def __noizu_info__(:sref), do: @__nzdo__sref
       def __noizu_info__(:restrict_provider), do: nil
       def __noizu_info__(:nmid_generator), do: @__nzdo_nmid_generatoer
-      def __noizu_info__(:nmid_index), do: @__nzdo_nmid_index
+      #def __noizu_info__(:nmid_index), do: @__nzdo_nmid_index
       def __noizu_info__(:nmid_sequencer), do: @__nzdo_nmid_sequencer
-
-
-      @__nzdo__poly_settings  %{
-        poly: @__nzdo__poly?,
-        support: @__nzdo__poly_support,
-        base: @__nzdo__poly_base
-      }
-
       def __noizu_info__(:poly), do: @__nzdo__poly_settings
+      def __noizu_info__(:nmid_index), do: @__nzdo__entity.__noizu_info__(:nmid_index)
       def __noizu_info__(:json_configuration), do: @__nzdo__entity.__noizu_info__(:json_configuration)
       def __noizu_info__(:identifier_type), do: @__nzdo__entity.__noizu_info__(:identifier_type)
       def __noizu_info__(:fields), do: @__nzdo__entity.__noizu_info__(:fields)
@@ -812,8 +818,6 @@ defmodule Noizu.DomainObject do
       def __noizu_info__(:tables), do: @__nzdo__entity.__noizu_info__(:tables)
       def __noizu_info__(:associated_types), do: @__nzdo__entity.__noizu_info__(:associated_types)
       def __noizu_info__(:schema_field_types), do: @__nzdo__entity.__noizu_info__(:schema_field_types)
-
-      @__nzdo__meta__map Map.new(@__nzdo__meta || [])
       def __noizu_info__(:meta), do: @__nzdo__meta__map
 
 
@@ -863,21 +867,9 @@ defmodule Noizu.DomainObject do
       defdelegate __sref__(), to: @__nzdo__base
       defdelegate __erp__(), to: @__nzdo__base
 
-      def __noizu_info__(:type), do: :entity
-      def __noizu_info__(:identifier_type), do: @__nzdo__identifier_type
-      def __noizu_info__(:fields), do: @__nzdo__field_list
-      def __noizu_info__(:field_types), do: @__nzdo__field_types_map
-      def __noizu_info__(:persistence), do: @__nzdo_persistence
-      def __noizu_info__(:tables), do: @__nzdo_persistence__by_table
       @__nzdo_associated_types (Enum.map(@__nzdo_persistence__by_table || %{}, fn({k,v}) -> {k, v.type} end) ++ Enum.map(@__nzdo__poly_support || %{}, fn(k,v) -> {k, :poly} end) ) |> Map.new()
-      def __noizu_info__(:associated_types), do: @__nzdo_associated_types
-
       @__nzdo__json_config put_in(@__nzdo__json_config, [:format_settings], @__nzdo__raw__json_format_settings)
-      def __noizu_info__(:json_configuration), do: @__nzdo__json_config
-
       @__nzdo__field_attributes_map Map.new(@__nzdo__field_attributes)
-      def __noizu_info__(:field_attributes), do: @__nzdo__field_attributes_map
-
       @__nzdo__schema_field_types Enum.map(
                                     @__nzdo_persistence && @__nzdo_persistence.layers || [],
                                     fn(layer) ->
@@ -885,6 +877,17 @@ defmodule Noizu.DomainObject do
                                       {key, Noizu.DomainObject.__unroll_field_types__(key, @__nzdo__field_types_map)}
                                     end
                                   )
+
+      def __noizu_info__(:type), do: :entity
+      def __noizu_info__(:identifier_type), do: @__nzdo__identifier_type
+      def __noizu_info__(:fields), do: @__nzdo__field_list
+      def __noizu_info__(:field_types), do: @__nzdo__field_types_map
+      def __noizu_info__(:nmid_index), do: @__nzdo__schema_helper.__noizu_info__(:nmid_indexes)[__MODULE__]
+      def __noizu_info__(:persistence), do: @__nzdo_persistence
+      def __noizu_info__(:tables), do: @__nzdo_persistence__by_table
+      def __noizu_info__(:associated_types), do: @__nzdo_associated_types
+      def __noizu_info__(:json_configuration), do: @__nzdo__json_config
+      def __noizu_info__(:field_attributes), do: @__nzdo__field_attributes_map
       def __noizu_info__(:schema_field_types), do: @__nzdo__schema_field_types
 
       defdelegate __noizu_info__(report), to: @__nzdo__base
