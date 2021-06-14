@@ -612,7 +612,7 @@ defmodule Noizu.DomainObject do
     end)
 
     enum_table = cond do
-                   v = Module.get_attribute(module, :enum_list, true) -> v
+                   v = Module.get_attribute(module, :enum_list) -> v
                    :else -> false
                  end
     universal_identifier = cond do
@@ -626,11 +626,14 @@ defmodule Noizu.DomainObject do
                          :else -> Application.get_env(:noizu_scaffolding, :universal_identifier_default, true)
                        end
 
+    generate_reference_type_default = cond do
+                                        enum_table -> false
+                                        :else -> universal_lookup || universal_identifier
+                                      end
     generate_reference_type = cond do
-                          Module.has_attribute?(module, :generate_reference_type) -> Module.get_attribute(module, :generate_reference_type, true)
-                          enum_table -> false
-                          :else -> Application.get_env(:noizu_scaffolding, :generate_reference_type_default, universal_lookup || universal_identifier)
-                        end
+                                Module.has_attribute?(module, :generate_reference_type) -> Module.get_attribute(module, :generate_reference_type)
+                                :else -> generate_reference_type_default
+                              end
 
     persistence_options = %{
       enum_table: enum_table,
