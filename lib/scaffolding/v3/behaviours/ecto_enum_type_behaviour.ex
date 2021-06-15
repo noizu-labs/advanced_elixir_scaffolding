@@ -1,4 +1,4 @@
-defmodule Noizu.EnumFieldBehaviour do
+defmodule Noizu.EctoEnumTypeBehaviour do
   defmodule Default do
 
 
@@ -91,16 +91,16 @@ defmodule Noizu.EnumFieldBehaviour do
       @doc """
       Casts to Enum.
       """
-      def cast(v), do: Noizu.EnumFieldBehaviour.Default.cast(__MODULE__, v)
+      def cast(v), do: Noizu.EctoEnumTypeBehaviour.Default.cast(__MODULE__, v)
 
       @doc """
       Same as `cast/1` but raises `Ecto.CastError` on invalid arguments.
       """
-      def cast!(v), do: Noizu.EnumFieldBehaviour.Default.cast!(__MODULE__, v)
+      def cast!(v), do: Noizu.EctoEnumTypeBehaviour.Default.cast!(__MODULE__, v)
 
-      def dump(v), do: Noizu.EnumFieldBehaviour.Default.dump(__MODULE__, v)
+      def dump(v), do: Noizu.EctoEnumTypeBehaviour.Default.dump(__MODULE__, v)
 
-      def load(v), do: Noizu.EnumFieldBehaviour.Default.load(__MODULE__, v)
+      def load(v), do: Noizu.EctoEnumTypeBehaviour.Default.load(__MODULE__, v)
 
     end
   end

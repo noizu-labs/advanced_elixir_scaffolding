@@ -1,6 +1,7 @@
-defmodule Noizu.UniversalRefBehaviour do
+defmodule Noizu.BasicRefBehaviour do
 
   defmodule Default do
+
     def cast(m, v) do
       e = m.__entity__
       case v do
@@ -9,9 +10,7 @@ defmodule Noizu.UniversalRefBehaviour do
         nil -> {:ok, nil}
         0 -> {:ok, nil}
         {:ref, ^e, _id} -> {:ok, v}
-        {:ref, Noizu.UniversalReference, _id} -> {:ok, v}
         %{__struct__: ^e} -> {:ok, v}
-        %Noizu.UniversalReference{} -> {:ok, v}
         v when is_integer(v) ->
           ref = e.ref({:ecto_identifier, e, v})
           ref && {:ok, ref} || :error
@@ -42,9 +41,7 @@ defmodule Noizu.UniversalRefBehaviour do
         nil -> {:ok, nil}
         0 -> {:ok, nil}
         {:ref, ^e, _id} -> {:ok, v}
-        {:ref, Noizu.UniversalReference, _id} -> {:ok, v}
         %{__struct__: ^e} -> {:ok, v}
-        %Noizu.UniversalReference{} -> {:ok, v}
         v when is_integer(v) ->
           ref = e.ref({:ecto_identifier, e, v})
           ref && {:ok, ref} || raise ArgumentError, "Unsupported #{m} - #{inspect v}"
@@ -80,7 +77,7 @@ defmodule Noizu.UniversalRefBehaviour do
       @doc """
       Casts to Ref.
       """
-      def cast(v), do: Noizu.UniversalRefBehaviour.Default.cast(__MODULE__, v)
+      def cast(v), do: Noizu.BasicRefBehaviour.Default.cast(__MODULE__, v)
 
       #----------------------------
       # cast!
@@ -88,18 +85,18 @@ defmodule Noizu.UniversalRefBehaviour do
       @doc """
       Same as `cast/1` but raises `Ecto.CastError` on invalid arguments.
       """
-      def cast!(v), do: Noizu.UniversalRefBehaviour.Default.cast!(__MODULE__, v)
+      def cast!(v), do: Noizu.BasicRefBehaviour.Default.cast!(__MODULE__, v)
 
       #----------------------------
       # dump
       #----------------------------
       @doc false
-      def dump(v), do: Noizu.UniversalRefBehaviour.Default.dump(__MODULE__, v)
+      def dump(v), do: Noizu.BasicRefBehaviour.Default.dump(__MODULE__, v)
 
       #----------------------------
       # load
       #----------------------------
-      def load(v), do: Noizu.UniversalRefBehaviour.Default.load(__MODULE__, v)
+      def load(v), do: Noizu.BasicRefBehaviour.Default.load(__MODULE__, v)
     end
   end
 

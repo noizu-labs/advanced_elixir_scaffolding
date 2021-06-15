@@ -58,8 +58,21 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
            def universal_identifier(_), do: throw "#{__MODULE__} does not support universal_identifier syntax"
        end
 
-       if @__nzdo_persistence.options[:generate_reference_type] do
-         Module.put_attribute(@__nzdo__base, :__nzdo_universal_ref, true)
+       if v = @__nzdo_persistence.options[:generate_reference_type] do
+         cond do
+           v == :enum_ref ->
+             Module.put_attribute(@__nzdo__base, :__nzdo_enum_ref, true)
+           v == :basic_ref ->
+             Module.put_attribute(@__nzdo__base, :__nzdo_basic_ref, true)
+           v == :universal_ref ->
+             Module.put_attribute(@__nzdo__base, :__nzdo_universal_ref, true)
+           @__nzdo_persistence.options[:universal_reference] == false && @__nzdo_persistence.options[:enum_table] ->
+             Module.put_attribute(@__nzdo__base, :__nzdo_enum_ref, true)
+           @__nzdo_persistence.options[:universal_reference] || @__nzdo_persistence.options[:universal_lookup] ->
+             Module.put_attribute(@__nzdo__base, :__nzdo_universal_ref, true)
+           :else ->
+               Module.put_attribute(@__nzdo__base, :__nzdo_basic_ref, true)
+         end
        end
 
      else

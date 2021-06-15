@@ -627,6 +627,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
     quote do
       defdelegate vsn(), to: @__nzdo__base
       def __entity__(), do: __MODULE__
+      def __base__(), do: @__nzdo__base
       defdelegate __repo__(), to: @__nzdo__base
       defdelegate __sref__(), to: @__nzdo__base
       defdelegate __erp__(), to: @__nzdo__base

@@ -23,6 +23,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject do
 
 
       def vsn(), do: @vsn
+      def __base__(), do: __MODULE__
       def __entity__(), do: @__nzdo__entity
       def __repo__(), do: @__nzdo__repo
       def __sref__(), do: @__nzdo__sref
@@ -56,23 +57,12 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject do
       def __noizu_info__(:meta), do: @__nzdo__meta__map
 
 
-
       #--------------------
-      # UniversalRef
-      #--------------------
-      if Module.get_attribute(__MODULE__, :__nzdo_universal_ref) do
-        m = @__nzdo__entity
-        defmodule UniversalRef do
-          use Noizu.UniversalRefBehaviour, entity: m
-        end
-      end
-
-      #--------------------
-      # EnumType
+      # EctoEnum
       #--------------------
       if options = Module.get_attribute(__MODULE__, :__nzdo__enum_list) do
         domain_object = __MODULE__
-        defmodule EnumField do
+        defmodule EctoEnumType do
           {values,default_value,ecto_type} = case options do
                                                {v,options} ->
                                                  {v,
@@ -85,12 +75,38 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject do
                                                    Module.get_attribute(domain_object, :__nzdo__enum_ecto_type) || :integer
                                                  }
                                              end
-          use Noizu.EnumFieldBehaviour,
+          use Noizu.EctoEnumTypeBehaviour,
               values: values,
               default: default_value,
               ecto_type: ecto_type
         end
       end
+
+      #--------------------
+      # Ref
+      #--------------------
+      cond do
+        Module.get_attribute(__MODULE__, :__nzdo_enum_ref) ->
+          e = @__nzdo__entity
+          b = __MODULE__
+          defmodule EctoEnumReference do
+            use Noizu.EnumRefBehaviour, entity: e, base: b
+          end
+
+        Module.get_attribute(__MODULE__, :__nzdo_universal_ref) ->
+          e = @__nzdo__entity
+          defmodule EctoUniversalReference do
+            use Noizu.UniversalRefBehaviour, entity: e
+          end
+
+        Module.get_attribute(__MODULE__, :__nzdo_basic_ref) ->
+          e = @__nzdo__entity
+          defmodule EctoReference do
+            use Noizu.BasicRefBehaviour, entity: e
+          end
+        :else -> :ok
+      end
+
     end
   end
 
