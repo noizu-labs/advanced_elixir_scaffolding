@@ -19,7 +19,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
       t = m.__noizu_info__(:associated_types)[s] ->
         cond do
           t == :poly -> s.ref(entity)
-          config = m.__noizu_info__(:tables)[s] && (t == :ecto || t == :mnesia) ->
+          config = (t == :ecto || t == :mnesia) && m.__persistence__(:table)[s] ->
             id = case config.map_id do
                    :same -> Map.get(entity, :identifier) || Map.get(entity, :id)
                    :unsupported -> nil
@@ -64,7 +64,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
       t = m.__noizu_info__(:associated_types)[s] ->
         cond do
           t == :poly -> entity
-          m.__noizu_info__(:tables)[s] -> m.__from_record__(s, entity)
+          m.__persistence__(:table)[s] -> m.__from_record__(s, entity)
           :else -> nil
         end
       :else -> nil
@@ -85,7 +85,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
       t = m.__noizu_info__(:associated_types)[s] ->
         cond do
           t == :poly -> entity
-          m.__noizu_info__(:tables)[s] -> m.__from_record__!(s, entity)
+          m.__persistence__(:table)[s] -> m.__from_record__!(s, entity)
           :else -> nil
         end
       :else -> nil
@@ -138,9 +138,9 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
   #-----------------------------------
   def __as_mnesia_record__(m, table, entity, options) do
     context = Noizu.ElixirCore.CallingContext.admin()
-    layer = m.__noizu_info__(:tables)[table]
+    layer = m.__persistence__(:table)[table]
     field_types = m.__noizu_info__(:field_types)[{layer.schema, layer.table}]
-    unrolled = m.__noizu_info__(:schema_field_types)[{layer.schema, layer.table}]
+    unrolled = layer.schema_fields
     fields = (struct(table, %{}) |> Map.keys()) -- [:__struct__]
     values = Enum.map(fields, fn(field) ->
       cond do
@@ -164,7 +164,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
   #-----------------------------------
   def __as_ecto_record__(m, table, entity, options) do
     context = Noizu.ElixirCore.CallingContext.admin()
-    layer = m.__noizu_info__(:tables)[table]
+    layer = m.__persistence__(:table)[table]
     unrolled = m.__unroll_field_types__(layer.schema)
     field_types = m.__noizu_info__(:field_types)[{layer.schema, layer.table}]
     #ecto_fields = Map.keys(struct(layer.table)) -- [:schema, :meta]
