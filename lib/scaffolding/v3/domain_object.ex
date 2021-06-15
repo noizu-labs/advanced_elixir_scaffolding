@@ -2,9 +2,10 @@ defmodule Noizu.DomainObject do
 
 
   defmacro __using__(options \\ nil) do
-    nmid_generator = options[:nmid_generator] || Application.get_env(:noizu_scaffolding, :default_nmid_generator, Noizu.Scaffolding.V3.NmidGenerator)
+    nmid_generator = options[:nmid_generator]
     nmid_sequencer = options[:nmid_sequencer]
-    nmid_index = options[:nmid_index] || 1
+    nmid_index = options[:nmid_index]
+    auto_generate = options[:auto_generate]
     caller = __CALLER__
     quote do
       import Noizu.DomainObject, only: [file_rel_dir: 1]
@@ -20,10 +21,18 @@ defmodule Noizu.DomainObject do
       end
       @__nzdo__base_definied {file_rel_dir(unquote(caller.file)), unquote(caller.line)}
 
-      @__nzdo_nmid_generatoer unquote(nmid_generator)
-      @__nzdo_nmid_index unquote(nmid_index)
-      @__nzdo_nmid_sequencer (unquote(nmid_sequencer) || __MODULE__)
-
+      if v = unquote(nmid_generator) do
+        Module.put_attribute(__MODULE__, :nmid_generator, v)
+      end
+      if v = unquote(nmid_sequencer) do
+        Module.put_attribute(__MODULE__, :nmid_sequencer, v)
+      end
+      if v = unquote(nmid_index) do
+        Module.put_attribute(__MODULE__, :nmid_index, v)
+      end
+      if unquote(auto_generate) != nil do
+        Module.put_attribute(__MODULE__, :auto_generate, unquote(auto_generate))
+      end
       @before_compile {Noizu.DomainObject, :before_compile_domain_object__base}
     end
   end
@@ -32,13 +41,13 @@ defmodule Noizu.DomainObject do
   #
   #--------------------------------------------
   defmacro noizu_entity(options \\ [], [do: block]) do
-    __noizu_entity(__CALLER__, options, block)
+    __noizu_entity__(__CALLER__, options, block)
   end
 
   #--------------------------------------------
   #
   #--------------------------------------------
-  defp __noizu_entity(caller, options, block) do
+  defp __noizu_entity__(caller, options, block) do
     erp_provider = options[:erp_imp] || Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultErpProvider
     ecto_provider = options[:ecto_imp] || Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultEctoProvider
     internal_provider = options[:internal_imp] || Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultInternalProvider
@@ -46,11 +55,13 @@ defmodule Noizu.DomainObject do
     repo = options[:repo]
     vsn = options[:vsn]
     sref = options[:sref]
+    default_nmid_generator = Application.get_env(:noizu_scaffolding, :default_nmid_generator, Noizu.Scaffolding.V3.NmidGenerator)
     poly_base = options[:poly_base]
     poly_support = options[:poly_support]
     json_provider = options[:json_provider]
     json_format = options[:json_format]
     json_white_list = options[:json_white_list]
+    json_supported_formats = options[:json_supported_formats]
     noizu_domain_object_schema = options[:noizu_domain_object_schema] || Application.get_env(:noizu_scaffolding, :domain_object_schema)
     process_config = quote do
                        import Noizu.DomainObject, only: [file_rel_dir: 1]
@@ -105,48 +116,11 @@ defmodule Noizu.DomainObject do
                                              :else -> @__nzdo__base
                                            end)
                        @__nzdo__poly_base_open? Module.open?(@__nzdo__poly_base)
-
-                       @__nzdo__poly_support (cond do
-                                                v = unquote(poly_support) -> v
-                                                v = Module.get_attribute(__MODULE__, :poly_support) -> v
-                                                !@__nzdo__base_open? && @__nzdo__base.__noizu_info(:poly_support) -> @__nzdo__base.__noizu_info(:poly_support)
-                                                @__nzdo__base_open? && Module.get_attribute(@__nzdo__base, :poly_support) -> Module.get_attribute(@__nzdo__base, :poly_support)
-                                                !@__nzdo__poly_base_open? && @__nzdo__poly_base.__noizu_info(:poly_support) -> @__nzdo__poly_base.__noizu_info(:poly_support)
-                                                @__nzdo__poly_base_open? && Module.get_attribute(@__nzdo__poly_base, :poly_support) -> Module.get_attribute(@__nzdo__poly_base, :poly_support)
-                                                :else -> nil
-                                              end)
-
+                       @__nzdo__poly_support unquote(poly_support) || Noizu.DomainObject.extract_attribute(:poly_support, nil)
                        @__nzdo__poly? ((@__nzdo__poly_base != @__nzdo__base || @__nzdo__poly_support) && true || false)
-
-                       @__nzdo__repo (cond do
-                                        v = unquote(repo) -> v
-                                        v = Module.get_attribute(__MODULE__, :repo) -> v
-                                        !@__nzdo__base_open? && @__nzdo__base.__noizu_info(:repo) -> @__nzdo__base.__noizu_info(:repo)
-                                        @__nzdo__base_open? && Module.get_attribute(@__nzdo__base, :repo) -> Module.get_attribute(@__nzdo__base, :repo)
-                                        !@__nzdo__poly_base_open? && @__nzdo__poly_base.__noizu_info(:repo) -> @__nzdo__poly_base.__noizu_info(:repo)
-                                        @__nzdo__poly_base_open? && Module.get_attribute(@__nzdo__poly_base, :repo) -> Module.get_attribute(@__nzdo__poly_base, :repo)
-                                        :else -> Module.concat(@__nzdo__poly_base, "Repo")
-                                      end)
-
-                       @__nzdo__sref (cond do
-                                        v = unquote(sref) -> v
-                                        v = Module.get_attribute(__MODULE__, :sref) -> v
-                                        !@__nzdo__base_open? && @__nzdo__base.__noizu_info(:sref) -> @__nzdo__base.__noizu_info(:sref)
-                                        @__nzdo__base_open? && Module.get_attribute(@__nzdo__base, :sref) -> Module.get_attribute(@__nzdo__base, :sref)
-                                        !@__nzdo__poly_base_open? && @__nzdo__poly_base.__noizu_info(:sref) -> @__nzdo__poly_base.__noizu_info(:sref)
-                                        @__nzdo__poly_base_open? && Module.get_attribute(@__nzdo__poly_base, :sref) -> Module.get_attribute(@__nzdo__poly_base, :sref)
-                                        :else -> :unsupported
-                                      end)
-
-                       @vsn (cond do
-                               v = unquote(vsn) -> v
-                               v = Module.get_attribute(__MODULE__, :vsn) -> v
-                               !@__nzdo__base_open? && @__nzdo__base.__noizu_info(:vsn) -> @__nzdo__base.__noizu_info(:vsn)
-                               @__nzdo__base_open? && Module.get_attribute(@__nzdo__base, :vsn) -> Module.get_attribute(@__nzdo__base, :vsn)
-                               !@__nzdo__poly_base_open? && @__nzdo__poly_base.__noizu_info(:vsn) -> @__nzdo__poly_base.__noizu_info(:vsn)
-                               @__nzdo__poly_base_open? && Module.get_attribute(@__nzdo__poly_base, :vsn) -> Module.get_attribute(@__nzdo__poly_base, :vsn)
-                               :else -> 1.0
-                             end)
+                       @__nzdo__repo unquote(repo) || Noizu.DomainObject.extract_attribute(:repo, Module.concat([@__nzdo__poly_base, "Repo"]))
+                       @__nzdo__sref unquote(sref) || Noizu.DomainObject.extract_attribute(:sref, :unsupported)
+                       @vsn unquote(vsn) || Noizu.DomainObject.extract_attribute(:vsn, 1.0)
 
                        if @__nzdo__base_open? do
                          Module.put_attribute(@__nzdo__base, :__nzdo__sref, @__nzdo__sref)
@@ -166,14 +140,12 @@ defmodule Noizu.DomainObject do
                        #----------------------
                        # Load Persistence Settings from base, we need them to control some submodules.
                        #----------------------
-                       @__nzdo_persistence (cond do
-                          !@__nzdo__base_open? && @__nzdo__base.__noizu_info(:persistence) -> @__nzdo__base.__noizu_info(:persistence)
-                          @__nzdo__base_open? && Module.get_attribute(@__nzdo__base, :vsn) -> Noizu.DomainObject.expand_persistence_layers(Module.get_attribute(@__nzdo__base, :persistence_layer), __MODULE__)
-                          !@__nzdo__poly_base_open? && @__nzdo__poly_base.__noizu_info(:vsn) -> @__nzdo__poly_base.__noizu_info(:persistence)
-                          @__nzdo__poly_base_open? && Module.get_attribute(@__nzdo__poly_base, :vsn) -> Noizu.DomainObject.expand_persistence_layers(Module.get_attribute(@__nzdo__poly_base, :persistence_layer), __MODULE__)
-                          :else -> Noizu.DomainObject.expand_persistence_layers(nil, __MODULE__)
-                        end)
+                       @__nzdo__auto_generate Noizu.DomainObject.extract_has_attribute(:auto_generate, nil)
+                       @__nzdo__enum_list Noizu.DomainObject.extract_has_attribute(:enum_list, false)
+                       @__nzdo__enum_default_value Noizu.DomainObject.extract_has_attribute(:default_value, :none)
+                       @__nzdo__enum_ecto_type Noizu.DomainObject.extract_has_attribute(:ecto_type, :integer)
 
+                       @__nzdo_persistence Noizu.DomainObject.extract_transform_attribute(:persistence_layer, :persistence, {Noizu.DomainObject, :expand_persistence_layers, [__MODULE__]})
                        @__nzdo_persistence__layers Enum.map(@__nzdo_persistence.layers, fn(layer) -> {layer.schema, layer} end) |> Map.new()
                        @__nzdo_persistence__by_table Enum.map(@__nzdo_persistence.layers, fn(layer) -> {layer.table, layer} end) |> Map.new()
                        @__nzdo_ecto_entity (@__nzdo_persistence.ecto_entity && true || false)
@@ -182,122 +154,71 @@ defmodule Noizu.DomainObject do
                        end
 
 
+                       if @__nzdo__base_open? do
+                         Module.put_attribute(@__nzdo__base, :__nzdo_persistence, @__nzdo_persistence)
+                         Module.put_attribute(@__nzdo__base, :__nzdo__enum_list, @__nzdo__enum_list)
+                         Module.put_attribute(@__nzdo__base, :__nzdo__enum_default_value, @__nzdo__enum_default_value)
+                         Module.put_attribute(@__nzdo__base, :__nzdo__enum_ecto_type, @__nzdo__enum_ecto_type)
+                       end
+
+
+                       #--------------------------------
+                       # Nmid
+                       #--------------------------------
+                       @__nzdo__nmid_generator Noizu.DomainObject.extract_has_attribute(:nmid_generator, unquote(default_nmid_generator))
+                       @__nzdo__nmid_sequencer Noizu.DomainObject.extract_has_attribute(:nmid_sequencer, __MODULE__)
+                       @__nzdo__nmid_index Noizu.DomainObject.extract_has_attribute(:nmid_index, nil)
+                       @__nzdo__nmid_bare Noizu.DomainObject.extract_has_attribute(:nmid_bare, @__nzdo_persistence.options[:enum_table] && true || false)
+                       if @__nzdo__base_open? do
+                         Module.put_attribute(@__nzdo__base, :__nzdo__nmid_generator, @__nzdo__nmid_generator)
+                         Module.put_attribute(@__nzdo__base, :__nzdo__nmid_sequencer, @__nzdo__nmid_sequencer)
+                         Module.put_attribute(@__nzdo__base, :__nzdo__nmid_index, @__nzdo__nmid_index)
+                         Module.put_attribute(@__nzdo__base, :__nzdo__nmid_bare, @__nzdo__nmid_bare)
+                       end
+
+
                        #--------------------------------
                        # Json Settings
                        #--------------------------------
-
-                       @__nzdo__json_provider (cond do
-                                                 v = unquote(json_provider) -> v
-                                                 v = Module.has_attribute?(__MODULE__, :json_provider) -> Module.get_attribute(__MODULE__, :json_provider)
-                                                 !@__nzdo__base_open? && @__nzdo__base.__noizu_info(:json_provider) -> @__nzdo__base.__noizu_info(:json_provider)
-                                                 @__nzdo__base_open? && Module.has_attribute?(@__nzdo__base, :json_provider) -> Module.get_attribute(@__nzdo__base, :json_provider)
-                                                 !@__nzdo__poly_base_open? && @__nzdo__poly_base.__noizu_info(:json_provider) -> @__nzdo__poly_base.__noizu_info(:json_provider)
-                                                 @__nzdo__poly_base_open? && Module.has_attribute?(@__nzdo__poly_base, :json_provider) -> Module.get_attribute(@__nzdo__poly_base, :json_provider)
-                                                 :else -> Noizu.Scaffolding.V3.Poison.Encoder
-                                               end)
-
-
+                       @__nzdo__json_provider unquote(json_provider) || Noizu.DomainObject.extract_attribute(:json_provider, Noizu.Scaffolding.V3.Poison.Encoder)
+                       @__nzdo__json_format unquote(json_format) || Noizu.DomainObject.extract_has_attribute(:json_format, :default)
+                       @__nzdo__json_supported_formats unquote(json_supported_formats) || Noizu.DomainObject.extract_has_attribute(:json_supported_formats,  [:standard, :admin, :verbose, :compact, :mobile, :verbose_mobile])
+                       @__nzdo__json_format_groups (Enum.map(Noizu.DomainObject.extract_attribute(:json_format_group, []),
+                                                         fn(group) ->
+                                                           case group do
+                                                             {alias, member} when is_atom(member) -> {alias, [members: [member]]}
+                                                             {alias, members} when is_list(members) -> {alias, [members: members]}
+                                                             {alias, member, defaults} when is_atom(member) -> {alias, [members: [member], defaults: defaults]}
+                                                             {alias, members, defaults} when is_list(members) -> {alias, [members: members, defaults: defaults]}
+                                                             _ -> raise "Invalid @json_formatting_group entry #{inspect group}"
+                                                           end
+                                                         end) |> Map.new())
+                       @__nzdo__json_field_groups (Enum.map(Noizu.DomainObject.extract_attribute(:json_field_group, []),
+                                                      fn(group) ->
+                                                        case group do
+                                                          {alias, member} when is_atom(member) -> {alias, [members: [member]]}
+                                                          {alias, members} when is_list(members) -> {alias, [members: members]}
+                                                          {alias, member, defaults} when is_atom(member) -> {alias, [members: [member], defaults: defaults]}
+                                                          {alias, members, defaults} when is_list(members) -> {alias, [members: members, defaults: defaults]}
+                                                          _ -> raise "Invalid @json_field_group entry #{inspect group}"
+                                                        end
+                                                      end) |> Map.new())
+                       @__nzdo__json_white_list (cond do
+                                                    unquote(json_white_list) != nil -> unquote(json_white_list)
+                                                    :else -> Noizu.DomainObject.extract_has_attribute(:json_white_list, false)
+                                                  end)
                        if (@__nzdo__base_open?) do
                          Module.put_attribute(@__nzdo__base, :__nzdo__json_provider, @__nzdo__json_provider)
-                       end
-
-                       @__nzdo__json_format (cond do
-                                               v = unquote(json_format) -> v
-                                               v = Module.has_attribute?(__MODULE__, :json_format) -> Module.get_attribute(__MODULE__, :json_format)
-                                               !@__nzdo__base_open? && @__nzdo__base.__noizu_info(:json_format) -> @__nzdo__base.__noizu_info(:json_format)
-                                               @__nzdo__base_open? && Module.has_attribute?(@__nzdo__base, :json_format) -> Module.get_attribute(@__nzdo__base, :json_format)
-                                               !@__nzdo__poly_base_open? && @__nzdo__poly_base.__noizu_info(:json_format) -> @__nzdo__poly_base.__noizu_info(:json_format)
-                                               @__nzdo__poly_base_open? && Module.has_attribute?(@__nzdo__poly_base, :json_provider) -> Module.get_attribute(@__nzdo__poly_base, :json_provider)
-                                               :else -> :default
-                                             end)
-
-                       if (@__nzdo__base_open?) do
                          Module.put_attribute(@__nzdo__base, :__nzdo__json_format, @__nzdo__json_format)
-                       end
-
-
-                       @__nzdo__json_supported_formats (cond do
-                                               !@__nzdo__base_open? && @__nzdo__base.__noizu_info(:json_supported_formats) -> @__nzdo__base.__noizu_info(:json_supported_formats)
-                                               @__nzdo__base_open? && Module.has_attribute?(@__nzdo__base, :json_supported_formats) -> Module.get_attribute(@__nzdo__base, :json_supported_formats)
-                                               !@__nzdo__poly_base_open? && @__nzdo__poly_base.__noizu_info(:json_supported_formats) -> @__nzdo__poly_base.__noizu_info(:json_supported_formats)
-                                               @__nzdo__poly_base_open? && Module.has_attribute?(@__nzdo__poly_base, :json_supported_formats) -> Module.get_attribute(@__nzdo__poly_base, :json_supported_formats)
-                                               :else -> [
-                                                          :standard,
-                                                          :admin,
-                                                          :verbose,
-                                                          :compact,
-                                                          :mobile,
-                                                          :verbose_mobile
-                                                        ]
-                                             end)
-
-                       if (@__nzdo__base_open?) do
                          Module.put_attribute(@__nzdo__base, :__nzdo__json_supported_formats, @__nzdo__json_supported_formats)
-                       end
-
-
-                       @__nzdo__json_format_groups (
-                                                     cond do
-                                                       !@__nzdo__base_open? && @__nzdo__base.__noizu_info(:json_format_group) -> @__nzdo__base.__noizu_info(:json_format_groups)
-                                                       @__nzdo__base_open? && Module.get_attribute(@__nzdo__base, :json_format_group) -> Module.get_attribute(@__nzdo__base, :json_format_group)
-                                                       !@__nzdo__poly_base_open? && @__nzdo__poly_base.__noizu_info(:json_format_group) -> @__nzdo__poly_base.__noizu_info(:json_format_group)
-                                                       @__nzdo__poly_base_open? && Module.get_attribute(@__nzdo__poly_base, :json_format_group) -> Module.get_attribute(@__nzdo__poly_base, :json_format_group)
-                                                       :else -> []
-                                                     end |> Enum.map(
-                                                              fn(group) ->
-                                                                case group do
-                                                                  {alias, member} when is_atom(member) -> {alias, [members: [member]]}
-                                                                  {alias, members} when is_list(members) -> {alias, [members: members]}
-                                                                  {alias, member, defaults} when is_atom(member) -> {alias, [members: [member], defaults: defaults]}
-                                                                  {alias, members, defaults} when is_list(members) -> {alias, [members: members, defaults: defaults]}
-                                                                  _ -> raise "Invalid @json_formatting_group entry #{inspect group}"
-                                                                end
-                                                              end) |> Map.new()
-                                                     )
-
-                       if (@__nzdo__base_open?) do
                          Module.put_attribute(@__nzdo__base, :__nzdo__json_format_groups, @__nzdo__json_format_groups)
-                       end
-
-                       @__nzdo__json_field_groups (
-                                                     cond do
-                                                       !@__nzdo__base_open? && @__nzdo__base.__noizu_info(:json_field_group) -> @__nzdo__base.__noizu_info(:json_field_group)
-                                                       @__nzdo__base_open? && Module.get_attribute(@__nzdo__base, :json_field_group) -> Module.get_attribute(@__nzdo__base, :json_field_group)
-                                                       !@__nzdo__poly_base_open? && @__nzdo__poly_base.__noizu_info(:json_field_group) -> @__nzdo__poly_base.__noizu_info(:json_field_group)
-                                                       @__nzdo__poly_base_open? && Module.get_attribute(@__nzdo__poly_base, :json_field_group) -> Module.get_attribute(@__nzdo__poly_base, :json_field_group)
-                                                       :else -> []
-                                                     end |> Enum.map(
-                                                              fn(group) ->
-                                                                case group do
-                                                                  {alias, member} when is_atom(member) -> {alias, [members: [member]]}
-                                                                  {alias, members} when is_list(members) -> {alias, [members: members]}
-                                                                  {alias, member, defaults} when is_atom(member) -> {alias, [members: [member], defaults: defaults]}
-                                                                  {alias, members, defaults} when is_list(members) -> {alias, [members: members, defaults: defaults]}
-                                                                  _ -> raise "Invalid @json_field_group entry #{inspect group}"
-                                                                end
-                                                              end) |> Map.new()
-                                                     )
-
-                       if (@__nzdo__base_open?) do
                          Module.put_attribute(@__nzdo__base, :__nzdo__json_field_groups, @__nzdo__json_field_groups)
-                       end
-
-                       @__nzdo__json_white_list (cond do
-                                                   unquote(json_white_list) == false -> false
-                                                   v = unquote(json_white_list) -> v
-                                                   v = Module.has_attribute?(__MODULE__, :json_white_list) -> Module.get_attribute(__MODULE__, :json_white_list)
-                                                   !@__nzdo__base_open? && @__nzdo__base.__noizu_info(:json_white_list) -> @__nzdo__base.__noizu_info(:json_white_list)
-                                                   @__nzdo__base_open? && Module.has_attribute?(@__nzdo__base, :json_white_list) -> Module.get_attribute(@__nzdo__base, :json_white_list)
-                                                   !@__nzdo__poly_base_open? && @__nzdo__poly_base.__noizu_info(:json_white_list) -> @__nzdo__poly_base.__noizu_info(:json_white_list)
-                                                   @__nzdo__poly_base_open? && Module.has_attribute?(@__nzdo__poly_base, :json_white_list) -> Module.get_attribute(@__nzdo__poly_base, :json_white_list)
-                                                   :else -> false
-                                                 end)
-
-                       if (@__nzdo__base_open?) do
                          Module.put_attribute(@__nzdo__base, :__nzdo__json_white_list, @__nzdo__json_white_list)
                        end
 
-
+                       #----------------------
+                       #
+                       #----------------------
                        __nzdo__json_config = %{
                          provider: @__nzdo__json_provider,
                          defualt_format: @__nzdo__json_format,
@@ -500,7 +421,7 @@ defmodule Noizu.DomainObject do
                        # Push details to Base, and read in required settings.
                        #---------------------
                        Module.put_attribute(@__nzdo__base, :__nzdo__repo, __MODULE__)
-                       @__nzdo__entity Module.concat(@__nzdo__base, "Entity")
+                       @__nzdo__entity Module.concat([@__nzdo__base, "Entity"])
                        @__nzdo__sref Module.get_attribute(@__nzdo__base, :sref)
                        @vsn (Module.get_attribute(@__nzdo__base, :vsn) || 1.0)
 
@@ -626,7 +547,7 @@ defmodule Noizu.DomainObject do
     end)
 
     enum_table = cond do
-                   v = Module.get_attribute(module, :enum_list) -> v
+                   v = Module.get_attribute(module, :__nzdo__enum_list) -> v && true || false
                    :else -> false
                  end
     universal_identifier = cond do
@@ -640,6 +561,11 @@ defmodule Noizu.DomainObject do
                          :else -> Application.get_env(:noizu_scaffolding, :universal_identifier_default, true)
                        end
 
+    auto_generate = case Module.get_attribute(module, :__nzdo__atuo_generate) do
+                      true -> true
+                      false -> false
+                      _ -> !enum_table
+                    end
     generate_reference_type_default = cond do
                                         enum_table -> false
                                         :else -> universal_lookup || universal_identifier
@@ -651,16 +577,19 @@ defmodule Noizu.DomainObject do
 
     persistence_options = %{
       enum_table: enum_table,
+      auto_generate: auto_generate,
       universal_identifier: universal_identifier,
       universal_lookup: universal_lookup,
       generate_reference_type: generate_reference_type,
     }
 
-    schemas = Enum.map(layers || [], fn(v) -> {v.schema, v} end)
+    schemas = Enum.map(layers || [], &({&1.schema, &1}))
+    tables = Enum.map(layers || [], &({&1.table, &1}))
 
     %Noizu.Scaffolding.V3.Schema.PersistenceSettings{
       layers: layers,
       schemas: schemas,
+      tables: tables,
       mnesia_backend: mnesia_backend,
       ecto_entity: ecto_entity,
       options: persistence_options
@@ -798,24 +727,30 @@ defmodule Noizu.DomainObject do
       def __sref__(), do: @__nzdo__sref
       def __erp__(), do: @__nzdo__entity
 
+
+      def __nmid__(), do: __nmid__(:all)
+      def __nmid__(:all), do: @__nzdo__entity.__nmid__(:all)
+      def __nmid__(:generator), do: @__nzdo__nmid_generator
+      def __nmid__(:sequencer), do: @__nzdo__nmid_sequencer
+      def __nmid__(:bare), do: @__nzdo__nmid_bare
+      def __nmid__(:index), do: @__nzdo__entity.__noizu_info__(:nmid_index)
+
+      defdelegate __persistence__(setting \\ :all), to:  @__nzdo__entity
+      defdelegate __persistence__(selector, setting), to:  @__nzdo__entity
+
       def __noizu_info__(:type), do: :base
       def __noizu_info__(:base), do: __MODULE__
       def __noizu_info__(:entity), do: @__nzdo__entity
       def __noizu_info__(:repo), do: @__nzdo__repo
       def __noizu_info__(:sref), do: @__nzdo__sref
       def __noizu_info__(:restrict_provider), do: nil
-      def __noizu_info__(:nmid_generator), do: @__nzdo_nmid_generatoer
-      #def __noizu_info__(:nmid_index), do: @__nzdo_nmid_index
-      def __noizu_info__(:nmid_sequencer), do: @__nzdo_nmid_sequencer
       def __noizu_info__(:poly), do: @__nzdo__poly_settings
-      def __noizu_info__(:nmid_index), do: @__nzdo__entity.__noizu_info__(:nmid_index)
       def __noizu_info__(:json_configuration), do: @__nzdo__entity.__noizu_info__(:json_configuration)
       def __noizu_info__(:identifier_type), do: @__nzdo__entity.__noizu_info__(:identifier_type)
       def __noizu_info__(:fields), do: @__nzdo__entity.__noizu_info__(:fields)
       def __noizu_info__(:field_attributes), do: @__nzdo__entity.__noizu_info__(:field_attributes)
       def __noizu_info__(:field_types), do: @__nzdo__entity.__noizu_info__(:field_types)
       def __noizu_info__(:persistence), do: @__nzdo__entity.__noizu_info__(:persistence)
-      def __noizu_info__(:tables), do: @__nzdo__entity.__noizu_info__(:tables)
       def __noizu_info__(:associated_types), do: @__nzdo__entity.__noizu_info__(:associated_types)
       def __noizu_info__(:schema_field_types), do: @__nzdo__entity.__noizu_info__(:schema_field_types)
       def __noizu_info__(:meta), do: @__nzdo__meta__map
@@ -835,19 +770,19 @@ defmodule Noizu.DomainObject do
       #--------------------
       # EnumType
       #--------------------
-      if options = Module.get_attribute(__MODULE__, :__nzdo_enum_field) do
+      if options = Module.get_attribute(__MODULE__, :__nzdo__enum_list) do
         domain_object = __MODULE__
         defmodule EnumField do
           {values,default_value,ecto_type} = case options do
                                                {v,options} ->
                                                  {v,
-                                                   options[:default_value] || Module.get_attribute(domain_object, :default_value) || :none,
-                                                   options[:ecto_type] || Module.get_attribute(domain_object, :ecto_type) || :integer
+                                                   options[:default_value] || Module.get_attribute(domain_object, :__nzdo__enum_default_value) || :none,
+                                                   options[:ecto_type] || Module.get_attribute(domain_object, :__nzdo__enum_ecto_type) || :integer
                                                  }
                                                v when is_list(v) ->
                                                  {v,
-                                                   Module.get_attribute(domain_object, :default_value) || :none,
-                                                   Module.get_attribute(domain_object, :ecto_type) || :integer
+                                                   Module.get_attribute(domain_object, :__nzdo__enum_default_value) || :none,
+                                                   Module.get_attribute(domain_object, :__nzdo__enum_ecto_type) || :integer
                                                  }
                                              end
           use Noizu.EnumFieldBehaviour,
@@ -877,6 +812,34 @@ defmodule Noizu.DomainObject do
                                       {key, Noizu.DomainObject.__unroll_field_types__(key, @__nzdo__field_types_map)}
                                     end
                                   )
+
+
+      def __persistence__(), do: __persistence__(:all)
+      def __persistence__(:all), do:  @__nzdo_persistence
+      def __persistence__(:enum_table), do:  @__nzdo_persistence.options.enum_table
+      def __persistence__(:auto_generate), do:  @__nzdo_persistence.options.auto_generate
+      def __persistence__(:universal_identifier), do:  @__nzdo_persistence.options.universal_identifier
+      def __persistence__(:universal_lookup), do:  @__nzdo_persistence.options.universal_lookup
+      def __persistence__(:reference_type), do:  @__nzdo_persistence.options.generate_reference_type
+      def __persistence__(:layer), do:  @__nzdo_persistence.layers
+      def __persistence__(:schema), do:  @__nzdo_persistence.schemas
+      def __persistence__(:table), do:  @__nzdo_persistence.tables
+      def __persistence__(:ecto_entity), do:  @__nzdo_persistence.ecto_entity
+      def __persistence__(:options), do:  @__nzdo_persistence.options
+      def __persistence__(repo, :table), do:  @__nzdo_persistence.schemas[repo] && @__nzdo_persistence.schemas[repo].table
+
+      def __nmid__(), do: __nmid__(:all)
+      def __nmid__(:all) do
+        %{
+          generator:  __nmid__(:generator),
+          sequencer: __nmid__(:sequencer),
+          bare: __nmid__(:bare),
+          index: __nmid__(:index),
+        }
+      end
+      def __nmid__(:index), do: @__nzdo__nmid_index || @__nzdo__schema_helper.__noizu_info__(:nmid_indexes)[__MODULE__]
+      defdelegate __nmid__(setting), to: @__nzdo__base
+
 
       def __noizu_info__(:type), do: :entity
       def __noizu_info__(:identifier_type), do: @__nzdo__identifier_type
@@ -919,6 +882,12 @@ defmodule Noizu.DomainObject do
       defdelegate entity!(ref, options \\ nil), to: @__nzdo__base
       defdelegate record(ref, options \\ nil), to: @__nzdo__base
       defdelegate record!(ref, options \\ nil), to: @__nzdo__base
+
+
+      defdelegate __persistence__(setting \\ :all), to:  @__nzdo__base
+      defdelegate __persistence__(selector, setting), to:  @__nzdo__base
+      defdelegate __nmid__(), to: @__nzdo__base
+      defdelegate __nmid__(setting), to: @__nzdo__base
       defdelegate __noizu_record__(type, ref, options \\ nil), to: @__nzdo__base
       defdelegate __noizu_info__(report), to: @__nzdo__base
     end
@@ -966,5 +935,71 @@ defmodule Noizu.DomainObject do
     |> Enum.filter(&(&1))
     |> Map.new()
   end
+
+  defmacro extract_transform_attribute(attribute, setting, mfa, default \\ nil) do
+    quote do
+      cond do
+        v = Module.get_attribute(__MODULE__,unquote(attribute)) ->
+          {Noizu.DomainObject, :expand_persistence_layers, [__MODULE__]}
+          {m,f,a} = unquote(mfa)
+          apply(m,f, [v] ++ a)
+        !@__nzdo__base_open? && @__nzdo__base.__noizu_info(unquote(setting)) -> @__nzdo__base.__noizu_info(unquote(setting))
+        @__nzdo__base_open? && Module.get_attribute(@__nzdo__base, unquote(attribute)) ->
+          v = Module.get_attribute(@__nzdo__base, unquote(attribute))
+          {m,f,a} = unquote(mfa)
+          apply(m,f, [v] ++ a)
+        !@__nzdo__poly_base_open? && @__nzdo__poly_base.__noizu_info(unquote(setting)) -> @__nzdo__poly_base.__noizu_info(unquote(setting))
+        @__nzdo__poly_base_open? && Module.get_attribute(@__nzdo__poly_base, unquote(attribute)) ->
+          v = Module.get_attribute(@__nzdo__poly_base, unquote(attribute))
+          {m,f,a} = unquote(mfa)
+          apply(m,f, [v] ++ a)
+        :else ->
+          v = unquote(default)
+          {m,f,a} = unquote(mfa)
+          apply(m,f, [v] ++ a)
+      end
+    end
+  end
+
+
+  defmacro extract_has_attribute(attribute, default) do
+    quote do
+      cond do
+        Module.has_attribute?(__MODULE__,unquote(attribute)) -> Module.get_attribute?(__MODULE__,unquote(attribute))
+        !@__nzdo__base_open? && @__nzdo__base.__noizu_info(unquote(attribute)) -> @__nzdo__base.__noizu_info(unquote(attribute))
+        @__nzdo__base_open? && Module.has_attribute?(@__nzdo__base, unquote(attribute)) -> Module.get_attribute(@__nzdo__base, unquote(attribute))
+        !@__nzdo__poly_base_open? && @__nzdo__poly_base.__noizu_info(unquote(attribute)) -> @__nzdo__poly_base.__noizu_info(unquote(attribute))
+        @__nzdo__poly_base_open? && Module.has_attribute?(@__nzdo__poly_base, unquote(attribute)) -> Module.get_attribute(@__nzdo__poly_base, unquote(attribute))
+        :else -> unquote(default)
+      end
+    end
+  end
+
+  defmacro extract_attribute(attribute, default) do
+    quote do
+      cond do
+        v = Module.get_attribute(__MODULE__,unquote(attribute)) -> v
+        !@__nzdo__base_open? && @__nzdo__base.__noizu_info(unquote(attribute)) -> @__nzdo__base.__noizu_info(unquote(attribute))
+        @__nzdo__base_open? && Module.get_attribute(@__nzdo__base, unquote(attribute)) -> Module.get_attribute(@__nzdo__base, unquote(attribute))
+        !@__nzdo__poly_base_open? && @__nzdo__poly_base.__noizu_info(unquote(attribute)) -> @__nzdo__poly_base.__noizu_info(unquote(attribute))
+        @__nzdo__poly_base_open? && Module.get_attribute(@__nzdo__poly_base, unquote(attribute)) -> Module.get_attribute(@__nzdo__poly_base, unquote(attribute))
+        :else -> unquote(default)
+      end
+    end
+  end
+
+  defmacro extract_attribute2(attribute, setting, default) do
+    quote do
+      cond do
+        v = Module.get_attribute(__MODULE__, unquote(attribute)) -> v
+        !@__nzdo__base_open? && @__nzdo__base.__noizu_info(unquote(setting)) -> @__nzdo__base.__noizu_info(unquote(setting))
+        @__nzdo__base_open? && Module.get_attribute(@__nzdo__base, unquote(attribute)) -> Module.get_attribute(@__nzdo__base, unquote(attribute))
+        !@__nzdo__poly_base_open? && @__nzdo__poly_base.__noizu_info(unquote(setting)) -> @__nzdo__poly_base.__noizu_info(unquote(setting))
+        @__nzdo__poly_base_open? && Module.get_attribute(@__nzdo__poly_base, unquote(attribute)) -> Module.get_attribute(@__nzdo__poly_base, unquote(attribute))
+        :else -> unquote(default)
+      end
+    end
+  end
+
 
 end

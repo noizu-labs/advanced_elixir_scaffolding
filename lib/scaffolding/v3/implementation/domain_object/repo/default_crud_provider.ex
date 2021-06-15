@@ -3,11 +3,11 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
   require Amnesia.Fragment
 
   def generate_identifier!(m) do
-    m.__noizu_info__(:nmid_generator).generate!(m.__noizu_info__(:nmid_sequencer))
+    m.__nmid__(:generator).generate!(m.__nmid__(:sequencer))
   end
 
   def generate_identifier(m) do
-    m.__noizu_info__(:nmid_generator).generate(m.__noizu_info__(:nmid_sequencer))
+    m.__nmid__(:generator).generate(m.__nmid__(:sequencer))
   end
 
   def get(_m, _ref, _context, _options) do
@@ -109,9 +109,19 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
 
   def pre_create_callback(m, entity, context, options) do
     cond do
-      entity.identifier && options[:override_identifier] != true -> throw "#{m.__noizu_info__(:entity)} attempted to call create with a preset identifier #{inspect entity.identifier}. If this was intentional set override_identifier option to true "
-      :else -> :ok
+      m.__persistence__(:auto_generate) ->
+        cond do
+          entity.identifier && options[:override_identifier] != true -> throw "#{m.__noizu_info__(:entity)} attempted to call create with a preset identifier #{inspect entity.identifier}. If this was intentional set override_identifier option to true "
+          :else -> :ok
+        end
+      :else ->
+        cond do
+          !entity.identifier && options[:generate_identifier] != true -> throw "#{m.__noizu_info__(:entity)} does not support auto_generate identifiers by default. Include in identifier during creation or pass in generate_identifier: true option "
+          :else -> :ok
+        end
     end
+
+
 
     # todo unviersal lookup logic
     identifier = entity.identifier || m.generate_identifier()
@@ -126,7 +136,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
 
   def post_create_callback(_m, entity, _context, _options), do: entity
   def create(m, entity, context, options) do
-    settings = m.__noizu_info__(:persistence)
+    settings = m.__persistence__()
     entity = m.pre_create_callback(entity, context, options)
     entity = Enum.reduce(
       settings.layers,
@@ -148,7 +158,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
   end
 
   def create!(m, entity, context, options) do
-    settings = m.__noizu_info__(:persistence)
+    settings = m.__persistence__()
     cond do
       settings.mnesia_backend == nil -> m.create(entity, context, options)
       settings.mnesia_backend[:require_transaction?] ->
