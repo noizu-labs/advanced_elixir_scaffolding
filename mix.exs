@@ -7,15 +7,17 @@ defmodule Noizu.Scaffolding.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :noizu_scaffolding,
-     version: "1.2.1",
-     elixir: "~> 1.4",
-     package: package(),
-     deps: deps(),
-     elixirc_paths: elixirc_paths(Mix.env),
-     description: "Noizu Scaffolding",
-     docs: docs()
-   ]
+    [
+      app: :noizu_scaffolding,
+      version: "1.2.1",
+      elixir: "~> 1.4",
+      package: package(),
+      deps: deps(),
+      elixirc_paths: elixirc_paths(Mix.env),
+      description: "Noizu Scaffolding",
+      docs: docs(),
+      xref: [exclude: [Plug.Conn]]
+    ]
   end # end project
 
   # Specifies which paths to compile per environment.
@@ -31,7 +33,10 @@ defmodule Noizu.Scaffolding.Mixfile do
   end # end package
 
   def application do
-    [ applications: [:logger] ]
+    [
+      applications: [:logger],
+      extra_applications: [:noizu_core]
+    ]
   end # end application
 
   defp deps do

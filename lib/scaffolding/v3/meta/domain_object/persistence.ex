@@ -110,7 +110,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.Persistence do
                          :else -> Application.get_env(:noizu_scaffolding, :universal_identifier_default, true)
                        end
 
-    auto_generate = case Module.get_attribute(module, :__nzdo__atuo_generate) do
+    auto_generate = case Module.get_attribute(module, :__nzdo__auto_generate) do
                       true -> true
                       false -> false
                       _ -> !enum_table

@@ -79,7 +79,7 @@ defmodule Noizu.Scaffolding.V3.Helpers do
   def update_expand_options(entity, options) when is_atom(entity) do
     sm = cond do
            !function_exported?(entity, :__sref__, 0) -> "[error]"
-           v = entity.__sref__ -> v != :undefined && v || "[error]"
+           v = entity.__sref__() -> v != :undefined && v || "[error]"
            :else -> "[error"
          end
     (options || %{})

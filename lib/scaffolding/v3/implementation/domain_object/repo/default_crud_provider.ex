@@ -10,11 +10,59 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
     m.__nmid__(:generator).generate(m.__nmid__(:sequencer))
   end
 
-  def get(_m, _ref, _context, _options) do
-    IO.puts "TODO table or mnesia query - get"
+  def get(m, ref, context, options) do
+    identifier = m.__entity__().id(ref)
+    if identifier do
+      Enum.reduce_while(m.__entity__().__persistence__(:layer), nil,
+        fn(layer, acc) ->
+          cond do
+            layer.load_fallback?->
+              case layer.type do
+                :mnesia ->
+                  record = layer.table.read(identifier)
+                  entity = record && m.__entity__().__from_record__(layer.table, record, context, options)
+                  entity && {:halt, entity} || {:cont, nil}
+                :ecto ->
+                  record = layer.schema.get(layer.table, identifier)
+                  entity = record && m.__entity__().__from_record__(layer.table, record, context, options)
+                  entity && {:halt, entity} || {:cont, nil}
+                :redis ->
+                  {:cont, nil}
+                _ ->
+                  {:cont, nil}
+              end
+            :else -> {:cont, nil}
+          end
+        end
+      )
+    end
   end
-  def get!(_m, _ref, _context, _options) do
-    IO.puts "TODO table or mnesia query - get!"
+  def get!(m, ref, context, options) do
+    identifier = m.__entity__().id(ref)
+    if identifier do
+      Enum.reduce_while(m.__entity__().__persistence__(:layer), nil,
+        fn(layer, acc) ->
+          cond do
+            layer.load_fallback?->
+              case layer.type do
+                :mnesia ->
+                  record = layer.table.read!(identifier)
+                  entity = record && m.__entity__().__from_record__!(layer.table, record, context, options)
+                  entity && {:halt, entity} || {:cont, nil}
+                :ecto ->
+                  record = layer.schema.get(layer.table, identifier)
+                  entity = record && m.__entity__().__from_record__!(layer.table, record, context, options)
+                  entity && {:halt, entity} || {:cont, nil}
+                :redis ->
+                  {:cont, nil}
+                _ ->
+                  {:cont, nil}
+              end
+            :else -> {:cont, nil}
+          end
+        end
+      )
+    end
   end
 
   def cache(_m, ref, _context, _options) do
@@ -26,32 +74,32 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
 
   def layer_pre_create_callback(_m, _layer, entity, _context, _options), do: entity
 
-  def layer_create_callback(m, %{type: :mnesia} = layer, entity, _context, options) do
+  def layer_create_callback(m, %{type: :mnesia} = layer, entity, context, options) do
     cond do
-      record = m.__entity__().__as_record__(layer.table, entity, options) ->
+      record = m.__entity__().__as_record__(layer.table, entity, context, options) ->
         layer.table.write(record)
     end
     entity
   end
-  def layer_create_callback(m, %{type: :ecto} = layer, entity, _context, options) do
+  def layer_create_callback(m, %{type: :ecto} = layer, entity, context, options) do
     cond do
-      record = m.__entity__().__as_record__(layer.table, entity, options) ->
+      record = m.__entity__().__as_record__(layer.table, entity, context, options) ->
         layer.schema.insert(record)
     end
     entity
   end
   def layer_create_callback(_m, _layer, entity, _context, _options), do: entity
 
-  def layer_create_callback!(m, %{type: :mnesia} = layer, entity, _context, options) do
+  def layer_create_callback!(m, %{type: :mnesia} = layer, entity, context, options) do
     cond do
-      record = m.__entity__().__as_record__!(layer.table, entity, options) ->
+      record = m.__entity__().__as_record__!(layer.table, entity, context, options) ->
         layer.table.write!(record)
     end
     entity
   end
-  def layer_create_callback!(m, %{type: :ecto} = layer, entity, _context, options) do
+  def layer_create_callback!(m, %{type: :ecto} = layer, entity, context, options) do
     cond do
-      record = m.__entity__().__as_record__!(layer.table, entity, options) ->
+      record = m.__entity__().__as_record__!(layer.table, entity, context, options) ->
         layer.schema.insert(record)
     end
     entity
@@ -68,16 +116,16 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
     cond do
       layer.type != :mnesia -> m.layer_create(layer, entity, context, options)
       layer.require_transaction? ->
-          cond do
-            layer.fragmented? ->
+        cond do
+          layer.fragmented? ->
             Amnesia.Fragment.transaction do
               m.layer_create(layer, entity, context, options)
             end
-            :else ->
-              Amnesia.transaction do
-                m.layer_create(layer, entity, context, options)
-              end
-          end
+          :else ->
+            Amnesia.transaction do
+              m.layer_create(layer, entity, context, options)
+            end
+        end
       layer.dirty? ->
         cond do
           layer.fragmented? ->
@@ -147,8 +195,8 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
             cond do
               layer.cascade_block? -> m.layer_create(layer, entity, context, options)
               :else ->
-              spawn fn -> m.layer_create!(layer, entity, context, options) end
-              entity
+                spawn fn -> m.layer_create!(layer, entity, context, options) end
+                entity
             end
           :else -> entity
         end
@@ -193,10 +241,10 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
             end
           end
         )
-      cond do
-        settings.mnesia_backend[:fragmented?] -> Amnesia.Fragment.async(fn -> m.post_create_callback(entity, context, options) end)
-        :else -> Amnesia.async(fn -> m.post_create_callback(entity, context, options) end)
-      end
+        cond do
+          settings.mnesia_backend[:fragmented?] -> Amnesia.Fragment.async(fn -> m.post_create_callback(entity, context, options) end)
+          :else -> Amnesia.async(fn -> m.post_create_callback(entity, context, options) end)
+        end
       :else ->
         cond do
           settings.mnesia_backend[:fragmented?] -> Amnesia.Fragment.async fn -> m.create(entity, context, options) end
@@ -223,30 +271,30 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
     quote do
       @__nzdo__crud_imp Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCrudProvider
 
-            def get(ref, context, options \\ []), do: @__nzdo__crud_imp.get(__MODULE__, ref, context, options)
-            def get!(ref, context, options \\ []), do: @__nzdo__crud_imp.get!(__MODULE__, ref, context, options)
-            def cache(ref, context, options \\ []), do: @__nzdo__crud_imp.cache(__MODULE__, ref, context, options)
-            def delete_cache(ref, context, options \\ []), do: @__nzdo__crud_imp.delete_cache(__MODULE__, ref, context, options)
+      def get(ref, context, options \\ []), do: @__nzdo__crud_imp.get(__MODULE__, ref, context, options)
+      def get!(ref, context, options \\ []), do: @__nzdo__crud_imp.get!(__MODULE__, ref, context, options)
+      def cache(ref, context, options \\ []), do: @__nzdo__crud_imp.cache(__MODULE__, ref, context, options)
+      def delete_cache(ref, context, options \\ []), do: @__nzdo__crud_imp.delete_cache(__MODULE__, ref, context, options)
 
-            def pre_create_callback(entity, context, options \\ []), do: @__nzdo__crud_imp.pre_create_callback(__MODULE__, entity, context, options)
-            def post_create_callback(entity, context, options \\ []), do: @__nzdo__crud_imp.post_create_callback(__MODULE__, entity, context, options)
-            def create(entity, context, options \\ []), do: @__nzdo__crud_imp.create(__MODULE__, entity, context, options)
-            def create!(entity, context, options \\ []), do: @__nzdo__crud_imp.create!(__MODULE__, entity, context, options)
+      def pre_create_callback(entity, context, options \\ []), do: @__nzdo__crud_imp.pre_create_callback(__MODULE__, entity, context, options)
+      def post_create_callback(entity, context, options \\ []), do: @__nzdo__crud_imp.post_create_callback(__MODULE__, entity, context, options)
+      def create(entity, context, options \\ []), do: @__nzdo__crud_imp.create(__MODULE__, entity, context, options)
+      def create!(entity, context, options \\ []), do: @__nzdo__crud_imp.create!(__MODULE__, entity, context, options)
 
-            def layer_pre_create_callback(layer, entity, context, options), do: @__nzdo__crud_imp.layer_pre_create_callback(__MODULE__, layer, entity, context, options)
-            def layer_create_callback(layer, entity, context, options), do: @__nzdo__crud_imp.layer_create_callback(__MODULE__, layer, entity, context, options)
-            def layer_create_callback!(layer, entity, context, options), do: @__nzdo__crud_imp.layer_create_callback(__MODULE__, layer, entity, context, options)
-            def layer_post_create_callback(layer, entity, context, options), do: @__nzdo__crud_imp.layer_post_create_callback(__MODULE__, layer, entity, context, options)
-            def layer_create(layer, entity, context, options), do: @__nzdo__crud_imp.layer_create(__MODULE__, layer, entity, context, options)
-            def layer_create!(layer, entity, context, options), do: @__nzdo__crud_imp.layer_create!(__MODULE__, layer, entity, context, options)
+      def layer_pre_create_callback(layer, entity, context, options), do: @__nzdo__crud_imp.layer_pre_create_callback(__MODULE__, layer, entity, context, options)
+      def layer_create_callback(layer, entity, context, options), do: @__nzdo__crud_imp.layer_create_callback(__MODULE__, layer, entity, context, options)
+      def layer_create_callback!(layer, entity, context, options), do: @__nzdo__crud_imp.layer_create_callback(__MODULE__, layer, entity, context, options)
+      def layer_post_create_callback(layer, entity, context, options), do: @__nzdo__crud_imp.layer_post_create_callback(__MODULE__, layer, entity, context, options)
+      def layer_create(layer, entity, context, options), do: @__nzdo__crud_imp.layer_create(__MODULE__, layer, entity, context, options)
+      def layer_create!(layer, entity, context, options), do: @__nzdo__crud_imp.layer_create!(__MODULE__, layer, entity, context, options)
 
-            def update(entity, context, options \\ []), do: @__nzdo__crud_imp.update(__MODULE__, entity, context, options)
-            def update!(entity, context, options \\ []), do: @__nzdo__crud_imp.update!(__MODULE__, entity, context, options)
-            def delete(entity, context, options \\ []), do: @__nzdo__crud_imp.delete(__MODULE__, entity, context, options)
-            def delete!(entity, context, options \\ []), do: @__nzdo__crud_imp.delete!(__MODULE__, entity, context, options)
+      def update(entity, context, options \\ []), do: @__nzdo__crud_imp.update(__MODULE__, entity, context, options)
+      def update!(entity, context, options \\ []), do: @__nzdo__crud_imp.update!(__MODULE__, entity, context, options)
+      def delete(entity, context, options \\ []), do: @__nzdo__crud_imp.delete(__MODULE__, entity, context, options)
+      def delete!(entity, context, options \\ []), do: @__nzdo__crud_imp.delete!(__MODULE__, entity, context, options)
 
-            def generate_identifier(), do: @__nzdo__crud_imp.generate_identifier(__MODULE__)
-            def generate_identifier!(), do: @__nzdo__crud_imp.generate_identifier!(__MODULE__)
+      def generate_identifier(), do: @__nzdo__crud_imp.generate_identifier(__MODULE__)
+      def generate_identifier!(), do: @__nzdo__crud_imp.generate_identifier!(__MODULE__)
     end
   end
 

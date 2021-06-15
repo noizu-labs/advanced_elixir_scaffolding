@@ -104,12 +104,12 @@ defmodule Noizu.DomainObject do
         v = Module.get_attribute(__MODULE__,unquote(attribute)) ->
           {m,f,a} = unquote(mfa)
           apply(m,f, [v] ++ a)
-        !@__nzdo__base_open? && @__nzdo__base.__noizu_info(unquote(setting)) -> @__nzdo__base.__noizu_info(unquote(setting))
+        !@__nzdo__base_open? && @__nzdo__base.__noizu_info__(unquote(setting)) -> @__nzdo__base.__noizu_info__(unquote(setting))
         @__nzdo__base_open? && Module.get_attribute(@__nzdo__base, unquote(attribute)) ->
           v = Module.get_attribute(@__nzdo__base, unquote(attribute))
           {m,f,a} = unquote(mfa)
           apply(m,f, [v] ++ a)
-        !@__nzdo__poly_base_open? && @__nzdo__poly_base.__noizu_info(unquote(setting)) -> @__nzdo__poly_base.__noizu_info(unquote(setting))
+        !@__nzdo__poly_base_open? && @__nzdo__poly_base.__noizu_info__(unquote(setting)) -> @__nzdo__poly_base.__noizu_info__(unquote(setting))
         @__nzdo__poly_base_open? && Module.get_attribute(@__nzdo__poly_base, unquote(attribute)) ->
           v = Module.get_attribute(@__nzdo__poly_base, unquote(attribute))
           {m,f,a} = unquote(mfa)
@@ -129,9 +129,9 @@ defmodule Noizu.DomainObject do
     quote do
       cond do
         Module.has_attribute?(__MODULE__,unquote(attribute)) -> Module.get_attribute(__MODULE__,unquote(attribute))
-        !@__nzdo__base_open? && @__nzdo__base.__noizu_info(unquote(attribute)) -> @__nzdo__base.__noizu_info(unquote(attribute))
+        !@__nzdo__base_open? && @__nzdo__base.__noizu_info__(unquote(attribute)) != nil -> @__nzdo__base.__noizu_info__(unquote(attribute))
         @__nzdo__base_open? && Module.has_attribute?(@__nzdo__base, unquote(attribute)) -> Module.get_attribute(@__nzdo__base, unquote(attribute))
-        !@__nzdo__poly_base_open? && @__nzdo__poly_base.__noizu_info(unquote(attribute)) -> @__nzdo__poly_base.__noizu_info(unquote(attribute))
+        !@__nzdo__poly_base_open? && @__nzdo__poly_base.__noizu_info__(unquote(attribute)) != nil -> @__nzdo__poly_base.__noizu_info__(unquote(attribute))
         @__nzdo__poly_base_open? && Module.has_attribute?(@__nzdo__poly_base, unquote(attribute)) -> Module.get_attribute(@__nzdo__poly_base, unquote(attribute))
         :else -> unquote(default)
       end
@@ -145,9 +145,9 @@ defmodule Noizu.DomainObject do
     quote do
       cond do
         v = Module.get_attribute(__MODULE__,unquote(attribute)) -> v
-        !@__nzdo__base_open? && @__nzdo__base.__noizu_info(unquote(attribute)) -> @__nzdo__base.__noizu_info(unquote(attribute))
+        !@__nzdo__base_open? && @__nzdo__base.__noizu_info__(unquote(attribute)) -> @__nzdo__base.__noizu_info__(unquote(attribute))
         @__nzdo__base_open? && Module.get_attribute(@__nzdo__base, unquote(attribute)) -> Module.get_attribute(@__nzdo__base, unquote(attribute))
-        !@__nzdo__poly_base_open? && @__nzdo__poly_base.__noizu_info(unquote(attribute)) -> @__nzdo__poly_base.__noizu_info(unquote(attribute))
+        !@__nzdo__poly_base_open? && @__nzdo__poly_base.__noizu_info__(unquote(attribute)) -> @__nzdo__poly_base.__noizu_info__(unquote(attribute))
         @__nzdo__poly_base_open? && Module.get_attribute(@__nzdo__poly_base, unquote(attribute)) -> Module.get_attribute(@__nzdo__poly_base, unquote(attribute))
         :else -> unquote(default)
       end

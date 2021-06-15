@@ -446,7 +446,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
                        @__nzdo__poly_base (cond do
                                              v = unquote(poly_base) -> v
                                              v = Module.get_attribute(__MODULE__, :poly_base) -> v
-                                             !@__nzdo__base_open? && @__nzdo__base.__noizu_info(:poly_base) -> @__nzdo__base.__noizu_info(:poly_base)
+                                             !@__nzdo__base_open? && @__nzdo__base.__noizu_info__(:poly_base) -> @__nzdo__base.__noizu_info__(:poly_base)
                                              @__nzdo__base_open? -> (Module.get_attribute(@__nzdo__base, :poly_base) || @__nzdo__base)
                                              :else -> @__nzdo__base
                                            end)
@@ -488,8 +488,8 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
                          @derive_list Noizu.Ecto.Entity
                        end
 
-
                        if @__nzdo__base_open? do
+                         Module.put_attribute(@__nzdo__base, :__nzdo__auto_generate, @__nzdo__auto_generate)
                          Module.put_attribute(@__nzdo__base, :__nzdo_persistence, @__nzdo_persistence)
                          Module.put_attribute(@__nzdo__base, :__nzdo__enum_list, @__nzdo__enum_list)
                          Module.put_attribute(@__nzdo__base, :__nzdo__enum_default_value, @__nzdo__enum_default_value)

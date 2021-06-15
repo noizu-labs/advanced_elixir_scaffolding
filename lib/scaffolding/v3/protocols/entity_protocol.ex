@@ -64,14 +64,14 @@ defimpl Noizu.V3.EntityProtocol, for: Tuple do
   def expand!(ref, context, options \\ nil)
   def expand!({:ext_ref, m, _} = ref, context, options) when is_atom(m) do
     cond do
-      Noizu.Scaffolding.V3.Helpers.expand_ref?(Noizu.Scaffolding.V3.Helpers.update_expand_options(m, context, options)) ->
+      Noizu.Scaffolding.V3.Helpers.expand_ref?(Noizu.Scaffolding.V3.Helpers.update_expand_options(m, options)) ->
         Noizu.V3.EntityProtocol.expand!(m.entity!(ref, options))
       :else -> ref
     end
   end
   def expand!({:ref, m, _} = ref, context,  options) when is_atom(m) do
       cond do
-        Noizu.Scaffolding.V3.Helpers.expand_ref?(Noizu.Scaffolding.V3.Helpers.update_expand_options(m, context, options)) ->
+        Noizu.Scaffolding.V3.Helpers.expand_ref?(Noizu.Scaffolding.V3.Helpers.update_expand_options(m, options)) ->
             Noizu.V3.EntityProtocol.expand!(m.entity!(ref, options))
         :else -> ref
       end

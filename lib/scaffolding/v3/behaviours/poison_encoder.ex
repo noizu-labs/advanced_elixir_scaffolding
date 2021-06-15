@@ -4,8 +4,6 @@ defmodule Noizu.Scaffolding.V3.Poison.Encoder do
   def encode(noizu_entity, options \\ nil) do
     {json_format, options} = Noizu.Scaffolding.Helpers.update_options(noizu_entity, options)
     context = options[:context]
-
-
     {entity, options}  = cond do
                            options[:__nzdo__restricted?] && options[:__nzdo__expanded?] -> {noizu_entity, options}
                            !options[:__nzdo__restricted?] ->

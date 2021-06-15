@@ -59,12 +59,14 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
 
   # entity load
   def entity(m, %{__struct__: m} = ref, _), do: ref
-  def entity(m, %{__struct__: s} = entity,_) do
+  def entity(m, %{__struct__: s} = entity, options) do
     cond do
       t = m.__noizu_info__(:associated_types)[s] ->
         cond do
           t == :poly -> entity
-          m.__persistence__(:table)[s] -> m.__from_record__(s, entity)
+          m.__persistence__(:table)[s] ->
+            context = Noizu.ElixirCore.CallingContext.system(options[:context])
+            m.__from_record__(s, entity, context, options)
           :else -> nil
         end
       :else -> nil
@@ -80,12 +82,14 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
   end
 
   def entity!(m, %{__struct__: m} = ref, _), do: ref
-  def entity!(m, %{__struct__: s} = entity, _) do
+  def entity!(m, %{__struct__: s} = entity, options) do
     cond do
       t = m.__noizu_info__(:associated_types)[s] ->
         cond do
           t == :poly -> entity
-          m.__persistence__(:table)[s] -> m.__from_record__!(s, entity)
+          m.__persistence__(:table)[s] ->
+            context = Noizu.ElixirCore.CallingContext.system(options[:context])
+            m.__from_record__!(s, entity, context, options)
           :else -> nil
         end
       :else -> nil
@@ -103,13 +107,14 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
   #-----------------------------------
   #
   #-----------------------------------
-  def __as_record__(m, table, ref, options) do
+  def __as_record__(m, table, ref, context, options) do
     cond do
       entity = m.entity(ref, options) ->
-        layer = m.__noizu__info(:tables)[table]
+        layer = m.__persistence__(:table)[table]
         cond do
-          layer.type == :mnesia -> m.__as_mnesia_record__(table, entity, options)
-          layer.type == :ecto -> m.__as_ecto_record__(table, entity, options)
+          layer.type == :mnesia -> m.__as_mnesia_record__(table, entity, context, options)
+          layer.type == :ecto -> m.__as_ecto_record__(table, entity, context, options)
+          layer.type == :redis -> m.__as_redis_record__(table, entity, context, options)
           :else -> throw "#{m} as #{layer.type} record not supported"
         end
       :else -> nil
@@ -119,13 +124,14 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
   #-----------------------------------
   #
   #-----------------------------------
-  def __as_record__!(m, table, ref, options) do
+  def __as_record__!(m, table, ref, context, options) do
     cond do
       entity = m.entity!(ref, options) ->
-        layer = m.__noizu__info(:tables)[table]
+        layer = m.__persistence__(:table)[table]
         cond do
-          layer.type == :mnesia -> m.__as_mnesia_record__!(table, entity, options)
-          layer.type == :ecto -> m.__as_ecto_record__!(table, entity, options)
+          layer.type == :mnesia -> m.__as_mnesia_record__!(table, entity, context, options)
+          layer.type == :ecto -> m.__as_ecto_record__!(table, entity, context, options)
+          layer.type == :redis -> m.__as_redis_record__!(table, entity, context, options)
           :else -> throw "#{m} as #{layer.type} record not supported"
         end
       :else -> nil
@@ -136,7 +142,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
   #-----------------------------------
   #
   #-----------------------------------
-  def __as_mnesia_record__(m, table, entity, options) do
+  def __as_mnesia_record__(m, table, entity, context, options) do
     context = Noizu.ElixirCore.CallingContext.admin()
     layer = m.__persistence__(:table)[table]
     field_types = m.__noizu_info__(:field_types)[{layer.schema, layer.table}]
@@ -155,17 +161,17 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
     %{struct(layer.table, values)| entity: entity}
   end
 
-  def __as_mnesia_record__!(m, table, ref, options) do
-    m.__as_mnesia_record__(table, ref, options)
+  def __as_mnesia_record__!(m, table, ref, context, options) do
+    m.__as_mnesia_record__(table, ref, context, options)
   end
 
   #-----------------------------------
   #
   #-----------------------------------
-  def __as_ecto_record__(m, table, entity, options) do
+  def __as_ecto_record__(m, table, entity, context, options) do
     context = Noizu.ElixirCore.CallingContext.admin()
     layer = m.__persistence__(:table)[table]
-    unrolled = m.__unroll_field_types__(layer.schema)
+    unrolled = layer.schema_fields
     field_types = m.__noizu_info__(:field_types)[{layer.schema, layer.table}]
     #ecto_fields = Map.keys(struct(layer.table)) -- [:schema, :meta]
     values = Enum.map(m.__noizu_info__(:fields), fn(field) ->
@@ -181,19 +187,37 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
     struct(layer.table, values)
   end
 
-  def __as_ecto_record__!(m, table, ref, options) do
-    m.__as_ecto_record__(table, ref, options)
+  def __as_ecto_record__!(m, table, ref, context, options) do
+    m.__as_ecto_record__(table, ref, context, options)
+  end
+
+
+  #-----------------------------------
+  #
+  #-----------------------------------
+  def __as_redis_record__(m, table, entity, context, options) do
+    raise "NYI"
+  end
+
+  def __as_redis_record__!(m, table, ref, context, options) do
+    raise "NYI"
   end
 
   #-----------------------------------
   #
   #-----------------------------------
-  def __from_record__(__MODULE__, _type, %{entity: temp}, _options) do
+  def __from_record__(m, _type, %{entity: temp}, context,  _options) do
     temp
   end
+  def __from_record__(m, _type, %{entity: temp}, context,  _options) do
+    nil
+  end
 
-  def __from_record__!(__MODULE__, _type, %{entity: temp}, _options) do
-    temp
+  def __from_record__!(m, _type, _, context, _options) do
+    nil
+  end
+  def __from_record__(m, _type, _, context,  _options) do
+    nil
   end
 
   #-----------------------------------
@@ -404,14 +428,18 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
       def string_to_id(type, id), do: @__nzdo__erp_imp.string_to_id(__MODULE__, type, id)
 
 
-      def __as_record__(table, entity, options \\ nil), do:  @__nzdo__erp_imp.__as_record__(__MODULE__, table, entity, options)
-      def __as_record__!(table, entity, options \\ nil), do:  @__nzdo__erp_imp.__as_record__!(__MODULE__, table, entity, options)
-      def __as_mnesia_record__(table, entity, options \\ nil), do:  @__nzdo__erp_imp.__as_mnesia_record__(__MODULE__, table, entity, options)
-      def __as_mnesia_record__!(table, entity, options \\ nil), do:  @__nzdo__erp_imp.__as_mnesia_record__!(__MODULE__, table, entity, options)
-      def __as_ecto_record__(table, entity, options \\ nil), do:  @__nzdo__erp_imp.__as_ecto_record__(__MODULE__, table, entity, options)
-      def __as_ecto_record__!(table, entity, options \\ nil), do:  @__nzdo__erp_imp.__as_ecto_record__!(__MODULE__, table, entity, options)
-      def __from_record__(type, record, options \\ nil), do:  @__nzdo__erp_imp.__from_record__(__MODULE__, type, record, options)
-      def __from_record__!(type, record, options \\ nil), do:  @__nzdo__erp_imp.__from_record__!(__MODULE__, type, record, options)
+      def __as_record__(table, entity, context, options \\ nil), do:  @__nzdo__erp_imp.__as_record__(__MODULE__, table, entity, context, options)
+      def __as_record__!(table, entity, context, options \\ nil), do:  @__nzdo__erp_imp.__as_record__!(__MODULE__, table, entity, context, options)
+      def __as_mnesia_record__(table, entity, context, options \\ nil), do:  @__nzdo__erp_imp.__as_mnesia_record__(__MODULE__, table, entity, context, options)
+      def __as_mnesia_record__!(table, entity, context, options \\ nil), do:  @__nzdo__erp_imp.__as_mnesia_record__!(__MODULE__, table, entity, context, options)
+      def __as_ecto_record__(table, entity, context, options \\ nil), do:  @__nzdo__erp_imp.__as_ecto_record__(__MODULE__, table, entity, context, options)
+      def __as_ecto_record__!(table, entity, context, options \\ nil), do:  @__nzdo__erp_imp.__as_ecto_record__!(__MODULE__, table, entity, context, options)
+
+      def __as_redis_record__(table, entity, context, options \\ nil), do:  @__nzdo__erp_imp.__as_redis_record__(__MODULE__, table, entity, context, options)
+      def __as_redis_record__!(table, entity, context, options \\ nil), do:  @__nzdo__erp_imp.__as_redis_record__!(__MODULE__, table, entity, context, options)
+
+      def __from_record__(type, record, context, options \\ nil), do:  @__nzdo__erp_imp.__from_record__(__MODULE__, type, record, context, options)
+      def __from_record__!(type, record, context, options \\ nil), do:  @__nzdo__erp_imp.__from_record__!(__MODULE__, type, record, context, options)
 
       defoverridable [
         id: 1,
@@ -431,22 +459,26 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
         string_to_id: 1,
         string_to_id: 2,
 
-        __as_record__: 2,
         __as_record__: 3,
-        __as_record__!: 2,
+        __as_record__: 4,
         __as_record__!: 3,
-        __as_mnesia_record__: 2,
+        __as_record__!: 4,
         __as_mnesia_record__: 3,
-        __as_mnesia_record__!: 2,
+        __as_mnesia_record__: 4,
         __as_mnesia_record__!: 3,
-        __as_ecto_record__: 2,
+        __as_mnesia_record__!: 4,
         __as_ecto_record__: 3,
-        __as_ecto_record__!: 2,
+        __as_ecto_record__: 4,
         __as_ecto_record__!: 3,
-        __from_record__: 2,
+        __as_ecto_record__!: 4,
+        __as_redis_record__: 3,
+        __as_redis_record__: 4,
+        __as_redis_record__!: 3,
+        __as_redis_record__!: 4,
         __from_record__: 3,
-        __from_record__!: 2,
+        __from_record__: 4,
         __from_record__!: 3,
+        __from_record__!: 4,
       ]
     end
   end
