@@ -62,11 +62,9 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Index do
       defdelegate vsn(), to: @__nzdo__base
       def __base__(), do: @__nzdo__base
       defdelegate __entity__(), to: @__nzdo__base
-      def __repo__(), do: __MODULE__
+      defdelegate __repo__(), to: @__nzdo__base
       defdelegate __sref__(), to: @__nzdo__base
       defdelegate __erp__(), to: @__nzdo__base
-
-
 
       defdelegate id(ref), to: @__nzdo__base
       defdelegate ref(ref), to: @__nzdo__base
@@ -81,9 +79,11 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Index do
 
       defdelegate __persistence__(setting \\ :all), to:  @__nzdo__base
       defdelegate __persistence__(selector, setting), to:  @__nzdo__base
+
       defdelegate __nmid__(), to: @__nzdo__base
       defdelegate __nmid__(setting), to: @__nzdo__base
-      defdelegate __noizu_record__(type, ref, options \\ nil), to: @__nzdo__base
+
+      def __noizu_info__(:type), do: :index
       defdelegate __noizu_info__(report), to: @__nzdo__base
     end
   end

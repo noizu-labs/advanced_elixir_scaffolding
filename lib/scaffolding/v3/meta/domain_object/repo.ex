@@ -107,6 +107,8 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo do
       defdelegate __nmid__(), to: @__nzdo__base
       defdelegate __nmid__(setting), to: @__nzdo__base
       defdelegate __noizu_record__(type, ref, options \\ nil), to: @__nzdo__base
+
+      def __noizu_info__(:type), do: :repo
       defdelegate __noizu_info__(report), to: @__nzdo__base
     end
   end
