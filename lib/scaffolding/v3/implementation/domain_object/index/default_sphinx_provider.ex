@@ -256,8 +256,8 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Index.DefaultSp
 
       @__nzdo__sref Module.get_attribute(@__nzdo__base, :__nzdo__sref)
       @rt_index unquote(rt_index) || :"#{@__nzdo__sref}_rt_idx"
-      @delta_index unquote(rt_index) || :"#{@__nzdo__sref}_rt_idx"
-      @primary_index unquote(rt_index) || :"#{@__nzdo__sref}_rt_idx"
+      @delta_index unquote(delta_index) || :"#{@__nzdo__sref}_delta_idx"
+      @primary_index unquote(primary_index) || :"#{@__nzdo__sref}_primary_idx"
       def __rt_index__(), do: @rt_index
       def __delta_index__(), do: @delta_index
       def __primary_index__(), do: @primary_index
