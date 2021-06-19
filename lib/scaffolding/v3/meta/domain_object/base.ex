@@ -37,6 +37,8 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject do
       def __nmid__(:bare), do: @__nzdo__nmid_bare
       def __nmid__(:index), do: @__nzdo__entity.__noizu_info__(:nmid_index)
 
+      defdelegate __indexing__(), to: @__nzdo__entity
+      defdelegate __indexing__(setting), to: @__nzdo__entity
       defdelegate __persistence__(setting \\ :all), to:  @__nzdo__entity
       defdelegate __persistence__(selector, setting), to:  @__nzdo__entity
 
@@ -52,8 +54,9 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject do
       def __noizu_info__(:fields), do: @__nzdo__entity.__noizu_info__(:fields)
       def __noizu_info__(:field_attributes), do: @__nzdo__entity.__noizu_info__(:field_attributes)
       def __noizu_info__(:field_types), do: @__nzdo__entity.__noizu_info__(:field_types)
-      def __noizu_info__(:persistence), do: @__nzdo__entity.__noizu_info__(:persistence)
+      def __noizu_info__(:persistence), do: __persistence__()
       def __noizu_info__(:associated_types), do: @__nzdo__entity.__noizu_info__(:associated_types)
+      def __noizu_info__(:indexing), do: __indexing__()
       def __noizu_info__(:meta), do: @__nzdo__meta__map
 
 
@@ -106,6 +109,21 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject do
           end
         :else -> :ok
       end
+
+      #--------------------
+      # Index
+      #--------------------
+      if Module.has_attribute?(__MODULE__, :__nzdo__inline_index) && Module.get_attribute(__MODULE__, :__nzdo__inline_index) do
+        e = @__nzdo__entity
+        defmodule Index do
+          require Noizu.DomainObject
+          Noizu.DomainObject.noizu_index(entity: e, inline: true) do
+
+          end
+        end
+      end
+
+
 
     end
   end

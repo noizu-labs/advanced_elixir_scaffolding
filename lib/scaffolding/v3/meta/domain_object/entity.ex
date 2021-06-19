@@ -167,6 +167,8 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
     end
 
     EntityMeta.__set_json_settings__(mod, field, opts)
+    EntityMeta.__set_index_settings__(mod, field, opts)
+    EntityMeta.__set_permission_settings__(mod, field, opts)
 
     options = %{}
     options = cond do
@@ -180,6 +182,108 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
     if options != %{} do
       Module.put_attribute(mod, :__nzdo__field_attributes, {field, options})
     end
+  end
+
+
+  #---------------------------------
+  #
+  #---------------------------------
+  def __set_index_settings__(mod, field, opts) do
+    indexers = Module.get_attribute(mod, :__nzdo__index_list)
+    entries = Module.get_attribute(mod, :index)
+    Module.delete_attribute(mod, :index)
+    o = EntityMeta.__extract_index_settings__(mod, field, indexers, entries, opts)
+    o && Module.put_attribute(mod, :__nzdo__field_indexing, o)
+  end
+
+  def __extract_index_settings__(_mod, _field, _indexers, [], _opts) do
+    nil
+  end
+
+  def __extract_index_settings__(mod, field, indexers, entries, opts) when is_list(entries) do
+    Enum.map(entries, &(EntityMeta.__extract_index_setting__(mod, field, indexers, &1, opts)))
+    |> List.flatten()
+    |> Enum.filter(&(&1))
+  end
+
+
+  def __extract_index_setting__(_mod, field, indexers, true, _opts) do
+    Enum.map(indexers, &({{field, &1}, %{index: true}}))
+  end
+
+  def __extract_index_setting__(_mod, field, indexers, false, _opts) do
+    Enum.map(indexers, &({{field, &1}, %{index: false}}))
+  end
+
+  def __extract_index_setting__(mod, field, indexers, :inline, opts) do
+    inline = Module.get_attribute(mod, :__nzdo__inline_index)
+    EntityMeta.__extract_index_setting__(mod, field, indexers, inline, opts)
+  end
+
+  def __extract_index_setting__(mod, field, indexers, index, _opts) when is_atom(index) do
+    cond do
+      Enum.member?(indexers, index) -> {{field, index}, %{index: true}}
+      :else -> raise "Index #{inspect index} not supported. You must include `@index #{index}` before declaring #{mod} if you wish to declare settings for this index."
+    end
+  end
+
+  def __extract_index_setting__(mod, field, indexers, settings, opts) when is_list(settings) do
+    Enum.map(settings, &(EntityMeta.__extract_index_setting__(mod, field, indexers, &1, opts)))
+  end
+
+  def __extract_index_setting__(_mod, field, indexers, {:as, setting}, _opts) do
+    Enum.map(indexers, &({{field, &1}, %{index: true, as: setting}}))
+  end
+
+  def __extract_index_setting__(_mod, field, indexers, {:with, setting}, _opts) do
+    Enum.map(indexers, &({{field, &1}, %{index: true, with: setting}}))
+  end
+
+  def __extract_index_setting__(_mod, field, indexers, {:user_defined, setting}, _opts) do
+    Enum.map(indexers, &({{field, &1}, %{index: true, user_defined: setting}}))
+  end
+
+  def __extract_index_setting__(mod, field, indexers, {:inline, settings}, opts) do
+    inline = Module.get_attribute(mod, :__nzdo__inline_index)
+    EntityMeta.__extract_index_setting__(mod, field, indexers, {inline, settings}, opts)
+  end
+
+  def __extract_index_setting__(mod, field, indexers, {index, settings}, opts) when is_atom(index) do
+    cond do
+      Enum.member?(indexers, index) ->
+        settings = is_list(settings) && settings || [settings]
+        Enum.map(settings, &(EntityMeta.__extract_index_setting__(mod, field, index, indexers, &1, opts)))
+      :else -> raise "Setting or Index #{inspect index} not supported. If this is an Index include `@index #{index}` before declaring #{mod}"
+    end
+  end
+
+  def __extract_index_setting__(_mod, field, index, _indexers, true, _opts) do
+    {{field, index}, %{index: true}}
+  end
+
+  def __extract_index_setting__(_mod, field, index, _indexers, false, _opts) do
+    {{field, index}, %{index: false}}
+  end
+
+  def __extract_index_setting__(_mod, field, index, _indexers, {:as, setting}, _opts) do
+    {{field, index}, %{index: true, as: setting}}
+  end
+
+  def __extract_index_setting__(_mod, field, index, _indexers, {:with, setting}, _opts) do
+    {{field, index}, %{index: true, with: setting}}
+  end
+
+  def __extract_index_setting__(_mod, field, index, _indexers, {:user_defined, setting}, _opts) do
+    {{field, index}, %{index: true, user_defined: setting}}
+  end
+
+
+  #---------------------------------
+  #
+  #---------------------------------
+  def __set_permission_settings__(mod, _field, _opts) do
+    #entries = Module.get_attribute(mod, :permission)
+    Module.delete_attribute(mod, :permission)
   end
 
   #---------------------------------
@@ -425,10 +529,8 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
                        Module.register_attribute(__MODULE__, :__nzdo__derive, accumulate: true)
                        Module.register_attribute(__MODULE__, :__nzdo__fields, accumulate: true)
                        Module.register_attribute(__MODULE__, :__nzdo__meta, accumulate: false)
-                       Module.register_attribute(__MODULE__, :__nzdo__field_permissions, accumulate: true)
                        Module.register_attribute(__MODULE__, :__nzdo__field_types, accumulate: true)
                        Module.register_attribute(__MODULE__, :__nzdo__field_attributes, accumulate: true)
-
 
                        #Json Encoding Instructions
                        Module.register_attribute(__MODULE__, :json, accumulate: true)
@@ -473,6 +575,13 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
                        @__nzdo__derive Noizu.V3.EntityProtocol
 
                        #----------------------
+                       # Load Sphinx Settings from base.
+                       #----------------------
+                       @__nzdo__indexes Noizu.DomainObject.extract_transform_attribute(:index, :indexing, {Noizu.DomainObject, :expand_indexes, [@__nzdo__base]}, [])
+                       @__nzdo__index_list Enum.map(@__nzdo__indexes, fn({k,_v}) -> k end)
+                       @__nzdo__inline_index Noizu.ElixirScaffolding.V3.Meta.DomainObject.Index.domain_object_indexer(@__nzdo__base)
+
+                       #----------------------
                        # Load Persistence Settings from base, we need them to control some submodules.
                        #----------------------
                        @__nzdo__auto_generate Noizu.DomainObject.extract_has_attribute(:auto_generate, nil)
@@ -510,6 +619,18 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
                          Module.put_attribute(@__nzdo__base, :__nzdo__nmid_index, @__nzdo__nmid_index)
                          Module.put_attribute(@__nzdo__base, :__nzdo__nmid_bare, @__nzdo__nmid_bare)
                        end
+
+
+                       #--------------------------------
+                       #
+                       #--------------------------------
+                       # Indexing
+                       Module.register_attribute(__MODULE__, :index, accumulate: true)
+                       Module.register_attribute(__MODULE__, :__nzdo__field_indexing, accumulate: true)
+
+                       # Permissions
+                       Module.register_attribute(__MODULE__, :permission, accumulate: true)
+                       Module.register_attribute(__MODULE__, :__nzdo__field_permissions, accumulate: true)
 
 
                        #--------------------------------
@@ -641,6 +762,19 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
         Module.put_attribute(@__nzdo__base, :__nzdo_persistence, @__nzdo_persistence)
       end
 
+      @__nzdo__indexes Enum.reduce(List.flatten(@__nzdo__field_indexing || []), @__nzdo__indexes, fn({{field,index},indexing}, acc) ->
+        cond do
+          acc[index][:fields][field] == nil ->
+            put_in(acc, [index, :fields, field], indexing)
+          e = acc[index][:fields][field] ->
+            e = Enum.reduce(indexing, e, fn({k,v},acc) -> put_in(acc, [k], v) end)
+            put_in(acc, [index, :fields, field], e)
+        end
+      end)
+
+      def __indexing__(), do: __indexing__(:indexes)
+      def __indexing__(:indexes), do: @__nzdo__indexes
+
       def __persistence__(), do: __persistence__(:all)
       def __persistence__(:all), do:  @__nzdo_persistence
       def __persistence__(:enum_table), do:  @__nzdo_persistence.options.enum_table
@@ -669,15 +803,15 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
 
 
       def __noizu_info__(:type), do: :entity
-      def __noizu_info__(:identifier_type), do: @__nzdo__identifier_type
+      def __noizu_info__(:identifier_tpe), do: @__nzdo__identifier_type
       def __noizu_info__(:fields), do: @__nzdo__field_list
       def __noizu_info__(:field_types), do: @__nzdo__field_types_map
-      def __noizu_info__(:persistence), do: @__nzdo_persistence
+      def __noizu_info__(:persistence), do: __persistence__()
       def __noizu_info__(:tables), do: @__nzdo_persistence__by_table
       def __noizu_info__(:associated_types), do: @__nzdo_associated_types
       def __noizu_info__(:json_configuration), do: @__nzdo__json_config
       def __noizu_info__(:field_attributes), do: @__nzdo__field_attributes_map
-
+      def __noizu_info__(:indexing), do: __indexing__()
       defdelegate __noizu_info__(report), to: @__nzdo__base
 
     end

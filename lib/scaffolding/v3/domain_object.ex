@@ -8,6 +8,7 @@ defmodule Noizu.DomainObject do
     caller = __CALLER__
     quote do
       import Noizu.DomainObject, only: [file_rel_dir: 1]
+      Module.register_attribute(__MODULE__, :index, accumulate: true)
       Module.register_attribute(__MODULE__, :persistence_layer, accumulate: true)
       Module.register_attribute(__MODULE__, :__nzdo__meta, accumulate: false)
       Module.register_attribute(__MODULE__, :json_white_list, accumulate: false)
@@ -43,11 +44,19 @@ defmodule Noizu.DomainObject do
     Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity.__noizu_entity__(__CALLER__, options, block)
   end
 
+
+  #--------------------------------------------
+  #
+  #--------------------------------------------
+  defmacro noizu_index(options \\ [], [do: block]) do
+    Noizu.ElixirScaffolding.V3.Meta.DomainObject.Index.__noizu_index__(__CALLER__, options, block)
+  end
+
   #--------------------------------------------
   #
   #--------------------------------------------
   defmacro noizu_sphinx(options \\ [], [do: block]) do
-    Noizu.ElixirScaffolding.V3.Meta.DomainObject.Sphinx.__noizu_sphinx(__CALLER__, options, block)
+    Noizu.ElixirScaffolding.V3.Meta.DomainObject.Sphinx.__noizu_sphinx__(__CALLER__, options, block)
   end
 
   #--------------------------------------------
@@ -90,10 +99,17 @@ defmodule Noizu.DomainObject do
   end
   def module_rel(_a, _b, acc), do: acc
 
+
+  #--------------------------------------------
+  #
+  #--------------------------------------------
+  defdelegate expand_indexes(layers, module), to: Noizu.ElixirScaffolding.V3.Meta.DomainObject.Index
+
   #--------------------------------------------
   #
   #--------------------------------------------
   defdelegate expand_persistence_layers(layers, module), to: Noizu.ElixirScaffolding.V3.Meta.Persistence
+
 
   #--------------------------------------------
   #

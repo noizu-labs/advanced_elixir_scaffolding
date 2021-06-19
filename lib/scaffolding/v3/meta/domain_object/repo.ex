@@ -99,6 +99,8 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo do
       defdelegate record(ref, options \\ nil), to: @__nzdo__base
       defdelegate record!(ref, options \\ nil), to: @__nzdo__base
 
+      defdelegate __indexing__(), to: @__nzdo__base
+      defdelegate __indexing__(setting), to: @__nzdo__base
 
       defdelegate __persistence__(setting \\ :all), to:  @__nzdo__base
       defdelegate __persistence__(selector, setting), to:  @__nzdo__base
