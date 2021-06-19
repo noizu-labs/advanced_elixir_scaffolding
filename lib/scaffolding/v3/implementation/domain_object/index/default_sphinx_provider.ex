@@ -235,12 +235,78 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Index.DefaultSp
       |> Phoenix.HTML.javascript_escape()
     end
 
+    def __config__(mod, context, options) do
+      raw = mod.__index_schema_fields__(context, options)
+      blobs = raw
+              |> Enum.filter(fn({_field, _provider, blob, _encoding, _bits, _indexing, _default}) -> blob end)
+              |> Enum.map(fn({_field, _provider, blob, _encoding, _bits, _indexing, _default}) -> {blob, :field} end)
+              |> Enum.uniq
+      base = raw
+             |> Enum.filter(fn({_field, _provider, blob, _encoding, _bits, _indexing, _default}) -> blob == nil end)
+             |> Enum.map(fn({field, _provider, _blob, encoding, _bits, _indexing, _default}) -> {field, encoding} end)
+
+      rt_fields = Enum.map(base ++ blobs, fn({field, encoding}) -> "rt_#{encoding} = #{field}" end)
+               |> Enum.join("\n      ")
+
+"""
+# =====================================================================
+# #{mod} : #{mod.__index_stem__}
+# Generated Index Definition
+# =====================================================================
+source #{mod.__primary_source__()} : primary_source__base
+{
+      xmlpipe_command = sphinx_xml_pipe primary #{mod.__index_stem__}
+}
+
+source #{mod.__delta_source__()} : primary_source__base
+{
+      xmlpipe_command = sphinx_xml_pipe delta #{mod.__index_stem__}
+}
+
+index #{mod.__primary_index__()} : index__base
+{
+      source = #{mod.__primary_source__()}
+      path = #{mod.__data_dir__}/#{mod.__primary_index__()}
+}
+index #{mod.__delta_index__()} : index__base
+{
+      source = #{mod.__delta_source__()}
+      path = #{mod.__data_dir__}/#{mod.__delta_index__()}
+}
+
+index #{mod.__rt_index__()}
+{
+      # @todo - make these settings in elixir indexing annotation
+      type = rt
+      dict = keywords
+      morphology = stem_en
+      min_stemming_len = 3
+      min_word_len = 3
+      html_strip = 1
+      path = #{mod.__data_dir__}/#{mod.__rt_index__()}
+
+    #{rt_fields}
+}
+
+"""
+
+    end
+
   end
 
   defmacro __using__(options) do
+    index_stem = options[:index_stem]
+    source_dir = options[:source_dir] || Application.get_env(:noizu_scaffolding, :sphinx_data_dir, "/sphinx/data")
+
     rt_index = options[:rt_index]
     delta_index = options[:delta_index]
     primary_index = options[:primary_index]
+
+    rt_source = options[:rt_source]
+    delta_source = options[:delta_source]
+    primary_source = options[:primary_source]
+
+
     quote do
       alias Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Index.DefaultSphinxProvider.Default, as: SphinxProvider
       def extract_field(field, entity, context, options), do: SphinxProvider.extract_field(__MODULE__, field, entity, context, options)
@@ -255,19 +321,34 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Index.DefaultSp
       def delete_index(entity, context, options), do: SphinxProvider.delete_index(__MODULE__, entity, context, options)
 
       @__nzdo__sref Module.get_attribute(@__nzdo__base, :__nzdo__sref)
-      @rt_index unquote(rt_index) || :"#{@__nzdo__sref}_rt_idx"
-      @delta_index unquote(delta_index) || :"#{@__nzdo__sref}_delta_idx"
-      @primary_index unquote(primary_index) || :"#{@__nzdo__sref}_primary_idx"
+      @index_stem unquote(index_stem) || @__nzdo__sref
+      @rt_index unquote(rt_index) || :"rt_index__#{@index_stem}"
+      @delta_index unquote(delta_index) || :"delta_index__#{@index_stem}"
+      @primary_index unquote(primary_index) || :"primary_index__#{@index_stem}"
+      @rt_source unquote(rt_source) || :"rt_source__#{@index_stem}"
+      @delta_source unquote(delta_source) || :"delta_source__#{@index_stem}"
+      @primary_source unquote(primary_source) || :"primary_source__#{@index_stem}"
+      @data_dir unquote(source_dir)
+
+
+      def __index_stem__(), do: @index_stem
       def __rt_index__(), do: @rt_index
       def __delta_index__(), do: @delta_index
       def __primary_index__(), do: @primary_index
+      def __rt_source__(), do: @rt_source
+      def __delta_source__(), do: @delta_source
+      def __primary_source__(), do: @primary_source
+      def __data_dir__(), do: @data_dir
 
       defdelegate sql_escape_string(v), to: SphinxProvider
+
+      def __config__(context, options), do: SphinxProvider.__config__(__MODULE__, context, options)
 
       defoverridable [
         extract_field: 4,
         fields: 2,
         build: 3,
+        __config__: 2,
         __index_schema_fields__: 2,
         __index_header__: 3,
         __index_record__: 4,
