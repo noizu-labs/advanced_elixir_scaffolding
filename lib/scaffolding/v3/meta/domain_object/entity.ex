@@ -170,6 +170,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
     EntityMeta.__set_index_settings__(mod, field, opts)
     EntityMeta.__set_permission_settings__(mod, field, opts)
 
+
     options = %{}
     options = cond do
                 (Module.has_attribute?(mod, :pii)) ->
@@ -718,6 +719,9 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
                  @derive @__nzdo__derive
                  defstruct @__nzdo__fields
 
+                 #---------------
+                 # Poison
+                 #---------------
                  if (@__nzdo__json_provider) do
                    __nzdo__json_provider = @__nzdo__json_provider
                    defimpl Poison.Encoder  do
@@ -725,7 +729,12 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
                    end
                  end
 
-
+                 #---------------
+                 # Inspect
+                 #---------------
+                 defimpl Inspect do
+                   defdelegate inspect(entity, opts), to: Noizu.ElixirScaffolding.V3.Meta.DomainObject.Inspect
+                 end
                end
 
     quote do
@@ -734,7 +743,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
       use unquote(erp_provider)
       use unquote(ecto_provider)
 
-      # Post User Logic Hook and checks.
+
       @before_compile unquote(internal_provider)
       @before_compile Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity
       @after_compile unquote(internal_provider)
