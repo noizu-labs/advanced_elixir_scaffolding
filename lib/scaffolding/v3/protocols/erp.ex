@@ -21,13 +21,13 @@ defimpl Noizu.ERP, for: Any do
   defmacro __deriving__(module, _struct, _options) do
     quote do
       defimpl Noizu.ERP, for: unquote(module) do
-        def id(%{__struct__: m} = ref), do: m.erp_handler().id(ref)
-        def ref(%{__struct__: m} = ref), do: m.erp_handler().ref(ref)
-        def sref(%{__struct__: m} = ref), do: m.erp_handler().sref(ref)
-        def record(%{__struct__: m} = ref, options \\ nil), do: m.erp_handler().record(ref, options)
-        def record!(%{__struct__: m} = ref, options \\ nil), do: m.erp_handler().record!(ref, options)
-        def entity(%{__struct__: m} = ref, options \\ nil), do: m.erp_handler().entity(ref, options)
-        def entity!(%{__struct__: m} = ref, options \\ nil), do: m.erp_handler().entity!(ref, options)
+        def id(%{__struct__: m} = ref), do: m.__erp__().id(ref)
+        def ref(%{__struct__: m} = ref), do: m.__erp__().ref(ref)
+        def sref(%{__struct__: m} = ref), do: m.__erp__().sref(ref)
+        def record(%{__struct__: m} = ref, options \\ nil), do: m.__erp__().record(ref, options)
+        def record!(%{__struct__: m} = ref, options \\ nil), do: m.__erp__().record!(ref, options)
+        def entity(%{__struct__: m} = ref, options \\ nil), do: m.__erp__().entity(ref, options)
+        def entity!(%{__struct__: m} = ref, options \\ nil), do: m.__erp__().entity!(ref, options)
       end
     end
   end

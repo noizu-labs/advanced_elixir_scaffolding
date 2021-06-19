@@ -71,7 +71,7 @@ defimpl Noizu.V3.RestrictedProtocol, for: Any do
     quote do
       defimpl Noizu.V3.RestrictedProtocol, for: unquote(module) do
         defdelegate restricted_view(entity, context, options), to: unquote(provider)
-        defdelegate restricted_edit(entity, current, context, options), to: unquote(provider)
+        defdelegate restricted_update(entity, current, context, options), to: unquote(provider)
         defdelegate restricted_create(entity, context, options), to: unquote(provider)
       end
     end
@@ -80,8 +80,8 @@ defimpl Noizu.V3.RestrictedProtocol, for: Any do
   def restricted_view(%{__struct__: _} = entity, context, options), do: Noizu.V3.RestrictedProtocol.Derive.Struct.restricted_view(entity, context, options)
   def restricted_view(entity, _context, _options), do: entity
 
-  def restricted_edit(%{__struct__: _} = entity, current, context, options), do: Noizu.V3.RestrictedProtocol.Derive.Struct.restricted_edit(entity, current, context, options)
-  def restricted_edit(entity, _current, _context, _options), do: entity
+  def restricted_update(%{__struct__: _} = entity, current, context, options), do: Noizu.V3.RestrictedProtocol.Derive.Struct.restricted_update(entity, current, context, options)
+  def restricted_update(entity, _current, _context, _options), do: entity
 
   def restricted_create(%{__struct__: _} = entity, context, options), do: Noizu.V3.RestrictedProtocol.Derive.Struct.restricted_create(entity, context, options)
   def restricted_create(entity, _context, _options), do: entity
@@ -97,11 +97,11 @@ defmodule Noizu.V3.RestrictedProtocol.Derive.Struct do
     end
   end
 
-  def restricted_edit(entity, current, context, options) do
+  def restricted_update(entity, current, context, options) do
     cond do
       !function_exported?(entity.__struct__, :__noizu_info__, 1) -> entity
-      m = entity.__struct__.__noizu_info__(:restrict_provider) -> m.restricted_edit(entity, current, context, options)
-      :else -> Noizu.V3.RestrictedProtocol.Derive.NoizuStruct.restricted_edit(entity, current, context, options)
+      m = entity.__struct__.__noizu_info__(:restrict_provider) -> m.restricted_update(entity, current, context, options)
+      :else -> Noizu.V3.RestrictedProtocol.Derive.NoizuStruct.restricted_update(entity, current, context, options)
     end
   end
 
@@ -116,6 +116,6 @@ end
 
 defmodule Noizu.V3.RestrictedProtocol.Derive.NoizuStruct do
   def restricted_view(entity, _context, _options), do: entity
-  def restricted_edit(entity, _current, _context, _options), do: entity
+  def restricted_update(entity, _current, _context, _options), do: entity
   def restricted_create(entity, _context, _options), do: entity
 end

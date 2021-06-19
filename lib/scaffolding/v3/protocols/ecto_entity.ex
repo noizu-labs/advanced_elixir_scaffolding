@@ -20,38 +20,11 @@ defimpl Noizu.Ecto.Entity, for: Any do
     quote do
       defimpl Noizu.Ecto.Entity, for: unquote(module) do
         def universal_reference?(_), do: false
-        def supported?(%{__struct__: module}) do
-          try do
-            module.ecto_entity?()
-          rescue _e -> false
-          catch _e -> false
-          end
-        end
-
-        def ecto_identifier(%{__struct__: module} = m) do
-          if supported?(m) do
-            module.ecto_identifier(m)
-          end
-        end
-        def ecto_identifier(_), do: nil
-
-        def universal_identifier(%{__struct__: module} = m) do
-          if supported?(m) do
-            module.universal_identifier(m)
-          end
-        end
-
-        def ref(%{__struct__: module} = m) do
-          if supported?(m) do
-            module.ref(m)
-          end
-        end
-
-        def source(%{__struct__: module} = m) do
-          if supported?(m) do
-            module.source(m)
-          end
-        end
+        def supported?(_), do: true
+        defdelegate ecto_identifier(m), to: unquote(module)
+        defdelegate universal_identifier(m), to: unquote(module)
+        defdelegate ref(m), to: unquote(module)
+        defdelegate source(m), to: unquote(module)
       end
     end
   end

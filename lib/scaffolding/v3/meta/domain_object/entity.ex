@@ -598,6 +598,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
                        #----------------------
                        @__nzdo__derive Noizu.ERP
                        @__nzdo__derive Noizu.V3.EntityProtocol
+                       @__nzdo__derive Noizu.V3.RestrictedProtocol
 
                        #----------------------
                        # Load Sphinx Settings from base.
@@ -619,7 +620,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
                        @__nzdo_persistence__by_table Enum.map(@__nzdo_persistence.layers, fn(layer) -> {layer.table, layer} end) |> Map.new()
                        @__nzdo_ecto_entity (@__nzdo_persistence.ecto_entity && true || false)
                        if @__nzdo_ecto_entity do
-                         @derive_list Noizu.Ecto.Entity
+                         @__nzdo__derive Noizu.Ecto.Entity
                        end
 
                        if @__nzdo__base_open? do
