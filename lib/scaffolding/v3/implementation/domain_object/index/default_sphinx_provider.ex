@@ -79,7 +79,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Index.DefaultSp
       end)
     end
 
-    def __index_schema__(mod, :xml, context, options) do
+    def __index_header__(mod, :xml, context, options) do
       # strip down blob entries
       fields = mod.__index_schema_fields__(context, options)
                |> Enum.uniq_by(fn({field, _provider, blob, _encoding, _bits, _indexing, _default}) -> blob && blob || field end)
@@ -109,6 +109,28 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Index.DefaultSp
 
       "<sphinx:schema>\n\t" <> Enum.join(fields, "\n\t") <> "\n</sphinx:schema>"
     end
+
+
+
+    def __index_header__(mod, :real_time, context, options) do
+      index = mod.__rt_index__()
+      raw = mod.__index_schema_fields__(context, options)
+      blobs = raw
+              |> Enum.filter(fn({_field, _provider, blob, _encoding, _bits, _indexing, _default}) -> blob end)
+              |> Enum.map(fn({_field, _provider, blob, _encoding, _bits, _indexing, _default}) -> blob end)
+              |> Enum.uniq
+      base = raw
+             |> Enum.filter(fn({_field, _provider, blob, _encoding, _bits, _indexing, _default}) -> blob == nil end)
+             |> Enum.map(fn({field, _provider, _blob, _encoding, _bits, _indexing, _default}) -> field end)
+
+      fields = Enum.map(base ++ blobs, &(Atom.to_string(&1)))
+               |> Enum.join(", ")
+
+      "REPLACE INTO #{index} (#{fields}) VALUES"
+    end
+
+
+
 
     def __index_record__(mod, record_type, entity, context, options) do
       uid = Noizu.Ecto.Entity.universal_identifier(entity)
@@ -215,7 +237,10 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Index.DefaultSp
 
   end
 
-  defmacro __using__(_options) do
+  defmacro __using__(options) do
+    rt_index = options[:rt_index]
+    delta_index = options[:delta_index]
+    primary_index = options[:primary_index]
     quote do
       alias Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Index.DefaultSphinxProvider.Default, as: SphinxProvider
       def extract_field(field, entity, context, options), do: SphinxProvider.extract_field(__MODULE__, field, entity, context, options)
@@ -223,13 +248,34 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Index.DefaultSp
       def build(type, context, options), do: SphinxProvider.build(__MODULE__, type, context, options)
 
       def __index_schema_fields__(context, options), do: SphinxProvider.__index_schema_fields__(__MODULE__, context, options)
-      def __index_schema__(type, context, options), do: SphinxProvider.__index_schema__(__MODULE__, type, context, options)
+      def __index_header__(type, context, options), do: SphinxProvider.__index_header__(__MODULE__, type, context, options)
       def __index_record__(type, entity, context, options), do: SphinxProvider.__index_record__(__MODULE__, type, entity, context, options)
 
       def update_index(entity, context, options), do: SphinxProvider.update_index(__MODULE__, entity, context, options)
       def delete_index(entity, context, options), do: SphinxProvider.delete_index(__MODULE__, entity, context, options)
 
+      @__nzdo__sref Module.get_attribute(@__nzdo__base, :__nzdo__sref)
+      @rt_index unquote(rt_index) || :"#{@__nzdo__sref}_rt_idx"
+      @delta_index unquote(rt_index) || :"#{@__nzdo__sref}_rt_idx"
+      @primary_index unquote(rt_index) || :"#{@__nzdo__sref}_rt_idx"
+      def __rt_index__(), do: @rt_index
+      def __delta_index__(), do: @delta_index
+      def __primary_index__(), do: @primary_index
+
       defdelegate sql_escape_string(v), to: SphinxProvider
+
+      defoverridable [
+        extract_field: 4,
+        fields: 2,
+        build: 3,
+        __index_schema_fields__: 2,
+        __index_header__: 3,
+        __index_record__: 4,
+        update_index: 3,
+        delete_index: 3,
+        sql_escape_string: 1
+      ]
+
     end
   end
 
