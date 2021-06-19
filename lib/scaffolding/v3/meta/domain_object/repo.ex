@@ -89,8 +89,6 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo do
       defdelegate __sref__(), to: @__nzdo__base
       defdelegate __erp__(), to: @__nzdo__base
 
-
-
       defdelegate id(ref), to: @__nzdo__base
       defdelegate ref(ref), to: @__nzdo__base
       defdelegate sref(ref), to: @__nzdo__base

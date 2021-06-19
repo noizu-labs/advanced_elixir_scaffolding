@@ -4,7 +4,13 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Index do
   #--------------------------------------------
   #
   #--------------------------------------------
-  def __noizu_index__(caller, _options, block) do
+  def __noizu_index__(caller, options, block) do
+    indexer = case options[:engine] do
+                nil -> Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Index.DefaultSphinxProvider
+                :sphinx -> Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Index.DefaultSphinxProvider
+                v when is_atom(v) -> v
+              end
+
     process_config = quote do
                        import Noizu.DomainObject, only: [file_rel_dir: 1]
 
@@ -33,16 +39,11 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Index do
                        after
                          :ok
                        end
-
-
-
-
-
                      end
 
     quote do
       unquote(process_config)
-      #use unquote(crud_provider)
+      use unquote(indexer)
 
       # Post User Logic Hook and checks.
       #@before_compile unquote(internal_provider)

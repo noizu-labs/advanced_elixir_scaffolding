@@ -207,7 +207,15 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
     |> Enum.filter(&(&1))
   end
 
-
+  def __extract_index_setting__(_mod, field, indexers, :field = encoding, _opts), do: Enum.map(indexers, &({{field, &1}, %{index: true, encoding: encoding}}))
+  def __extract_index_setting__(_mod, field, indexers, :attr_uint = encoding, _opts), do: Enum.map(indexers, &({{field, &1}, %{index: true, encoding: encoding}}))
+  def __extract_index_setting__(_mod, field, indexers, :attr_int = encoding, _opts), do: Enum.map(indexers, &({{field, &1}, %{index: true, encoding: encoding}}))
+  def __extract_index_setting__(_mod, field, indexers, :attr_bigint = encoding, _opts), do: Enum.map(indexers, &({{field, &1}, %{index: true, encoding: encoding}}))
+  def __extract_index_setting__(_mod, field, indexers, :attr_bool = encoding, _opts), do: Enum.map(indexers, &({{field, &1}, %{index: true, encoding: encoding}}))
+  def __extract_index_setting__(_mod, field, indexers, :attr_multi = encoding, _opts), do: Enum.map(indexers, &({{field, &1}, %{index: true, encoding: encoding}}))
+  def __extract_index_setting__(_mod, field, indexers, :attr_multi64 = encoding, _opts), do: Enum.map(indexers, &({{field, &1}, %{index: true, encoding: encoding}}))
+  def __extract_index_setting__(_mod, field, indexers, :attr_timestamp = encoding, _opts), do: Enum.map(indexers, &({{field, &1}, %{index: true, encoding: encoding}}))
+  def __extract_index_setting__(_mod, field, indexers, :attr_float = encoding, _opts), do: Enum.map(indexers, &({{field, &1}, %{index: true, encoding: encoding}}))
   def __extract_index_setting__(_mod, field, indexers, true, _opts) do
     Enum.map(indexers, &({{field, &1}, %{index: true}}))
   end
@@ -230,6 +238,14 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
 
   def __extract_index_setting__(mod, field, indexers, settings, opts) when is_list(settings) do
     Enum.map(settings, &(EntityMeta.__extract_index_setting__(mod, field, indexers, &1, opts)))
+  end
+
+  def __extract_index_setting__(_mod, field, indexers, {:bits, encoding}, _opts) do
+    Enum.map(indexers, &({{field, &1}, %{index: true, bits: encoding}}))
+  end
+
+  def __extract_index_setting__(_mod, field, indexers, {:encoding, encoding}, _opts) do
+    Enum.map(indexers, &({{field, &1}, %{index: true, encoding: encoding}}))
   end
 
   def __extract_index_setting__(_mod, field, indexers, {:as, setting}, _opts) do
@@ -266,6 +282,15 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
     {{field, index}, %{index: false}}
   end
 
+
+  def __extract_index_setting__(_mod, field, index, _indexers, {:bits, encoding}, _opts) do
+    {{field, index}, %{index: true, bits: encoding}}
+  end
+
+  def __extract_index_setting__(_mod, field, index, _indexers, {:encoding, encoding}, _opts) do
+    {{field, index}, %{index: true, encoding: encoding}}
+  end
+
   def __extract_index_setting__(_mod, field, index, _indexers, {:as, setting}, _opts) do
     {{field, index}, %{index: true, as: setting}}
   end
@@ -277,7 +302,6 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
   def __extract_index_setting__(_mod, field, index, _indexers, {:user_defined, setting}, _opts) do
     {{field, index}, %{index: true, user_defined: setting}}
   end
-
 
   #---------------------------------
   #
@@ -822,6 +846,8 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
       def __noizu_info__(:field_attributes), do: @__nzdo__field_attributes_map
       def __noizu_info__(:indexing), do: __indexing__()
       defdelegate __noizu_info__(report), to: @__nzdo__base
+
+
 
     end
   end
