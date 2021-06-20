@@ -8,7 +8,7 @@ defmodule Noizu.Scaffolding.V3.Schema.PersistenceLayer do
                dirty?: boolean,
                fragmented?: boolean,
                require_transaction?: boolean,
-
+               tx_block: atom,
                load_fallback?: boolean,
 
                cascade_create?: boolean,
@@ -28,6 +28,7 @@ defmodule Noizu.Scaffolding.V3.Schema.PersistenceLayer do
     id_map: :same,
     dirty?: false,
     fragmented?: false,
+    tx_block: :none,
     require_transaction?: false,
 
     load_fallback?: false,

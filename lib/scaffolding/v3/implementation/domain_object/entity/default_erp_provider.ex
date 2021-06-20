@@ -157,7 +157,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
         :else -> nil
       end
     end) |> List.flatten()
-         |> Map.new()
+             |> Map.new()
     %{struct(layer.table, values)| entity: entity}
   end
 
@@ -441,6 +441,19 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
       def __from_record__(type, record, context, options \\ nil), do:  @__nzdo__erp_imp.__from_record__(__MODULE__, type, record, context, options)
       def __from_record__!(type, record, context, options \\ nil), do:  @__nzdo__erp_imp.__from_record__!(__MODULE__, type, record, context, options)
 
+
+      # Temp this doesn't technically belong here.
+      def __write_index__(entity, _context, _options \\ nil) do
+        IO.puts "TODO - #{__MODULE__} - iterate over indexes (if any) and call their insert methods."
+      end
+      def __update_index__(entity, _context, _options \\ nil) do
+        IO.puts "TODO - #{__MODULE__} - iterate over indexes (if any) and call their update methods."
+      end
+      def __delete_index__(entity, _context, _options \\ nil) do
+        IO.puts "TODO - #{__MODULE__} - iterate over indexes (if any) and call their delete methods."
+      end
+
+
       defoverridable [
         id: 1,
         ref: 1,
@@ -479,6 +492,14 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
         __from_record__: 4,
         __from_record__!: 3,
         __from_record__!: 4,
+
+
+        __write_index__: 2,
+        __write_index__: 3,
+        __update_index__: 2,
+        __update_index__: 3,
+        __delete_index__: 2,
+        __delete_index__: 3,
       ]
     end
   end

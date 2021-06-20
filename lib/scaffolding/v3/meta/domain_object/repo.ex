@@ -6,6 +6,78 @@
 defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo do
   #alias Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo, as: RepoMeta
 
+  @type entity :: Map.t
+  @type ref :: {:ref, atom, any}
+  @type sref :: String.t
+  @type layer :: Noizu.Scaffolding.V3.Schema.PersistenceLayer.t
+  @type entity_reference :: ref | sref | entity | nil
+  @type opts :: Keyword.t | Map.t | nil
+
+  @callback cache(ref :: entity_reference, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
+  @callback delete_cache(ref :: entity_reference, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
+
+  @callback get(ref :: entity_reference, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
+  @callback post_get_callback(entity :: entity, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
+  @callback layer_get(layer :: layer, ref :: entity_reference, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
+  @callback layer_pre_get_callback(layer :: layer, ref :: entity_reference, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity_reference | entity |nil
+  @callback layer_post_get_callback(layer :: layer, ref :: entity_reference, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
+
+  @callback get!(ref :: entity_reference, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
+  @callback post_get_callback!(entity :: entity, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
+  @callback layer_get!(layer :: layer, ref :: entity_reference, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
+  @callback layer_pre_get_callback!(layer :: layer, ref :: entity_reference, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity_reference | entity |nil
+  @callback layer_post_get_callback!(layer :: layer, ref :: entity_reference, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
+
+  @callback create(entity :: entity, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
+  @callback pre_create_callback(entity :: entity, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
+  @callback post_create_callback(entity :: entity, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
+  @callback layer_create(layer :: layer, entity :: entity, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
+  @callback layer_pre_create_callback(layer :: layer, entity :: entity, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
+  @callback layer_create_callback(layer :: layer, entity :: entity, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
+  @callback layer_post_create_callback(layer :: layer, entity :: entity, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
+
+  @callback create!(entity :: entity, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
+  @callback pre_create_callback!(entity :: entity, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
+  @callback post_create_callback!(entity :: entity, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
+  @callback layer_create!(layer :: layer, entity :: entity, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
+  @callback layer_pre_create_callback!(layer :: layer, entity :: entity, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
+  @callback layer_create_callback!(layer :: layer, entity :: entity, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
+  @callback layer_post_create_callback!(layer :: layer, entity :: entity, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
+
+  @callback update(entity :: entity, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
+  @callback pre_update_callback(entity :: entity, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
+  @callback post_update_callback(entity :: entity, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
+  @callback layer_update(layer :: layer, entity :: entity, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
+  @callback layer_pre_update_callback(layer :: layer, entity :: entity, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
+  @callback layer_update_callback(layer :: layer, entity :: entity, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
+  @callback layer_post_update_callback(layer :: layer, entity :: entity, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
+
+  @callback update!(entity :: entity, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
+  @callback pre_update_callback!(entity :: entity, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
+  @callback post_update_callback!(entity :: entity, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
+  @callback layer_update!(layer :: layer, entity :: entity, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
+  @callback layer_pre_update_callback!(layer :: layer, entity :: entity, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
+  @callback layer_update_callback!(layer :: layer, entity :: entity, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
+  @callback layer_post_update_callback!(layer :: layer, entity :: entity, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
+
+  @callback delete(entity :: entity, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
+  @callback pre_delete_callback(entity :: entity, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
+  @callback post_delete_callback(entity :: entity, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
+  @callback layer_delete(layer :: layer, entity :: entity, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
+  @callback layer_pre_delete_callback(layer :: layer, entity :: entity, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
+  @callback layer_delete_callback(layer :: layer, entity :: entity, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
+  @callback layer_post_delete_callback(layer :: layer, entity :: entity, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
+
+  @callback delete!(entity :: entity, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
+  @callback pre_delete_callback!(entity :: entity, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
+  @callback post_delete_callback!(entity :: entity, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
+  @callback layer_delete!(layer :: layer, entity :: entity, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
+  @callback layer_pre_delete_callback!(layer :: layer, entity :: entity, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
+  @callback layer_delete_callback!(layer :: layer, entity :: entity, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
+  @callback layer_post_delete_callback!(layer :: layer, entity :: entity, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
+
+  @callback generate_identifier() :: integer | any
+  @callback generate_identifier!() :: integer | any
 
   #--------------------------------------------
   #
@@ -15,7 +87,10 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo do
     internal_provider = options[:internal_imp] || Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultInternalProvider
     process_config = quote do
                        import Noizu.DomainObject, only: [file_rel_dir: 1]
-
+                       require Amnesia
+                       require Amnesia.Helper
+                       require Amnesia.Fragment
+                       require Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo
                        #---------------------
                        # Insure Single Call
                        #---------------------
@@ -45,6 +120,11 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo do
                        Module.put_attribute(@__nzdo__base, :__nzdo__repo, __MODULE__)
                        @__nzdo__entity Module.concat([@__nzdo__base, "Entity"])
                        @__nzdo__sref Module.get_attribute(@__nzdo__base, :sref)
+                       @__nzdo_persistence Module.get_attribute(@__nzdo__base, :__nzdo_persistence)
+
+                       @__nzdo_top_layer List.first(@__nzdo_persistence && @__nzdo_persistence.layers || [])
+                       @__nzdo_top_layer_tx_block @__nzdo_top_layer && @__nzdo_top_layer.tx_block
+
                        @vsn (Module.get_attribute(@__nzdo__base, :vsn) || 1.0)
 
                        #----------------------
@@ -52,6 +132,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo do
                        #----------------------
                        try do
                          import Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo
+                         @implement Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo
                          unquote(block)
                        after
                          :ok
@@ -74,8 +155,78 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo do
     end
   end
 
+  #--------------------------------------------
+  #
+  #--------------------------------------------
+  defmacro __transaction_block__(_options \\ [], [do: block]) do
+    quote do
+      case @__nzdo_top_layer_tx_block do
+        :none ->
+          unquote(block)
+        :tx ->
+          Amnesia.transaction do
+            unquote(block)
+          end
+        :async ->
+          Amnesia.async do
+            unquote(block)
+          end
+        :sync ->
+          Amnesia.sync do
+            unquote(block)
+          end
+        :fragment_tx ->
+          Amnesia.Fragment.transaction do
+            unquote(block)
+          end
+        :fragment_async ->
+          Amnesia.Fragment.async do
+            unquote(block)
+          end
+        :fragment_sync ->
+          Amnesia.Fragment.sync do
+            unquote(block)
+          end
+        _ ->
+          unquote(block)
+      end
+    end
+  end
 
-
+  defmacro __layer_transaction_block__(layer, _options \\ [], [do: block]) do
+    quote do
+      case unquote(is_map(layer) && layer.tx_block) do
+        :none ->
+          unquote(block)
+        :tx ->
+          Amnesia.transaction do
+            unquote(block)
+          end
+        :async ->
+          Amnesia.async do
+            unquote(block)
+          end
+        :sync ->
+          Amnesia.sync do
+            unquote(block)
+          end
+        :fragment_tx ->
+          Amnesia.Fragment.transaction do
+            unquote(block)
+          end
+        :fragment_async ->
+          Amnesia.Fragment.async do
+            unquote(block)
+          end
+        :fragment_sync ->
+          Amnesia.Fragment.sync do
+            unquote(block)
+          end
+        _ ->
+          unquote(block)
+      end
+    end
+  end
   #--------------------------------------------
   #
   #--------------------------------------------

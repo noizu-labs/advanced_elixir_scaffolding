@@ -235,6 +235,33 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.Persistence do
                        :else -> false
                      end
 
+    tx_block = cond do
+                 type == :ecto ->
+                   cond do
+                     dirty? -> :none
+                     :else -> :ecto_transaction
+                   end
+                 type == :mnesia ->
+                   cond do
+                     require_transaction? && fragmented? -> :fragment_tx
+                     require_transaction? -> :tx
+                     :else ->
+                       case {dirty?, fragmented?} do
+                         {:sync, true} -> :fragment_sync
+                         {:sync, false} -> :sync
+                         {:async, true} -> :fragment_async
+                         {:async, false} -> :async
+                         {true, true} -> :fragment_async
+                         {true, false} -> :async
+                         {false, true} -> :fragment_tx
+                         {false, false} -> :tx
+                         _ -> :none
+                       end
+                   end
+                 :else -> :none
+               end
+
+
     %Noizu.Scaffolding.V3.Schema.PersistenceLayer{
       schema: provider,
       type: type,
@@ -242,6 +269,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.Persistence do
       id_map: id_map,
       dirty?: dirty?,
       fragmented?: fragmented?,
+      tx_block: tx_block,
       require_transaction?: require_transaction?,
 
       load_fallback?: load_fallback?,
