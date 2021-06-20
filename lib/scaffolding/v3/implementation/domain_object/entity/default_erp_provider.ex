@@ -3,194 +3,224 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
   #-----------------
   # id
   #-----------------
-  def id(m, {:ref, m, id}), do: id
-  def id(m, ref) do
-    r = ref && m.ref(ref)
-    r && (r != ref) && m.id(r) || nil
-  end
-
-  #------------------
-  #
-  #------------------
-  def ref(_, nil), do: nil
-  def ref(m, %{__struct__: m, identifier: id}), do: {:ref, m, id}
-  def ref(m, %{__struct__: s} = entity) do
-    cond do
-      t = m.__noizu_info__(:associated_types)[s] ->
-        cond do
-          t == :poly -> s.ref(entity)
-          config = (t == :ecto || t == :mnesia) && m.__persistence__(:table)[s] ->
-            id = case config.map_id do
-                   :same -> Map.get(entity, :identifier) || Map.get(entity, :id)
-                   :unsupported -> nil
-                   {m,f} -> apply(m,f, [entity])
-                   {m,f,a} when is_list(a) -> apply(m, f, [entity] ++ a)
-                   f when is_function(f,1) -> f.(entity)
-                   _ -> nil
-                 end
-            id && {:ref, m, entity.identifier}
-          :else -> nil
-        end
-      :else -> nil
+  def id(domain_object, {:ref, domain_object, id}), do: id
+  def id(domain_object, ref) do
+    case domain_object.ref(ref) do
+      {:ref, _, id} -> id
+      _ -> nil
     end
   end
-  def ref(m, ref), do: m.valid_identifier(ref) && {:ref, m, ref}
 
   #------------------
   #
   #------------------
-  def sref(m, ref) do
-    sref = m.__sref__()
+  def ref(_domain_object, nil), do: nil
+  def ref(domain_object, %domain_object{identifier: identifier}), do: {:ref, domain_object, identifier}
+  def ref(domain_object, %associated_struct{} = entity) do
+    association_type = domain_object.__noizu_info__(:associated_types)[associated_struct]
     cond do
-      sref == :undefined -> nil
-      id = m.id(ref) ->
-        id_str = m.id_to_string(id)
-        type = m.__noizu_info__(:identifier_type)
-        type = is_tuple(type) && elem(type, 0) || type
-        cond do
-          id_str == nil -> throw "id to string errror #{m}"
-          type == :ref -> "ref.#{sref}{#{id_str}}"
-          type == :list || type == :compound -> "ref.#{sref}#{id_str}"
-          :else ->  "ref.#{sref}.#{id_str}"
+      association_type == nil -> nil
+      association_type == false -> nil
+      association_type == :poly -> associated_struct.ref(entity)
+      config = domain_object.__persistence__(:table)[associated_struct] ->
+        identifier = case config.map_id do
+                       :unsupported -> nil
+                       :same -> get_in(entity, [Access.key(:identifier)]) || get_in(entity, [Access.key(:id)])
+                       {m,f} -> apply(m,f, [entity])
+                       {m,f,a} when is_list(a) -> apply(m, f, [entity] ++ a)
+                       {m,f,a} -> apply(m,f, [entity, a])
+                       f when is_function(f,1) -> f.(entity)
+                       _ -> nil
+                     end
+        identifier && {:ref, domain_object, identifier}
+        :else -> nil
+    end
+  end
+  def ref(domain_object, ref), do: domain_object.valid_identifier(ref) && {:ref, domain_object, ref}
+
+  #------------------
+  #
+  #------------------
+  def sref(domain_object, ref) do
+    sref_name = domain_object.__sref__()
+    identifier = domain_object.id(ref)
+    cond do
+      sref_name == :undefined -> nil
+      identifier ->
+        sref_identifier = domain_object.id_to_string(identifier) || throw "#{domain_object}.id_to_string failed for #{inspect identifier}"
+        identifier_type = case domain_object.__noizu_info__(:identifier_type) do
+                            identifier_type when is_tuple(identifier_type) -> elem(identifier_type, 0)
+                            identifier_type -> identifier_type
+                          end
+        case identifier_type do
+          :ref -> "ref.#{sref_name}{#{sref_identifier}}"
+          :list -> "ref.#{sref_name}#{sref_identifier}"
+          :compound -> "ref.#{sref_name}#{sref_identifier}"
+          _other -> "ref.#{sref_name}.#{sref_identifier}"
         end
       :else -> nil
     end
   end
 
   # entity load
-  def entity(m, %{__struct__: m} = ref, _), do: ref
-  def entity(m, %{__struct__: s} = entity, options) do
+  def entity(domain_object, %domain_object{} = entity, _options), do: entity
+  def entity(domain_object, %associated_struct{} = entity, options) do
+    association_type = domain_object.__noizu_info__(:associated_types)[associated_struct]
     cond do
-      t = m.__noizu_info__(:associated_types)[s] ->
+      association_type == nil -> nil
+      association_type == false -> nil
+      association_type == :poly -> entity
+      config = domain_object.__persistence__(:table)[associated_struct] ->
+        context = Noizu.ElixirCore.CallingContext.system(options[:context] || Process.get(:context))
+        domain_object.__from_record__(associated_struct, entity, context, options)
+      :else -> nil
+    end
+  end
+  def entity(domain_object, ref, options) do
+    cond do
+      ref = domain_object.ref(ref) ->
+        context = Noizu.ElixirCore.CallingContext.system(options[:context] || Process.get(:context))
+        domain_object.__repo__().get(ref, context, options)
+      :else -> nil
+    end
+  end
+
+  def entity!(domain_object, %domain_object{} = entity, _options), do: entity
+  def entity!(domain_object, %associated_struct{} = entity, options) do
+    association_type = domain_object.__noizu_info__(:associated_types)[associated_struct]
+    cond do
+      association_type == nil -> nil
+      association_type == false -> nil
+      association_type == :poly -> entity
+      config = domain_object.__persistence__(:table)[associated_struct] ->
+        context = Noizu.ElixirCore.CallingContext.system(options[:context] || Process.get(:context))
+        domain_object.__from_record__!(associated_struct, entity, context, options)
+      :else -> nil
+    end
+  end
+  def entity!(domain_object, ref, options) do
+    cond do
+      ref = domain_object.ref(ref) ->
+        context = Noizu.ElixirCore.CallingContext.system(options[:context] || Process.get(:context))
+        domain_object.__repo__().get!(ref, context, options)
+      :else -> nil
+    end
+  end
+
+  #-----------------------------------
+  #
+  #-----------------------------------
+  def __as_record__(domain_object, table, ref, context, options) do
+    cond do
+      entity = domain_object.entity(ref, options) ->
+        layer = domain_object.__persistence__(:table)[table]
         cond do
-          t == :poly -> entity
-          m.__persistence__(:table)[s] ->
-            context = Noizu.ElixirCore.CallingContext.system(options[:context])
-            m.__from_record__(s, entity, context, options)
+          layer == nil -> throw "#{domain_object}.__as_record__ to table #{inspect table} not supported"
+          layer.type == :mnesia -> domain_object.__as_mnesia_record__(table, entity, context, options)
+          layer.type == :ecto -> domain_object.__as_ecto_record__(table, entity, context, options)
+          layer.type == :redis -> domain_object.__as_redis_record__(table, entity, context, options)
+          layer.type != domain_object && Kernel.function_exported?(layer.type, :__as_record__, 4) -> layer.type.__as_record__(table, entity, context, options)
+          :else -> throw "#{domain_object}.__as_record__ layer.type (#{inspect layer.type}) not supported"
+        end
+      :else -> nil
+    end
+  end
+
+  #-----------------------------------
+  #
+  #-----------------------------------
+  def __as_record__!(domain_object, table, ref, context, options) do
+    cond do
+      entity = domain_object.entity!(ref, options) ->
+        layer = domain_object.__persistence__(:table)[table]
+        cond do
+          layer == nil -> throw "#{domain_object}.__as_record__! to table #{inspect table} not supported"
+          layer.type == :mnesia -> domain_object.__as_mnesia_record__!(table, entity, context, options)
+          layer.type == :ecto -> domain_object.__as_ecto_record__!(table, entity, context, options)
+          layer.type == :redis -> domain_object.__as_redis_record__!(table, entity, context, options)
+          layer.type != domain_object && Kernel.function_exported?(layer.type, :__as_record__!, 4) -> layer.type.__as_record__!(table, entity, context, options)
+          :else -> throw "#{domain_object}.__as_record__! layer.type (#{inspect layer.type}) not supported"
+        end
+      :else -> nil
+    end
+  end
+
+  #-----------------------------------
+  #
+  #-----------------------------------
+  def __as_mnesia_record__(domain_object, table, entity, context, options) do
+    context = Noizu.ElixirCore.CallingContext.system(context)
+    layer = domain_object.__persistence__(:table)[table]
+    field_types = domain_object.__noizu_info__(:field_types)
+    fields = Map.keys(table.__struct__([]))  -- [:__struct__, :__meta__]
+    Enum.map(fields,
+      fn(field) ->
+        cond do
+          field == :entity -> entity
+          entry = layer.schema_fields[field] ->
+            type = field_types[entry[:source]]
+            source = case entry[:selector] do
+                       nil -> get_in(entity, [Access.key(entry[:source])])
+                       path when is_list(path) -> get_in(entity, path)
+                       {m,f,a} when is_list(a) -> apply(m, f, [entry, entity] ++ a)
+                       {m,f,a} -> apply(m, f, [entry, entity, a])
+                       f when is_function(f, 0) -> f.()
+                       f when is_function(f, 1) -> f.(entity)
+                       f when is_function(f, 2) -> f.(entry, entity)
+                       f when is_function(f, 3) -> f.(entry, entity, context)
+                       f when is_function(f, 4) -> f.(entry, entity, context, options)
+                     end
+            type.handler.cast(entry[:source], entry[:segment], source, type, layer, context, options)
+          Map.has_key?(entity, field) -> {field, get_in(entity, [Access.key(field)])}
           :else -> nil
         end
-      :else -> nil
-    end
-  end
-  def entity(m, ref, options) do
-    cond do
-      ref = m.ref(ref) ->
-        context = Noizu.ElixirCore.CallingContext.system(options[:context] || Process.get(:context))
-        m.__repo__().get(ref, context)
-      :else -> nil
-    end
+      end)
+    |> List.flatten()
+    |> Enum.filter(&(&1))
+    |> layer.table.__struct__()
   end
 
-  def entity!(m, %{__struct__: m} = ref, _), do: ref
-  def entity!(m, %{__struct__: s} = entity, options) do
-    cond do
-      t = m.__noizu_info__(:associated_types)[s] ->
+  def __as_mnesia_record__!(domain_object, table, ref, context, options) do
+    domain_object.__as_mnesia_record__(table, ref, context, options)
+  end
+
+  #-----------------------------------
+  #
+  #-----------------------------------
+  def __as_ecto_record__(domain_object, table, entity, context, options) do
+    context = Noizu.ElixirCore.CallingContext.admin()
+    layer = domain_object.__persistence__(:table)[table]
+    field_types = domain_object.__noizu_info__(:field_types)
+    Enum.map(domain_object.__noizu_info__(:fields),
+      fn(field) ->
         cond do
-          t == :poly -> entity
-          m.__persistence__(:table)[s] ->
-            context = Noizu.ElixirCore.CallingContext.system(options[:context])
-            m.__from_record__!(s, entity, context, options)
+          field == :identifier -> {:identifier, Noizu.Ecto.Entity.ecto_identifier(entity)}
+          entry = layer.schema_fields[field] ->
+            type = field_types[entry[:source]]
+            source = case entry[:selector] do
+                       nil -> get_in(entity, [Access.key(entry[:source])])
+                       path when is_list(path) -> get_in(entity, path)
+                       {m,f,a} when is_list(a) -> apply(m, f, [entry, entity] ++ a)
+                       {m,f,a} -> apply(m, f, [entry, entity, a])
+                       f when is_function(f, 0) -> f.()
+                       f when is_function(f, 1) -> f.(entity)
+                       f when is_function(f, 2) -> f.(entry, entity)
+                       f when is_function(f, 3) -> f.(entry, entity, context)
+                       f when is_function(f, 4) -> f.(entry, entity, context, options)
+                     end
+            type.handler.cast(entry[:source], entry[:segment], source, type, layer, context, options)
+          Map.has_key?(entity, field) -> {field, get_in(entity, [Access.key(field)])}
           :else -> nil
         end
-      :else -> nil
-    end
-  end
-  def entity!(m, ref, options) do
-    cond do
-      ref = m.ref(ref) ->
-        context = Noizu.ElixirCore.CallingContext.system(options[:context] || Process.get(:context))
-        m.__repo__().get!(ref, context)
-      :else -> nil
-    end
+      end)
+    |> List.flatten()
+    |> Enum.filter(&(&1))
+    |> layer.table.__struct__()
   end
 
-  #-----------------------------------
-  #
-  #-----------------------------------
-  def __as_record__(m, table, ref, context, options) do
-    cond do
-      entity = m.entity(ref, options) ->
-        layer = m.__persistence__(:table)[table]
-        cond do
-          layer.type == :mnesia -> m.__as_mnesia_record__(table, entity, context, options)
-          layer.type == :ecto -> m.__as_ecto_record__(table, entity, context, options)
-          layer.type == :redis -> m.__as_redis_record__(table, entity, context, options)
-          :else -> throw "#{m} as #{layer.type} record not supported"
-        end
-      :else -> nil
-    end
+  def __as_ecto_record__!(domain_object, table, ref, context, options) do
+    domain_object.__as_ecto_record__(table, ref, context, options)
   end
-
-  #-----------------------------------
-  #
-  #-----------------------------------
-  def __as_record__!(m, table, ref, context, options) do
-    cond do
-      entity = m.entity!(ref, options) ->
-        layer = m.__persistence__(:table)[table]
-        cond do
-          layer.type == :mnesia -> m.__as_mnesia_record__!(table, entity, context, options)
-          layer.type == :ecto -> m.__as_ecto_record__!(table, entity, context, options)
-          layer.type == :redis -> m.__as_redis_record__!(table, entity, context, options)
-          :else -> throw "#{m} as #{layer.type} record not supported"
-        end
-      :else -> nil
-    end
-  end
-
-
-  #-----------------------------------
-  #
-  #-----------------------------------
-  def __as_mnesia_record__(m, table, entity, context, options) do
-    context = Noizu.ElixirCore.CallingContext.admin()
-    layer = m.__persistence__(:table)[table]
-    field_types = m.__noizu_info__(:field_types)[{layer.schema, layer.table}]
-    unrolled = layer.schema_fields
-    fields = (struct(table, %{}) |> Map.keys()) -- [:__struct__]
-    values = Enum.map(fields, fn(field) ->
-      cond do
-        entry = unrolled[field] ->
-          type = field_types[entry[:source]]
-          type.handler.cast(entry[:source], entry[:segment], get_in(entity, [Access.key(entry[:source])]), type, layer, context, options)
-        Map.has_key?(entity, field) -> {field, get_in(entity, [Access.key(field)])}
-        :else -> nil
-      end
-    end) |> List.flatten()
-             |> Map.new()
-    %{struct(layer.table, values)| entity: entity}
-  end
-
-  def __as_mnesia_record__!(m, table, ref, context, options) do
-    m.__as_mnesia_record__(table, ref, context, options)
-  end
-
-  #-----------------------------------
-  #
-  #-----------------------------------
-  def __as_ecto_record__(m, table, entity, context, options) do
-    context = Noizu.ElixirCore.CallingContext.admin()
-    layer = m.__persistence__(:table)[table]
-    unrolled = layer.schema_fields
-    field_types = m.__noizu_info__(:field_types)[{layer.schema, layer.table}]
-    #ecto_fields = Map.keys(struct(layer.table)) -- [:schema, :meta]
-    values = Enum.map(m.__noizu_info__(:fields), fn(field) ->
-      cond do
-        field == :identifier -> {:identifier, Noizu.Ecto.Entity.ecto_identifier(entity)}
-        entry = unrolled[field] ->
-          type = field_types[entry[:source]]
-          type.handler.cast(entry[:source], entry[:segment], get_in(entity, [Access.key(entry[:source])]), type, layer, context, options)
-        Map.has_key?(entity, field) -> {field, get_in(entity, [Access.key(field)])}
-        :else -> nil
-      end
-    end) |> List.flatten() |> Map.new()
-    struct(layer.table, values)
-  end
-
-  def __as_ecto_record__!(m, table, ref, context, options) do
-    m.__as_ecto_record__(table, ref, context, options)
-  end
-
 
   #-----------------------------------
   #
@@ -364,7 +394,105 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
   def record(_, _ref, _options), do: nil
   def record!(_, _ref, _options), do: nil
 
+  def valid?(m, entity, context, options) do
+    attributes = m.__noizu_info__(:field_attributes)
+    field_errors = Enum.map(Map.from_struct(entity),
+                     fn({field, value}) ->
+                       # Required Check
+                       field_attributes = attributes[field]
+                       required = field_attributes[:required]
+                       required_check = case required do
+                                          true -> (value && true) || {:error, {:required, field}}
+                                          {m,f} ->
+                                            arity = Enum.max(Keyword.get_values(m.__info__(:functions), f))
+                                            case arity do
+                                              1 -> apply(m, f, [value])
+                                              2 -> apply(m, f, [field, entity])
+                                              3 -> apply(m, f, [field, entity, context])
+                                              4 -> apply(m, f, [field, entity, context, options])
+                                            end
+                                          {m,f, arity} when is_integer(arity) ->
+                                            case arity do
+                                              1 -> apply(m, f, [value])
+                                              2 -> apply(m, f, [field, entity])
+                                              3 -> apply(m, f, [field, entity, context])
+                                              4 -> apply(m, f, [field, entity, context, options])
+                                            end
+                                          {m,f,a} when is_list(a) -> apply(m, f, [field, entity] ++ a)
+                                          {m,f,a} -> apply(m, f, [field, entity, a])
+                                          f when is_function(f, 1) -> f.([value])
+                                          f when is_function(f, 2) -> f.([field, entity])
+                                          f when is_function(f, 3) -> f.([field, entity, context])
+                                          f when is_function(f, 4) -> f.([field, entity, context, options])
+                                          false -> true
+                                          nil -> true
+                                        end
 
+                       # Type Constraint Check
+                       type_constraint_check = case field_attributes[:type_constraint] do
+                                                 {:ref, permitted} ->
+                                                   case value do
+                                                     {:ref, domain_object, _identifier} -> (permitted == :any || Enum.member?(permitted, domain_object)) || {:error, {:ref, {field, domain_object}}}
+                                                     %domain_object{} -> (permitted == :any || Enum.member?(permitted, domain_object)) || {:error, {:ref, {field, domain_object}}}
+                                                     nil ->
+                                                       cond do
+                                                         required == true ->  {:error, {:ref, {field, value}}}
+                                                         :else -> true
+                                                       end
+                                                     _ -> {:error, {:ref, {field, value}}}
+                                                   end
+                                                 {:struct, permitted} ->
+                                                   case value do
+                                                     %domain_object{} -> (permitted == :any || Enum.member?(permitted, domain_object)) || {:error, {:struct, {field, domain_object}}}
+                                                     nil ->
+                                                       cond do
+                                                         required == true ->  {:error, {:struct, {field, value}}}
+                                                         :else -> true
+                                                       end
+                                                     _ -> {:error, {:struct, {field, value}}}
+                                                   end
+                                                 {:enum, permitted} ->
+                                                   et = permitted.__enum_type__
+                                                   ee = permitted.__entity__
+                                                   case value do
+                                                     nil ->
+                                                       cond do
+                                                         required == true ->  {:error, {:enum, {field, value}}}
+                                                         :else -> true
+                                                       end
+                                                     {:ref, ^ee, _identifier} -> true
+                                                     %{__struct__: ^ee} -> true  # %^ee{} breaks intellij parsing.
+                                                     v when is_atom(v) -> et && Map.has_key?(et.atom_to_enum(), value) || {:error, {:enum, {field, value}}}
+                                                     _ -> {:error, {:enum, {field, value}}}
+                                                   end
+                                                 {:atom, permitted} ->
+                                                   case value do
+                                                     nil ->
+                                                       cond do
+                                                         required == true ->  {:error, {:enum, {field, value}}}
+                                                         :else -> true
+                                                       end
+                                                     v when is_atom(v) -> (permitted == :any || Enum.member?(permitted, v)) || {:error, {:enum, {field, value}}}
+                                                     _ -> {:error, {:enum, {field, value}}}
+                                                   end
+                                                 _ -> true
+                                               end
+
+                       errors = Enum.filter([required_check, type_constraint_check], fn(v) ->
+                         case v do
+                           {:error, _} -> true
+                           _ -> false
+                         end
+                       end)
+                       length(errors) > 0 && {field, errors} || nil
+                     end
+                   ) |> Enum.filter(&(&1))
+
+    cond do
+      field_errors == [] -> true
+      :else -> {:error, Map.new(field_errors)}
+    end
+  end
 
 
   defmacro __using__(_options \\ nil) do
@@ -441,8 +569,9 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
       def __from_record__(type, record, context, options \\ nil), do:  @__nzdo__erp_imp.__from_record__(__MODULE__, type, record, context, options)
       def __from_record__!(type, record, context, options \\ nil), do:  @__nzdo__erp_imp.__from_record__!(__MODULE__, type, record, context, options)
 
-
-      # Temp this doesn't technically belong here.
+      #====================================================
+      # These should be move into their own modules.
+      #====================================================
       def __write_index__(entity, _context, _options \\ nil) do
         IO.puts "TODO - #{__MODULE__} - iterate over indexes (if any) and call their insert methods."
       end
@@ -452,6 +581,8 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
       def __delete_index__(entity, _context, _options \\ nil) do
         IO.puts "TODO - #{__MODULE__} - iterate over indexes (if any) and call their delete methods."
       end
+
+      def valid?(%__MODULE__{} = entity, context, options \\ nil) , do:  @__nzdo__erp_imp.valid?(__MODULE__, entity, context, options)
 
 
       defoverridable [
@@ -500,6 +631,9 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
         __update_index__: 3,
         __delete_index__: 2,
         __delete_index__: 3,
+
+        valid?: 2,
+        valid?: 3,
       ]
     end
   end

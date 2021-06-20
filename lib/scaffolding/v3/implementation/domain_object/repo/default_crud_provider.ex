@@ -691,56 +691,8 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
   #------------------------------------------
   def layer_post_delete_callback(_m, _layer, entity, _context, _options), do: entity
 
-  """
-        settings = m.__persistence__()
-        cond do
-          settings.mnesia_backend == nil -> m.create(entity, context, options)
-          settings.mnesia_backend[:require_transaction?] ->
-            cond do
-              settings.mnesia_backend[:fragmented?] ->
-                Amnesia.Fragment.transaction do
-                  m.create(entity, context, options)
-                end
-              :else ->
-                Amnesia.transaction do
-                  m.create(entity, context, options)
-                end
-            end
-          settings.mnesia_backend[:dirty?] ->
-            entity = cond do
-                       settings.mnesia_backend[:fragmented?] -> Amnesia.Fragment.async(fn -> m.pre_create_callback(entity, context, options) end)
-                       :else -> Amnesia.async(fn -> m.pre_create_callback(entity, context, options) end)
-                     end
-            entity = Enum.reduce(
-              settings.layers,
-              entity,
-              fn(layer, entity) ->
-                cond do
-                  layer.cascade_create? ->
-                    cond do
-                      layer.cascade_block? -> m.layer_create!(layer, entity, context, options)
-                      :else ->
-                        spawn fn -> m.layer_create!(layer, entity, context, options) end
-                        entity
-                    end
-                  :else -> entity
-                end
-              end
-            )
-            cond do
-              settings.mnesia_backend[:fragmented?] -> Amnesia.Fragment.async(fn -> m.post_create_callback(entity, context, options) end)
-              :else -> Amnesia.async(fn -> m.post_create_callback(entity, context, options) end)
-            end
-          :else ->
-            cond do
-              settings.mnesia_backend[:fragmented?] -> Amnesia.Fragment.async fn -> m.create(entity, context, options) end
-              :else -> Amnesia.async fn -> m.create(entity, context, options) end
-            end
-        end
-  """
-
-
   defmacro __using__(_options \\ nil) do
+    caller = __CALLER__
     quote do
       @__nzdo__crud_imp Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCrudProvider
 

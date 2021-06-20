@@ -193,9 +193,13 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo do
     end
   end
 
-  defmacro __layer_transaction_block__(layer, _options \\ [], [do: block]) do
+  defmacro __layer_transaction_block__(layer, options \\ [], [do: block]) do
+    Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo.__layer_transaction_block__d(__CALLER__, layer, options, block)
+  end
+
+  def __layer_transaction_block__d(_caller, layer, _options, block) do
     quote do
-      case unquote(is_map(layer) && layer.tx_block) do
+      case is_map(unquote(layer)) && unquote(layer).tx_block do
         :none ->
           unquote(block)
         :tx ->
@@ -232,14 +236,13 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo do
   #--------------------------------------------
   defmacro __before_compile__(_) do
     quote do
-
       defdelegate vsn(), to: @__nzdo__base
       def __base__(), do: @__nzdo__base
       defdelegate __entity__(), to: @__nzdo__base
       def __repo__(), do: __MODULE__
       defdelegate __sref__(), to: @__nzdo__base
       defdelegate __erp__(), to: @__nzdo__base
-
+      defdelegate __enum_type__(), to: @__nzdo__base
       defdelegate id(ref), to: @__nzdo__base
       defdelegate ref(ref), to: @__nzdo__base
       defdelegate sref(ref), to: @__nzdo__base
@@ -247,16 +250,13 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo do
       defdelegate entity!(ref, options \\ nil), to: @__nzdo__base
       defdelegate record(ref, options \\ nil), to: @__nzdo__base
       defdelegate record!(ref, options \\ nil), to: @__nzdo__base
-
       defdelegate __indexing__(), to: @__nzdo__base
       defdelegate __indexing__(setting), to: @__nzdo__base
-
       defdelegate __persistence__(setting \\ :all), to:  @__nzdo__base
       defdelegate __persistence__(selector, setting), to:  @__nzdo__base
       defdelegate __nmid__(), to: @__nzdo__base
       defdelegate __nmid__(setting), to: @__nzdo__base
       defdelegate __noizu_record__(type, ref, options \\ nil), to: @__nzdo__base
-
       def __noizu_info__(:type), do: :repo
       defdelegate __noizu_info__(report), to: @__nzdo__base
     end

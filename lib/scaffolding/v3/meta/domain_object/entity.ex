@@ -156,6 +156,103 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
   #--------------------------
   #
   #--------------------------
+  def pii_level(value) do
+    levels = %{
+      0 => :level_0,
+      1 => :level_1,
+      2 => :level_2,
+      3 => :level_3,
+      4 => :level_4,
+      5 => :level_5,
+      6 => :level_6,
+      :level_0 => :level_0,
+      :level_1 => :level_1,
+      :level_2 => :level_2,
+      :level_3 => :level_3,
+      :level_4 => :level_4,
+      :level_5 => :level_5,
+      :level_6 => :level_6,
+
+      true => :level_3,
+      false => :level_6,
+      :default => :level_6,
+    }
+    levels[value] || levels[:default]
+  end
+
+
+
+  def __field_attribute_normalize__(:pii, attr_value), do: EntityMeta.pii_level(attr_value)
+  def __field_attribute_normalize__(:required, attr_value) do
+    case attr_value do
+      [ref: v] -> {:ref, __field_attribute_normalize__(:ref, v)}
+      [enum: v] -> {:enum, __field_attribute_normalize__(:enum, v)}
+      [struct: v] -> {:struct,  __field_attribute_normalize__(:struct, v)}
+      {:ref, v} -> {:ref, __field_attribute_normalize__(:ref, v)}
+      {:enum, v} -> {:enum, __field_attribute_normalize__(:enum, v)}
+      {:struct, v} -> {:struct, __field_attribute_normalize__(:struct, v)}
+      _else -> attr_value
+    end
+  end
+  def __field_attribute_normalize__(:enum, attr_value) do
+    case attr_value do
+      true -> :any
+      v when is_list(v) -> List.flatten(v)
+      v when is_atom(v) -> v
+    end
+  end
+  def __field_attribute_normalize__(type, attr_value) when type == :ref or type == :struct do
+    case attr_value do
+      true -> :any
+      v when is_list(v) -> MapSet.new(List.flatten(v))
+      v when is_atom(v) -> MapSet.new([v])
+    end
+  end
+
+
+
+  def __field_attribute_valid__?(:pii, attr_value) do
+
+    cond do
+      is_integer(attr_value) && attr_value >= 0 && attr_value <= 6 -> true
+      Enum.member?([:level_0, :level_1, :level_2, :level_3, :level_4, :level_5, :level_6], attr_value) -> true
+      attr_value == nil -> :ignore
+      attr_value == [] -> :ignore
+      :else -> false
+    end
+  end
+
+  def __field_attribute_valid__?(:required, attr_value) do
+    case attr_value do
+      nil -> :ignore
+      true -> true
+      false -> true
+      {_m,_f} -> true
+      {_m,_f,_a} -> true
+      f when is_function(f, 1) -> true
+      f when is_function(f, 2) -> true
+      f when is_function(f, 3) -> true
+      f when is_function(f, 4) -> true
+      [ref: v] -> __field_attribute_valid__?(:ref, v) && :ref
+      [enum: v] -> __field_attribute_valid__?(:enum, v) && :enum
+      [struct: v] -> __field_attribute_valid__?(:struct, v) && :struct
+      {:ref, v} -> __field_attribute_valid__?(:ref, v) && :ref
+      {:enum, v} -> __field_attribute_valid__?(:enum, v) && :enum
+      {:struct, v} -> __field_attribute_valid__?(:struct, v) && :struct
+      _else -> false
+    end
+  end
+  def __field_attribute_valid__?(type, attr_value) when type == :ref or type == :struct  or type == :enum do
+    case attr_value do
+      nil -> :ignore
+      [] -> :ignore
+      v when is_list(v) -> true
+      v when is_atom(v) -> true
+      true -> true
+      _ -> false
+    end
+  end
+
   def __set_field_attributes__(mod, field, opts) do
     cond do
       nil == opts -> :ok
@@ -170,18 +267,57 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
     EntityMeta.__set_index_settings__(mod, field, opts)
     EntityMeta.__set_permission_settings__(mod, field, opts)
 
+    options = Enum.map([:pii, :ref, :enum, :struct, :required],
+                fn(attribute) ->
+                  cond do
+                    Module.has_attribute?(mod, attribute) ->
+                      attr_value = Module.get_attribute(mod, attribute)
+                      Module.delete_attribute(mod, attribute)
+                      valid? = EntityMeta.__field_attribute_valid__?(attribute, attr_value)
+                      valid? || raise "#{mod}.#{field} unsupported @#{attribute} value #{inspect attr_value}}"
+                      attr_value = EntityMeta.__field_attribute_normalize__(attribute, attr_value)
 
-    options = %{}
-    options = cond do
-                (Module.has_attribute?(mod, :pii)) ->
-                  o = put_in(options, [:pii], Module.get_attribute(mod, :pii))
-                  Module.delete_attribute(mod, :pii)
-                  o
-                :else -> options
-              end
+                      cond do
+                        valid? == :ignore -> nil
+                        :else ->
+                          case attribute do
+                            :pii -> {:pii, attr_value}
+                            :ref -> {:type_constraint, {:ref, attr_value}}
+                            :struct -> {:type_constraint, {:struct, attr_value}}
+                            :enum ->
+                              case attr_value do
+                                :any -> {:type_constraint, {:atom, :any}}
+                                v when is_list(v) -> {:type_constraint, {:atom, MapSet.new(v)}}
+                                v -> {:type_constraint, {:enum, v}}
+                              end
+                            :required ->
+                              case attr_value do
+                                {:ref, v} ->
+                                  [{:required, true}, {:type_constraint, {:ref, v}}]
+                                {:struct, v} ->
+                                  [{:required, true}, {:type_constraint, {:struct, v}}]
+                                {:enum, v} ->
+                                  type_constraint = case v do
+                                                      :any -> {:type_constraint, {:atom, :any}}
+                                                      v when is_list(v) -> {:type_constraint, {:atom, MapSet.new(v)}}
+                                                      _else -> {:type_constraint, {:enum, v}}
+                                                    end
+                                  [{:required, true}, type_constraint]
+                                _ ->
+                                  {:required, attr_value}
+                              end
+                          end
+                      end
 
-    if options != %{} do
-      Module.put_attribute(mod, :__nzdo__field_attributes, {field, options})
+
+                    :else -> nil
+                  end
+                end)
+              |> Enum.filter(&(&1))
+              |> List.flatten()
+
+    if options != [] do
+      Module.put_attribute(mod, :__nzdo__field_attributes, {field, Map.new(options)})
     end
   end
 
@@ -433,11 +569,11 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
               __set_option__(acc, selectors, fields, {:embed, embed})
             {:embed, embed} when is_list(embed)->
               embed = Enum.map(embed, fn(e) ->
-                 case e do
-                   e when is_atom(e) -> {e, true}
-                   {e, f} -> {e, f}
-                   _ -> nil
-                 end
+                case e do
+                  e when is_atom(e) -> {e, true}
+                  {e, f} -> {e, f}
+                  _ -> nil
+                end
               end) |> Enum.filter(&(&1)) |> Map.new()
               __set_option__(acc, selectors, fields, {:embed, embed})
             _ -> acc
@@ -551,6 +687,14 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
                        # Registerss
                        #---------------------
                        Module.register_attribute(__MODULE__, :meta, accumulate: true)
+
+                       Module.register_attribute(__MODULE__, :pii, accumulate: false)
+                       Module.register_attribute(__MODULE__, :enum, accumulate: false)
+                       Module.register_attribute(__MODULE__, :required, accumulate: false)
+                       Module.register_attribute(__MODULE__, :ref, accumulate: true)
+                       Module.register_attribute(__MODULE__, :struct, accumulate: true)
+
+
                        Module.register_attribute(__MODULE__, :__nzdo__derive, accumulate: true)
                        Module.register_attribute(__MODULE__, :__nzdo__fields, accumulate: true)
                        Module.register_attribute(__MODULE__, :__nzdo__meta, accumulate: false)
@@ -783,6 +927,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
       defdelegate vsn(), to: @__nzdo__base
       def __entity__(), do: __MODULE__
       def __base__(), do: @__nzdo__base
+      defdelegate __enum_type__(), to: @__nzdo__base
       defdelegate __repo__(), to: @__nzdo__base
       defdelegate __sref__(), to: @__nzdo__base
       defdelegate __erp__(), to: @__nzdo__base

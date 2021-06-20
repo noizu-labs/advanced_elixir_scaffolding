@@ -22,12 +22,18 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject do
       @__nzdo__meta__map Map.new(@__nzdo__meta || [])
 
 
+      @__nzdo__enum_type nil
+      if Module.get_attribute(__MODULE__, :__nzdo__enum_list) do
+        @__nzdo__enum_type Module.concat([__MODULE__, :EctoEnumType])
+      end
+
       def vsn(), do: @vsn
       def __base__(), do: __MODULE__
       def __entity__(), do: @__nzdo__entity
       def __repo__(), do: @__nzdo__repo
       def __sref__(), do: @__nzdo__sref
       def __erp__(), do: @__nzdo__entity
+      def __enum_type__(), do: @__nzdo__enum_type
 
 
       def __nmid__(), do: __nmid__(:all)
