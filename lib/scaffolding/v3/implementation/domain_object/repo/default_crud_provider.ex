@@ -697,14 +697,24 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
       @__nzdo__crud_imp Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCrudProvider
 
 
+
+
+
+
+
       def cache_key(ref, context, options) do
         sref = __MODULE__.__entity__.sref(ref)
         sref && :"e_c:#{sref}"
       end
 
-      def cached(ref, context, options \\ []), do: cache(ref,context, options)
-      def cache(ref, context, options \\ []), do: @__nzdo__crud_imp.cache(__MODULE__, ref, context, options)
-      def delete_cache(ref, context, options \\ []), do: @__nzdo__crud_imp.delete_cache(__MODULE__, ref, context, options)
+      def cached(ref, context), do: cached(ref, context, [])
+      def cached(ref, context, options), do: cache(ref,context, options)
+
+      def cache(ref, context), do: cache(ref, context, [])
+      def cache(ref, context, options), do: @__nzdo__crud_imp.cache(__MODULE__, ref, context, options)
+
+      def delete_cache(ref, context), do: delete_cache(ref, context, [])
+      def delete_cache(ref, context, options), do: @__nzdo__crud_imp.delete_cache(__MODULE__, ref, context, options)
 
       def generate_identifier(), do: @__nzdo__crud_imp.generate_identifier(__MODULE__)
       def generate_identifier!(), do: @__nzdo__crud_imp.generate_identifier!(__MODULE__)
@@ -712,8 +722,10 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
       #=====================================================================
       # Get
       #=====================================================================
-      def get(ref, context, options \\ []), do: @__nzdo__crud_imp.get(__MODULE__, ref, context, options)
-      def get!(ref, context, options \\ []), do: @__nzdo__crud_imp.get!(__MODULE__, ref, context, options)
+      def get(ref, context), do: get(ref, context, [])
+      def get(ref, context, options), do: @__nzdo__crud_imp.get(__MODULE__, ref, context, options)
+      def get!(ref, context), do: get!(ref, context, [])
+      def get!(ref, context, options), do: @__nzdo__crud_imp.get!(__MODULE__, ref, context, options)
       def post_get_callback(ref, context, options), do: @__nzdo__crud_imp.post_get_callback(__MODULE__,  ref, context, options)
       def post_get_callback!(ref, context, options), do: @__nzdo__crud_imp.post_get_callback!(__MODULE__,  ref, context, options)
       def layer_get(layer, ref, context, options), do: @__nzdo__crud_imp.layer_get(__MODULE__,  layer, ref, context, options)
@@ -736,8 +748,10 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
       #=====================================================================
       # Create
       #=====================================================================
-      def create(entity, context, options \\ []), do: @__nzdo__crud_imp.create(__MODULE__,  entity, context, options)
-      def create!(entity, context, options \\ []), do: @__nzdo__crud_imp.create!(__MODULE__,  entity, context, options)
+      def create(entity, context), do: create(entity, context, [])
+      def create(entity, context, options), do: @__nzdo__crud_imp.create(__MODULE__,  entity, context, options)
+      def create!(entity, context), do: create!(entity, context, [])
+      def create!(entity, context, options), do: @__nzdo__crud_imp.create!(__MODULE__,  entity, context, options)
       def pre_create_callback(entity, context, options), do: @__nzdo__crud_imp.pre_create_callback(__MODULE__,  entity, context, options)
       def pre_create_callback!(entity, context, options), do: @__nzdo__crud_imp.pre_create_callback!(__MODULE__,  entity, context, options)
       def post_create_callback(entity, context, options), do: @__nzdo__crud_imp.post_create_callback(__MODULE__,  entity, context, options)
@@ -771,8 +785,10 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
       #=====================================================================
       # Update
       #=====================================================================
-      def update(entity, context, options \\ []), do: @__nzdo__crud_imp.update(__MODULE__,  entity, context, options)
-      def update!(entity, context, options \\ []), do: @__nzdo__crud_imp.update!(__MODULE__,  entity, context, options)
+      def update(entity, context), do: update(entity, context, [])
+      def update(entity, context, options), do: @__nzdo__crud_imp.update(__MODULE__,  entity, context, options)
+      def update!(entity, context), do: update!(entity, context, [])
+      def update!(entity, context, options), do: @__nzdo__crud_imp.update!(__MODULE__,  entity, context, options)
       def pre_update_callback(entity, context, options), do: @__nzdo__crud_imp.pre_update_callback(__MODULE__,  entity, context, options)
       def pre_update_callback!(entity, context, options), do: @__nzdo__crud_imp.pre_update_callback!(__MODULE__,  entity, context, options)
       def post_update_callback(entity, context, options), do: @__nzdo__crud_imp.post_update_callback(__MODULE__,  entity, context, options)
@@ -802,8 +818,10 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
       #=====================================================================
       # Delete
       #=====================================================================
-      def delete(entity, context, options \\ []), do: @__nzdo__crud_imp.delete(__MODULE__,  entity, context, options)
-      def delete!(entity, context, options \\ []), do: @__nzdo__crud_imp.delete!(__MODULE__,  entity, context, options)
+      def delete(entity, context), do: delete(entity, context, [])
+      def delete(entity, context, options), do: @__nzdo__crud_imp.delete(__MODULE__,  entity, context, options)
+      def delete!(entity, context), do: delete!(entity, context, [])
+      def delete!(entity, context, options), do: @__nzdo__crud_imp.delete!(__MODULE__,  entity, context, options)
       def pre_delete_callback(ref, context, options), do: @__nzdo__crud_imp.pre_delete_callback(__MODULE__,  ref, context, options)
       def pre_delete_callback!(entity, context, options), do: @__nzdo__crud_imp.pre_delete_callback!(__MODULE__,  entity, context, options)
       def post_delete_callback(entity, context, options), do: @__nzdo__crud_imp.post_delete_callback(__MODULE__,  entity, context, options)
@@ -824,6 +842,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
           layer_post_delete_callback(layer, entity, context, options)
         end
       end
+
 
 
       defoverridable [
@@ -902,9 +921,6 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
         layer_post_delete_callback: 4,
         layer_post_delete_callback!: 4,
       ]
-
-
-
 
     end
   end

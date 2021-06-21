@@ -2,6 +2,10 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject do
 
   defmacro __before_compile__(_) do
     quote do
+
+      @__nzdo__entity Module.get_attribute(__MODULE__, :__nzdo__entity)
+      @__nzdo__struct Module.get_attribute(__MODULE__, :__nzdo__struct)
+
       defdelegate id(ref), to: @__nzdo__entity
       defdelegate ref(ref), to: @__nzdo__entity
       defdelegate sref(ref), to: @__nzdo__entity
@@ -9,18 +13,13 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject do
       defdelegate entity!(ref, options \\ nil), to: @__nzdo__entity
       defdelegate record(ref, options \\ nil), to: @__nzdo__entity
       defdelegate record!(ref, options \\ nil), to: @__nzdo__entity
-      defdelegate __noizu_record__(type, ref, options \\ nil), to: @__nzdo__entity
-
-
 
       @__nzdo__poly_settings  %{
         poly: @__nzdo__poly?,
         support: @__nzdo__poly_support,
         base: @__nzdo__poly_base
       }
-
       @__nzdo__meta__map Map.new(@__nzdo__meta || [])
-
 
       @__nzdo__enum_type nil
       if Module.get_attribute(__MODULE__, :__nzdo__enum_list) do
@@ -34,7 +33,6 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject do
       def __sref__(), do: @__nzdo__sref
       def __erp__(), do: @__nzdo__entity
       def __enum_type__(), do: @__nzdo__enum_type
-
 
       def __nmid__(), do: __nmid__(:all)
       def __nmid__(:all), do: @__nzdo__entity.__nmid__(:all)
