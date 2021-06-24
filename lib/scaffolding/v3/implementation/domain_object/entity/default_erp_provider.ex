@@ -73,9 +73,9 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
         association_type == nil -> nil
         association_type == false -> nil
         association_type == :poly -> entity
-        config = domain_object.__persistence__(:table)[associated_struct] ->
+        layer = domain_object.__persistence__(:table)[associated_struct] ->
           context = Noizu.ElixirCore.CallingContext.system(options[:context] || Process.get(:context))
-          domain_object.__from_record__(associated_struct, entity, context, options)
+          domain_object.__from_record__(layer, entity, context, options)
         :else -> nil
       end
     end
@@ -95,9 +95,9 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
         association_type == nil -> nil
         association_type == false -> nil
         association_type == :poly -> entity
-        config = domain_object.__persistence__(:table)[associated_struct] ->
+        layer = domain_object.__persistence__(:table)[associated_struct] ->
           context = Noizu.ElixirCore.CallingContext.system(options[:context] || Process.get(:context))
-          domain_object.__from_record__!(associated_struct, entity, context, options)
+          domain_object.__from_record__!(layer, entity, context, options)
         :else -> nil
       end
     end

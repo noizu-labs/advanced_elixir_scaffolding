@@ -62,14 +62,14 @@ end
 
 defimpl Noizu.V3.EntityProtocol, for: Tuple do
   def expand!(ref, context, options \\ nil)
-  def expand!({:ext_ref, m, _} = ref, context, options) when is_atom(m) do
+  def expand!({:ext_ref, m, _} = ref, _context, options) when is_atom(m) do
     cond do
       Noizu.Scaffolding.V3.Helpers.expand_ref?(Noizu.Scaffolding.V3.Helpers.update_expand_options(m, options)) ->
         Noizu.V3.EntityProtocol.expand!(m.entity!(ref, options))
       :else -> ref
     end
   end
-  def expand!({:ref, m, _} = ref, context,  options) when is_atom(m) do
+  def expand!({:ref, m, _} = ref, _context,  options) when is_atom(m) do
       cond do
         Noizu.Scaffolding.V3.Helpers.expand_ref?(Noizu.Scaffolding.V3.Helpers.update_expand_options(m, options)) ->
             Noizu.V3.EntityProtocol.expand!(m.entity!(ref, options))
@@ -84,7 +84,7 @@ end
 defimpl Noizu.V3.EntityProtocol, for: Map do
   def expand!(entity, context, options \\ %{})
 
-  def expand!(%{__struct__: m} = entity, context, %{structs: true} = options), do: Noizu.V3.EntityProtocol.Derive.NoizuStruct.expand!(entity, context, options)
+  def expand!(%{__struct__: _m} = entity, context, %{structs: true} = options), do: Noizu.V3.EntityProtocol.Derive.NoizuStruct.expand!(entity, context, options)
   def expand!(%{__struct__: _m} = entity, _context, _options), do: entity
   def expand!(%{} = entity, context,  %{maps: true} = options) do
     {max_concurrency, options} = cond do

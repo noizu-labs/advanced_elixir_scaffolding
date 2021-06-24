@@ -14,15 +14,15 @@ defmodule Noizu.Scaffolding.V3.Poison.Encoder do
                              {Noizu.V3.EntityProtocol.expand!(noizu_entity, context, options), options}
                          end
 
-    fields = Map.from_struct(entity)
-             |> Enum.map(&(encode_field(noizu_entity.__struct__, json_format, &1, context, options)))
-             |> Enum.filter(&(&1))
-             |> List.flatten()
-             |> Enum.filter(fn({_,v}) -> v && true end)
-             |> Map.new()
-             |> put_in([:kind], entity.__struct__.__sref__)
-             |> put_in([:json_format], json_format)
-             |> Poison.Encoder.encode(options)
+    Map.from_struct(entity)
+    |> Enum.map(&(encode_field(noizu_entity.__struct__, json_format, &1, context, options)))
+    |> Enum.filter(&(&1))
+    |> List.flatten()
+    |> Enum.filter(fn({_,v}) -> v && true end)
+    |> Map.new()
+    |> put_in([:kind], entity.__struct__.__sref__)
+    |> put_in([:json_format], json_format)
+    |> Poison.Encoder.encode(options)
   end
 
   def encode_field(mod, json_format, {field, value}, context, options) do

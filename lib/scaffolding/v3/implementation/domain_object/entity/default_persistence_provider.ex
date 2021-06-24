@@ -10,9 +10,9 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultP
       layer = domain_object.__persistence__(:table)[table]
       layer && domain_object.__as_record__(layer, ref, context, options)
     end
-    def __as_record__(domain_object, layer = %PersistenceLayer{type: type}, ref, context, options) do
+    def __as_record__(domain_object, layer = %PersistenceLayer{}, ref, context, options) do
       cond do
-        entity = domain_object.entity(ref, options) -> domain_object.__as_record_type__(layer, context, options)
+        entity = domain_object.entity(ref, options) -> domain_object.__as_record_type__(layer, entity, context, options)
         :else -> nil
       end
     end
@@ -24,9 +24,9 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultP
       layer = domain_object.__persistence__(:table)[table]
       layer && domain_object.__as_record__!(layer, ref, context, options)
     end
-    def __as_record__!(domain_object, layer = %PersistenceLayer{type: type}, ref, context, options) do
+    def __as_record__!(domain_object, layer = %PersistenceLayer{}, ref, context, options) do
       cond do
-        entity = domain_object.entity(ref, options) -> domain_object.__as_record_type__(layer, context, options)
+        entity = domain_object.entity(ref, options) -> domain_object.__as_record_type__(layer, entity, context, options)
         :else -> nil
       end
     end
@@ -65,7 +65,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultP
       |> layer.table.__struct__()
     end
 
-    def __as_record_type__(domain_object, layer = %{type: :ecto, table: table}, entity, context, options) do
+    def __as_record_type__(domain_object, layer = %{type: :ecto, table: table}, entity, _context, options) do
       context = Noizu.ElixirCore.CallingContext.admin()
       field_types = domain_object.__noizu_info__(:field_types)
       Enum.map(domain_object.__noizu_info__(:fields),

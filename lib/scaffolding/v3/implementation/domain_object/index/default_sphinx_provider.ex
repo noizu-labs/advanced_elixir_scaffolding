@@ -31,12 +31,12 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Index.DefaultSp
     def build(_mod, _type, _context, _options), do: nil
 
 
-    def __index_schema_fields__(mod, context, options) do
+    def __index_schema_fields__(mod, _context, _options) do
       settings = mod.__indexing__()[mod]
       expanded_fields = Enum.map(settings[:fields], fn({field, indexing}) ->
         field_type = mod.__noizu_info__(:field_types)[field]
         {field, indexing} = cond do
-                              as = indexing[:as] -> {field, update_in(indexing, [:from], &(&1 || field))}
+                              indexing[:as] -> {field, update_in(indexing, [:from], &(&1 || field))}
                               :else -> {field, indexing}
                             end
         cond do
@@ -157,7 +157,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Index.DefaultSp
           contents = raw
                      |> Enum.filter(fn({_field, _provider, blob, _encoding, _bits, _indexing, _default}) -> blob == for_blob end)
                      |> Enum.map(
-                          fn({field, provider, _blob, encoding, _bits, indexing, _default}) ->
+                          fn({field, provider, _blob, _encoding, _bits, indexing, _default}) ->
                             value = cond do
                                       provider -> provider.__sphinx_encoded__(field, entity, indexing, settings)
                                       :else -> get_in(entity, [Access.key(indexing[:from] || field)])
@@ -224,8 +224,8 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Index.DefaultSp
 
     end
 
-    def update_index(mod, entity, context, options), do: nil
-    def delete_index(mod, entity, context, options), do: nil
+    def update_index(_mod, _entity, _context, _options), do: nil
+    def delete_index(_mod, _entity, _context, _options), do: nil
 
 
     def sql_escape_string(nil), do: ""

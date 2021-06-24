@@ -16,7 +16,7 @@ defmodule Noizu.Scaffolding.Mixfile do
       elixirc_paths: elixirc_paths(Mix.env),
       description: "Noizu Scaffolding",
       docs: docs(),
-      xref: [exclude: [Plug.Conn]]
+      xref: [exclude: []]
     ]
   end # end project
 
@@ -35,7 +35,7 @@ defmodule Noizu.Scaffolding.Mixfile do
   def application do
     [
       applications: [:logger],
-      extra_applications: [:noizu_core]
+      extra_applications: [:noizu_core, :amnesia, :plug]
     ]
   end # end application
 

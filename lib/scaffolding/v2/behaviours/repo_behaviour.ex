@@ -24,127 +24,78 @@ defmodule Noizu.Scaffolding.V2.RepoBehaviour do
   @callback nmid_generator() :: any
   @callback implementation() :: any
 
-  @doc """
-    Compile time options.
-  """
+  # Compile time options.
   @callback options() :: Module
 
-  @doc """
-    Match Records.
-  """
+  # Match Records.
   @callback match(any, CallingContext.t, opts) :: list
 
-  @doc """
-    Match Records. Transaction Wrapped
-  """
+  # Match Records. Transaction Wrapped
   @callback match!(any, CallingContext.t, opts) :: list
 
-  @doc """
-    List Records.
-  """
+  # List Records.
   @callback list(CallingContext.t, opts) :: list
 
-  @doc """
-    List Records. Transaction Wrapped
-  """
+  # List Records. Transaction Wrapped
   @callback list!(CallingContext.t, opts) :: list
 
-  @doc """
-    Fetch record.
-  """
+  # Fetch record.
   @callback get(integer | atom, CallingContext.t, opts) :: any
 
-  @doc """
-    Fetch record. Transaction Wrapped
-  """
+  # Fetch record. Transaction Wrapped
   @callback get!(integer | atom, CallingContext.t, opts) :: any
 
-  @doc """
-    Update record.
-  """
+  # Update record.
   @callback update(any, CallingContext.t, opts) :: any
 
-  @doc """
-    Update record. Transaction Wrapped
-  """
+  # Update record. Transaction Wrapped
   @callback update!(any, CallingContext.t, opts) :: any
 
-  @doc """
-    Delete record.
-  """
+  # Delete record.
   @callback delete(any, CallingContext.t, opts) :: boolean
 
-  @doc """
-    Delete record. Transaction Wrapped
-  """
+  # Delete record. Transaction Wrapped
   @callback delete!(any, CallingContext.t, opts) :: boolean
 
-  @doc """
-    Create new record.
-  """
+  # Create new record.
   @callback create(any, CallingContext.t, opts) :: any
 
-  @doc """
-    Create new record. Transaction Wrapped
-  """
+  # Create new record. Transaction Wrapped
   @callback create!(any, CallingContext.t, opts) :: any
 
-  @doc """
-    Hook for any post create steps.
-    Provided an entity needs to setup linked objects.
-  """
+  # Hook for any post create steps.
+  # Provided an entity needs to setup linked objects.
   @callback pre_create_callback(any, CallingContext.t, opts) :: any
 
-  @doc """
-    Hook for any post update steps.
-  """
+  # Hook for any post update steps.
   @callback pre_update_callback(any, CallingContext.t, opts) :: any
 
-  @doc """
-    Hook for any post delete steps.
-  """
+  # Hook for any post delete steps.
   @callback pre_delete_callback(any, CallingContext.t, opts) :: any
 
-  @doc """
-    Hook for any post create steps.
-    Provided an entity needs to setup linked objects.
-  """
+  # Hook for any post create steps.
+  # Provided an entity needs to setup linked objects.
   @callback post_create_callback(any, CallingContext.t, opts) :: any
 
-
-  @doc """
-    Hook for any post get steps. (such as versioning)
-  """
+  #  Hook for any post get steps. (such as versioning)
   @callback post_get_callback(any, CallingContext.t, opts) :: any
 
-  @doc """
-    Hook for any post update steps.
-  """
+  # Hook for any post update steps.
   @callback post_update_callback(any, CallingContext.t, opts) :: any
 
-  @doc """
-    Hook for any post delete steps.
-  """
+  # Hook for any post delete steps.
   @callback post_delete_callback(any, CallingContext.t, opts) :: any
 
-  @doc """
-     generate new nmid.
-  """
+  # generate new nmid.
   @callback generate_identifier(any) :: integer | atom
 
-  @doc """
-     generate new nmid. Transaction Wrapped
-  """
+  # generate new nmid. Transaction Wrapped
   @callback generate_identifier!(any) :: integer | atom
 
-  @doc """
-  Cast from json to struct.
-  """
+  # Cast from json to struct.
   @callback from_json(Map.t, CallingContext.t, opts) :: any
 
-  @doc """
-  Cast from json to struct.
-  """
+  # Cast from json to struct.
   @callback from_json_version(any, Map.t, CallingContext.t, opts) :: any
 
   defmacro __using__(options) do

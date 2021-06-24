@@ -1,6 +1,5 @@
 defmodule Noizu.ElixirScaffolding.V3.Meta.SimpleObject.Inspect do
   import Inspect.Algebra
-  alias Code.Identifier
 
   def inspect(entity, opts) do
     kind = String.replace_leading("#{entity.__struct__}", "Elixir.", "")

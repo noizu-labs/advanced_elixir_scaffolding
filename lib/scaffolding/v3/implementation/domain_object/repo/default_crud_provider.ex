@@ -372,13 +372,13 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
     #------------------------------------------
     # Create - layer_create_callback
     #------------------------------------------
-    def layer_create_callback(m, %PersistenceLayer{schema: schema} = layer, entity, context, options) do
+    def layer_create_callback(m, %PersistenceLayer{} = layer, entity, context, options) do
       m.__entity__().__as_record__(layer, entity, context, options)
       |> layer_create_loop(layer, context, options)
       entity
     end
 
-    def layer_create_callback!(m, %PersistenceLayer{schema: schema} = layer, entity, context, options) do
+    def layer_create_callback!(m, %PersistenceLayer{} = layer, entity, context, options) do
       m.__entity__().__as_record__!(layer, entity, context, options)
       |> layer_create_loop!(layer, context, options)
       entity
@@ -676,7 +676,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
   end
 
   defmacro __using__(_options \\ nil) do
-    caller = __CALLER__
+    # caller = __CALLER__
     quote do
       alias Noizu.Scaffolding.V3.Schema.PersistenceLayer
       @__nzdo__crud_imp Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCrudProvider.Default

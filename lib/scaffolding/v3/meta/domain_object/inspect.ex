@@ -1,6 +1,5 @@
 defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Inspect do
   import Inspect.Algebra
-  alias Code.Identifier
 
   def inspect(entity, opts) do
     cond do
