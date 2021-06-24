@@ -264,6 +264,16 @@ defmodule Noizu.DomainObject do
       @__nzdo__enum_default_value Noizu.DomainObject.extract_has_attribute(:default_value, :none)
       @__nzdo__enum_ecto_type Noizu.DomainObject.extract_has_attribute(:ecto_type, :integer)
 
+      case Noizu.DomainObject.extract_has_attribute(:universal_identifier, :not_set) do
+        :not_set -> :skip
+        v -> Module.put_attribute(__MODULE__, :universal_identifier, v)
+      end
+
+      case Noizu.DomainObject.extract_has_attribute(:universal_lookup, :not_set) do
+        :not_set -> :skip
+        v -> Module.put_attribute(__MODULE__, :universal_lookup, v)
+      end
+
       @__nzdo_persistence Noizu.DomainObject.extract_transform_attribute(:persistence_layer, :persistence, {Noizu.DomainObject, :expand_persistence_layers, [__MODULE__]})
       @__nzdo_persistence__layers Enum.map(@__nzdo_persistence.layers, fn(layer) -> {layer.schema, layer} end) |> Map.new()
       @__nzdo_persistence__by_table Enum.map(@__nzdo_persistence.layers, fn(layer) -> {layer.table, layer} end) |> Map.new()

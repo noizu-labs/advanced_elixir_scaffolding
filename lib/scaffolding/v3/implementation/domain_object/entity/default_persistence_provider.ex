@@ -1,52 +1,43 @@
 defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultPersistenceProvider do
 
   defmodule Default do
-    #-----------------------------------
-    #
-    #-----------------------------------
-    def __as_record__(domain_object, table, ref, context, options) do
-      cond do
-        entity = domain_object.entity(ref, options) ->
-          layer = domain_object.__persistence__(:table)[table]
-          cond do
-            layer == nil -> throw "#{domain_object}.__as_record__ to table #{inspect table} not supported"
-            layer.type == :mnesia -> domain_object.__as_mnesia_record__(table, entity, context, options)
-            layer.type == :ecto -> domain_object.__as_ecto_record__(table, entity, context, options)
-            layer.type == :redis -> domain_object.__as_redis_record__(table, entity, context, options)
-            layer.type != domain_object && Kernel.function_exported?(layer.type, :__as_record__, 4) -> layer.type.__as_record__(table, entity, context, options)
-            :else -> throw "#{domain_object}.__as_record__ layer.type (#{inspect layer.type}) not supported"
-          end
-        :else -> nil
-      end
-    end
+    alias Noizu.Scaffolding.V3.Schema.PersistenceLayer
 
     #-----------------------------------
-    #
+    # __as_record__
     #-----------------------------------
-    def __as_record__!(domain_object, table, ref, context, options) do
-      cond do
-        entity = domain_object.entity!(ref, options) ->
-          layer = domain_object.__persistence__(:table)[table]
-          cond do
-            layer == nil -> throw "#{domain_object}.__as_record__! to table #{inspect table} not supported"
-            layer.type == :mnesia -> domain_object.__as_mnesia_record__!(table, entity, context, options)
-            layer.type == :ecto -> domain_object.__as_ecto_record__!(table, entity, context, options)
-            layer.type == :redis -> domain_object.__as_redis_record__!(table, entity, context, options)
-            layer.type != domain_object && Kernel.function_exported?(layer.type, :__as_record__!, 4) -> layer.type.__as_record__!(table, entity, context, options)
-            :else -> throw "#{domain_object}.__as_record__! layer.type (#{inspect layer.type}) not supported"
-          end
-        :else -> nil
-      end
-    end
-
-    #-----------------------------------
-    #
-    #-----------------------------------
-    def __as_mnesia_record__(domain_object, table, entity, context, options) do
-      context = Noizu.ElixirCore.CallingContext.system(context)
+    def __as_record__(domain_object, table, ref, context, options) when is_atom(table) do
       layer = domain_object.__persistence__(:table)[table]
+      layer && domain_object.__as_record__(layer, ref, context, options)
+    end
+    def __as_record__(domain_object, layer = %PersistenceLayer{type: type}, ref, context, options) do
+      cond do
+        entity = domain_object.entity(ref, options) -> domain_object.__as_record_type__(layer, context, options)
+        :else -> nil
+      end
+    end
+
+    #-----------------------------------
+    # __as_record__!
+    #-----------------------------------
+    def __as_record__!(domain_object, table, ref, context, options) when is_atom(table) do
+      layer = domain_object.__persistence__(:table)[table]
+      layer && domain_object.__as_record__!(layer, ref, context, options)
+    end
+    def __as_record__!(domain_object, layer = %PersistenceLayer{type: type}, ref, context, options) do
+      cond do
+        entity = domain_object.entity(ref, options) -> domain_object.__as_record_type__(layer, context, options)
+        :else -> nil
+      end
+    end
+
+    #-----------------------------------
+    # __as_record_type__
+    #-----------------------------------
+    def __as_record_type__(domain_object, layer = %PersistenceLayer{type: :mnesia, table: table}, entity, context, options) do
+      context = Noizu.ElixirCore.CallingContext.system(context)
       field_types = domain_object.__noizu_info__(:field_types)
-      fields = Map.keys(table.__struct__([]))  -- [:__struct__, :__meta__]
+      fields = Map.keys(table.__struct__([]))  -- [:__struct__]
       Enum.map(fields,
         fn(field) ->
           cond do
@@ -74,16 +65,8 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultP
       |> layer.table.__struct__()
     end
 
-    def __as_mnesia_record__!(domain_object, table, ref, context, options) do
-      domain_object.__as_mnesia_record__(table, ref, context, options)
-    end
-
-    #-----------------------------------
-    #
-    #-----------------------------------
-    def __as_ecto_record__(domain_object, table, entity, context, options) do
+    def __as_record_type__(domain_object, layer = %{type: :ecto, table: table}, entity, context, options) do
       context = Noizu.ElixirCore.CallingContext.admin()
-      layer = domain_object.__persistence__(:table)[table]
       field_types = domain_object.__noizu_info__(:field_types)
       Enum.map(domain_object.__noizu_info__(:fields),
         fn(field) ->
@@ -109,42 +92,37 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultP
         end)
       |> List.flatten()
       |> Enum.filter(&(&1))
-      |> layer.table.__struct__()
+      |> table.__struct__()
     end
 
-    def __as_ecto_record__!(domain_object, table, ref, context, options) do
-      domain_object.__as_ecto_record__(table, ref, context, options)
-    end
+    def __as_record_type__(_domain_object, _layer, _entity, _context, _options), do: nil
 
     #-----------------------------------
-    #
+    # __as_record_type__!
     #-----------------------------------
-    def __as_redis_record__(m, table, entity, context, options) do
-      raise "NYI"
-    end
+    def __as_record_type__!(domain_object, layer, entity, context, options), do: domain_object.__as_record_type__(layer, entity, context, options)
 
-    def __as_redis_record__!(m, table, ref, context, options) do
-      raise "NYI"
-    end
 
     #-----------------------------------
     #
     #-----------------------------------
-    def __from_record__(m, _type, %{entity: temp}, context,  _options) do
+    def __from_record__(_domain_object, _layer, %{entity: temp}, _context,  _options) do
       temp
     end
-    def __from_record__(m, _type, %{entity: temp}, context,  _options) do
+    def __from_record__(_domain_object, _layer, _ref, _context,  _options) do
       nil
     end
 
-    def __from_record__!(m, _type, _, context, _options) do
-      nil
+    def __from_record__!(_domain_object, _layer, %{entity: temp}, _context,  _options) do
+      temp
     end
-    def __from_record__(m, _type, _, context,  _options) do
+    def __from_record__!(_domain_object, _layer, _ref, _context,  _options) do
       nil
     end
 
-
+    #-----------------------------------
+    #
+    #-----------------------------------
     def ecto_identifier(_, %{ecto_identifier: id}), do: id
     def ecto_identifier(_, %{identifier: id}) when is_integer(id), do: id
     def ecto_identifier(m, ref) do
@@ -161,6 +139,9 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultP
       end
     end
 
+    #-----------------------------------
+    #
+    #-----------------------------------
     def universal_identifier_lookup(m, ref) do
       ref = m.ref(ref)
       case Noizu.Scaffolding.V3.Database.UniversalLookupTable.read!(ref) do
@@ -173,20 +154,17 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultP
 
   defmacro __using__(_options \\ nil) do
     quote do
+      alias Noizu.Scaffolding.V3.Schema.PersistenceLayer
       @__nzdo__persistence_imp Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultPersistenceProvider.Default
 
-      def __as_record__(table, entity, context, options \\ nil), do:  @__nzdo__persistence_imp.__as_record__(__MODULE__, table, entity, context, options)
-      def __as_record__!(table, entity, context, options \\ nil), do:  @__nzdo__persistence_imp.__as_record__!(__MODULE__, table, entity, context, options)
-      def __as_mnesia_record__(table, entity, context, options \\ nil), do:  @__nzdo__persistence_imp.__as_mnesia_record__(__MODULE__, table, entity, context, options)
-      def __as_mnesia_record__!(table, entity, context, options \\ nil), do:  @__nzdo__persistence_imp.__as_mnesia_record__!(__MODULE__, table, entity, context, options)
-      def __as_ecto_record__(table, entity, context, options \\ nil), do:  @__nzdo__persistence_imp.__as_ecto_record__(__MODULE__, table, entity, context, options)
-      def __as_ecto_record__!(table, entity, context, options \\ nil), do:  @__nzdo__persistence_imp.__as_ecto_record__!(__MODULE__, table, entity, context, options)
+      def __as_record__(%PersistenceLayer{} = layer, entity, context, options \\ nil), do:  @__nzdo__persistence_imp.__as_record__(__MODULE__, layer, entity, context, options)
+      def __as_record__!(%PersistenceLayer{} = layer, entity, context, options \\ nil), do:  @__nzdo__persistence_imp.__as_record__!(__MODULE__, layer, entity, context, options)
 
-      def __as_redis_record__(table, entity, context, options \\ nil), do:  @__nzdo__persistence_imp.__as_redis_record__(__MODULE__, table, entity, context, options)
-      def __as_redis_record__!(table, entity, context, options \\ nil), do:  @__nzdo__persistence_imp.__as_redis_record__!(__MODULE__, table, entity, context, options)
+      def __as_record_type__(%PersistenceLayer{} = layer, entity, context, options \\ nil), do:  @__nzdo__persistence_imp.__as_record_type__(__MODULE__, layer, entity, context, options)
+      def __as_record_type__!(%PersistenceLayer{} = layer, entity, context, options \\ nil), do:  @__nzdo__persistence_imp.__as_record_type__!(__MODULE__, layer, entity, context, options)
 
-      def __from_record__(type, record, context, options \\ nil), do:  @__nzdo__persistence_imp.__from_record__(__MODULE__, type, record, context, options)
-      def __from_record__!(type, record, context, options \\ nil), do:  @__nzdo__persistence_imp.__from_record__!(__MODULE__, type, record, context, options)
+      def __from_record__(%PersistenceLayer{} = layer, record, context, options \\ nil), do:  @__nzdo__persistence_imp.__from_record__(__MODULE__, layer, record, context, options)
+      def __from_record__!(%PersistenceLayer{} = layer, record, context, options \\ nil), do:  @__nzdo__persistence_imp.__from_record__!(__MODULE__, layer, record, context, options)
 
       if (@__nzdo_persistence.ecto_entity) do
         def ecto_entity?(), do: true
@@ -213,18 +191,10 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultP
         __as_record__: 4,
         __as_record__!: 3,
         __as_record__!: 4,
-        __as_mnesia_record__: 3,
-        __as_mnesia_record__: 4,
-        __as_mnesia_record__!: 3,
-        __as_mnesia_record__!: 4,
-        __as_ecto_record__: 3,
-        __as_ecto_record__: 4,
-        __as_ecto_record__!: 3,
-        __as_ecto_record__!: 4,
-        __as_redis_record__: 3,
-        __as_redis_record__: 4,
-        __as_redis_record__!: 3,
-        __as_redis_record__!: 4,
+        __as_record_type__: 3,
+        __as_record_type__: 4,
+        __as_record_type__!: 3,
+        __as_record_type__!: 4,
         __from_record__: 3,
         __from_record__: 4,
         __from_record__!: 3,
