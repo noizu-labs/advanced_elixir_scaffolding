@@ -285,18 +285,30 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.Persistence do
 
 
   def default_mnesia_database(module) do
-    path = Module.split(module)
-    Module.concat(["#{List.first(path)}" <> "Schema", "Database"])
+    case Application.get_env(:noizu_scaffolding, :default_mnesia_database) do
+      nil ->
+        path = Module.split(module)
+        Module.concat(["#{List.first(path)}" <> "Schema", "Database"])
+      v -> v
+    end
   end
 
   def default_ecto_repo(module) do
-    path = Module.split(module)
-    Module.concat(["#{List.first(path)}" <> "Schema", "Repo"])
+    case Application.get_env(:noizu_scaffolding, :default_ecto_database) do
+      nil ->
+        path = Module.split(module)
+        Module.concat(["#{List.first(path)}" <> "Schema", "Repo"])
+      v -> v
+    end
   end
 
   def default_redis_repo(module) do
-    path = Module.split(module)
-    Module.concat(["#{List.first(path)}" <> "Schema", "Redis"])
+    case Application.get_env(:noizu_scaffolding, :default_redis_database) do
+      nil ->
+        path = Module.split(module)
+        Module.concat(["#{List.first(path)}" <> "Schema", "Redis"])
+      v -> v
+    end
   end
 
 end
