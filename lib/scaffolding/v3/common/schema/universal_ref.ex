@@ -1,4 +1,4 @@
-defmodule Noizu.Scaffolding.V3.Schema.UniversalRef do
+defmodule Noizu.Scaffolding.V3.Schema.UniversalReference do
   @moduledoc """
   Ecto ENUM Custom Type.
   """

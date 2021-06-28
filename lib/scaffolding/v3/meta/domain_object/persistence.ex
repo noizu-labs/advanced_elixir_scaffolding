@@ -117,7 +117,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.Persistence do
                     end
     generate_reference_type_default = cond do
                                         enum_table -> false
-                                        :else -> universal_lookup || universal_identifier
+                                        :else -> (universal_lookup || universal_identifier) && :universal_ref || false
                                       end
     generate_reference_type = cond do
                                 Module.has_attribute?(module, :generate_reference_type) -> Module.get_attribute(module, :generate_reference_type)

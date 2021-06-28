@@ -23,7 +23,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject do
 
       @__nzdo__enum_type nil
       if Module.get_attribute(__MODULE__, :__nzdo__enum_list) do
-        @__nzdo__enum_type Module.concat([__MODULE__, :EctoEnumType])
+        @__nzdo__enum_type Module.concat([__MODULE__, "Ecto.EnumType"])
       end
 
       def vsn(), do: @vsn
@@ -69,7 +69,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject do
       #--------------------
       if options = Module.get_attribute(__MODULE__, :__nzdo__enum_list) do
         domain_object = __MODULE__
-        defmodule EctoEnumType do
+        defmodule Ecto.EnumType do
           {values,default_value,ecto_type} = case options do
                                                {v,options} ->
                                                  {v,
@@ -82,7 +82,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject do
                                                    Module.get_attribute(domain_object, :__nzdo__enum_ecto_type) || :integer
                                                  }
                                              end
-          use Noizu.EctoEnumTypeBehaviour,
+          use Noizu.Ecto.EnumTypeBehaviour,
               values: values,
               default: default_value,
               ecto_type: ecto_type
@@ -96,19 +96,19 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject do
         Module.get_attribute(__MODULE__, :__nzdo_enum_ref) ->
           e = @__nzdo__entity
           b = __MODULE__
-          defmodule EctoEnumReference do
+          defmodule Ecto.EnumReference do
             use Noizu.EnumRefBehaviour, entity: e, base: b
           end
 
         Module.get_attribute(__MODULE__, :__nzdo_universal_ref) ->
           e = @__nzdo__entity
-          defmodule EctoUniversalReference do
+          defmodule Ecto.UniversalReference do
             use Noizu.UniversalRefBehaviour, entity: e
           end
 
         Module.get_attribute(__MODULE__, :__nzdo_basic_ref) ->
           e = @__nzdo__entity
-          defmodule EctoReference do
+          defmodule Ecto.Reference do
             use Noizu.BasicRefBehaviour, entity: e
           end
         :else -> :ok

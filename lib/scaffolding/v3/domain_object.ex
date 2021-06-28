@@ -269,6 +269,11 @@ defmodule Noizu.DomainObject do
         v -> Module.put_attribute(__MODULE__, :universal_identifier, v)
       end
 
+      case Noizu.DomainObject.extract_has_attribute(:generate_reference_type, :not_set) do
+        :not_set -> :skip
+        v -> Module.put_attribute(__MODULE__, :generate_reference_type, v)
+      end
+
       case Noizu.DomainObject.extract_has_attribute(:universal_lookup, :not_set) do
         :not_set -> :skip
         v -> Module.put_attribute(__MODULE__, :universal_lookup, v)

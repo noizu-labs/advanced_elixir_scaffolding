@@ -62,7 +62,7 @@ defmodule Noizu.Scaffolding.V3.NmidGenerator do
   #
   #--------------------
   def map_id(v, node_key, entity_key) do
-    v * 1_00_000 + (node_key * 1_000) + entity_key
+    v * 1_00_000 + (rem(node_key, 99) * 1_000) + rem(entity_key, 999)
   end
 
 
