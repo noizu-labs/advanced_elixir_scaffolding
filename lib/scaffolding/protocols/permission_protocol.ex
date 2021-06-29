@@ -32,7 +32,7 @@ end # end defimpl EntityReferenceProtocol, for: List
 defimpl Noizu.Permissions, for: Tuple do
   def has_permission(ref, permission, context, options \\ nil) do
     case ref do
-      {:ref, manager, _identifier} when is_atom(manager)->
+      {:ref, manager, _identifier} when is_atom(manager) ->
         manager.has_permission(ref, permission, context, options)
       {:ext_ref, manager, _identifier} when is_atom(manager) ->
         manager.has_permission(ref, permission, context, options)
@@ -41,7 +41,7 @@ defimpl Noizu.Permissions, for: Tuple do
 
   def has_permission!(ref, permission, context, options \\ nil) do
     case ref do
-      {:ref, manager, _identifier} when is_atom(manager)->
+      {:ref, manager, _identifier} when is_atom(manager) ->
         manager.has_permission!(ref, permission, context, options)
       {:ext_ref, manager, _identifier} when is_atom(manager) ->
         manager.has_permission!(ref, permission, context, options)

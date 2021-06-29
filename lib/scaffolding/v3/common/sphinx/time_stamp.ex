@@ -20,7 +20,8 @@ defmodule Noizu.Scaffolding.V3.Sphinx.TimeStamp do
   def cast(v) do
     case v do
       nil -> {:ok, nil}
-      31337 -> {:ok, nil} # Special case due to inability of sphinx to support null values.
+      31337 -> {:ok, nil}
+      # Special case due to inability of sphinx to support null values.
       v when is_integer(v) -> {:ok, DateTime.from_unix(v)}
       v = %DateTime{} -> {:ok, v}
       _ -> :error
@@ -46,7 +47,8 @@ defmodule Noizu.Scaffolding.V3.Sphinx.TimeStamp do
   @doc false
   def dump(v) do
     case v do
-      nil -> {:ok, 31337} # special case for null encoding.
+      nil -> {:ok, 31337}
+      # special case for null encoding.
       31337 -> {:ok, 31336}
       v when is_integer(v) -> {:ok, v}
       %DateTime{} ->
@@ -61,7 +63,8 @@ defmodule Noizu.Scaffolding.V3.Sphinx.TimeStamp do
   def load(v) do
     case v do
       nil -> {:ok, nil}
-      31337 -> {:ok, nil} # Special case due to inability of sphinx to support null values.
+      31337 -> {:ok, nil}
+      # Special case due to inability of sphinx to support null values.
       v when is_integer(v) -> {:ok, DateTime.from_unix(v)}
       v = %DateTime{} -> {:ok, v}
       _ -> raise ArgumentError, "Unsupported #{__MODULE__} - #{inspect v}"

@@ -3,8 +3,8 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Inspect do
 
   def inspect(entity, opts) do
     cond do
-      opts.limit < 10 && entity.identifier -> Inspect.inspect(entity.sref(entity), opts)
-      opts.limit < 10 -> Inspect.inspect("ref.#{entity.__sref__}.(pending)", opts)
+      opts.limit < 10 && entity.identifier -> Inspect.inspect(entity.__struct__.sref(entity), opts)
+      opts.limit < 10 -> Inspect.inspect("ref.#{entity.__struct__.__sref__}.(pending)", opts)
       :else ->
         kind = String.replace_leading("#{entity.__struct__}", "Elixir.", "")
         entity.__struct__.strip_pii(entity, opts.custom_options[:pii] || :level_3)

@@ -161,9 +161,9 @@ defmodule Noizu.Scaffolding.V2.EntityBehaviour do
     # Repo module (entity/record implementation), Module name with "Repo" appeneded if :auto
     repo_module = Keyword.get(options, :repo_module, :auto)
     entity_table = case Keyword.get(options, :entity_table, :auto) do
-      :auto -> Keyword.get(options, :mnesia_table, :auto)
-      v -> v
-    end
+                     :auto -> Keyword.get(options, :mnesia_table, :auto)
+                     v -> v
+                   end
 
     poly_base = Keyword.get(options, :poly_base, :auto)
     poly_support = Keyword.get(options, :poly_support, :auto)
@@ -188,41 +188,41 @@ defmodule Noizu.Scaffolding.V2.EntityBehaviour do
       @module __MODULE__
 
       @poly_base (case unquote(poly_base) do
-        :auto -> @module
-        v -> v
-      end)
+                    :auto -> @module
+                    v -> v
+                  end)
 
       @poly_support (case unquote(poly_support) do
-        :auto -> :auto
-        v when is_list(v) -> MapSet.new(v)
-        v -> v
-      end)
+                       :auto -> :auto
+                       v when is_list(v) -> MapSet.new(v)
+                       v -> v
+                     end)
 
       @poly_type? ((@poly_base != @module) || (@poly_support != :auto) || false)
 
 
       @default_implementation (case unquote(default_implementation) do
-        :auto ->
-          if @poly_type? do
-            Noizu.Scaffolding.V2.EntityBehaviourPolySupport
-          else
-            Noizu.Scaffolding.V2.EntityBehaviourDefault
-          end
-        v -> v
-      end)
+                                 :auto ->
+                                   if @poly_type? do
+                                     Noizu.Scaffolding.V2.EntityBehaviourPolySupport
+                                   else
+                                     Noizu.Scaffolding.V2.EntityBehaviourDefault
+                                   end
+                                 v -> v
+                               end)
 
       @sref_prefix (case unquote(sm) do
-        :auto ->
-          if @poly_type? do
-            cond do
-              @module != @poly_base -> @poly_base.sref_prefix()
-              true -> "ref.#{__MODULE__}."
-            end
-          else
-            "ref.#{__MODULE__}."
-          end
-        v -> "ref.#{v}."
-      end)
+                      :auto ->
+                        if @poly_type? do
+                          cond do
+                            @module != @poly_base -> @poly_base.sref_prefix()
+                            true -> "ref.#{__MODULE__}."
+                          end
+                        else
+                          "ref.#{__MODULE__}."
+                        end
+                      v -> "ref.#{v}."
+                    end)
 
 
       @sref_module  (case unquote(sm) do

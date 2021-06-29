@@ -6,7 +6,7 @@ defmodule Noizu.BasicRefBehaviour do
       e = m.__entity__
       case v do
         true -> {:ok, nil}
-        false ->{:ok, nil}
+        false -> {:ok, nil}
         nil -> {:ok, nil}
         0 -> {:ok, nil}
         {:ref, ^e, _id} -> {:ok, v}
@@ -37,7 +37,7 @@ defmodule Noizu.BasicRefBehaviour do
       e = m.__entity__
       case v do
         true -> {:ok, nil}
-        false ->{:ok, nil}
+        false -> {:ok, nil}
         nil -> {:ok, nil}
         0 -> {:ok, nil}
         {:ref, ^e, _id} -> {:ok, v}

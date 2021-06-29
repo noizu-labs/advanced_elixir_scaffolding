@@ -96,9 +96,9 @@ defmodule Noizu.Scaffolding.V3.Helpers do
   #-------------------------
   # api_response
   #-------------------------
-  def api_response(%Plug.Conn{} = conn, response,  %CallingContext{} = context, options \\ []) do
+  def api_response(%Plug.Conn{} = conn, response, %CallingContext{} = context, options \\ []) do
     options = options
-              |> update_in([:pretty], &( &1 == nil && true || &1))
+              |> update_in([:pretty], &(&1 == nil && true || &1))
               |> update_in([:expand_refs], &(&1 == nil && context.options[:expand_refs] || &1))
               |> update_in([:expand_all_refs], &(&1 == nil && context.options[:expand_all_refs] || &1))
               |> update_in([:json_format], &(&1 == nil && context.options[:json_format] || &1))
@@ -109,10 +109,14 @@ defmodule Noizu.Scaffolding.V3.Helpers do
 
     # Preprocess response data.
     response = cond do
-                 options[:expand] && options[:restricted] -> Noizu.V3.RestrictedProtocol.restricted_view(Noizu.V3.EntityProtocol.expand!(response, context, options), context, options[:restrict_options])
-                 options[:expand] -> Noizu.V3.EntityProtocol.expand!(response, context, options)
-                 options[:restricted] -> Noizu.V3.RestrictedProtocol.restricted_view(response, context, options[:restrict_options])
-                 :else -> response
+                 options[:expand] && options[:restricted] ->
+                   Noizu.V3.RestrictedProtocol.restricted_view(Noizu.V3.EntityProtocol.expand!(response, context, options), context, options[:restrict_options])
+                 options[:expand] ->
+                   Noizu.V3.EntityProtocol.expand!(response, context, options)
+                 options[:restricted] ->
+                   Noizu.V3.RestrictedProtocol.restricted_view(response, context, options[:restrict_options])
+                 :else ->
+                   response
                end
 
     options = options[:expand] && put_in(options || [], :__nzdo__expanded?, true) || options
@@ -120,7 +124,7 @@ defmodule Noizu.Scaffolding.V3.Helpers do
 
     # Injecting Useful content from calling context into headers for api client's consumption.
     case Plug.Conn.get_resp_header(conn, "x-request-id") do
-      [request|_] ->
+      [request | _] ->
         if request != context.token do
           conn
           |> Plug.Conn.put_resp_header("x-request-id", context.token)
@@ -131,7 +135,8 @@ defmodule Noizu.Scaffolding.V3.Helpers do
       [] ->
         conn
         |> Plug.Conn.put_resp_header("x-request-id", context.token)
-    end |> send_resp(200, "application/json", json_library().encode_to_iodata!(response, options))
+    end
+    |> send_resp(200, "application/json", json_library().encode_to_iodata!(response, options))
   end
 
 
@@ -147,7 +152,7 @@ defmodule Noizu.Scaffolding.V3.Helpers do
         defdelegate update_expand_options(entity, options), to: Noizu.Scaffolding.V3.Helpers
         defdelegate expand_ref?(options), to: Noizu.Scaffolding.V3.Helpers
         defdelegate expand_ref?(path, depth, options \\ nil), to: Noizu.Scaffolding.V3.Helpers
-        defdelegate api_response(conn, response,  context, options), to: Noizu.Scaffolding.V3.Helpers
+        defdelegate api_response(conn, response, context, options), to: Noizu.Scaffolding.V3.Helpers
         defdelegate json_library(), to: Noizu.Scaffolding.V3.Helpers
         defdelegate send_resp(conn, default_status, default_content_type, body), to: Noizu.Scaffolding.V3.Helpers
         defdelegate ensure_resp_content_type(conn, content_type), to: Noizu.Scaffolding.V3.Helpers

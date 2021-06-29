@@ -22,8 +22,10 @@ defmodule Noizu.Scaffolding.V3.PathEncoding do
   ]
 
   @identity_matrix %{
-    a11: 1, a12: 0,
-    a21: 0, a22: 1
+    a11: 1,
+    a12: 0,
+    a21: 0,
+    a22: 1
   }
 
   def parent_path(nil), do: nil
@@ -41,8 +43,12 @@ defmodule Noizu.Scaffolding.V3.PathEncoding do
   #---------------------------
   def position_matrix(position) when is_integer(position) do
     i = position + 1
-    %{a11: i, a12: -1,
-      a21: 1, a22: 0}
+    %{
+      a11: i,
+      a12: -1,
+      a21: 1,
+      a22: 0
+    }
   end
 
   #---------------------------
@@ -50,8 +56,10 @@ defmodule Noizu.Scaffolding.V3.PathEncoding do
   #---------------------------
   def multiply_matrix(%{a11: a11, a12: a12, a21: a21, a22: a22}, %{a11: b11, a12: b12, a21: b21, a22: b22}) do
     %{
-      a11: (a11 * b11 + a12 * b21), a12: (a11 * b12 + a12 * b22),
-      a21: (a21 * b11 + a22 * b21), a22: (a21 * b12 + a22 * b22),
+      a11: (a11 * b11 + a12 * b21),
+      a12: (a11 * b12 + a12 * b22),
+      a21: (a21 * b11 + a22 * b21),
+      a22: (a21 * b12 + a22 * b22),
     }
   end
 
@@ -66,9 +74,13 @@ defmodule Noizu.Scaffolding.V3.PathEncoding do
   #
   #---------------------------
   def convert_path_to_matrix(path) when is_list(path) do
-    Enum.reduce(path, @identity_matrix, fn(position, path) ->
-      multiply_matrix(path, position_matrix(position))
-    end)
+    Enum.reduce(
+      path,
+      @identity_matrix,
+      fn (position, path) ->
+        multiply_matrix(path, position_matrix(position))
+      end
+    )
   end
 
 
@@ -93,7 +105,7 @@ defmodule Noizu.Scaffolding.V3.PathEncoding do
         a21 = -m.a22
         a12 = (m.a11 - (a11 * (l + 1)))
         a22 = (m.a21 - (a21 * (l + 1)))
-        convert_matrix_to_path( %{a11: a11, a12: a12, a21: a21, a22: a22}, acc ++ [l])
+        convert_matrix_to_path(%{a11: a11, a12: a12, a21: a21, a22: a22}, acc ++ [l])
       else
         {:error, acc}
       end
@@ -166,13 +178,15 @@ defmodule Noizu.Scaffolding.V3.PathEncoding do
     parse = json
             |> String.split(".")
             |> String.trim()
-            |> Enum.reduce({:ok,[]},
-                 fn(n, {s,l}) ->
+            |> Enum.reduce(
+                 {:ok, []},
+                 fn (n, {s, l}) ->
                    case Integer.parse(n) do
                      {:ok, i} -> {s, l ++ [i]}
                      _ -> {:error, l}
                    end
-                 end)
+                 end
+               )
     case parse do
       {:ok, []} -> nil
       {:ok, path} -> new(path)

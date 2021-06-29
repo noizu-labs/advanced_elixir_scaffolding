@@ -18,14 +18,18 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Index do
                        # Insure Single Call
                        #---------------------
                        if line = Module.get_attribute(__MODULE__, :__nzdo__index_definied) do
-                         raise "#{file_rel_dir(unquote(caller.file))}:#{unquote(caller.line)} attempting to redefine #{__MODULE__}.noizu_index first defined on #{elem(line,0)}:#{elem(line,1)}"
+                         raise "#{file_rel_dir(unquote(caller.file))}:#{unquote(caller.line)} attempting to redefine #{__MODULE__}.noizu_index first defined on #{elem(line, 0)}:#{
+                           elem(line, 1)
+                         }"
                        end
                        @__nzdo__index_definied {file_rel_dir(unquote(caller.file)), unquote(caller.line)}
 
                        #---------------------
                        # Find Base
                        #---------------------
-                       @__nzdo__base Module.split(__MODULE__) |> Enum.slice(0..-2) |> Module.concat()
+                       @__nzdo__base Module.split(__MODULE__)
+                                     |> Enum.slice(0..-2)
+                                     |> Module.concat()
                        if !Module.get_attribute(@__nzdo__base, :__nzdo__base_definied) do
                          raise "#{@__nzdo__base} must include use Noizu.DomainObject call."
                        end
@@ -78,12 +82,13 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Index do
       defdelegate __indexing__(), to: @__nzdo__base
       defdelegate __indexing__(setting), to: @__nzdo__base
 
-      defdelegate __persistence__(setting \\ :all), to:  @__nzdo__base
-      defdelegate __persistence__(selector, setting), to:  @__nzdo__base
+      defdelegate __persistence__(setting \\ :all), to: @__nzdo__base
+      defdelegate __persistence__(selector, setting), to: @__nzdo__base
 
       defdelegate __nmid__(), to: @__nzdo__base
       defdelegate __nmid__(setting), to: @__nzdo__base
 
+      def __noizu_info__(), do: put_in(@__nzdo__base.__noizu_info__(), [:type], :index)
       def __noizu_info__(:type), do: :index
       defdelegate __noizu_info__(report), to: @__nzdo__base
     end
@@ -105,7 +110,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Index do
       {:inline, type} when is_atom(type) -> inline_indexer(base, type, [])
       {indexer, options} when is_atom(indexer) and is_map(options) -> {indexer, %{options: options, fields: %{}}}
       {indexer, options} when is_atom(indexer) and is_list(options) -> {indexer, %{options: Map.new(options), fields: %{}}}
-      indexer when is_atom(indexer)-> {indexer, %{options: %{}, fields: %{}}}
+      indexer when is_atom(indexer) -> {indexer, %{options: %{}, fields: %{}}}
       _ -> raise "Invalid @index annotation #{inspect l}"
     end
   end

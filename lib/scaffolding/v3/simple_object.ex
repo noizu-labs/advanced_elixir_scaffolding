@@ -18,7 +18,7 @@ defmodule Noizu.SimpleObject do
 
       # Insure only referenced once.
       if line = Module.get_attribute(__MODULE__, :__nzdo__simple_definied) do
-        raise "#{file_rel_dir(unquote(caller.file))}:#{unquote(caller.line)} duplicate use Noizu.SimpleObject reference. First defined on #{elem(line,0)}:#{elem(line,1)}"
+        raise "#{file_rel_dir(unquote(caller.file))}:#{unquote(caller.line)} duplicate use Noizu.SimpleObject reference. First defined on #{elem(line, 0)}:#{elem(line, 1)}"
       end
       @__nzdo__simple_definied {file_rel_dir(unquote(caller.file)), unquote(caller.line)}
 

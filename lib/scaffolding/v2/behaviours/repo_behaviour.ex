@@ -100,12 +100,12 @@ defmodule Noizu.Scaffolding.V2.RepoBehaviour do
 
   defmacro __using__(options) do
     # Implementation for Persistance layer interactions.
-    implementation_provider = Keyword.get(options, :implementation_provider,  Noizu.Scaffolding.V2.RepoBehaviour.AmnesiaProvider)
+    implementation_provider = Keyword.get(options, :implementation_provider, Noizu.Scaffolding.V2.RepoBehaviour.AmnesiaProvider)
 
     options = case Keyword.get(options, :entity_table, :auto) do
-      :auto -> Keyword.put(options, :entity_table, Keyword.get(options, :mnesia_table, :auto))
-      _ -> options
-    end
+                :auto -> Keyword.put(options, :entity_table, Keyword.get(options, :mnesia_table, :auto))
+                _ -> options
+              end
 
     quote do
       @behaviour Noizu.Scaffolding.RepoBehaviour
@@ -150,7 +150,7 @@ defmodule Noizu.Scaffolding.V2.RepoBehaviour do
           FastGlobal.delete(key)
           spawn fn ->
             (options[:nodes] || Node.list())
-            |> Task.async_stream(fn(n) -> :rpc.cast(n, FastGlobal, :delete, [key]) end)
+            |> Task.async_stream(fn (n) -> :rpc.cast(n, FastGlobal, :delete, [key]) end)
             |> Enum.map(&(&1))
           end
           # return
@@ -169,8 +169,9 @@ defmodule Noizu.Scaffolding.V2.RepoBehaviour do
           ts = :os.system_time(:second)
           identifier = @entity_module.id(ref)
           # @todo setup invalidation scheme
-          Noizu.FastGlobal.Cluster.get(cache_key,
-            fn() ->
+          Noizu.FastGlobal.Cluster.get(
+            cache_key,
+            fn () ->
               if Amnesia.Table.wait([@entity_table], 500) == :ok do
                 case get!(identifier, context, options) do
                   entity = %{} -> entity

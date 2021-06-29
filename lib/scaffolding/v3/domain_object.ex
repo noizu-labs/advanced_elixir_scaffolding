@@ -19,7 +19,7 @@ defmodule Noizu.DomainObject do
 
       # Insure only referenced once.
       if line = Module.get_attribute(__MODULE__, :__nzdo__base_definied) do
-        raise "#{file_rel_dir(unquote(caller.file))}:#{unquote(caller.line)} duplicate use Noizu.DomainObject reference. First defined on #{elem(line,0)}:#{elem(line,1)}"
+        raise "#{file_rel_dir(unquote(caller.file))}:#{unquote(caller.line)} duplicate use Noizu.DomainObject reference. First defined on #{elem(line, 0)}:#{elem(line, 1)}"
       end
       @__nzdo__base_definied {file_rel_dir(unquote(caller.file)), unquote(caller.line)}
 
@@ -38,6 +38,15 @@ defmodule Noizu.DomainObject do
       @before_compile Noizu.ElixirScaffolding.V3.Meta.DomainObject
     end
   end
+
+
+  #--------------------------------------------
+  #
+  #--------------------------------------------
+  defmacro noizu_type_handler(options \\ []) do
+    Noizu.ElixirScaffolding.V3.Meta.DomainObject.TypeHandler.__noizu_type_handler__(__CALLER__, options)
+  end
+
 
   #--------------------------------------------
   #
@@ -80,7 +89,7 @@ defmodule Noizu.DomainObject do
   #--------------------------------------------
   def file_rel_dir(module_path) do
     offset = file_rel_dir(__ENV__.file, module_path, 0)
-    String.slice(module_path, offset .. - 1)
+    String.slice(module_path, offset..- 1)
   end
   def file_rel_dir(<<m>> <> a, <<m>> <> b, acc) do
     file_rel_dir(a, b, 1 + acc)
@@ -91,12 +100,12 @@ defmodule Noizu.DomainObject do
   #
   #--------------------------------------------
   def module_rel(base, module_path) do
-    [_|a] = base
-    [_|b] = module_path
+    [_ | a] = base
+    [_ | b] = module_path
     offset = module_rel(a, b, 0)
-    Enum.slice(module_path, (offset + 1).. - 1)
+    Enum.slice(module_path, (offset + 1)..- 1)
   end
-  def module_rel([h|a], [h|b], acc) do
+  def module_rel([h | a], [h | b], acc) do
     module_rel(a, b, 1 + acc)
   end
   def module_rel(_a, _b, acc), do: acc
@@ -119,23 +128,23 @@ defmodule Noizu.DomainObject do
   defmacro extract_transform_attribute(attribute, setting, mfa, default \\ nil) do
     quote do
       cond do
-        v = Module.get_attribute(__MODULE__,unquote(attribute)) ->
-          {m,f,a} = unquote(mfa)
-          apply(m,f, [v] ++ a)
+        v = Module.get_attribute(__MODULE__, unquote(attribute)) ->
+          {m, f, a} = unquote(mfa)
+          apply(m, f, [v] ++ a)
         !@__nzdo__base_open? && @__nzdo__base.__noizu_info__(unquote(setting)) -> @__nzdo__base.__noizu_info__(unquote(setting))
         @__nzdo__base_open? && Module.get_attribute(@__nzdo__base, unquote(attribute)) ->
           v = Module.get_attribute(@__nzdo__base, unquote(attribute))
-          {m,f,a} = unquote(mfa)
-          apply(m,f, [v] ++ a)
+          {m, f, a} = unquote(mfa)
+          apply(m, f, [v] ++ a)
         !@__nzdo__poly_base_open? && @__nzdo__poly_base.__noizu_info__(unquote(setting)) -> @__nzdo__poly_base.__noizu_info__(unquote(setting))
         @__nzdo__poly_base_open? && Module.get_attribute(@__nzdo__poly_base, unquote(attribute)) ->
           v = Module.get_attribute(@__nzdo__poly_base, unquote(attribute))
-          {m,f,a} = unquote(mfa)
-          apply(m,f, [v] ++ a)
+          {m, f, a} = unquote(mfa)
+          apply(m, f, [v] ++ a)
         :else ->
           v = unquote(default)
-          {m,f,a} = unquote(mfa)
-          apply(m,f, [v] ++ a)
+          {m, f, a} = unquote(mfa)
+          apply(m, f, [v] ++ a)
       end
     end
   end
@@ -146,7 +155,7 @@ defmodule Noizu.DomainObject do
   defmacro extract_has_attribute(attribute, default) do
     quote do
       cond do
-        Module.has_attribute?(__MODULE__,unquote(attribute)) -> Module.get_attribute(__MODULE__,unquote(attribute))
+        Module.has_attribute?(__MODULE__, unquote(attribute)) -> Module.get_attribute(__MODULE__, unquote(attribute))
         !@__nzdo__base_open? && @__nzdo__base.__noizu_info__(unquote(attribute)) != nil -> @__nzdo__base.__noizu_info__(unquote(attribute))
         @__nzdo__base_open? && Module.has_attribute?(@__nzdo__base, unquote(attribute)) -> Module.get_attribute(@__nzdo__base, unquote(attribute))
         !@__nzdo__poly_base_open? && @__nzdo__poly_base.__noizu_info__(unquote(attribute)) != nil -> @__nzdo__poly_base.__noizu_info__(unquote(attribute))
@@ -162,7 +171,7 @@ defmodule Noizu.DomainObject do
   defmacro extract_attribute(attribute, default) do
     quote do
       cond do
-        v = Module.get_attribute(__MODULE__,unquote(attribute)) -> v
+        v = Module.get_attribute(__MODULE__, unquote(attribute)) -> v
         !@__nzdo__base_open? && @__nzdo__base.__noizu_info__(unquote(attribute)) -> @__nzdo__base.__noizu_info__(unquote(attribute))
         @__nzdo__base_open? && Module.get_attribute(@__nzdo__base, unquote(attribute)) -> Module.get_attribute(@__nzdo__base, unquote(attribute))
         !@__nzdo__poly_base_open? && @__nzdo__poly_base.__noizu_info__(unquote(attribute)) -> @__nzdo__poly_base.__noizu_info__(unquote(attribute))
@@ -179,7 +188,10 @@ defmodule Noizu.DomainObject do
     quote do
       base = unquote(options)[:base]
 
-      @__nzdo__base base || Module.get_attribute(__MODULE__, :simple_object) ||  (Module.split(__MODULE__) |> Enum.slice(0..-2) |> Module.concat())
+      @__nzdo__base base || Module.get_attribute(__MODULE__, :simple_object) || (
+        Module.split(__MODULE__)
+        |> Enum.slice(0..-2)
+        |> Module.concat())
       @__nzdo__base_open? Module.open?(@__nzdo__base)
       @base_meta ((Module.has_attribute?(@__nzdo__base, :meta) && Module.get_attribute(@__nzdo__base, :meta) || []))
       Module.delete_attribute(__MODULE__, :meta)
@@ -210,7 +222,9 @@ defmodule Noizu.DomainObject do
       Module.put_attribute(__MODULE__, :__nzdo__entity, __MODULE__)
       Module.put_attribute(__MODULE__, :__nzdo__struct, __MODULE__)
 
-      @__nzdo__schema_helper noizu_domain_object_schema || raise "#{__MODULE__} you must pass in noizu_domain_object_schema or set {:noizu_scaffolding, :domain_object_schema} config value."
+      @__nzdo__schema_helper noizu_domain_object_schema || raise "#{
+        __MODULE__
+      } you must pass in noizu_domain_object_schema or set {:noizu_scaffolding, :domain_object_schema} config value."
       @__nzdo__poly_base (cond do
                             v = poly_base -> v
                             v = Module.get_attribute(__MODULE__, :poly_base) -> v
@@ -246,7 +260,7 @@ defmodule Noizu.DomainObject do
       # Load Sphinx Settings from base.
       #----------------------
       @__nzdo__indexes Noizu.DomainObject.extract_transform_attribute(:index, :indexing, {Noizu.DomainObject, :expand_indexes, [@__nzdo__base]}, [])
-      @__nzdo__index_list Enum.map(@__nzdo__indexes, fn({k,_v}) -> k end)
+      @__nzdo__index_list Enum.map(@__nzdo__indexes, fn ({k, _v}) -> k end)
       @__nzdo__inline_index Noizu.ElixirScaffolding.V3.Meta.DomainObject.Index.domain_object_indexer(@__nzdo__base)
 
       if (@__nzdo__base_open?) do
@@ -280,8 +294,10 @@ defmodule Noizu.DomainObject do
       end
 
       @__nzdo_persistence Noizu.DomainObject.extract_transform_attribute(:persistence_layer, :persistence, {Noizu.DomainObject, :expand_persistence_layers, [__MODULE__]})
-      @__nzdo_persistence__layers Enum.map(@__nzdo_persistence.layers, fn(layer) -> {layer.schema, layer} end) |> Map.new()
-      @__nzdo_persistence__by_table Enum.map(@__nzdo_persistence.layers, fn(layer) -> {layer.table, layer} end) |> Map.new()
+      @__nzdo_persistence__layers Enum.map(@__nzdo_persistence.layers, fn (layer) -> {layer.schema, layer} end)
+                                  |> Map.new()
+      @__nzdo_persistence__by_table Enum.map(@__nzdo_persistence.layers, fn (layer) -> {layer.table, layer} end)
+                                    |> Map.new()
       @__nzdo_ecto_entity (@__nzdo_persistence.ecto_entity && true || false)
 
       if @__nzdo_ecto_entity do
@@ -331,27 +347,38 @@ defmodule Noizu.DomainObject do
 
       @__nzdo__json_provider json_provider || Noizu.DomainObject.extract_attribute(:json_provider, Noizu.Scaffolding.V3.Poison.Encoder)
       @__nzdo__json_format json_format || Noizu.DomainObject.extract_has_attribute(:json_format, :default)
-      @__nzdo__json_supported_formats json_supported_formats || Noizu.DomainObject.extract_has_attribute(:json_supported_formats,  [:standard, :admin, :verbose, :compact, :mobile, :verbose_mobile])
-      @__nzdo__json_format_groups (Enum.map(Noizu.DomainObject.extract_attribute(:json_format_group, []),
-                                     fn(group) ->
+      @__nzdo__json_supported_formats json_supported_formats || Noizu.DomainObject.extract_has_attribute(
+        :json_supported_formats,
+        [:standard, :admin, :verbose, :compact, :mobile, :verbose_mobile]
+      )
+      @__nzdo__json_format_groups (
+                                    Enum.map(
+                                      Noizu.DomainObject.extract_attribute(:json_format_group, []),
+                                      fn (group) ->
+                                        case group do
+                                          {alias, member} when is_atom(member) -> {alias, [members: [member]]}
+                                          {alias, members} when is_list(members) -> {alias, [members: members]}
+                                          {alias, member, defaults} when is_atom(member) -> {alias, [members: [member], defaults: defaults]}
+                                          {alias, members, defaults} when is_list(members) -> {alias, [members: members, defaults: defaults]}
+                                          _ -> raise "Invalid @json_formatting_group entry #{inspect group}"
+                                        end
+                                      end
+                                    )
+                                    |> Map.new())
+      @__nzdo__json_field_groups (
+                                   Enum.map(
+                                     Noizu.DomainObject.extract_attribute(:json_field_group, []),
+                                     fn (group) ->
                                        case group do
                                          {alias, member} when is_atom(member) -> {alias, [members: [member]]}
                                          {alias, members} when is_list(members) -> {alias, [members: members]}
                                          {alias, member, defaults} when is_atom(member) -> {alias, [members: [member], defaults: defaults]}
                                          {alias, members, defaults} when is_list(members) -> {alias, [members: members, defaults: defaults]}
-                                         _ -> raise "Invalid @json_formatting_group entry #{inspect group}"
+                                         _ -> raise "Invalid @json_field_group entry #{inspect group}"
                                        end
-                                     end) |> Map.new())
-      @__nzdo__json_field_groups (Enum.map(Noizu.DomainObject.extract_attribute(:json_field_group, []),
-                                    fn(group) ->
-                                      case group do
-                                        {alias, member} when is_atom(member) -> {alias, [members: [member]]}
-                                        {alias, members} when is_list(members) -> {alias, [members: members]}
-                                        {alias, member, defaults} when is_atom(member) -> {alias, [members: [member], defaults: defaults]}
-                                        {alias, members, defaults} when is_list(members) -> {alias, [members: members, defaults: defaults]}
-                                        _ -> raise "Invalid @json_field_group entry #{inspect group}"
-                                      end
-                                    end) |> Map.new())
+                                     end
+                                   )
+                                   |> Map.new())
       @__nzdo__json_white_list (cond do
                                   json_white_list -> json_white_list
                                   :else -> Noizu.DomainObject.extract_has_attribute(:json_white_list, false)

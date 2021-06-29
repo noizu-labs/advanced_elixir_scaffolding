@@ -107,7 +107,8 @@ defimpl Noizu.Ecto.Entity, for: Tuple do
         _ ->
           case module.universal_identifier(ref) do
             v when is_integer(v) ->
-              %Noizu.Scaffolding.V3.Database.UniversalLookupTable{identifier: ref, universal_identifier: v} |> Noizu.Scaffolding.V3.Database.UniversalLookupTable.write!
+              %Noizu.Scaffolding.V3.Database.UniversalLookupTable{identifier: ref, universal_identifier: v}
+              |> Noizu.Scaffolding.V3.Database.UniversalLookupTable.write!
               v
             _ ->
               nil
@@ -166,7 +167,7 @@ end
 #=============================================
 #
 #=============================================
-defimpl Noizu.Ecto.Entity, for: [ Map ] do
+defimpl Noizu.Ecto.Entity, for: [Map] do
   def universal_reference?(_), do: false
   def supported?(%{__struct__: module}) do
     try do

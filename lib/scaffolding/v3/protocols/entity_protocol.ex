@@ -28,34 +28,36 @@ end
 defimpl Noizu.V3.EntityProtocol, for: List do
   def expand!(entity, context, options \\ nil) do
     {max_concurrency, options} = cond do
-      options[:sync] -> {1, options}
-      is_integer(options[:async]) && length(entity) < options[:async] -> {1, options}
-      :else -> Noizu.Scaffolding.V3.Helpers.expand_concurrency(options)
-    end
+                                   options[:sync] -> {1, options}
+                                   is_integer(options[:async]) && length(entity) < options[:async] -> {1, options}
+                                   :else -> Noizu.Scaffolding.V3.Helpers.expand_concurrency(options)
+                                 end
     if max_concurrency == 1 do
       entity
       |> Enum.map(
-        fn(v) ->
-          cond do
-            is_map(v) || is_list(v) || is_tuple(v) -> Noizu.V3.EntityProtocol.expand!(v, context, options)
-            :else -> v
-          end
-        end
-      )
+           fn (v) ->
+             cond do
+               is_map(v) || is_list(v) || is_tuple(v) -> Noizu.V3.EntityProtocol.expand!(v, context, options)
+               :else -> v
+             end
+           end
+         )
     else
       timeout = options[:timeout] || 30_000
       ordered = options[:ordered] || true
       entity
       |> Task.async_stream(
-        fn(v) ->
-          cond do
-            is_map(v) || is_list(v) || is_tuple(v) -> Noizu.V3.EntityProtocol.expand!(v, context, options)
-            :else -> v
-          end
-        end,
-        max_concurrency: max_concurrency, timeout: timeout, ordered: ordered
-      )
-      |> Enum.map(fn({:ok, v}) -> v end)
+           fn (v) ->
+             cond do
+               is_map(v) || is_list(v) || is_tuple(v) -> Noizu.V3.EntityProtocol.expand!(v, context, options)
+               :else -> v
+             end
+           end,
+           max_concurrency: max_concurrency,
+           timeout: timeout,
+           ordered: ordered
+         )
+      |> Enum.map(fn ({:ok, v}) -> v end)
     end
   end
 end
@@ -69,12 +71,12 @@ defimpl Noizu.V3.EntityProtocol, for: Tuple do
       :else -> ref
     end
   end
-  def expand!({:ref, m, _} = ref, _context,  options) when is_atom(m) do
-      cond do
-        Noizu.Scaffolding.V3.Helpers.expand_ref?(Noizu.Scaffolding.V3.Helpers.update_expand_options(m, options)) ->
-            Noizu.V3.EntityProtocol.expand!(m.entity!(ref, options))
-        :else -> ref
-      end
+  def expand!({:ref, m, _} = ref, _context, options) when is_atom(m) do
+    cond do
+      Noizu.Scaffolding.V3.Helpers.expand_ref?(Noizu.Scaffolding.V3.Helpers.update_expand_options(m, options)) ->
+        Noizu.V3.EntityProtocol.expand!(m.entity!(ref, options))
+      :else -> ref
+    end
   end
   def expand!(tuple, _context, _) do
     tuple
@@ -86,16 +88,16 @@ defimpl Noizu.V3.EntityProtocol, for: Map do
 
   def expand!(%{__struct__: _m} = entity, context, %{structs: true} = options), do: Noizu.V3.EntityProtocol.Derive.NoizuStruct.expand!(entity, context, options)
   def expand!(%{__struct__: _m} = entity, _context, _options), do: entity
-  def expand!(%{} = entity, context,  %{maps: true} = options) do
+  def expand!(%{} = entity, context, %{maps: true} = options) do
     {max_concurrency, options} = cond do
-      options[:sync] -> {1, options}
-      is_integer(options[:async]) && length(Map.keys(entity)) < options[:async] -> {1, options}
-      :else -> Noizu.Scaffolding.V3.Helpers.expand_concurrency(options)
-    end
+                                   options[:sync] -> {1, options}
+                                   is_integer(options[:async]) && length(Map.keys(entity)) < options[:async] -> {1, options}
+                                   :else -> Noizu.Scaffolding.V3.Helpers.expand_concurrency(options)
+                                 end
     if max_concurrency == 1 do
       entity
       |> Enum.map(
-           fn({k,v}) ->
+           fn ({k, v}) ->
              cond do
                is_map(v) || is_list(v) || is_tuple(v) -> {k, Noizu.V3.EntityProtocol.expand!(v, context, options)}
                :else -> {k, v}
@@ -109,15 +111,17 @@ defimpl Noizu.V3.EntityProtocol, for: Map do
       ordered = options[:ordered] || true
       entity
       |> Task.async_stream(
-           fn({k,v}) ->
+           fn ({k, v}) ->
              cond do
                is_map(v) || is_list(v) || is_tuple(v) -> {k, Noizu.V3.EntityProtocol.expand!(v, context, options)}
                :else -> {k, v}
              end
            end,
-           max_concurrency: max_concurrency, timeout: timeout, ordered: ordered
+           max_concurrency: max_concurrency,
+           timeout: timeout,
+           ordered: ordered
          )
-      |> Enum.map(fn({:ok, v}) -> v end)
+      |> Enum.map(fn ({:ok, v}) -> v end)
       |> Map.new
     end
   end
@@ -140,8 +144,9 @@ defmodule Noizu.V3.EntityProtocol.Derive.NoizuStruct do
   def expand!(entity, context, options) do
     {deriving, options} = pop_in(options, [:deriving])
     {json_format, options} = Noizu.Scaffolding.V3.Helpers.update_options(entity, context, options)
-    v = Enum.map(Map.from_struct(entity),
-      fn({k,v}) ->
+    v = Enum.map(
+      Map.from_struct(entity),
+      fn ({k, v}) ->
         v = cond do
               is_map(v) && expand_field?(k, entity.__struct__, json_format, deriving) -> Noizu.V3.EntityProtocol.expand!(v, context, options)
               is_list(v) && expand_field?(k, entity.__struct__, json_format, deriving) -> Noizu.V3.EntityProtocol.expand!(v, context, options)
@@ -149,7 +154,8 @@ defmodule Noizu.V3.EntityProtocol.Derive.NoizuStruct do
               :else -> v
             end
         {k, v}
-      end)
+      end
+    )
     struct(entity.__struct__, v)
   end
 end

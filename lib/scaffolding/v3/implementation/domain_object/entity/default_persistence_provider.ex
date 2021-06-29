@@ -37,18 +37,20 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultP
     def __as_record_type__(domain_object, layer = %PersistenceLayer{type: :mnesia, table: table}, entity, context, options) do
       context = Noizu.ElixirCore.CallingContext.system(context)
       field_types = domain_object.__noizu_info__(:field_types)
-      fields = Map.keys(table.__struct__([]))  -- [:__struct__]
-      Enum.map(fields,
-        fn(field) ->
+      fields = Map.keys(table.__struct__([])) -- [:__struct__]
+      Enum.map(
+        fields,
+        fn (field) ->
           cond do
-            field == :entity -> entity
+            field == :identifier -> {field, entity.identifier}
+            field == :entity -> {field, entity}
             entry = layer.schema_fields[field] ->
               type = field_types[entry[:source]]
               source = case entry[:selector] do
                          nil -> get_in(entity, [Access.key(entry[:source])])
                          path when is_list(path) -> get_in(entity, path)
-                         {m,f,a} when is_list(a) -> apply(m, f, [entry, entity] ++ a)
-                         {m,f,a} -> apply(m, f, [entry, entity, a])
+                         {m, f, a} when is_list(a) -> apply(m, f, [entry, entity] ++ a)
+                         {m, f, a} -> apply(m, f, [entry, entity, a])
                          f when is_function(f, 0) -> f.()
                          f when is_function(f, 1) -> f.(entity)
                          f when is_function(f, 2) -> f.(entry, entity)
@@ -59,7 +61,8 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultP
             Map.has_key?(entity, field) -> {field, get_in(entity, [Access.key(field)])}
             :else -> nil
           end
-        end)
+        end
+      )
       |> List.flatten()
       |> Enum.filter(&(&1))
       |> layer.table.__struct__()
@@ -68,8 +71,9 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultP
     def __as_record_type__(domain_object, layer = %{type: :ecto, table: table}, entity, _context, options) do
       context = Noizu.ElixirCore.CallingContext.admin()
       field_types = domain_object.__noizu_info__(:field_types)
-      Enum.map(domain_object.__noizu_info__(:fields),
-        fn(field) ->
+      Enum.map(
+        domain_object.__noizu_info__(:fields),
+        fn (field) ->
           cond do
             field == :identifier -> {:identifier, Noizu.Ecto.Entity.ecto_identifier(entity)}
             entry = layer.schema_fields[field] ->
@@ -77,8 +81,8 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultP
               source = case entry[:selector] do
                          nil -> get_in(entity, [Access.key(entry[:source])])
                          path when is_list(path) -> get_in(entity, path)
-                         {m,f,a} when is_list(a) -> apply(m, f, [entry, entity] ++ a)
-                         {m,f,a} -> apply(m, f, [entry, entity, a])
+                         {m, f, a} when is_list(a) -> apply(m, f, [entry, entity] ++ a)
+                         {m, f, a} -> apply(m, f, [entry, entity, a])
                          f when is_function(f, 0) -> f.()
                          f when is_function(f, 1) -> f.(entity)
                          f when is_function(f, 2) -> f.(entry, entity)
@@ -89,7 +93,8 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultP
             Map.has_key?(entity, field) -> {field, get_in(entity, [Access.key(field)])}
             :else -> nil
           end
-        end)
+        end
+      )
       |> List.flatten()
       |> Enum.filter(&(&1))
       |> table.__struct__()
@@ -106,17 +111,17 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultP
     #-----------------------------------
     #
     #-----------------------------------
-    def __from_record__(_domain_object, _layer, %{entity: temp}, _context,  _options) do
+    def __from_record__(_domain_object, _layer, %{entity: temp}, _context, _options) do
       temp
     end
-    def __from_record__(_domain_object, _layer, _ref, _context,  _options) do
+    def __from_record__(_domain_object, _layer, _ref, _context, _options) do
       nil
     end
 
-    def __from_record__!(_domain_object, _layer, %{entity: temp}, _context,  _options) do
+    def __from_record__!(_domain_object, _layer, %{entity: temp}, _context, _options) do
       temp
     end
-    def __from_record__!(_domain_object, _layer, _ref, _context,  _options) do
+    def __from_record__!(_domain_object, _layer, _ref, _context, _options) do
       nil
     end
 
@@ -157,14 +162,16 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultP
       alias Noizu.Scaffolding.V3.Schema.PersistenceLayer
       @__nzdo__persistence_imp Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultPersistenceProvider.Default
 
-      def __as_record__(%PersistenceLayer{} = layer, entity, context, options \\ nil), do:  @__nzdo__persistence_imp.__as_record__(__MODULE__, layer, entity, context, options)
-      def __as_record__!(%PersistenceLayer{} = layer, entity, context, options \\ nil), do:  @__nzdo__persistence_imp.__as_record__!(__MODULE__, layer, entity, context, options)
+      def __as_record__(%PersistenceLayer{} = layer, entity, context, options \\ nil), do: @__nzdo__persistence_imp.__as_record__(__MODULE__, layer, entity, context, options)
+      def __as_record__!(%PersistenceLayer{} = layer, entity, context, options \\ nil), do: @__nzdo__persistence_imp.__as_record__!(__MODULE__, layer, entity, context, options)
 
-      def __as_record_type__(%PersistenceLayer{} = layer, entity, context, options \\ nil), do:  @__nzdo__persistence_imp.__as_record_type__(__MODULE__, layer, entity, context, options)
-      def __as_record_type__!(%PersistenceLayer{} = layer, entity, context, options \\ nil), do:  @__nzdo__persistence_imp.__as_record_type__!(__MODULE__, layer, entity, context, options)
+      def __as_record_type__(%PersistenceLayer{} = layer, entity, context, options \\ nil),
+          do: @__nzdo__persistence_imp.__as_record_type__(__MODULE__, layer, entity, context, options)
+      def __as_record_type__!(%PersistenceLayer{} = layer, entity, context, options \\ nil),
+          do: @__nzdo__persistence_imp.__as_record_type__!(__MODULE__, layer, entity, context, options)
 
-      def __from_record__(%PersistenceLayer{} = layer, record, context, options \\ nil), do:  @__nzdo__persistence_imp.__from_record__(__MODULE__, layer, record, context, options)
-      def __from_record__!(%PersistenceLayer{} = layer, record, context, options \\ nil), do:  @__nzdo__persistence_imp.__from_record__!(__MODULE__, layer, record, context, options)
+      def __from_record__(%PersistenceLayer{} = layer, record, context, options \\ nil), do: @__nzdo__persistence_imp.__from_record__(__MODULE__, layer, record, context, options)
+      def __from_record__!(%PersistenceLayer{} = layer, record, context, options \\ nil), do: @__nzdo__persistence_imp.__from_record__!(__MODULE__, layer, record, context, options)
 
       if (@__nzdo_persistence.ecto_entity) do
         def ecto_entity?(), do: true

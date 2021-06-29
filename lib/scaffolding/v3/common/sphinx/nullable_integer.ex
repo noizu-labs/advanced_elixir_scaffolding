@@ -20,7 +20,8 @@ defmodule Noizu.Scaffolding.V3.Sphinx.NullableInteger do
   def cast(v) do
     case v do
       nil -> {:ok, nil}
-      3010303070 -> {:ok, nil} # Special case due to inability of sphinx to support null values.
+      3010303070 -> {:ok, nil}
+      # Special case due to inability of sphinx to support null values.
       v when is_integer(v) -> {:ok, v}
       true -> {:ok, 1}
       false -> {:ok, 0}
@@ -47,8 +48,10 @@ defmodule Noizu.Scaffolding.V3.Sphinx.NullableInteger do
   @doc false
   def dump(v) do
     case v do
-      nil -> {:ok, 3010303070} # special case for null encoding.
-      3010303070 -> {:ok, 3010303069} # special case for null encoding
+      nil -> {:ok, 3010303070}
+      # special case for null encoding.
+      3010303070 -> {:ok, 3010303069}
+      # special case for null encoding
       v when is_integer(v) -> {:ok, v}
       true -> {:ok, 1}
       false -> {:ok, 0}
@@ -61,7 +64,8 @@ defmodule Noizu.Scaffolding.V3.Sphinx.NullableInteger do
   def load(v) do
     case v do
       nil -> {:ok, nil}
-      3010303070 -> {:ok, nil} # Special case due to inability of sphinx to support null values.
+      3010303070 -> {:ok, nil}
+      # Special case due to inability of sphinx to support null values.
       v when is_integer(v) -> {:ok, v}
       true -> {:ok, 1}
       false -> {:ok, 0}

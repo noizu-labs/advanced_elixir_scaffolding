@@ -15,7 +15,7 @@ defimpl Noizu.V3.RestrictedProtocol, for: List do
     if max_concurrency == 1 do
       entity
       |> Enum.map(
-           fn(v) ->
+           fn (v) ->
              Noizu.V3.RestrictedProtocol.restricted_view(v, context, options)
            end
          )
@@ -24,12 +24,14 @@ defimpl Noizu.V3.RestrictedProtocol, for: List do
       ordered = options[:ordered] || true
       entity
       |> Task.async_stream(
-           fn(v) ->
+           fn (v) ->
              Noizu.V3.RestrictedProtocol.restricted_view(v, context, options)
            end,
-           max_concurrency: max_concurrency, timeout: timeout, ordered: ordered
+           max_concurrency: max_concurrency,
+           timeout: timeout,
+           ordered: ordered
          )
-      |> Enum.map(fn({:ok, v}) -> v end)
+      |> Enum.map(fn ({:ok, v}) -> v end)
     end
   end
 
@@ -46,7 +48,7 @@ defimpl Noizu.V3.RestrictedProtocol, for: List do
     if max_concurrency == 1 do
       entity
       |> Enum.map(
-           fn(v) ->
+           fn (v) ->
              Noizu.V3.RestrictedProtocol.restricted_create(v, context, options)
            end
          )
@@ -55,12 +57,14 @@ defimpl Noizu.V3.RestrictedProtocol, for: List do
       ordered = options[:ordered] || true
       entity
       |> Task.async_stream(
-           fn(v) ->
+           fn (v) ->
              Noizu.V3.RestrictedProtocol.restricted_create(v, context, options)
            end,
-           max_concurrency: max_concurrency, timeout: timeout, ordered: ordered
+           max_concurrency: max_concurrency,
+           timeout: timeout,
+           ordered: ordered
          )
-      |> Enum.map(fn({:ok, v}) -> v end)
+      |> Enum.map(fn ({:ok, v}) -> v end)
     end
   end
 end

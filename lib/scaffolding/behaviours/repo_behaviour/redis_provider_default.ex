@@ -15,15 +15,20 @@ defmodule Noizu.Scaffolding.RepoBehaviour.RedisProviderDefault do
     root_table =
       Application.get_env(:noizu_scaffolding, :default_database, default_database)
       |> Module.split()
-    entity_name = path |> List.last()
+    entity_name = path
+                  |> List.last()
     table_name = String.slice(entity_name, 0..-5) <> "Table"
     inner_path = Enum.slice(path, 1..-2)
     Module.concat(root_table ++ inner_path ++ [table_name])
   end #end expand_table
 
   def expand_entity(module) do
-    rm = Module.split(module) |> Enum.slice(0..-2) |> Module.concat
-    m = (Module.split(module) |> List.last())
+    rm = Module.split(module)
+         |> Enum.slice(0..-2)
+         |> Module.concat
+    m = (
+      Module.split(module)
+      |> List.last())
     t = String.slice(m, 0..-5) <> "Entity"
     Module.concat([rm, t])
   end # end expand_repo
@@ -43,7 +48,7 @@ defmodule Noizu.Scaffolding.RepoBehaviour.RedisProviderDefault do
         []
       {:ok, m} ->
         m
-        |> Enum.map(fn(x) -> entity_module.redis_decode(x, options) end)
+        |> Enum.map(fn (x) -> entity_module.redis_decode(x, options) end)
     end
   end # end list/3
 
@@ -63,7 +68,7 @@ defmodule Noizu.Scaffolding.RepoBehaviour.RedisProviderDefault do
         []
       {:ok, m} ->
         m
-        |> Enum.map(fn(x) -> entity_module.redis_decode(x, options) end)
+        |> Enum.map(fn (x) -> entity_module.redis_decode(x, options) end)
     end
   end # end list/3
 
@@ -151,7 +156,7 @@ defmodule Noizu.Scaffolding.RepoBehaviour.RedisProviderDefault do
 
   def pre_create_callback({mod, _entity_module, _mnesia_table, _query_strategy, _audit_engine, _dirty, _frag, _audit_level} = _indicator, entity, _context, _options) do
     if entity.identifier == nil do
-      %{entity| identifier: mod.generate_identifier}
+      %{entity | identifier: mod.generate_identifier}
     else
       entity
     end

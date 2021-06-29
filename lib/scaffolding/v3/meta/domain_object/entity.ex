@@ -21,7 +21,12 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
       defdelegate __sref__(), to: @__nzdo__base
       defdelegate __erp__(), to: @__nzdo__base
 
-      @__nzdo_associated_types (Enum.map(@__nzdo_persistence__by_table || %{}, fn({k,v}) -> {k, v.type} end) ++ Enum.map(@__nzdo__poly_support || %{}, fn(k,v) -> {k, :poly} end) ) |> Map.new()
+      @__nzdo_associated_types (
+                                 Enum.map(@__nzdo_persistence__by_table || %{}, fn ({k, v}) -> {k, v.type} end) ++ Enum.map(
+                                   @__nzdo__poly_support || %{},
+                                   fn (k, v) -> {k, :poly} end
+                                 ))
+                               |> Map.new()
       @__nzdo__json_config put_in(@__nzdo__json_config, [:format_settings], @__nzdo__raw__json_format_settings)
       @__nzdo__field_attributes_map Map.new(@__nzdo__field_attributes)
 
@@ -30,37 +35,41 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
         Module.put_attribute(@__nzdo__base, :__nzdo_persistence, @__nzdo_persistence)
       end
 
-      @__nzdo__indexes Enum.reduce(List.flatten(@__nzdo__field_indexing || []), @__nzdo__indexes, fn({{field,index},indexing}, acc) ->
-        cond do
-          acc[index][:fields][field] == nil ->
-            put_in(acc, [index, :fields, field], indexing)
-          e = acc[index][:fields][field] ->
-            e = Enum.reduce(indexing, e, fn({k,v},acc) -> put_in(acc, [k], v) end)
-            put_in(acc, [index, :fields, field], e)
-        end
-      end)
+      @__nzdo__indexes Enum.reduce(
+                         List.flatten(@__nzdo__field_indexing || []),
+                         @__nzdo__indexes,
+                         fn ({{field, index}, indexing}, acc) ->
+                           cond do
+                             acc[index][:fields][field] == nil ->
+                               put_in(acc, [index, :fields, field], indexing)
+                             e = acc[index][:fields][field] ->
+                               e = Enum.reduce(indexing, e, fn ({k, v}, acc) -> put_in(acc, [k], v) end)
+                               put_in(acc, [index, :fields, field], e)
+                           end
+                         end
+                       )
 
       def __indexing__(), do: __indexing__(:indexes)
       def __indexing__(:indexes), do: @__nzdo__indexes
 
       def __persistence__(), do: __persistence__(:all)
-      def __persistence__(:all), do:  @__nzdo_persistence
-      def __persistence__(:enum_table), do:  @__nzdo_persistence.options.enum_table
-      def __persistence__(:auto_generate), do:  @__nzdo_persistence.options.auto_generate
-      def __persistence__(:universal_identifier), do:  @__nzdo_persistence.options.universal_identifier
-      def __persistence__(:universal_lookup), do:  @__nzdo_persistence.options.universal_lookup
-      def __persistence__(:reference_type), do:  @__nzdo_persistence.options.generate_reference_type
-      def __persistence__(:layer), do:  @__nzdo_persistence.layers
-      def __persistence__(:schema), do:  @__nzdo_persistence.schemas
-      def __persistence__(:table), do:  @__nzdo_persistence.tables
-      def __persistence__(:ecto_entity), do:  @__nzdo_persistence.ecto_entity
-      def __persistence__(:options), do:  @__nzdo_persistence.options
-      def __persistence__(repo, :table), do:  @__nzdo_persistence.schemas[repo] && @__nzdo_persistence.schemas[repo].table
+      def __persistence__(:all), do: @__nzdo_persistence
+      def __persistence__(:enum_table), do: @__nzdo_persistence.options.enum_table
+      def __persistence__(:auto_generate), do: @__nzdo_persistence.options.auto_generate
+      def __persistence__(:universal_identifier), do: @__nzdo_persistence.options.universal_identifier
+      def __persistence__(:universal_lookup), do: @__nzdo_persistence.options.universal_lookup
+      def __persistence__(:reference_type), do: @__nzdo_persistence.options.generate_reference_type
+      def __persistence__(:layer), do: @__nzdo_persistence.layers
+      def __persistence__(:schema), do: @__nzdo_persistence.schemas
+      def __persistence__(:table), do: @__nzdo_persistence.tables
+      def __persistence__(:ecto_entity), do: @__nzdo_persistence.ecto_entity
+      def __persistence__(:options), do: @__nzdo_persistence.options
+      def __persistence__(repo, :table), do: @__nzdo_persistence.schemas[repo] && @__nzdo_persistence.schemas[repo].table
 
       def __nmid__(), do: __nmid__(:all)
       def __nmid__(:all) do
         %{
-          generator:  __nmid__(:generator),
+          generator: __nmid__(:generator),
           sequencer: __nmid__(:sequencer),
           bare: __nmid__(:bare),
           index: __nmid__(:index),
@@ -70,6 +79,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
       defdelegate __nmid__(setting), to: @__nzdo__base
 
 
+      def __noizu_info__(), do: put_in(@__nzdo__base.__noizu_info__(), [:type], :entity)
       def __noizu_info__(:type), do: :entity
       def __noizu_info__(:identifier_type), do: @__nzdo__identifier_type
       def __noizu_info__(:fields), do: @__nzdo__field_list
@@ -106,7 +116,9 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
                        #---------------------
                        @file unquote(macro_file) <> "<single_call>"
                        if line = Module.get_attribute(__MODULE__, :__nzdo__entity_definied) do
-                         raise "#{file_rel_dir(unquote(caller.file))}:#{unquote(caller.line)} attempting to redefine #{__MODULE__}.noizu_entity first defined on #{elem(line,0)}:#{elem(line,1)}"
+                         raise "#{file_rel_dir(unquote(caller.file))}:#{unquote(caller.line)} attempting to redefine #{__MODULE__}.noizu_entity first defined on #{elem(line, 0)}:#{
+                           elem(line, 1)
+                         }"
                        end
                        @__nzdo__entity_definied {file_rel_dir(unquote(caller.file)), unquote(caller.line)}
 
@@ -266,9 +278,12 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
     end
   end
   def __public_fields__(mod, fields, default, opts) do
-    Enum.map(fields, fn(field) ->
-      __public_field__(mod, field, default, opts)
-    end)
+    Enum.map(
+      fields,
+      fn (field) ->
+        __public_field__(mod, field, default, opts)
+      end
+    )
   end
 
   #--------------------------
@@ -295,9 +310,12 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
     end
   end
   def __restricted_fields__(mod, fields, default, opts) do
-    Enum.map(fields, fn(field) ->
-      __restricted_field__(mod, field, default, opts)
-    end)
+    Enum.map(
+      fields,
+      fn (field) ->
+        __restricted_field__(mod, field, default, opts)
+      end
+    )
   end
 
   #--------------------------
@@ -324,9 +342,12 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
     end
   end
   def __private_fields__(mod, fields, default, opts) do
-    Enum.map(fields, fn(field) ->
-      __private_field__(mod, field, default, opts)
-    end)
+    Enum.map(
+      fields,
+      fn (field) ->
+        __private_field__(mod, field, default, opts)
+      end
+    )
   end
 
   #--------------------------
@@ -353,9 +374,12 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
     end
   end
   def __internal_fields__(mod, fields, default, opts) do
-    Enum.map(fields, fn(field) ->
-      __internal_field__(mod, field, default, opts)
-    end)
+    Enum.map(
+      fields,
+      fn (field) ->
+        __internal_field__(mod, field, default, opts)
+      end
+    )
   end
 
   #--------------------------
@@ -392,7 +416,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
     case attr_value do
       [ref: v] -> {:ref, __field_attribute_normalize__(:ref, v)}
       [enum: v] -> {:enum, __field_attribute_normalize__(:enum, v)}
-      [struct: v] -> {:struct,  __field_attribute_normalize__(:struct, v)}
+      [struct: v] -> {:struct, __field_attribute_normalize__(:struct, v)}
       {:ref, v} -> {:ref, __field_attribute_normalize__(:ref, v)}
       {:enum, v} -> {:enum, __field_attribute_normalize__(:enum, v)}
       {:struct, v} -> {:struct, __field_attribute_normalize__(:struct, v)}
@@ -432,8 +456,8 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
       nil -> :ignore
       true -> true
       false -> true
-      {_m,_f} -> true
-      {_m,_f,_a} -> true
+      {_m, _f} -> true
+      {_m, _f, _a} -> true
       f when is_function(f, 1) -> true
       f when is_function(f, 2) -> true
       f when is_function(f, 3) -> true
@@ -447,7 +471,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
       _else -> false
     end
   end
-  def __field_attribute_valid__?(type, attr_value) when type == :ref or type == :struct  or type == :enum do
+  def __field_attribute_valid__?(type, attr_value) when type == :ref or type == :struct or type == :enum do
     case attr_value do
       nil -> :ignore
       [] -> :ignore
@@ -472,8 +496,9 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
     EntityMeta.__set_index_settings__(mod, field, opts)
     EntityMeta.__set_permission_settings__(mod, field, opts)
 
-    options = Enum.map([:pii, :ref, :enum, :struct, :required],
-                fn(attribute) ->
+    options = Enum.map(
+                [:pii, :ref, :enum, :struct, :required],
+                fn (attribute) ->
                   cond do
                     Module.has_attribute?(mod, attribute) ->
                       attr_value = Module.get_attribute(mod, attribute)
@@ -517,7 +542,8 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
 
                     :else -> nil
                   end
-                end)
+                end
+              )
               |> Enum.filter(&(&1))
               |> List.flatten()
 
@@ -658,9 +684,9 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
   def __set_json_settings__(mod, field, opts) do
     config = Module.get_attribute(mod, :__nzdo__json_config)
     settings = Module.get_attribute(mod, :__nzdo__raw__json_format_settings, %{})
-               |>     EntityMeta.__extract_json_settings__(:json, mod, field, config, opts)
-               |>     EntityMeta.__extract_json_settings__(:json_embed, mod, field, config, opts)
-               |>     EntityMeta.__extract_json_settings__(:json_ignore, mod, field, config, opts)
+               |> EntityMeta.__extract_json_settings__(:json, mod, field, config, opts)
+               |> EntityMeta.__extract_json_settings__(:json_embed, mod, field, config, opts)
+               |> EntityMeta.__extract_json_settings__(:json_ignore, mod, field, config, opts)
     Module.put_attribute(mod, :__nzdo__raw__json_format_settings, settings)
   end
 
@@ -719,10 +745,12 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
   end
 
   def __expand_json_selector__(selectors, config, opts) when is_list(selectors) do
-    Enum.map(selectors,
-      fn(selector) ->
+    Enum.map(
+      selectors,
+      fn (selector) ->
         __expand_json_selector__(selector, config, opts)
-      end)
+      end
+    )
     |> List.flatten()
     |> Enum.uniq()
   end
@@ -738,10 +766,12 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
   end
 
   def __expand_json_field__(fields, config, opts) when is_list(fields) do
-    Enum.map(fields,
-      fn(field) ->
+    Enum.map(
+      fields,
+      fn (field) ->
         __expand_json_field__(field, config, opts)
-      end)
+      end
+    )
     |> List.flatten()
     |> Enum.uniq()
   end
@@ -758,34 +788,45 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
     # {[selectors], ..}
     # {selector, as: "RenameTo"}
     # {selector, embed: [list]}
-    Enum.reduce(entries || [], acc, fn(entry, acc) ->
-      {selectors, fields, settings} = __expand_json_entry__(entry, field, config, opts)
-      Enum.reduce(settings, acc,
-        fn(s, acc) ->
-          case s do
-            :expand -> __set_option__(acc, selectors, fields, {:expand, true})
-            :sref -> __set_option__(acc, selectors, fields, {:sref, true})
-            :ignore -> __set_option__(acc, selectors, fields, {:include, false})
-            :include -> __set_option__(acc, selectors, fields, {:include, true})
-            {:format, _} -> __set_option__(acc, selectors, fields, s)
-            {:as, _} -> __set_option__(acc, selectors, fields, s)
-            {:embed, embed} when is_atom(embed)->
-              embed = Map.new([{:embed, true}])
-              __set_option__(acc, selectors, fields, {:embed, embed})
-            {:embed, embed} when is_list(embed)->
-              embed = Enum.map(embed, fn(e) ->
-                case e do
-                  e when is_atom(e) -> {e, true}
-                  {e, f} -> {e, f}
-                  _ -> nil
-                end
-              end) |> Enum.filter(&(&1)) |> Map.new()
-              __set_option__(acc, selectors, fields, {:embed, embed})
-            _ -> acc
+    Enum.reduce(
+      entries || [],
+      acc,
+      fn (entry, acc) ->
+        {selectors, fields, settings} = __expand_json_entry__(entry, field, config, opts)
+        Enum.reduce(
+          settings,
+          acc,
+          fn (s, acc) ->
+            case s do
+              :expand -> __set_option__(acc, selectors, fields, {:expand, true})
+              :sref -> __set_option__(acc, selectors, fields, {:sref, true})
+              :ignore -> __set_option__(acc, selectors, fields, {:include, false})
+              :include -> __set_option__(acc, selectors, fields, {:include, true})
+              {:format, _} -> __set_option__(acc, selectors, fields, s)
+              {:as, _} -> __set_option__(acc, selectors, fields, s)
+              {:embed, embed} when is_atom(embed) ->
+                embed = Map.new([{:embed, true}])
+                __set_option__(acc, selectors, fields, {:embed, embed})
+              {:embed, embed} when is_list(embed) ->
+                embed = Enum.map(
+                          embed,
+                          fn (e) ->
+                            case e do
+                              e when is_atom(e) -> {e, true}
+                              {e, f} -> {e, f}
+                              _ -> nil
+                            end
+                          end
+                        )
+                        |> Enum.filter(&(&1))
+                        |> Map.new()
+                __set_option__(acc, selectors, fields, {:embed, embed})
+              _ -> acc
+            end
           end
-        end
-      )
-    end)
+        )
+      end
+    )
   end
 
   #---------------------------------
@@ -794,25 +835,34 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
   def __extract_json_settings__(acc, section = :json_embed, mod, field, config, opts) do
     entries = Module.get_attribute(mod, section)
     Module.delete_attribute(mod, section)
-    Enum.reduce(entries, acc, fn(entry, acc) ->
-      case entry do
-        {selector, embed} when is_list(embed) ->
-          selectors = __expand_json_selector__(selector, config, opts)
-          embed = Enum.map(embed, fn(e) ->
-            case e do
-              e when is_atom(e) -> {e, true}
-              {e, f} -> {e, f}
-              _ -> nil
-            end
-          end) |> Enum.filter(&(&1)) |> Map.new()
-          __set_option__(acc, selectors, [field], {:embed, embed})
-        {selector, embed} when is_atom(embed) ->
-          selectors = __expand_json_selector__(selector, config, opts)
-          embed = Map.new([{:embed, true}])
-          __set_option__(acc, selectors, [field], {:embed, embed})
-        _ -> acc
+    Enum.reduce(
+      entries,
+      acc,
+      fn (entry, acc) ->
+        case entry do
+          {selector, embed} when is_list(embed) ->
+            selectors = __expand_json_selector__(selector, config, opts)
+            embed = Enum.map(
+                      embed,
+                      fn (e) ->
+                        case e do
+                          e when is_atom(e) -> {e, true}
+                          {e, f} -> {e, f}
+                          _ -> nil
+                        end
+                      end
+                    )
+                    |> Enum.filter(&(&1))
+                    |> Map.new()
+            __set_option__(acc, selectors, [field], {:embed, embed})
+          {selector, embed} when is_atom(embed) ->
+            selectors = __expand_json_selector__(selector, config, opts)
+            embed = Map.new([{:embed, true}])
+            __set_option__(acc, selectors, [field], {:embed, embed})
+          _ -> acc
+        end
       end
-    end)
+    )
   end
 
   #---------------------------------
@@ -821,30 +871,42 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
   def __extract_json_settings__(acc, section = :json_ignore, mod, field, config, opts) do
     entries = Module.get_attribute(mod, section)
     Module.delete_attribute(mod, section)
-    Enum.reduce(entries, acc, fn(entry, acc) ->
-      case entry do
-        {selector, fields} ->
-          selectors = __expand_json_selector__(selector, config, opts)
-          fields = __expand_json_field__(fields, config, opts)
-          __set_option__(acc, selectors, fields, {:include, false})
-        selector ->
-          selectors = __expand_json_selector__(selector, config, opts)
-          __set_option__(acc, selectors, [field], {:include, false})
+    Enum.reduce(
+      entries,
+      acc,
+      fn (entry, acc) ->
+        case entry do
+          {selector, fields} ->
+            selectors = __expand_json_selector__(selector, config, opts)
+            fields = __expand_json_field__(fields, config, opts)
+            __set_option__(acc, selectors, fields, {:include, false})
+          selector ->
+            selectors = __expand_json_selector__(selector, config, opts)
+            __set_option__(acc, selectors, [field], {:include, false})
+        end
       end
-    end)
+    )
   end
 
   #---------------------------------
   #
   #---------------------------------
   def __set_option__(acc, formats, fields, {setting, setting_value}) do
-    Enum.reduce(formats, acc, fn(format, acc) ->
-      acc = update_in(acc, [format], &(&1 || %{}))
-      Enum.reduce(fields, acc, fn(field, acc) ->
-        acc = update_in(acc, [format, field], &(&1 || %{}))
-        put_in(acc, [format, field, setting], setting_value)
-      end)
-    end)
+    Enum.reduce(
+      formats,
+      acc,
+      fn (format, acc) ->
+        acc = update_in(acc, [format], &(&1 || %{}))
+        Enum.reduce(
+          fields,
+          acc,
+          fn (field, acc) ->
+            acc = update_in(acc, [format, field], &(&1 || %{}))
+            put_in(acc, [format, field, setting], setting_value)
+          end
+        )
+      end
+    )
   end
 
 
@@ -860,9 +922,11 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
       # fields meta data
       #----------------------
       @file unquote(macro_file) <> "<types_map>"
-      @__nzdo__field_types_map ((@__nzdo__field_types || []) |> Map.new())
+      @__nzdo__field_types_map (
+                                 (@__nzdo__field_types || [])
+                                 |> Map.new())
       @file unquote(macro_file) <> "<field_list>"
-      @__nzdo__field_list (Enum.map(@__nzdo__fields, fn({k,_}) -> k end) -- [:initial, :meta])
+      @__nzdo__field_list (Enum.map(@__nzdo__fields, fn ({k, _}) -> k end) -- [:initial, :meta])
 
       #----------------------
       # Universals Fields (always include)

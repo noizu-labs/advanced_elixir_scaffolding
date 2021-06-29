@@ -6,7 +6,7 @@ defmodule Noizu.EnumRefBehaviour do
       e = m.__entity__
       case v do
         true -> {:ok, nil}
-        false ->{:ok, nil}
+        false -> {:ok, nil}
         nil -> {:ok, nil}
         0 -> {:ok, nil}
         v when is_atom(v) ->
@@ -72,11 +72,28 @@ defmodule Noizu.EnumRefBehaviour do
       use Ecto.Type
       @ref_entity unquote(entity)
       @enum_mod (case unquote(base) do
-                   false -> Module.concat((Module.split(@ref_entity) |> Enum.slice(0..-2))  ++ ["Ecto.EnumType"])
-                   nil -> Module.concat((Module.split(@ref_entity) |> Enum.slice(0..-2))  ++ ["Ecto.EnumType"])
-                   :auto -> Module.concat((Module.split(@ref_entity) |> Enum.slice(0..-2))  ++ ["Ecto.EnumType"])
-                   v when is_atom(v) -> Module.concat([v, "Ecto.EnumType"])
-                   _ -> raise "#{__MODULE__} invalid base option"
+                   false ->
+                     Module.concat(
+                       (
+                         Module.split(@ref_entity)
+                         |> Enum.slice(0..-2)) ++ ["Ecto.EnumType"]
+                     )
+                   nil ->
+                     Module.concat(
+                       (
+                         Module.split(@ref_entity)
+                         |> Enum.slice(0..-2)) ++ ["Ecto.EnumType"]
+                     )
+                   :auto ->
+                     Module.concat(
+                       (
+                         Module.split(@ref_entity)
+                         |> Enum.slice(0..-2)) ++ ["Ecto.EnumType"]
+                     )
+                   v when is_atom(v) ->
+                     Module.concat([v, "Ecto.EnumType"])
+                   _ ->
+                     raise "#{__MODULE__} invalid base option"
                  end)
 
       @ecto_type unquote(ecto_type)

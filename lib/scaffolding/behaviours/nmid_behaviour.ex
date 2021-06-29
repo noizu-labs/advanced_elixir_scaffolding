@@ -5,8 +5,8 @@
 
 defmodule Noizu.Scaffolding.NmidBehaviour do
   @moduledoc ("""
-  This Behaviour provides a generic way for generating unique numeric or other identifiers scoped by instance and entity type.
-  """)
+              This Behaviour provides a generic way for generating unique numeric or other identifiers scoped by instance and entity type.
+              """)
   @type seq :: tuple
   @type opts :: Map.t
   @type detail :: any

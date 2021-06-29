@@ -9,24 +9,43 @@ defmodule Noizu.Scaffolding.RepoBehaviour.RedisProvider do
   alias Noizu.ElixirCore.CallingContext
   alias Noizu.ERP, as: EntityReferenceProtocol
   @methods ([
-              :entity, :options, :generate_identifier!, :generate_identifier,
-              :update, :update!, :delete, :delete!, :create, :create!, :get, :get!,
-              :match, :match!, :list, :list!, :pre_create_callback, :pre_update_callback, :pre_delete_callback,
-              :post_create_callback, :post_get_callback, :post_update_callback, :post_delete_callback,
+              :entity,
+              :options,
+              :generate_identifier!,
+              :generate_identifier,
+              :update,
+              :update!,
+              :delete,
+              :delete!,
+              :create,
+              :create!,
+              :get,
+              :get!,
+              :match,
+              :match!,
+              :list,
+              :list!,
+              :pre_create_callback,
+              :pre_update_callback,
+              :pre_delete_callback,
+              :post_create_callback,
+              :post_get_callback,
+              :post_update_callback,
+              :post_delete_callback,
               :extract_date
             ])
 
   defmacro __using__(options) do
     # Only include implementation for these methods.
     option_arg = Keyword.get(options, :only, @methods)
-    only = List.foldl(@methods, %{}, fn(method, acc) -> Map.put(acc, method, Enum.member?(option_arg, method)) end)
+    only = List.foldl(@methods, %{}, fn (method, acc) -> Map.put(acc, method, Enum.member?(option_arg, method)) end)
 
     # Don't include implementation for these methods.
     option_arg = Keyword.get(options, :override, [])
-    override = List.foldl(@methods, %{}, fn(method, acc) -> Map.put(acc, method, Enum.member?(option_arg, method)) end)
+    override = List.foldl(@methods, %{}, fn (method, acc) -> Map.put(acc, method, Enum.member?(option_arg, method)) end)
 
     # Final set of methods to provide implementations for.
-    required? = List.foldl(@methods, %{}, fn(method, acc) -> Map.put(acc, method, only[method] && !override[method]) end)
+    required? = List.foldl(@methods, %{}, fn (method, acc) -> Map.put(acc, method, only[method] && !override[method]) end)
 
     # associated mnesia table and entity
     #mnesia_table = Keyword.get(options, :mnesia_table, :auto)
@@ -62,9 +81,9 @@ defmodule Noizu.Scaffolding.RepoBehaviour.RedisProvider do
       @entity_module (entity_module)
 
       sequencer = case unquote(sequencer) do
-        :auto -> @entity_module
-        v -> v
-      end
+                    :auto -> @entity_module
+                    v -> v
+                  end
       @sequencer sequencer
 
       query_strategy = unquote(query_strategy)
@@ -162,7 +181,8 @@ defmodule Noizu.Scaffolding.RepoBehaviour.RedisProvider do
         def pre_update_callback(entity, context, options), do: Noizu.Scaffolding.RepoBehaviour.RedisProviderDefault.pre_update_callback(@param_pass_thru, entity, context, options)
       end # end required?.pre_update_callback
       if unquote(required?.post_update_callback) do
-        def post_update_callback(entity, context, options), do: Noizu.Scaffolding.RepoBehaviour.RedisProviderDefault.post_update_callback(@param_pass_thru, entity, context, options)
+        def post_update_callback(entity, context, options),
+            do: Noizu.Scaffolding.RepoBehaviour.RedisProviderDefault.post_update_callback(@param_pass_thru, entity, context, options)
       end # end required?.post_update_callback
       if unquote(required?.update) do
         def update(entity, context, options \\ %{})
@@ -180,7 +200,8 @@ defmodule Noizu.Scaffolding.RepoBehaviour.RedisProvider do
         def pre_delete_callback(entity, context, options), do: Noizu.Scaffolding.RepoBehaviour.RedisProviderDefault.pre_delete_callback(@param_pass_thru, entity, context, options)
       end # end required?.pre_delete_callback
       if unquote(required?.post_delete_callback) do
-        def post_delete_callback(entity, context, options), do: Noizu.Scaffolding.RepoBehaviour.RedisProviderDefault.post_delete_callback(@param_pass_thru, entity, context, options)
+        def post_delete_callback(entity, context, options),
+            do: Noizu.Scaffolding.RepoBehaviour.RedisProviderDefault.post_delete_callback(@param_pass_thru, entity, context, options)
       end # end required?.post_delete_callback
       if unquote(required?.delete) do
         def delete(entity, context, options \\ %{})
@@ -200,7 +221,8 @@ defmodule Noizu.Scaffolding.RepoBehaviour.RedisProvider do
         end
       end # end required?.pre_create_callback
       if unquote(required?.post_create_callback) do
-        def post_create_callback(entity, context, options), do: Noizu.Scaffolding.RepoBehaviour.RedisProviderDefault.post_create_callback(@param_pass_thru, entity, context, options)
+        def post_create_callback(entity, context, options),
+            do: Noizu.Scaffolding.RepoBehaviour.RedisProviderDefault.post_create_callback(@param_pass_thru, entity, context, options)
       end # end required?.post_create_callback
       if unquote(required?.create) do
         def create(entity, context, options \\ %{})

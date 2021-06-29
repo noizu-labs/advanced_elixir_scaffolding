@@ -9,7 +9,8 @@ defmodule Noizu.UniversalReference do
 
   @type t :: %Noizu.UniversalReference{
                identifier: integer, # ref or actual universal id.
-               ref: nil | tuple | any, # ref or actual entity
+               ref: nil | tuple | any,
+               # ref or actual entity
              }
 
   defstruct [

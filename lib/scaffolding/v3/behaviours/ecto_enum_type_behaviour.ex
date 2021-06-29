@@ -6,7 +6,7 @@ defmodule Noizu.Ecto.EnumTypeBehaviour do
     @doc """
     Casts to Enum.
     """
-    def cast(m,v) when is_atom(v) do
+    def cast(m, v) when is_atom(v) do
       cond do
         v == nil -> {:ok, m.enum_to_atom(m.default_value())}
         m.atom_to_enum(v) -> {:ok, v}
@@ -72,9 +72,13 @@ defmodule Noizu.Ecto.EnumTypeBehaviour do
       use Ecto.Type
       @ecto_type (unquote(options[:ecto_type]) || :integer)
       @default_value (unquote(options[:default]) || :none)
-      @atom_to_enum ((unquote(options[:values]) || [{:none, 0}]) |> Map.new())
-      @enum_to_atom Enum.map(@atom_to_enum, fn({a,e}) -> {e,a} end) |> Map.new()
-      @json_to_atom Enum.map(@atom_to_enum, fn({a,_e}) -> {"#{a}",a} end) |> Map.new()
+      @atom_to_enum (
+                      (unquote(options[:values]) || [{:none, 0}])
+                      |> Map.new())
+      @enum_to_atom Enum.map(@atom_to_enum, fn ({a, e}) -> {e, a} end)
+                    |> Map.new()
+      @json_to_atom Enum.map(@atom_to_enum, fn ({a, _e}) -> {"#{a}", a} end)
+                    |> Map.new()
 
 
       def default_value(), do: @default_value

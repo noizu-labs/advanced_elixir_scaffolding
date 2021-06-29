@@ -29,10 +29,10 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
           identifier = case config.map_id do
                          :unsupported -> nil
                          :same -> get_in(entity, [Access.key(:identifier)]) || get_in(entity, [Access.key(:id)])
-                         {m,f} -> apply(m,f, [entity])
-                         {m,f,a} when is_list(a) -> apply(m, f, [entity] ++ a)
-                         {m,f,a} -> apply(m,f, [entity, a])
-                         f when is_function(f,1) -> f.(entity)
+                         {m, f} -> apply(m, f, [entity])
+                         {m, f, a} when is_list(a) -> apply(m, f, [entity] ++ a)
+                         {m, f, a} -> apply(m, f, [entity, a])
+                         f when is_function(f, 1) -> f.(entity)
                          _ -> nil
                        end
           identifier && {:ref, domain_object, identifier}
@@ -119,7 +119,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
     def sref_section_regex(_, :uuid), do: "([0-9a-zA-Z_-]*)"
     def sref_section_regex(m, {:list, template}), do: "(\[((" <> m.sref_section_regex(template) <> ",?)+)\])"
     def sref_section_regex(m, {:compound, template, _}), do: m.sref_section_regex({:compound, template})
-    def sref_section_regex(m, {:compound, template}), do: "(\{" <> Enum.join(Enum.map(template, &(m.sref_section_regex(&1))), ",")  <>  "\})"
+    def sref_section_regex(m, {:compound, template}), do: "(\{" <> Enum.join(Enum.map(template, &(m.sref_section_regex(&1))), ",") <> "\})"
     def sref_section_regex(m, {:atom, _c}), do: m.sref_section_regex(:atom)
     def sref_section_regex(_, :atom), do: "([a-z_A-Z0-9]*)"
     def sref_section_regex(m, {:ref, _c}), do: m.sref_section_regex(:ref)
@@ -134,12 +134,14 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
     def id_to_string(_m, :hash, id) when is_bitstring(id), do: id
     def id_to_string(_m, :uuid, id), do: UUID.binary_to_string!(id)
     def id_to_string(m, {:list, template}, id) do
-      "[" <> (Enum.map(id, &(m.id_to_string(template, &1))) |> Enum.join(",")) <> "]"
+      "[" <> (
+               Enum.map(id, &(m.id_to_string(template, &1)))
+               |> Enum.join(",")) <> "]"
     end
     def id_to_string(m, {:compound, template, prep}, id) do
       case prep do
         prep when is_function(prep, 2) -> m.id_to_string({:compound, template}, prep.(:encode, id))
-        {m,f} -> m.id_to_string({:compound, template}, apply(m, f, [:encode, id]))
+        {m, f} -> m.id_to_string({:compound, template}, apply(m, f, [:encode, id]))
         _ -> throw "invalid compound id formatter"
       end
     end
@@ -147,7 +149,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
       template_list = Tuple.to_list(template)
       id_list = Tuple.to_list(id)
       length(template_list) != length(id_list) && throw "invalid compound id #{inspect id}"
-      l = Enum.map_reduce(id_list, 0, &( {m.id_to_string(Enum.at(template_list, &2), &1), &2 + 1}))
+      l = Enum.map_reduce(id_list, 0, &({m.id_to_string(Enum.at(template_list, &2), &1), &2 + 1}))
       "{" <> Enum.join(l, ",") <> "}"
     end
     def id_to_string(_m, :atom, id), do: Atom.to_string(id)
@@ -158,7 +160,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
                v = %MapSet{} -> Enum.member?(v, id) && Atom.to_string(id) || throw "unsupported atom id #{inspect id}"
                v when is_function(v, 0) -> v.()[id] && Atom.to_string(id) || throw "unsupported atom id #{inspect id}"
                v when is_function(v, 1) -> v.(id) && Atom.to_string(id) || throw "unsupported atom id #{inspect id}"
-               {m,f} -> apply(m, f, [id]) && Atom.to_string(id) || throw "unsupported atom id #{inspect id}"
+               {m, f} -> apply(m, f, [id]) && Atom.to_string(id) || throw "unsupported atom id #{inspect id}"
                _ -> throw "invalid atom constraint #{inspect constraint}"
              end
       "[#{sref}]"
@@ -175,7 +177,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
         v = %MapSet{} -> Enum.member?(v, m) && sref || throw "unsupported ref id #{inspect sref}"
         v when is_function(v, 0) -> v.()[m] && sref || throw "unsupported ref id #{inspect sref}"
         v when is_function(v, 1) -> v.(m) && sref || throw "unsupported ref id #{inspect sref}"
-        {m,f} -> apply(m, f, [m]) && sref || throw "unsupported ref id #{inspect sref}"
+        {m, f} -> apply(m, f, [m]) && sref || throw "unsupported ref id #{inspect sref}"
         _ -> throw "invalid ref constraint #{inspect constraint}"
       end
     end
@@ -193,7 +195,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
       r = Regex.compile(m.sref_section_regex(template))
       case Regex.split(r, id, :include_captures) do
         v when is_list(v) and length(v) > 0 ->
-          Enum.filter(v, &(!Enum.member?(["[", ",", "]"], &1)) )
+          Enum.filter(v, &(!Enum.member?(["[", ",", "]"], &1)))
           |> Enum.map(&(m.string_to_id(template, &1)))
         _ -> throw "invalid sref id part #{inspect id}"
       end
@@ -202,7 +204,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
       formatted = m.string_to_id({:compound, template}, id)
       case prep do
         prep when is_function(prep, 2) -> prep.(:decode, formatted)
-        {m,f} -> apply(m, f, [:decode, formatted])
+        {m, f} -> apply(m, f, [:decode, formatted])
         _ -> throw "invalid compound id formatter"
       end
     end
@@ -218,7 +220,8 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
         [] -> throw "vinalid compind id #{extract.source}"
         v when is_list(v) ->
           length(v) != length(template_list) && throw "malformed compound id: #{inspect id}"
-          Enum.map(v, &(m.string_to_id(Enum.at(template_list, &2), &1))) |> List.to_tuple()
+          Enum.map(v, &(m.string_to_id(Enum.at(template_list, &2), &1)))
+          |> List.to_tuple()
       end
     end
     def string_to_id(_m, :atom, id), do: Atom.to_string(id)
@@ -229,7 +232,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
                v = %MapSet{} -> Enum.member?(v, id) && Atom.to_string(id) || throw "unsupported atom id #{inspect id}"
                v when is_function(v, 0) -> v.()[id] && Atom.to_string(id) || throw "unsupported atom id #{inspect id}"
                v when is_function(v, 1) -> v.(id) && Atom.to_string(id) || throw "unsupported atom id #{inspect id}"
-               {m,f} -> apply(m, f, [id]) && Atom.to_string(id) || throw "unsupported atom id #{inspect id}"
+               {m, f} -> apply(m, f, [id]) && Atom.to_string(id) || throw "unsupported atom id #{inspect id}"
                _ -> throw "invalid atom constraint #{inspect constraint}"
              end
       "[#{sref}]"
@@ -246,7 +249,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
         v = %MapSet{} -> Enum.member?(v, m) && sref || throw "unsupported ref id #{inspect sref}"
         v when is_function(v, 0) -> v.()[m] && sref || throw "unsupported ref id #{inspect sref}"
         v when is_function(v, 1) -> v.(m) && sref || throw "unsupported ref id #{inspect sref}"
-        {m,f} -> apply(m, f, [m]) && sref || throw "unsupported ref id #{inspect sref}"
+        {m, f} -> apply(m, f, [m]) && sref || throw "unsupported ref id #{inspect sref}"
         _ -> throw "invalid ref constraint #{inspect constraint}"
       end
     end

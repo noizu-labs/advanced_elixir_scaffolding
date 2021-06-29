@@ -19,13 +19,13 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo do
   @callback get(ref :: entity_reference, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
   @callback post_get_callback(entity :: entity, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
   @callback layer_get(layer :: layer, ref :: entity_reference, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
-  @callback layer_pre_get_callback(layer :: layer, ref :: entity_reference, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity_reference | entity |nil
+  @callback layer_pre_get_callback(layer :: layer, ref :: entity_reference, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity_reference | entity | nil
   @callback layer_post_get_callback(layer :: layer, ref :: entity_reference, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
 
   @callback get!(ref :: entity_reference, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
   @callback post_get_callback!(entity :: entity, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
   @callback layer_get!(layer :: layer, ref :: entity_reference, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
-  @callback layer_pre_get_callback!(layer :: layer, ref :: entity_reference, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity_reference | entity |nil
+  @callback layer_pre_get_callback!(layer :: layer, ref :: entity_reference, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity_reference | entity | nil
   @callback layer_post_get_callback!(layer :: layer, ref :: entity_reference, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
 
   @callback create(entity :: entity, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
@@ -95,14 +95,18 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo do
                        # Insure Single Call
                        #---------------------
                        if line = Module.get_attribute(__MODULE__, :__nzdo__repo_definied) do
-                         raise "#{file_rel_dir(unquote(caller.file))}:#{unquote(caller.line)} attempting to redefine #{__MODULE__}.noizu_repo first defined on #{elem(line,0)}:#{elem(line,1)}"
+                         raise "#{file_rel_dir(unquote(caller.file))}:#{unquote(caller.line)} attempting to redefine #{__MODULE__}.noizu_repo first defined on #{elem(line, 0)}:#{
+                           elem(line, 1)
+                         }"
                        end
                        @__nzdo__repo_definied {file_rel_dir(unquote(caller.file)), unquote(caller.line)}
 
                        #---------------------
                        # Find Base
                        #---------------------
-                       @__nzdo__base Module.split(__MODULE__) |> Enum.slice(0..-2) |> Module.concat()
+                       @__nzdo__base Module.split(__MODULE__)
+                                     |> Enum.slice(0..-2)
+                                     |> Module.concat()
                        if !Module.get_attribute(@__nzdo__base, :__nzdo__base_definied) do
                          raise "#{@__nzdo__base} must include use Noizu.DomainObject call."
                        end
@@ -253,11 +257,12 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo do
       defdelegate record!(ref, options \\ nil), to: @__nzdo__base
       defdelegate __indexing__(), to: @__nzdo__base
       defdelegate __indexing__(setting), to: @__nzdo__base
-      defdelegate __persistence__(setting \\ :all), to:  @__nzdo__base
-      defdelegate __persistence__(selector, setting), to:  @__nzdo__base
+      defdelegate __persistence__(setting \\ :all), to: @__nzdo__base
+      defdelegate __persistence__(selector, setting), to: @__nzdo__base
       defdelegate __nmid__(), to: @__nzdo__base
       defdelegate __nmid__(setting), to: @__nzdo__base
 
+      def __noizu_info__(), do: put_in(@__nzdo__base.__noizu_info__(), [:type], :repo)
       def __noizu_info__(:type), do: :repo
       defdelegate __noizu_info__(report), to: @__nzdo__base
     end

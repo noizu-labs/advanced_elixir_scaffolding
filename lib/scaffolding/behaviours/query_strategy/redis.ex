@@ -20,7 +20,7 @@ defmodule Noizu.Scaffolding.QueryStrategy.Redis do
     throw "List NYI"
   end
 
-  def get(identifier, entity_module,  %CallingContext{} = _context, options) do
+  def get(identifier, entity_module, %CallingContext{} = _context, options) do
     client = get_redix_client(entity_module, options)
     cond do
       client ->
@@ -35,7 +35,7 @@ defmodule Noizu.Scaffolding.QueryStrategy.Redis do
     end
   end
 
-  def update(entity, entity_module,  %CallingContext{} = _context, options) do
+  def update(entity, entity_module, %CallingContext{} = _context, options) do
     client = get_redix_client(entity_module, options)
     cond do
       client ->
@@ -56,7 +56,7 @@ defmodule Noizu.Scaffolding.QueryStrategy.Redis do
     end
   end
 
-  def create(entity, entity_module,  %CallingContext{} = _context, options) do
+  def create(entity, entity_module, %CallingContext{} = _context, options) do
     client = get_redix_client(entity_module, options)
     cond do
       client ->
@@ -77,7 +77,7 @@ defmodule Noizu.Scaffolding.QueryStrategy.Redis do
     end
   end
 
-  def delete(identifier, entity_module,  %CallingContext{} = _context, options) do
+  def delete(identifier, entity_module, %CallingContext{} = _context, options) do
     client = get_redix_client(entity_module, options)
     cond do
       client ->

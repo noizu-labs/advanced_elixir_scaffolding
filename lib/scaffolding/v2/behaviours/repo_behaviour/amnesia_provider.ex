@@ -13,16 +13,16 @@ defmodule Noizu.Scaffolding.V2.RepoBehaviour.AmnesiaProvider do
   def expand_options(m, o) do
 
     entity_table = case Keyword.get(o, :entity_table, :auto) do
-      :auto -> Keyword.get(o, :mnesia_table, :auto)
-      v -> v
-    end
+                     :auto -> Keyword.get(o, :mnesia_table, :auto)
+                     v -> v
+                   end
     entity_table = expand_table(m, entity_table)
 
     entity_module = expand_entity(m, Keyword.get(o, :entity_module, :auto))
     sequencer = case Keyword.get(o, :sequencer, :auto) do
-      :auto -> entity_module
-      v -> v
-    end
+                  :auto -> entity_module
+                  v -> v
+                end
     nmid_generator = Keyword.get(o, :nmid_generator, Application.get_env(:noizu_scaffolding, :default_nmid_generator))
     query_strategy = Keyword.get(o, :query_strategy, Noizu.Scaffolding.QueryStrategy.Default)
     audit_engine = Keyword.get(o, :audit_engine, Application.get_env(:noizu_scaffolding, :default_audit_engine, Noizu.Scaffolding.AuditEngine.Default))
@@ -44,8 +44,12 @@ defmodule Noizu.Scaffolding.V2.RepoBehaviour.AmnesiaProvider do
   # expand_entity
   #--------------
   def expand_entity(module, :auto) do
-    rm = Module.split(module) |> Enum.slice(0..-2) |> Module.concat
-    m = (Module.split(module) |> List.last())
+    rm = Module.split(module)
+         |> Enum.slice(0..-2)
+         |> Module.concat
+    m = (
+      Module.split(module)
+      |> List.last())
     t = String.slice(m, 0..-5) <> "Entity"
     Module.concat([rm, t])
   end
@@ -60,7 +64,8 @@ defmodule Noizu.Scaffolding.V2.RepoBehaviour.AmnesiaProvider do
     root_table =
       Application.get_env(:noizu_scaffolding, :default_database, default_database)
       |> Module.split()
-    entity_name = path |> List.last()
+    entity_name = path
+                  |> List.last()
     table_name = String.slice(entity_name, 0..-5) <> "Table"
     inner_path = Enum.slice(path, 1..-2)
     Module.concat(root_table ++ inner_path ++ [table_name])
@@ -105,7 +110,7 @@ defmodule Noizu.Scaffolding.V2.RepoBehaviour.AmnesiaProvider do
         e = module.entity_module()
         m
         |> Amnesia.Selection.values
-        |> Enum.map(fn(x) -> e.entity(x, options) end)
+        |> Enum.map(fn (x) -> e.entity(x, options) end)
     end
   end
 
@@ -117,11 +122,13 @@ defmodule Noizu.Scaffolding.V2.RepoBehaviour.AmnesiaProvider do
     options = options || %{}
     dirty = Map.get(options, :dirty, m_opt[:dirty])
     frag = Map.get(options, :frag, m_opt[:frag])
-    options_b = options |> Map.delete(:frag) |> Map.delete(:dirty)
+    options_b = options
+                |> Map.delete(:frag)
+                |> Map.delete(:dirty)
 
     cond do
-      dirty && frag == :sync -> Amnesia.Fragment.sync(fn ->  module.match(match_sel, context, options_b) end)
-      dirty -> Amnesia.Fragment.async(fn ->  module.match(match_sel, context, options_b) end)
+      dirty && frag == :sync -> Amnesia.Fragment.sync(fn -> module.match(match_sel, context, options_b) end)
+      dirty -> Amnesia.Fragment.async(fn -> module.match(match_sel, context, options_b) end)
       true ->
         Amnesia.Fragment.transaction do
           module.match(match_sel, context, options_b)
@@ -149,7 +156,7 @@ defmodule Noizu.Scaffolding.V2.RepoBehaviour.AmnesiaProvider do
         e = module.entity_module()
         m
         |> Amnesia.Selection.values
-        |> Enum.map(fn(x) -> e.entity(x, options) end)
+        |> Enum.map(fn (x) -> e.entity(x, options) end)
     end
   end # end list/3
 
@@ -161,10 +168,12 @@ defmodule Noizu.Scaffolding.V2.RepoBehaviour.AmnesiaProvider do
     options = options || %{}
     dirty = Map.get(options, :dirty, m_opt[:dirty])
     frag = Map.get(options, :frag, m_opt[:frag])
-    options_b = options |> Map.delete(:frag) |> Map.delete(:dirty)
+    options_b = options
+                |> Map.delete(:frag)
+                |> Map.delete(:dirty)
     cond do
-      dirty && frag == :sync -> Amnesia.Fragment.sync(fn ->  module.list(context, options_b) end)
-      dirty -> Amnesia.Fragment.async(fn ->  module.list(context, options_b) end)
+      dirty && frag == :sync -> Amnesia.Fragment.sync(fn -> module.list(context, options_b) end)
+      dirty -> Amnesia.Fragment.async(fn -> module.list(context, options_b) end)
       true ->
         Amnesia.Fragment.transaction do
           module.list(context, options_b)
@@ -188,9 +197,9 @@ defmodule Noizu.Scaffolding.V2.RepoBehaviour.AmnesiaProvider do
 
     if options[:audit] || Enum.member?([:very_verbose], module.audit_level()) do
       ref = case record do
-        nil -> nil
-        _ -> em.ref(record)
-      end
+              nil -> nil
+              _ -> em.ref(record)
+            end
       audit_engine = options[:audit_engine] || module.audit_engine()
       audit_engine.audit(:get, :scaffolding, ref, context, options)
     end
@@ -214,7 +223,9 @@ defmodule Noizu.Scaffolding.V2.RepoBehaviour.AmnesiaProvider do
     options = options || %{}
     dirty = Map.get(options, :dirty, m_opt[:dirty])
     frag = Map.get(options, :frag, m_opt[:frag])
-    options = options |> Map.delete(:frag) |> Map.delete(:dirty)
+    options = options
+              |> Map.delete(:frag)
+              |> Map.delete(:dirty)
     cond do
       dirty && frag == :sync -> Amnesia.Fragment.sync(fn -> module.get(identifier, context, options) end)
       dirty -> Amnesia.Fragment.async(fn -> module.get(identifier, context, options) end)
@@ -228,7 +239,7 @@ defmodule Noizu.Scaffolding.V2.RepoBehaviour.AmnesiaProvider do
   #--------------
   # pre_create_callback
   #--------------
-  def pre_create_callback(%{identifier: nil} = entity, _context, _options), do: %{entity| identifier: entity.__struct__.repo().generate_identifier()}
+  def pre_create_callback(%{identifier: nil} = entity, _context, _options), do: %{entity | identifier: entity.__struct__.repo().generate_identifier()}
   def pre_create_callback(entity, _context, _options), do: entity
 
   #--------------
@@ -284,7 +295,9 @@ defmodule Noizu.Scaffolding.V2.RepoBehaviour.AmnesiaProvider do
     options = options || %{}
     dirty = Map.get(options, :dirty, m_opt[:dirty])
     frag = Map.get(options, :frag, m_opt[:frag])
-    options = options |> Map.delete(:frag) |> Map.delete(:dirty)
+    options = options
+              |> Map.delete(:frag)
+              |> Map.delete(:dirty)
     cond do
       dirty && frag == :sync -> Amnesia.Fragment.sync(fn -> module.create(entity, context, options) end)
       dirty -> Amnesia.Fragment.async(fn -> module.create(entity, context, options) end)
@@ -340,9 +353,9 @@ defmodule Noizu.Scaffolding.V2.RepoBehaviour.AmnesiaProvider do
   def update(entity, context, options) do
     module = entity.__struct__.repo()
     entity
-    |>  module.pre_update_callback(context, options)
-    |>  module.inner_update_callback(context, options)
-    |>  module.post_update_callback(context, options)
+    |> module.pre_update_callback(context, options)
+    |> module.inner_update_callback(context, options)
+    |> module.post_update_callback(context, options)
   end # end update/3
 
   #--------------
@@ -354,7 +367,9 @@ defmodule Noizu.Scaffolding.V2.RepoBehaviour.AmnesiaProvider do
     options = options || %{}
     dirty = Map.get(options, :dirty, m_opt[:dirty])
     frag = Map.get(options, :frag, m_opt[:frag])
-    options = options |> Map.delete(:frag) |> Map.delete(:dirty)
+    options = options
+              |> Map.delete(:frag)
+              |> Map.delete(:dirty)
     cond do
       dirty && frag == :sync -> Amnesia.Fragment.sync(fn -> module.update(entity, context, options) end)
       dirty -> Amnesia.Fragment.async(fn -> module.update(entity, context, options) end)
@@ -409,9 +424,9 @@ defmodule Noizu.Scaffolding.V2.RepoBehaviour.AmnesiaProvider do
   def delete(entity, context, options) do
     module = entity.__struct__.repo()
     entity
-    |>  module.pre_delete_callback(context, options)
-    |>  module.inner_delete_callback(context, options)
-    |>  module.post_delete_callback(context, options)
+    |> module.pre_delete_callback(context, options)
+    |> module.inner_delete_callback(context, options)
+    |> module.post_delete_callback(context, options)
     true
   end # end delete/3
 
@@ -424,7 +439,9 @@ defmodule Noizu.Scaffolding.V2.RepoBehaviour.AmnesiaProvider do
     options = options || %{}
     dirty = Map.get(options, :dirty, m_opt[:dirty])
     frag = Map.get(options, :frag, m_opt[:frag])
-    options = options |> Map.delete(:frag) |> Map.delete(:dirty)
+    options = options
+              |> Map.delete(:frag)
+              |> Map.delete(:dirty)
     cond do
       dirty && frag == :sync -> Amnesia.Fragment.sync(fn -> module.delete(entity, context, options) end)
       dirty -> Amnesia.Fragment.async(fn -> module.delete(entity, context, options) end)

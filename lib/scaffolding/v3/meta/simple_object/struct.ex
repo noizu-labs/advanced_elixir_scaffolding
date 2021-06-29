@@ -16,7 +16,9 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.SimpleObject.Struct do
                        #---------------------
                        @file unquote(macro_file) <> "<single_call>"
                        if line = Module.get_attribute(__MODULE__, :__nzdo__struct_definied) do
-                         raise "#{file_rel_dir(unquote(caller.file))}:#{unquote(caller.line)} attempting to redefine #{__MODULE__}.noizu_struct first defined on #{elem(line,0)}:#{elem(line,1)}"
+                         raise "#{file_rel_dir(unquote(caller.file))}:#{unquote(caller.line)} attempting to redefine #{__MODULE__}.noizu_struct first defined on #{elem(line, 0)}:#{
+                           elem(line, 1)
+                         }"
                        end
                        @__nzdo__struct_definied {file_rel_dir(unquote(caller.file)), unquote(caller.line)}
 
@@ -64,7 +66,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.SimpleObject.Struct do
                          @file unquote(macro_file) <> "<block>"
                          unquote(block)
                        after
-                        :ok
+                         :ok
                        end
 
                        @file unquote(macro_file) <> "<__post_struct_definition_macro__>"
@@ -153,15 +155,19 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.SimpleObject.Struct do
       #-------
       # __indexing__
       #--------------
-      @__nzdo__indexes Enum.reduce(List.flatten(@__nzdo__field_indexing || []), @__nzdo__indexes, fn({{field,index},indexing}, acc) ->
-        cond do
-          acc[index][:fields][field] == nil ->
-            put_in(acc, [index, :fields, field], indexing)
-          e = acc[index][:fields][field] ->
-            e = Enum.reduce(indexing, e, fn({k,v},acc) -> put_in(acc, [k], v) end)
-            put_in(acc, [index, :fields, field], e)
-        end
-      end)
+      @__nzdo__indexes Enum.reduce(
+                         List.flatten(@__nzdo__field_indexing || []),
+                         @__nzdo__indexes,
+                         fn ({{field, index}, indexing}, acc) ->
+                           cond do
+                             acc[index][:fields][field] == nil ->
+                               put_in(acc, [index, :fields, field], indexing)
+                             e = acc[index][:fields][field] ->
+                               e = Enum.reduce(indexing, e, fn ({k, v}, acc) -> put_in(acc, [k], v) end)
+                               put_in(acc, [index, :fields, field], e)
+                           end
+                         end
+                       )
 
       def __indexing__(), do: __indexing__(:indexes)
       def __indexing__(:indexes), do: @__nzdo__indexes
@@ -171,26 +177,57 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.SimpleObject.Struct do
       #--------------
       @__nzdo_persistence Noizu.Scaffolding.V3.Schema.PersistenceSettings.update_schema_fields(@__nzdo_persistence, @__nzdo__field_types_map)
       def __persistence__(), do: __persistence__(:all)
-      def __persistence__(:all), do:  @__nzdo_persistence
-      def __persistence__(:enum_table), do:  @__nzdo_persistence.options.enum_table
-      def __persistence__(:auto_generate), do:  @__nzdo_persistence.options.auto_generate
-      def __persistence__(:universal_identifier), do:  @__nzdo_persistence.options.universal_identifier
-      def __persistence__(:universal_lookup), do:  @__nzdo_persistence.options.universal_lookup
-      def __persistence__(:reference_type), do:  @__nzdo_persistence.options.generate_reference_type
-      def __persistence__(:layer), do:  @__nzdo_persistence.layers
-      def __persistence__(:schema), do:  @__nzdo_persistence.schemas
-      def __persistence__(:table), do:  @__nzdo_persistence.tables
-      def __persistence__(:ecto_entity), do:  @__nzdo_persistence.ecto_entity
-      def __persistence__(:options), do:  @__nzdo_persistence.options
-      def __persistence__(repo, :table), do:  @__nzdo_persistence.schemas[repo] && @__nzdo_persistence.schemas[repo].table
+      def __persistence__(:all), do: @__nzdo_persistence
+      def __persistence__(:enum_table), do: @__nzdo_persistence.options.enum_table
+      def __persistence__(:auto_generate), do: @__nzdo_persistence.options.auto_generate
+      def __persistence__(:universal_identifier), do: @__nzdo_persistence.options.universal_identifier
+      def __persistence__(:universal_lookup), do: @__nzdo_persistence.options.universal_lookup
+      def __persistence__(:reference_type), do: @__nzdo_persistence.options.generate_reference_type
+      def __persistence__(:layer), do: @__nzdo_persistence.layers
+      def __persistence__(:schema), do: @__nzdo_persistence.schemas
+      def __persistence__(:table), do: @__nzdo_persistence.tables
+      def __persistence__(:ecto_entity), do: @__nzdo_persistence.ecto_entity
+      def __persistence__(:options), do: @__nzdo_persistence.options
+      def __persistence__(repo, :table), do: @__nzdo_persistence.schemas[repo] && @__nzdo_persistence.schemas[repo].table
 
 
       #-------
       # __noizu_info__
       #--------------
-      @__nzdo_associated_types (Enum.map(@__nzdo_persistence__by_table || %{}, fn({k,v}) -> {k, v.type} end) ++ Enum.map(@__nzdo__poly_support || %{}, fn(k,v) -> {k, :poly} end) ) |> Map.new()
+      @__nzdo_associated_types (
+                                 Enum.map(@__nzdo_persistence__by_table || %{}, fn ({k, v}) -> {k, v.type} end) ++ Enum.map(
+                                   @__nzdo__poly_support || %{},
+                                   fn (k, v) -> {k, :poly} end
+                                 ))
+                               |> Map.new()
       @__nzdo__json_config put_in(@__nzdo__json_config, [:format_settings], @__nzdo__raw__json_format_settings)
       @__nzdo__field_attributes_map Map.new(@__nzdo__field_attributes)
+
+
+      def __noizu_info__() do
+        Enum.map(
+          [
+            :type,
+            :base,
+            :struct,
+            :entity,
+            :repo,
+            :sref,
+            :restrict_provider,
+            :poly,
+            :json_configuration,
+            :identifier_type,
+            :fields,
+            :field_attributes,
+            :field_types,
+            :persistence,
+            :associated_types,
+            :indexing,
+            :meta
+          ],
+          &({&1, __noizu_info__(&1)})
+        )
+      end
 
       def __noizu_info__(:type), do: :simple
       def __noizu_info__(:base), do: @__nzdo__base

@@ -25,35 +25,38 @@ defmodule Noizu.Scaffolding.QueryStrategy.Default do
     rpp = options[:rpp] || 5000
 
     qspec = cond do
-      filters = options[:filters] ->
-        Enum.map(filters, fn(filter) ->
-          index = Enum.find_index(Keyword.keys(mnesia_table.attributes()), &( &1 == filter[:field]))
-          f = cond do
-            index != nil -> :"$#{index + 1}"
-            true ->
-              Logger.warn("Attempting to filter query by nonexistent field #{filter[:field]}")
-              nil
-          end
-          v = is_tuple(filter[:value]) && {filter[:value]} || filter[:value]
-          {filter[:comparison] || :==, f, v}
-        end)
+              filters = options[:filters] ->
+                Enum.map(
+                  filters,
+                  fn (filter) ->
+                    index = Enum.find_index(Keyword.keys(mnesia_table.attributes()), &(&1 == filter[:field]))
+                    f = cond do
+                          index != nil -> :"$#{index + 1}"
+                          true ->
+                            Logger.warn("Attempting to filter query by nonexistent field #{filter[:field]}")
+                            nil
+                        end
+                    v = is_tuple(filter[:value]) && {filter[:value]} || filter[:value]
+                    {filter[:comparison] || :==, f, v}
+                  end
+                )
 
-      filter = options[:filter] ->
-        index = Enum.find_index(Keyword.keys(mnesia_table.attributes()), &( &1 == filter[:field]))
-        f = cond do
-          index != nil -> :"$#{index + 1}"
-          true ->
-            Logger.warn("Attempting to filter query by nonexistent field #{filter[:field]}")
-            nil
-        end
-        v = is_tuple(filter[:value]) && {filter[:value]} || filter[:value]
-        [{filter[:comparison] || :==, f, v}]
-      true -> [{:==, true, true}]
-    end
+              filter = options[:filter] ->
+                index = Enum.find_index(Keyword.keys(mnesia_table.attributes()), &(&1 == filter[:field]))
+                f = cond do
+                      index != nil -> :"$#{index + 1}"
+                      true ->
+                        Logger.warn("Attempting to filter query by nonexistent field #{filter[:field]}")
+                        nil
+                    end
+                v = is_tuple(filter[:value]) && {filter[:value]} || filter[:value]
+                [{filter[:comparison] || :==, f, v}]
+              true -> [{:==, true, true}]
+            end
 
     a = for index <- 1..Enum.count(mnesia_table.attributes()) do
-      String.to_atom("$#{index}")
-    end
+          String.to_atom("$#{index}")
+        end
 
     t = List.to_tuple([mnesia_table] ++ a)
     spec = [{t, qspec, [:"$_"]}]
@@ -63,12 +66,16 @@ defmodule Noizu.Scaffolding.QueryStrategy.Default do
       nil -> nil
       :badarg -> :badarg
       raw ->
-        raw = if pg > 1, do: Enum.reduce(2..pg, raw, fn(_i, a) -> Amnesia.Selection.next(a) end), else: raw
-        if raw == nil, do: nil, else: %Amnesia.Table.Select{raw| coerce: mnesia_table}
+        raw = if pg > 1, do: Enum.reduce(2..pg, raw, fn (_i, a) -> Amnesia.Selection.next(a) end), else: raw
+        if raw == nil, do: nil,
+                       else: %Amnesia.Table.Select{
+                         raw |
+                         coerce: mnesia_table
+                       }
     end
   end
 
-  def get(identifier, mnesia_table,  %CallingContext{} = _context, options) do
+  def get(identifier, mnesia_table, %CallingContext{} = _context, options) do
     if options[:dirty] == true do
       mnesia_table.read!(identifier)
     else
@@ -76,7 +83,7 @@ defmodule Noizu.Scaffolding.QueryStrategy.Default do
     end
   end
 
-  def update(entity, mnesia_table,  %CallingContext{} = _context, options) do
+  def update(entity, mnesia_table, %CallingContext{} = _context, options) do
     if options[:dirty] == true do
       mnesia_table.write!(entity)
     else
@@ -84,7 +91,7 @@ defmodule Noizu.Scaffolding.QueryStrategy.Default do
     end
   end
 
-  def create(entity, mnesia_table,  %CallingContext{} = _context, options) do
+  def create(entity, mnesia_table, %CallingContext{} = _context, options) do
     if options[:dirty] == true do
       mnesia_table.write!(entity)
     else
@@ -92,7 +99,7 @@ defmodule Noizu.Scaffolding.QueryStrategy.Default do
     end
   end
 
-  def delete(identifier, mnesia_table,  %CallingContext{} = _context, options) do
+  def delete(identifier, mnesia_table, %CallingContext{} = _context, options) do
     if options[:dirty] == true do
       mnesia_table.delete!(identifier)
     else

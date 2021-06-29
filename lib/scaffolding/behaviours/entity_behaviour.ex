@@ -133,7 +133,28 @@ defmodule Noizu.Scaffolding.EntityBehaviour do
   #-----------------------------------------------------------------------------
   # Defines
   #-----------------------------------------------------------------------------
-  @methods [:id, :ref, :sref, :entity, :entity!, :record, :record!, :erp_imp, :as_record, :sref_module, :as_record, :from_json, :repo, :shallow, :miss_cb, :compress, :expand, :has_permission, :has_permission!, :poly_base]
+  @methods [
+    :id,
+    :ref,
+    :sref,
+    :entity,
+    :entity!,
+    :record,
+    :record!,
+    :erp_imp,
+    :as_record,
+    :sref_module,
+    :as_record,
+    :from_json,
+    :repo,
+    :shallow,
+    :miss_cb,
+    :compress,
+    :expand,
+    :has_permission,
+    :has_permission!,
+    :poly_base
+  ]
 
   #-----------------------------------------------------------------------------
   # Using Implementation
@@ -141,13 +162,13 @@ defmodule Noizu.Scaffolding.EntityBehaviour do
   defmacro __using__(options) do
     # Only include implementation for these methods.
     option_arg = Keyword.get(options, :only, @methods)
-    only = List.foldl(@methods, %{}, fn(method, acc) -> Map.put(acc, method, Enum.member?(option_arg, method)) end)
+    only = List.foldl(@methods, %{}, fn (method, acc) -> Map.put(acc, method, Enum.member?(option_arg, method)) end)
 
     # Don't include implementation for these methods.
     option_arg = Keyword.get(options, :override, [])
-    override = List.foldl(@methods, %{}, fn(method, acc) -> Map.put(acc, method, Enum.member?(option_arg, method)) end)
+    override = List.foldl(@methods, %{}, fn (method, acc) -> Map.put(acc, method, Enum.member?(option_arg, method)) end)
 
-    required? = List.foldl(@methods, %{}, fn(method, acc) -> Map.put(acc, method, only[method] && !override[method]) end)
+    required? = List.foldl(@methods, %{}, fn (method, acc) -> Map.put(acc, method, only[method] && !override[method]) end)
 
     # Repo module (entity/record implementation), Module name with "Repo" appeneded if :auto
     repo_module = Keyword.get(options, :repo_module, :auto)
@@ -185,8 +206,8 @@ defmodule Noizu.Scaffolding.EntityBehaviour do
       #-------------------------------------------------------------------------
       if unquote(required?.from_json) do
         def from_json(json, context) do
-           @expanded_repo.from_json(json, context)
-         end
+          @expanded_repo.from_json(json, context)
+        end
       end
 
       if unquote(required?.shallow) do

@@ -23,15 +23,15 @@ defmodule Noizu.Scaffolding.Helpers do
     lines = String.split(msg, "\n", trim: true)
 
     pad_str = cond do
-      pad == 0 -> ""
-      :else -> String.duplicate(" ", pad)
-    end
+                pad == 0 -> ""
+                :else -> String.duplicate(" ", pad)
+              end
 
     top = "\n#{pad_str}#{String.duplicate(char, l_len)} #{header} #{String.duplicate(char, r_len)}"
     bottom = pad_str <> String.duplicate(char, len) <> "\n"
     middle = for line <- lines do
-      "#{pad_str}#{char} " <> line
-    end
+               "#{pad_str}#{char} " <> line
+             end
     Enum.join([top] ++ middle ++ [bottom], "\n")
   end
 
@@ -40,24 +40,24 @@ defmodule Noizu.Scaffolding.Helpers do
   #-------------------------
   def request_pagination(params, default_page, default_results_per_page) do
     page = case params["pg"] || default_page do
-      v when is_integer(v) -> v
-      v when is_bitstring(v) ->
-        case Integer.parse(v) do
-          {v, ""} -> v
-          _ -> default_page
-        end
-      _ -> default_page
-    end
+             v when is_integer(v) -> v
+             v when is_bitstring(v) ->
+               case Integer.parse(v) do
+                 {v, ""} -> v
+                 _ -> default_page
+               end
+             _ -> default_page
+           end
 
     results_per_page = case params["rpp"] || default_results_per_page do
-      v when is_integer(v) -> v
-      v when is_bitstring(v) ->
-        case Integer.parse(v) do
-          {v, ""} -> v
-          _ -> default_results_per_page
-        end
-      _ -> default_results_per_page
-    end
+                         v when is_integer(v) -> v
+                         v when is_bitstring(v) ->
+                           case Integer.parse(v) do
+                             {v, ""} -> v
+                             _ -> default_results_per_page
+                           end
+                         _ -> default_results_per_page
+                       end
 
     {page, results_per_page}
   end
@@ -69,10 +69,15 @@ defmodule Noizu.Scaffolding.Helpers do
     cond do
       page == 0 -> query
       true ->
-        Enum.reduce(1 .. page, query, fn(_, acc) ->
-          Amnesia.Selection.next(acc)
-        end)
-    end |> Amnesia.Selection.values()
+        Enum.reduce(
+          1..page,
+          query,
+          fn (_, acc) ->
+            Amnesia.Selection.next(acc)
+          end
+        )
+    end
+    |> Amnesia.Selection.values()
   end
 
   #-------------------------
@@ -104,18 +109,18 @@ defmodule Noizu.Scaffolding.Helpers do
   """
   def update_expand_options(entity, options) when is_atom(entity) do
     sm = try do
-      entity.sref_module()
+           entity.sref_module()
     rescue _e -> "[error]"
-    end
+         end
     (options || %{})
     |> update_in([:depth], &((&1 || 1) + 1))
     |> update_in([:path], &(sm <> (&1 && ("." <> &1) || "")))
   end
   def update_expand_options(%{__struct__: m} = _entity, options) do
     sm = try do
-      m.sref_module()
+           m.sref_module()
     rescue _e -> "[error]"
-    end
+         end
     (options || %{})
     |> update_in([:depth], &((&1 || 1) + 1))
     |> update_in([:path], &(sm <> (&1 && ("." <> &1) || "")))
@@ -133,13 +138,13 @@ defmodule Noizu.Scaffolding.Helpers do
   #-------------------------
   def expand_concurrency(options) do
     {max_concurrency, next_concurrency} = case options[:max_concurrency] do
-      [] -> {1, [1]}
-      [h] -> {h, [max(h-1, 1)]}
-      [h|t] -> {h, t}
-      _ ->
-        h = System.schedulers_online()
-        {h, [max(h-1, 1)]}
-    end
+                                            [] -> {1, [1]}
+                                            [h] -> {h, [max(h - 1, 1)]}
+                                            [h | t] -> {h, t}
+                                            _ ->
+                                              h = System.schedulers_online()
+                                              {h, [max(h - 1, 1)]}
+                                          end
     {max_concurrency, put_in(options, [:max_concurrency], next_concurrency)}
   end
 
@@ -158,13 +163,17 @@ defmodule Noizu.Scaffolding.Helpers do
       options[:expand_all_refs] == :infinity -> true
       is_integer(options[:expand_all_refs]) && options[:expand_all_refs] <= depth -> true
       expand = options[:expand_refs] ->
-        Enum.reduce_while(expand, false, fn({p, d}, acc) ->
-          cond do
-            is_integer(d) && d > depth -> {:cont, acc}
-            Regex.match?(p, path) -> {:halt, true}
-            :else -> {:cont, acc}
+        Enum.reduce_while(
+          expand,
+          false,
+          fn ({p, d}, acc) ->
+            cond do
+              is_integer(d) && d > depth -> {:cont, acc}
+              Regex.match?(p, path) -> {:halt, true}
+              :else -> {:cont, acc}
+            end
           end
-        end)
+        )
       :else -> false
     end
   end
@@ -172,9 +181,9 @@ defmodule Noizu.Scaffolding.Helpers do
   #-------------------------
   # api_response
   #-------------------------
-  def api_response(%Plug.Conn{} = conn, response,  %CallingContext{} = context, options \\ []) do
+  def api_response(%Plug.Conn{} = conn, response, %CallingContext{} = context, options \\ []) do
     options = options
-              |> update_in([:pretty], &( &1 == nil && true || &1))
+              |> update_in([:pretty], &(&1 == nil && true || &1))
               |> update_in([:expand_refs], &(&1 == nil && context.options[:expand_refs] || &1))
               |> update_in([:expand_all_refs], &(&1 == nil && context.options[:expand_all_refs] || &1))
               |> update_in([:json_format], &(&1 == nil && context.options[:json_format] || &1))
@@ -185,15 +194,19 @@ defmodule Noizu.Scaffolding.Helpers do
 
     # Preprocess response data.
     response = cond do
-      options[:expand] && options[:restricted] -> Noizu.RestrictedProtocol.restricted_view(Noizu.EntityProtocol.expand!(response, options), context, options[:restrict_options])
-      options[:expand] -> Noizu.EntityProtocol.expand!(response, options)
-      options[:restricted] -> Noizu.RestrictedProtocol.restricted_view(response, context, options[:restrict_options])
-      :else -> response
-    end
+                 options[:expand] && options[:restricted] ->
+                   Noizu.RestrictedProtocol.restricted_view(Noizu.EntityProtocol.expand!(response, options), context, options[:restrict_options])
+                 options[:expand] ->
+                   Noizu.EntityProtocol.expand!(response, options)
+                 options[:restricted] ->
+                   Noizu.RestrictedProtocol.restricted_view(response, context, options[:restrict_options])
+                 :else ->
+                   response
+               end
 
     # Injecting Useful content from calling context into headers for api client's consumption.
     case Plug.Conn.get_resp_header(conn, "x-request-id") do
-      [request|_] ->
+      [request | _] ->
         if request != context.token do
           conn
           |> Plug.Conn.put_resp_header("x-request-id", context.token)
@@ -204,7 +217,8 @@ defmodule Noizu.Scaffolding.Helpers do
       [] ->
         conn
         |> Plug.Conn.put_resp_header("x-request-id", context.token)
-    end |> send_resp(200, "application/json", json_library().encode_to_iodata!(response, options))
+    end
+    |> send_resp(200, "application/json", json_library().encode_to_iodata!(response, options))
   end
 
   def json_library() do
@@ -228,7 +242,7 @@ defmodule Noizu.Scaffolding.Helpers do
       conn
     else
       content_type = content_type <> "; charset=utf-8"
-      %{conn | resp_headers: [{"content-type", content_type}|resp_headers]}
+      %{conn | resp_headers: [{"content-type", content_type} | resp_headers]}
     end
   end
 
@@ -245,14 +259,16 @@ defmodule Noizu.Scaffolding.Helpers do
   ]
 
   @json_formats Application.get_env(:noizu_scaffolding, :json_formats, @default_json_formats)
-  @formats Map.new(@json_formats,
-             fn(f) ->
+  @formats Map.new(
+             @json_formats,
+             fn (f) ->
                case f do
-                 {k,v} when is_atom(k) and is_bitstring(v) -> {v,k}
-                 {k,v} when is_atom(v) and is_bitstring(k) -> {v,v}
+                 {k, v} when is_atom(k) and is_bitstring(v) -> {v, k}
+                 {k, v} when is_atom(v) and is_bitstring(k) -> {v, v}
                  k when is_atom(k) -> {Atom.to_string(k), k}
                end
-             end)
+             end
+           )
 
   def format_to_atom(v, default) do
     @formats[v] || default
@@ -274,9 +290,11 @@ defmodule Noizu.Scaffolding.Helpers do
     case format_overrides do
       v when is_bitstring(v) ->
         String.split(v, ",")
-        |> Enum.map(fn(e) ->
-          get_context_provider.format_to_tuple(String.split(e, ":"))
-        end)
+        |> Enum.map(
+             fn (e) ->
+               get_context_provider.format_to_tuple(String.split(e, ":"))
+             end
+           )
         |> Enum.filter(&(&1))
         |> Map.new()
       _ -> %{}
@@ -315,58 +333,65 @@ defmodule Noizu.Scaffolding.Helpers do
   def default_get_context__expand_refs(conn, params, get_context_provider, _options) do
     case (params["expand-refs"] || List.first(Plug.Conn.get_resp_header(conn, "x-expand-refs"))) do
       v when is_bitstring(v) ->
-        Enum.map(String.split(v, ","),
-          fn(r) ->
-            {path, depth} =  case String.split(r, ":") do
-              [path,"infinity"] -> {path, :infinity}
-              [path,depth] ->
-                case Integer.parse(depth) do
-                  {v, ""} -> {path, v}
-                  _ -> {nil, nil}
-                end
-              [path] -> {path, :infinity}
-            end
+        Enum.map(
+          String.split(v, ","),
+          fn (r) ->
+            {path, depth} = case String.split(r, ":") do
+                              [path, "infinity"] -> {path, :infinity}
+                              [path, depth] ->
+                                case Integer.parse(depth) do
+                                  {v, ""} -> {path, v}
+                                  _ -> {nil, nil}
+                                end
+                              [path] -> {path, :infinity}
+                            end
             if path do
               extended = case String.split(path, ".") do
-                [v] ->
-                  e = get_context_provider.sref_module(String.trim(v))
-                  e && [e, "*"]
-                v when is_list(v) ->
-                  Enum.reduce_while(v, [],
-                    fn(e, acc)->
-                      cond do
-                        e == "**" -> {:cont, acc ++ [e]}
-                        e == "*" -> {:cont, acc ++ [e]}
-                        e == "++" -> {:cont, acc ++ [e]}
-                        e == "+" -> {:cont, acc ++ [e]}
-                        Regex.match?(~r/^\{[0-9,]+\}$/, e) -> {:cont, acc ++ [e]}
-                        e = get_context_provider.sref_module(String.trim(e)) -> {:cont, acc ++ [e]}
-                        :else -> {:halt, nil}
-                      end
-                    end
-                  )
-              end
+                           [v] ->
+                             e = get_context_provider.sref_module(String.trim(v))
+                             e && [e, "*"]
+                           v when is_list(v) ->
+                             Enum.reduce_while(
+                               v,
+                               [],
+                               fn (e, acc) ->
+                                 cond do
+                                   e == "**" -> {:cont, acc ++ [e]}
+                                   e == "*" -> {:cont, acc ++ [e]}
+                                   e == "++" -> {:cont, acc ++ [e]}
+                                   e == "+" -> {:cont, acc ++ [e]}
+                                   Regex.match?(~r/^\{[0-9,]+\}$/, e) -> {:cont, acc ++ [e]}
+                                   e = get_context_provider.sref_module(String.trim(e)) -> {:cont, acc ++ [e]}
+                                   :else -> {:halt, nil}
+                                 end
+                               end
+                             )
+                         end
               if extended do
-                [h|t] = extended
+                [h | t] = extended
                 head = cond do
-                  is_atom(h) -> "^#{h.sref_module()}"
-                  h == "**" -> "^([a-z_\\-0-9\\.])*"
-                  h == "++" -> "^([a-z_\\-0-9\\.])+"
-                  :else -> "^([a-z_\\-0-9])#{h}"
-                end
-                reg = Enum.reduce(t, head, fn(x, acc) ->
-                  cond do
-                    is_atom(x) -> acc <> "\.#{x.sref_module()}"
-                    x == "**" -> acc <> "([a-z_\\-0-9\\.])*"
-                    x == "++" -> acc <> "([a-z_\\-0-9\\.])+"
-                    Regex.match?(~r/^\{[0-9,]+\}$/, x) -> acc <> "([a-z_\\-0-9]*\.)#{x}"
-                    :else -> acc <> "([a-z_\\-0-9])#{x}"
-                  end
-                end) <> "$"
+                         is_atom(h) -> "^#{h.sref_module()}"
+                         h == "**" -> "^([a-z_\\-0-9\\.])*"
+                         h == "++" -> "^([a-z_\\-0-9\\.])+"
+                         :else -> "^([a-z_\\-0-9])#{h}"
+                       end
+                reg = Enum.reduce(
+                        t,
+                        head,
+                        fn (x, acc) ->
+                          cond do
+                            is_atom(x) -> acc <> "\.#{x.sref_module()}"
+                            x == "**" -> acc <> "([a-z_\\-0-9\\.])*"
+                            x == "++" -> acc <> "([a-z_\\-0-9\\.])+"
+                            Regex.match?(~r/^\{[0-9,]+\}$/, x) -> acc <> "([a-z_\\-0-9]*\.)#{x}"
+                            :else -> acc <> "([a-z_\\-0-9])#{x}"
+                          end
+                        end
+                      ) <> "$"
                 reg = case Regex.compile(reg) do
-                  {:ok, v} -> v
-                  _ -> nil
-                end
+                        {:ok, v} -> v
+                        _ -> nil
+                      end
                 reg && {reg, depth}
               end
             end
@@ -399,17 +424,31 @@ defmodule Noizu.Scaffolding.Helpers do
   #-------------------------
   def get_ip(conn) do
     case Plug.Conn.get_req_header(conn, "x-forwarded-for") do
-      [h|_] ->
+      [h | _] ->
         ip_list = case h do
-          v when is_bitstring(v) -> v
-          v when is_tuple(v) -> v |> Tuple.to_list |> Enum.join(".")
-          v when is_list(h) -> v |> to_charlist() |> to_string()
-          v -> "#{v}"
-        end
-        [f|_] = String.split(ip_list, ",")
+                    v when is_bitstring(v) ->
+                      v
+                    v when is_tuple(v) ->
+                      v
+                      |> Tuple.to_list
+                      |> Enum.join(".")
+                    v when is_list(h) ->
+                      v
+                      |> to_charlist()
+                      |> to_string()
+                    v ->
+                      "#{v}"
+                  end
+        [f | _] = String.split(ip_list, ",")
         String.trim(f)
-      [] -> conn.remote_ip |> Tuple.to_list |> Enum.join(".")
-      nil ->  conn.remote_ip |> Tuple.to_list |> Enum.join(".")
+      [] ->
+        conn.remote_ip
+        |> Tuple.to_list
+        |> Enum.join(".")
+      nil ->
+        conn.remote_ip
+        |> Tuple.to_list
+        |> Enum.join(".")
     end
   end # end get_ip/1
 
@@ -417,7 +456,7 @@ defmodule Noizu.Scaffolding.Helpers do
   # force_put/3
   #-------------------------
   def force_put(nil, [h], v), do: %{h => v}
-  def force_put(nil, [h|_] = p, v), do: force_put(%{h => %{}}, p, v)
+  def force_put(nil, [h | _] = p, v), do: force_put(%{h => %{}}, p, v)
   def force_put(entity, [h], v), do: put_in(entity, [h], v)
   def force_put(entity, path, v) when is_list(path) do
     try do
@@ -425,14 +464,16 @@ defmodule Noizu.Scaffolding.Helpers do
     rescue
       _exception ->
         [entity, _] = Enum.slice(path, 0..-2)
-                      |> Enum.reduce([entity, []],
-                           fn(x, [e, p]) ->
+                      |> Enum.reduce(
+                           [entity, []],
+                           fn (x, [e, p]) ->
                              a = p ++ [x]
                              cond do
                                get_in(e, a) -> [e, a]
                                true -> [put_in(e, a, %{}), a]
                              end
-                           end)
+                           end
+                         )
         put_in(entity, path, v)
     end
   end
@@ -450,7 +491,7 @@ defmodule Noizu.Scaffolding.Helpers do
         defdelegate update_expand_options(entity, options), to: Noizu.Scaffolding.Helpers
         defdelegate expand_ref?(options), to: Noizu.Scaffolding.Helpers
         defdelegate expand_ref?(path, depth, options \\ nil), to: Noizu.Scaffolding.Helpers
-        defdelegate api_response(conn, response,  context, options), to: Noizu.Scaffolding.Helpers
+        defdelegate api_response(conn, response, context, options), to: Noizu.Scaffolding.Helpers
         defdelegate json_library(), to: Noizu.Scaffolding.Helpers
         defdelegate send_resp(conn, default_status, default_content_type, body), to: Noizu.Scaffolding.Helpers
         defdelegate ensure_resp_content_type(conn, content_type), to: Noizu.Scaffolding.Helpers

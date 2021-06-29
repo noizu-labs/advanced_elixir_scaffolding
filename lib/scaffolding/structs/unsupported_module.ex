@@ -5,8 +5,8 @@
 
 defmodule Noizu.Scaffolding.UnsupportedModule do
   @type t :: %__MODULE__{
-    reference: any,
-  }
+               reference: any,
+             }
 
   defstruct [
     reference: nil,
@@ -23,8 +23,8 @@ defmodule Noizu.Scaffolding.UnsupportedModule do
   def record!(item, _options), do: throw "UnsupportedModule #{inspect item}"
   def as_record(item, _options), do: throw "UnsupportedModule #{inspect item}"
   def sref_module(), do: "unsupported-module"
-  def has_permission(_,_,_,_), do: false
-  def has_permission!(_,_,_,_), do: false
+  def has_permission(_, _, _, _), do: false
+  def has_permission!(_, _, _, _), do: false
   def compress(entity), do: entity
   def compress(entity, _options), do: entity
   def expand(entity), do: entity

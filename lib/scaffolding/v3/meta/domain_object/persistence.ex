@@ -6,7 +6,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.Persistence do
   #--------------------------------------------
   def file_rel_dir(module_path) do
     offset = file_rel_dir(__ENV__.file, module_path, 0)
-    String.slice(module_path, offset .. - 1)
+    String.slice(module_path, offset..- 1)
   end
   def file_rel_dir(<<m>> <> a, <<m>> <> b, acc) do
     file_rel_dir(a, b, 1 + acc)
@@ -17,12 +17,12 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.Persistence do
   #
   #--------------------------------------------
   def module_rel(base, module_path) do
-    [_|a] = base
-    [_|b] = module_path
+    [_ | a] = base
+    [_ | b] = module_path
     offset = module_rel(a, b, 0)
-    Enum.slice(module_path, (offset + 1).. - 1)
+    Enum.slice(module_path, (offset + 1)..- 1)
   end
-  def module_rel([h|a], [h|b], acc) do
+  def module_rel([h | a], [h | b], acc) do
     module_rel(a, b, 1 + acc)
   end
   def module_rel(_a, _b, acc), do: acc
@@ -33,67 +33,93 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.Persistence do
   def expand_persistence_layers(nil, module), do: expand_persistence_layers([:mnesia], module)
   def expand_persistence_layers(layers, module) when is_atom(layers), do: expand_persistence_layers([layers], module)
   def expand_persistence_layers(layers, module) do
-    layers = Enum.map(Enum.reverse(layers), fn(layer) ->
-      case layer do
-        v when is_atom(v) -> expand_layer(v, module, [])
-        {v, t} when is_atom(t) -> expand_layer(v, t, module, [])
-        {v, o} when is_list(o) -> expand_layer(v, module, o)
-        {v, t, o} when is_atom(t) and is_list(o) -> expand_layer(v,t,module,o)
+    layers = Enum.map(
+      Enum.reverse(layers),
+      fn (layer) ->
+        case layer do
+          v when is_atom(v) -> expand_layer(v, module, [])
+          {v, t} when is_atom(t) -> expand_layer(v, t, module, [])
+          {v, o} when is_list(o) -> expand_layer(v, module, o)
+          {v, t, o} when is_atom(t) and is_list(o) -> expand_layer(v, t, module, o)
+        end
       end
-    end)
+    )
     h = Module.get_attribute(module, :persistence)
     ecto_entity = cond do
                     is_list(h) && Keyword.has_key?(h, :ecto_entity) && h[:ecto_entity] != true -> h[:ecto_entity]
                     is_map(h) && Map.has_key?(h, :ecto_entity) && h[:ecto_entity] != true -> h[:ecto_entity]
                     :else ->
-                      Enum.reduce_while(layers, nil, fn(layer, acc) ->
-                        cond do
-                          layer.type == :ecto -> {:halt, layer.table}
-                          :else -> {:cont, acc}
+                      Enum.reduce_while(
+                        layers,
+                        nil,
+                        fn (layer, acc) ->
+                          cond do
+                            layer.type == :ecto -> {:halt, layer.table}
+                            :else -> {:cont, acc}
+                          end
                         end
-                      end)
+                      )
                   end
 
-    layers = Enum.map(layers, fn(layer) ->
-      {_, layer} = pop_in(layer, [Access.key(:options), :ref_module])
-      {_, layer} = pop_in(layer, [Access.key(:options), :universal?])
-      layer
-    end)
-
-    mnesia_backend = Enum.reduce(layers, nil, fn(layer, acc) ->
-      cond do
-        layer.type == :mnesia ->
-          acc = update_in(acc || %{}, [:dirty?], fn(p) ->
-            cond do
-              p == false -> p
-              p == nil -> layer.dirty?
-              layer.dirty? == false -> false
-              :else -> p
-            end
-          end)
-
-          acc = update_in(acc || %{}, [:fragmented?], fn(p) ->
-            cond do
-              p == true -> p
-              p == nil -> layer.fragmented?
-              layer.fragmented? == true -> true
-              :else -> p
-            end
-          end)
-
-          acc = update_in(acc || %{}, [:require_transaction?], fn(p) ->
-            cond do
-              p == true -> p
-              p == nil -> layer.require_transaction?
-              layer.require_transaction? == true -> true
-              :else -> p
-            end
-          end)
-          acc
-
-        :else -> acc
+    layers = Enum.map(
+      layers,
+      fn (layer) ->
+        {_, layer} = pop_in(layer, [Access.key(:options), :ref_module])
+        {_, layer} = pop_in(layer, [Access.key(:options), :universal?])
+        layer
       end
-    end)
+    )
+
+    mnesia_backend = Enum.reduce(
+      layers,
+      nil,
+      fn (layer, acc) ->
+        cond do
+          layer.type == :mnesia ->
+            acc = update_in(
+              acc || %{},
+              [:dirty?],
+              fn (p) ->
+                cond do
+                  p == false -> p
+                  p == nil -> layer.dirty?
+                  layer.dirty? == false -> false
+                  :else -> p
+                end
+              end
+            )
+
+            acc = update_in(
+              acc || %{},
+              [:fragmented?],
+              fn (p) ->
+                cond do
+                  p == true -> p
+                  p == nil -> layer.fragmented?
+                  layer.fragmented? == true -> true
+                  :else -> p
+                end
+              end
+            )
+
+            acc = update_in(
+              acc || %{},
+              [:require_transaction?],
+              fn (p) ->
+                cond do
+                  p == true -> p
+                  p == nil -> layer.require_transaction?
+                  layer.require_transaction? == true -> true
+                  :else -> p
+                end
+              end
+            )
+            acc
+
+          :else -> acc
+        end
+      end
+    )
 
     enum_table = cond do
                    v = Module.get_attribute(module, :__nzdo__enum_list) -> v && true || false
@@ -132,8 +158,10 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.Persistence do
       generate_reference_type: generate_reference_type,
     }
 
-    schemas = Enum.map(layers || [], &({&1.schema, &1})) |> Map.new()
-    tables = Enum.map(layers || [], &({&1.table, &1})) |> Map.new()
+    schemas = Enum.map(layers || [], &({&1.schema, &1}))
+              |> Map.new()
+    tables = Enum.map(layers || [], &({&1.table, &1}))
+             |> Map.new()
 
     %Noizu.Scaffolding.V3.Schema.PersistenceSettings{
       layers: layers,
@@ -157,7 +185,8 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.Persistence do
       %Noizu.Scaffolding.V3.Schema.RedisMetadata{} ->
         expand_layer(provider, {module, :redis}, module, options)
       metadata ->
-        path = Module.split(module) |> Enum.slice(0 .. -2)
+        path = Module.split(module)
+               |> Enum.slice(0..-2)
         root_table = Module.split(metadata.database)
         inner_path = module_rel(root_table, path)
         table = Module.concat(root_table ++ inner_path ++ ["Table"])
