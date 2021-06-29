@@ -40,6 +40,14 @@ defmodule Noizu.DomainObject do
   end
 
 
+
+  #--------------------------------------------
+  #
+  #--------------------------------------------
+  defmacro noizu_scaffolding_schema(options \\ [], [do: block]) do
+    Noizu.ElixirScaffolding.V3.Meta.DomainObject.ScaffoldingSchema.__noizu_scaffolding_schema__(__CALLER__, options, block)
+  end
+
   #--------------------------------------------
   #
   #--------------------------------------------
