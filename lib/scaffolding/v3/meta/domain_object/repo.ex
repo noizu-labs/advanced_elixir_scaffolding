@@ -91,6 +91,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo do
                        require Amnesia.Helper
                        require Amnesia.Fragment
                        require Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo
+                       import Noizu.ElixirCore.Guards
                        #---------------------
                        # Insure Single Call
                        #---------------------

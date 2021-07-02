@@ -10,6 +10,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.SimpleObject.Struct do
                        import Noizu.DomainObject, only: [file_rel_dir: 1]
                        require Noizu.DomainObject
                        require Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity
+                       import Noizu.ElixirCore.Guards
                        @options unquote(options)
                        #---------------------
                        # Insure Single Call

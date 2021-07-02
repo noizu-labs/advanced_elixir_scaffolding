@@ -13,7 +13,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Index do
 
     process_config = quote do
                        import Noizu.DomainObject, only: [file_rel_dir: 1]
-
+                       import Noizu.ElixirCore.Guards
                        #---------------------
                        # Insure Single Call
                        #---------------------

@@ -15,6 +15,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.ScaffoldingSchema do
            import Noizu.DomainObject, only: [file_rel_dir: 1]
            require Noizu.DomainObject
            require Noizu.ElixirScaffolding.V3.Meta.DomainObject.ScaffoldingSchema
+           import Noizu.ElixirCore.Guards
            @options unquote(options)
            @app unquote(app)
            @base_prefix (case unquote(base_prefix) do

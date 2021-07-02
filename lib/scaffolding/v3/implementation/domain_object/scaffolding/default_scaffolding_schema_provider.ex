@@ -8,6 +8,11 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Scaffolding.Def
       |> Enum.filter(&( List.starts_with?(Module.split(&1),Module.split(base))))
     end
 
+
+    def filter_modules(app, base, %MapSet{} = types) do
+      module_children(app, base)
+      |> Enum.filter(&(function_exported?(&1, :__noizu_info__, 1) && Enum.member?(types, &1.__noizu_info__(:type))))
+    end
     def filter_modules(app, base, types) when is_list(types) do
       module_children(app, base)
       |> Enum.filter(&(function_exported?(&1, :__noizu_info__, 1) && Enum.member?(types, &1.__noizu_info__(:type))))
@@ -49,7 +54,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Scaffolding.Def
 
       @cache_keys Map.merge(@cache_keys || %{}, %{
         type: :"__nzss__#{@app}__type",
-        list: :"__nzss__#{@app}__*",
+        all: :"__nzss__#{@app}__*",
         entities: :"__nzss__#{@app}__entities",
         indexes: :"__nzss__#{@app}__indexes",
         enums: :"__nzss__#{@app}__enums",
@@ -79,7 +84,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Scaffolding.Def
         key = __cache_key__(:all)
         case FastGlobal.get(key, :cache_miss) do
           :cache_miss ->
-            cache = Enum.map(__all_properties__(), &({&1, __noizu_info__(&1)}))
+            cache = Enum.map(__all_properties__() -- [:all], &({&1, __noizu_info__(&1)}))
                     |> Map.new
             FastGlobal.put(key, cache)
             cache
