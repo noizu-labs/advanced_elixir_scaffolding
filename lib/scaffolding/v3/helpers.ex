@@ -97,7 +97,7 @@ defmodule Noizu.Scaffolding.V3.Helpers do
   # api_response
   #-------------------------
   def api_response(%Plug.Conn{} = conn, response, %CallingContext{} = context, options \\ []) do
-    options = options
+    options = (options || [])
               |> update_in([:pretty], &(&1 == nil && true || &1))
               |> update_in([:expand_refs], &(&1 == nil && context.options[:expand_refs] || &1))
               |> update_in([:expand_all_refs], &(&1 == nil && context.options[:expand_all_refs] || &1))
