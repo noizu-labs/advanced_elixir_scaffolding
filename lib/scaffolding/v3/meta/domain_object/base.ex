@@ -90,6 +90,21 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject do
       def __noizu_info__(:meta), do: @__nzdo__meta__map
 
 
+
+
+
+      if Module.get_attribute(__MODULE__, :__nzdo__enum_list) do
+        @enum_struct Module.concat([__MODULE__, Ecto.EnumType])
+        def __noizu_info__(:enum), do: @enum_struct
+      else
+        def __noizu_info__(:enum), do: nil
+      end
+
+      # only defined for types that have enum entities.
+      if Module.get_attribute(__MODULE__, :__nzdo__enum_list) do
+        def __enum__(), do: __noizu_info__(:enum)
+      end
+
       #--------------------
       # EctoEnum
       #--------------------

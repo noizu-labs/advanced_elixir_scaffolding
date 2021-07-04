@@ -42,14 +42,21 @@ defmodule Noizu.DomainObject do
 
 
   #--------------------------------------------
-  #
+  # noizu_table
+  #--------------------------------------------
+  defmacro noizu_table(options \\ []) do
+    Noizu.ElixirScaffolding.V3.Meta.Table.__noizu_table__(__CALLER__, options)
+  end
+
+  #--------------------------------------------
+  # noizu_scaffolding_schema
   #--------------------------------------------
   defmacro noizu_scaffolding_schema(options \\ [], [do: block]) do
     Noizu.ElixirScaffolding.V3.Meta.DomainObject.ScaffoldingSchema.__noizu_scaffolding_schema__(__CALLER__, options, block)
   end
 
   #--------------------------------------------
-  #
+  # noizu_type_handler
   #--------------------------------------------
   defmacro noizu_type_handler(options \\ []) do
     Noizu.ElixirScaffolding.V3.Meta.DomainObject.TypeHandler.__noizu_type_handler__(__CALLER__, options)
@@ -57,7 +64,7 @@ defmodule Noizu.DomainObject do
 
 
   #--------------------------------------------
-  #
+  # noizu_entity
   #--------------------------------------------
   defmacro noizu_entity(options \\ [], [do: block]) do
     Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity.__noizu_entity__(__CALLER__, options, block)
@@ -65,35 +72,35 @@ defmodule Noizu.DomainObject do
 
 
   #--------------------------------------------
-  #
+  # noizu_index
   #--------------------------------------------
   defmacro noizu_index(options \\ [], [do: block]) do
     Noizu.ElixirScaffolding.V3.Meta.DomainObject.Index.__noizu_index__(__CALLER__, options, block)
   end
 
   #--------------------------------------------
-  #
+  # noizu_sphinx
   #--------------------------------------------
   defmacro noizu_sphinx(options \\ [], [do: block]) do
     Noizu.ElixirScaffolding.V3.Meta.DomainObject.Sphinx.__noizu_sphinx__(__CALLER__, options, block)
   end
 
   #--------------------------------------------
-  #
+  # noizu_struct
   #--------------------------------------------
   defmacro noizu_struct(options \\ [], [do: block]) do
     Noizu.ElixirScaffolding.V3.Meta.SimpleObject.Struct.__noizu_struct__(__CALLER__, options, block)
   end
 
   #--------------------------------------------
-  #
+  # noizu_repo
   #--------------------------------------------
   defmacro noizu_repo(options \\ [], [do: block]) do
     Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo.__noizu_repo__(__CALLER__, options, block)
   end
 
   #--------------------------------------------
-  #
+  # file_rel_dir
   #--------------------------------------------
   def file_rel_dir(module_path) do
     offset = file_rel_dir(__ENV__.file, module_path, 0)
@@ -105,7 +112,7 @@ defmodule Noizu.DomainObject do
   def file_rel_dir(_a, _b, acc), do: acc
 
   #--------------------------------------------
-  #
+  # module_rel
   #--------------------------------------------
   def module_rel(base, module_path) do
     [_ | a] = base
@@ -120,18 +127,18 @@ defmodule Noizu.DomainObject do
 
 
   #--------------------------------------------
-  #
+  # expand_indexes
   #--------------------------------------------
   defdelegate expand_indexes(layers, module), to: Noizu.ElixirScaffolding.V3.Meta.DomainObject.Index
 
   #--------------------------------------------
-  #
+  # expand_persistence_layers
   #--------------------------------------------
   defdelegate expand_persistence_layers(layers, module), to: Noizu.ElixirScaffolding.V3.Meta.Persistence
 
 
   #--------------------------------------------
-  #
+  # extract_transform_attribute
   #--------------------------------------------
   defmacro extract_transform_attribute(attribute, setting, mfa, default \\ nil) do
     quote do
@@ -158,7 +165,7 @@ defmodule Noizu.DomainObject do
   end
 
   #--------------------------------------------
-  #
+  # extract_has_attribute
   #--------------------------------------------
   defmacro extract_has_attribute(attribute, default) do
     quote do
@@ -174,7 +181,7 @@ defmodule Noizu.DomainObject do
   end
 
   #--------------------------------------------
-  #
+  # extract_attribute
   #--------------------------------------------
   defmacro extract_attribute(attribute, default) do
     quote do
@@ -190,7 +197,7 @@ defmodule Noizu.DomainObject do
   end
 
   #----------------------------------------------------
-  #
+  # __prepare__base__macro__
   #----------------------------------------------------
   defmacro __prepare__base__macro__(options) do
     quote do
@@ -216,6 +223,9 @@ defmodule Noizu.DomainObject do
     end
   end
 
+  #----------------------------------------------------
+  # __prepare__poly__macro__
+  #----------------------------------------------------
   defmacro __prepare__poly__macro__(options) do
     quote do
       options = unquote(options)
@@ -260,8 +270,9 @@ defmodule Noizu.DomainObject do
     end
   end
 
-
-
+  #----------------------------------------------------
+  # __prepare__sphinx__macro__
+  #----------------------------------------------------
   defmacro __prepare__sphinx__macro__(_) do
     quote do
       #----------------------
@@ -279,6 +290,9 @@ defmodule Noizu.DomainObject do
     end
   end
 
+  #----------------------------------------------------
+  # __prepare__persistence_settings__macro__
+  #----------------------------------------------------
   defmacro __prepare__persistence_settings__macro__(_) do
     quote do
       @__nzdo__auto_generate Noizu.DomainObject.extract_has_attribute(:auto_generate, nil)
@@ -326,6 +340,10 @@ defmodule Noizu.DomainObject do
     end
   end
 
+
+  #----------------------------------------------------
+  # __prepare__nmid__macro__
+  #----------------------------------------------------
   defmacro __prepare__nmid__macro__(_) do
     default_nmid_generator = Application.get_env(:noizu_scaffolding, :default_nmid_generator, Noizu.Scaffolding.V3.NmidGenerator)
     quote do
@@ -345,6 +363,9 @@ defmodule Noizu.DomainObject do
     end
   end
 
+  #----------------------------------------------------
+  # __prepare__json_settings__macro__
+  #----------------------------------------------------
   defmacro __prepare__json_settings__macro__(options) do
     quote do
       options = unquote(options)

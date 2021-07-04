@@ -53,7 +53,11 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
       def __indexing__(:indexes), do: @__nzdo__indexes
 
       def __persistence__(), do: __persistence__(:all)
-      def __persistence__(:all), do: @__nzdo_persistence
+      def __persistence__(:all) do
+        [:enum_table, :auto_generate, :universal_identifier, :universal_lookup, :reference_type, :layer, :schema, :table, :ecto_entity, :options]
+        |> Enum.map(&({&1, __persistence__(&1)}))
+        |> Map.new()
+      end
       def __persistence__(:enum_table), do: @__nzdo_persistence.options.enum_table
       def __persistence__(:auto_generate), do: @__nzdo_persistence.options.auto_generate
       def __persistence__(:universal_identifier), do: @__nzdo_persistence.options.universal_identifier
@@ -90,6 +94,12 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
       def __noizu_info__(:field_attributes), do: @__nzdo__field_attributes_map
       def __noizu_info__(:indexing), do: __indexing__()
       defdelegate __noizu_info__(report), to: @__nzdo__base
+
+
+      # only defined for enum types.
+      if @__nzdo_persistence.options.enum_table do
+        def __enum__(), do: __noizu_info__(:enum)
+      end
 
 
 

@@ -2,10 +2,10 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Scaffolding.Def
 
   defmodule Default do
 
-    def module_children(app, base) do
+    def module_children(app, scope) do
       :application.get_key(app, :modules)
       |> elem(1)
-      |> Enum.filter(&( List.starts_with?(Module.split(&1),Module.split(base))))
+      |> Enum.filter(&( List.starts_with?(Module.split(&1),Module.split(scope))))
     end
 
 
@@ -63,6 +63,11 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Scaffolding.Def
         meta: :"__nzss__#{@app}__meta",
       })
       @all_properties Map.keys(@cache_keys)
+
+
+      Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Scaffolding.DefaultScaffoldingSchemaProvider.Default
+
+      def module_children(scope), do: @__nzdo__internal_imp.module_children(@app, scope)
 
       def __all_properties__(), do: @all_properties
 

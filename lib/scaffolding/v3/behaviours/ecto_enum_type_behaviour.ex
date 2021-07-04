@@ -72,14 +72,31 @@ defmodule Noizu.Ecto.EnumTypeBehaviour do
       use Ecto.Type
       @ecto_type (unquote(options[:ecto_type]) || :integer)
       @default_value (unquote(options[:default]) || :none)
-      @atom_to_enum (
-                      (unquote(options[:values]) || [{:none, 0}])
-                      |> Map.new())
+
+
+      raw_atom_list = (unquote(options[:values]) || [{:none, 0}])
+                      |> Enum.map(
+                           fn
+                             ({k,{v,d}}) -> {k, v, "#{d}"}
+                             ({k,v}) -> {k, v, nil}
+                           end
+                         )
+      @atom_to_enum Enum.map(raw_atom_list, fn({k,v,_}) -> {k,v} end) |> Map.new()
+      @atom_descriptions Enum.map(raw_atom_list, fn({k,_,d}) -> d && {k,d} end) |> Enum.filter(&(&1)) |> Map.new()
+
       @enum_to_atom Enum.map(@atom_to_enum, fn ({a, e}) -> {e, a} end)
                     |> Map.new()
       @json_to_atom Enum.map(@atom_to_enum, fn ({a, _e}) -> {"#{a}", a} end)
                     |> Map.new()
 
+
+      def value_description(enum) when is_atom(enum) do
+        Map.has_key?(@atom_to_enum, enum) && (@atom_descriptions[enum] || "no description") || throw "#{enum} is not a member of #{__MODULE__}"
+      end
+      def value_description(enum) when is_integer(enum) do
+        enum = @enum_to_atom[enum] || throw "#{enum} enum not found in #{__MODULE__}"
+        @atom_descriptions[enum] || "no description"
+      end
 
       def default_value(), do: @default_value
       def atom_to_enum(), do: @atom_to_enum

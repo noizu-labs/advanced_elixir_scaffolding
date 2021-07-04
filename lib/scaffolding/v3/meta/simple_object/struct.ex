@@ -178,7 +178,11 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.SimpleObject.Struct do
       #--------------
       @__nzdo_persistence Noizu.Scaffolding.V3.Schema.PersistenceSettings.update_schema_fields(@__nzdo_persistence, @__nzdo__field_types_map)
       def __persistence__(), do: __persistence__(:all)
-      def __persistence__(:all), do: @__nzdo_persistence
+      def __persistence__(:all) do
+        [:enum_table, :auto_generate, :universal_identifier, :universal_lookup, :reference_type, :layer, :schema, :table, :ecto_entity, :options]
+        |> Enum.map(&({&1, __persistence__(&1)}))
+        |> Map.new()
+      end
       def __persistence__(:enum_table), do: @__nzdo_persistence.options.enum_table
       def __persistence__(:auto_generate), do: @__nzdo_persistence.options.auto_generate
       def __persistence__(:universal_identifier), do: @__nzdo_persistence.options.universal_identifier
