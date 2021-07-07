@@ -76,7 +76,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
       ref = m.__entity__().ref(ref)
       if ref do
         Enum.reduce_while(
-          m.__entity__().__persistence__(:layer),
+          m.__entity__().__persistence__(:layers),
           nil,
           fn (layer, _) ->
             cond do
@@ -98,7 +98,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
       ref = m.__entity__().ref(ref)
       if ref do
         Enum.reduce_while(
-          m.__entity__().__persistence__(:layer),
+          m.__entity__().__persistence__(:layers),
           nil,
           fn (layer, _acc) ->
             cond do
@@ -381,7 +381,8 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
     def layer_create_loop(list, %PersistenceLayer{schema: schema} = layer, context, options) do
       case list do
         records when is_list(records) -> Enum.map(records, &(layer_create_loop(&1, layer, context, options)))
-        record = %{__struct__: _} -> schema.create_handler(record, context, options)
+        record = %{__struct__: _} ->
+          schema.create_handler(record, context, options)
         _ -> :skip # @todo log
       end
     end
@@ -389,7 +390,8 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
     def layer_create_loop!(list, %PersistenceLayer{schema: schema} = layer, context, options) do
       case list do
         records when is_list(records) -> Enum.map(records, &(layer_create_loop!(&1, layer, context, options)))
-        record = %{__struct__: _} -> schema.create_handler!(record, context, options)
+        record = %{__struct__: _} ->
+          schema.create_handler!(record, context, options)
         _ -> :skip # @todo log
       end
     end
@@ -784,11 +786,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
         end
       end
       def layer_create_callback(%PersistenceLayer{} = layer, entity, context, options), do: @__nzdo__crud_imp.layer_create_callback(__MODULE__, layer, entity, context, options)
-      def layer_create_callback!(%PersistenceLayer{} = layer, entity, context, options) do
-        Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo.__layer_transaction_block__(layer) do
-          layer_create_callback(layer, entity, context, options)
-        end
-      end
+      def layer_create_callback!(%PersistenceLayer{} = layer, entity, context, options), do: @__nzdo__crud_imp.layer_create_callback!(__MODULE__, layer, entity, context, options)
       def layer_post_create_callback(%PersistenceLayer{} = layer, entity, context, options),
           do: @__nzdo__crud_imp.layer_post_create_callback(__MODULE__, layer, entity, context, options)
       def layer_post_create_callback!(%PersistenceLayer{} = layer, entity, context, options) do

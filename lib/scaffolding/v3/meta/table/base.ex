@@ -213,7 +213,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.Table do
         @__nzdo_persistence Noizu.DomainObject.expand_persistence_layers(Module.get_attribute(__MODULE__, :persistence_layers, [@__nzdo__table_repo]), __MODULE__)
         def __persistence__(), do: __persistence__(:all)
         def __persistence__(:all) do
-          [:enum_table, :auto_generate, :universal_identifier, :universal_lookup, :reference_type, :layer, :schema, :table, :ecto_entity, :options]
+          [:enum_table, :auto_generate, :universal_identifier, :universal_lookup, :reference_type, :layers, :schemas, :tables, :ecto_entity, :options]
           |> Enum.map(&({&1, __persistence__(&1)}))
           |> Map.new()
         end
@@ -222,9 +222,9 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.Table do
         def __persistence__(:universal_identifier), do:  @__nzdo_persistence.options.universal_identifier
         def __persistence__(:universal_lookup), do:  @__nzdo_persistence.options.universal_lookup
         def __persistence__(:reference_type), do:  @__nzdo_persistence.options.generate_reference_type
-        def __persistence__(:layer), do:  @__nzdo_persistence.layers
-        def __persistence__(:schema), do:  @__nzdo_persistence.schemas
-        def __persistence__(:table), do:  @__nzdo_persistence.tables
+        def __persistence__(:layers), do:  @__nzdo_persistence.layers
+        def __persistence__(:schemas), do:  @__nzdo_persistence.schemas
+        def __persistence__(:tables), do:  @__nzdo_persistence.tables
         def __persistence__(:ecto_entity), do:  @__nzdo_persistence.ecto_entity
         def __persistence__(:options), do:  @__nzdo_persistence.options
         def __persistence__(@__nzdo__table_repo, :table), do: __MODULE__

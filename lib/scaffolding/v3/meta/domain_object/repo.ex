@@ -88,6 +88,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo do
     process_config = quote do
                        import Noizu.DomainObject, only: [file_rel_dir: 1]
                        require Amnesia
+                       require Logger
                        require Amnesia.Helper
                        require Amnesia.Fragment
                        require Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo
@@ -171,27 +172,81 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo do
           unquote(block)
         :tx ->
           Amnesia.transaction do
-            unquote(block)
+            try do
+              unquote(block)
+            rescue e ->
+              Logger.error("TXN #{__MODULE__} - rescue #{Exception.format(:error, e, __STACKTRACE__)}")
+            catch
+              :exit, e ->
+                Logger.error("TXN #{__MODULE__} - exit #{Exception.format(:error, e, __STACKTRACE__)}")
+              e ->
+                Logger.error("TXN #{__MODULE__} - catch #{Exception.format(:error, e, __STACKTRACE__)}")
+            end
           end
         :async ->
           Amnesia.async do
-            unquote(block)
+            try do
+              unquote(block)
+            rescue e ->
+              Logger.error("TXN #{__MODULE__} - rescue #{Exception.format(:error, e, __STACKTRACE__)}")
+            catch
+              :exit, e ->
+                Logger.error("TXN #{__MODULE__} - exit #{Exception.format(:error, e, __STACKTRACE__)}")
+              e ->
+                Logger.error("TXN #{__MODULE__} - catch #{Exception.format(:error, e, __STACKTRACE__)}")
+            end
           end
         :sync ->
           Amnesia.sync do
-            unquote(block)
+            try do
+              unquote(block)
+            rescue e ->
+              Logger.error("TXN #{__MODULE__} - rescue #{Exception.format(:error, e, __STACKTRACE__)}")
+            catch
+              :exit, e ->
+                Logger.error("TXN #{__MODULE__} - exit #{Exception.format(:error, e, __STACKTRACE__)}")
+              e ->
+                Logger.error("TXN #{__MODULE__} - catch #{Exception.format(:error, e, __STACKTRACE__)}")
+            end
           end
         :fragment_tx ->
           Amnesia.Fragment.transaction do
-            unquote(block)
+            try do
+              unquote(block)
+            rescue e ->
+              Logger.error("TXN #{__MODULE__} - rescue #{Exception.format(:error, e, __STACKTRACE__)}")
+            catch
+              :exit, e ->
+                Logger.error("TXN #{__MODULE__} - exit #{Exception.format(:error, e, __STACKTRACE__)}")
+              e ->
+                Logger.error("TXN #{__MODULE__} - catch #{Exception.format(:error, e, __STACKTRACE__)}")
+            end
           end
         :fragment_async ->
           Amnesia.Fragment.async do
-            unquote(block)
+            try do
+              unquote(block)
+            rescue e ->
+              Logger.error("TXN #{__MODULE__} - rescue #{Exception.format(:error, e, __STACKTRACE__)}")
+            catch
+              :exit, e ->
+                Logger.error("TXN #{__MODULE__} - exit #{Exception.format(:error, e, __STACKTRACE__)}")
+              e ->
+                Logger.error("TXN #{__MODULE__} - catch #{Exception.format(:error, e, __STACKTRACE__)}")
+            end
           end
         :fragment_sync ->
           Amnesia.Fragment.sync do
-            unquote(block)
+            try do
+              unquote(block)
+            rescue e ->
+              Logger.error("TXN #{__MODULE__} - rescue #{Exception.format(:error, e, __STACKTRACE__)}")
+            catch
+              :exit, e ->
+                Logger.error("TXN #{__MODULE__} - exit #{Exception.format(:error, e, __STACKTRACE__)}")
+              e ->
+                Logger.error("TXN #{__MODULE__} - catch #{Exception.format(:error, e, __STACKTRACE__)}")
+            end
           end
         _ ->
           unquote(block)
@@ -210,27 +265,81 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo do
           unquote(block)
         :tx ->
           Amnesia.transaction do
-            unquote(block)
+            try do
+              unquote(block)
+            rescue e ->
+              Logger.error("TXN #{__MODULE__} - rescue #{Exception.format(:error, e, __STACKTRACE__)}")
+            catch
+              :exit, e ->
+                Logger.error("TXN #{__MODULE__} - exit #{Exception.format(:error, e, __STACKTRACE__)}")
+              e ->
+                Logger.error("TXN #{__MODULE__} - catch #{Exception.format(:error, e, __STACKTRACE__)}")
+            end
           end
         :async ->
           Amnesia.async do
-            unquote(block)
+            try do
+              unquote(block)
+            rescue e ->
+              Logger.error("TXN #{__MODULE__} - rescue #{Exception.format(:error, e, __STACKTRACE__)}")
+            catch
+              :exit, e ->
+                Logger.error("TXN #{__MODULE__} - exit #{Exception.format(:error, e, __STACKTRACE__)}")
+              e ->
+                Logger.error("TXN #{__MODULE__} - catch #{Exception.format(:error, e, __STACKTRACE__)}")
+            end
           end
         :sync ->
           Amnesia.sync do
-            unquote(block)
+            try do
+              unquote(block)
+            rescue e ->
+              Logger.error("TXN #{__MODULE__} - rescue #{Exception.format(:error, e, __STACKTRACE__)}")
+            catch
+              :exit, e ->
+                Logger.error("TXN #{__MODULE__} - exit #{Exception.format(:error, e, __STACKTRACE__)}")
+              e ->
+                Logger.error("TXN #{__MODULE__} - catch #{Exception.format(:error, e, __STACKTRACE__)}")
+            end
           end
         :fragment_tx ->
           Amnesia.Fragment.transaction do
-            unquote(block)
+            try do
+              unquote(block)
+            rescue e ->
+              Logger.error("TXN #{__MODULE__} - rescue #{Exception.format(:error, e, __STACKTRACE__)}")
+            catch
+              :exit, e ->
+                Logger.error("TXN #{__MODULE__} - exit #{Exception.format(:error, e, __STACKTRACE__)}")
+              e ->
+                Logger.error("TXN #{__MODULE__} - catch #{Exception.format(:error, e, __STACKTRACE__)}")
+            end
           end
         :fragment_async ->
           Amnesia.Fragment.async do
-            unquote(block)
+            try do
+              unquote(block)
+            rescue e ->
+              Logger.error("TXN #{__MODULE__} - rescue #{Exception.format(:error, e, __STACKTRACE__)}")
+            catch
+              :exit, e ->
+                Logger.error("TXN #{__MODULE__} - exit #{Exception.format(:error, e, __STACKTRACE__)}")
+              e ->
+                Logger.error("TXN #{__MODULE__} - catch #{Exception.format(:error, e, __STACKTRACE__)}")
+            end
           end
         :fragment_sync ->
           Amnesia.Fragment.sync do
-            unquote(block)
+            try do
+              unquote(block)
+            rescue e ->
+              Logger.error("TXN #{__MODULE__} - rescue #{Exception.format(:error, e, __STACKTRACE__)}")
+            catch
+              :exit, e ->
+                Logger.error("TXN #{__MODULE__} - exit #{Exception.format(:error, e, __STACKTRACE__)}")
+              e ->
+                Logger.error("TXN #{__MODULE__} - catch #{Exception.format(:error, e, __STACKTRACE__)}")
+            end
           end
         _ ->
           unquote(block)
