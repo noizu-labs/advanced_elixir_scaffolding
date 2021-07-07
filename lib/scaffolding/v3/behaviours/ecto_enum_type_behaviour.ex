@@ -90,10 +90,10 @@ defmodule Noizu.Ecto.EnumTypeBehaviour do
                     |> Map.new()
 
 
-      def value_description(enum) when is_atom(enum) do
+      def description(enum) when is_atom(enum) do
         Map.has_key?(@atom_to_enum, enum) && (@atom_descriptions[enum] || "no description") || throw "#{enum} is not a member of #{__MODULE__}"
       end
-      def value_description(enum) when is_integer(enum) do
+      def description(enum) when is_integer(enum) do
         enum = @enum_to_atom[enum] || throw "#{enum} enum not found in #{__MODULE__}"
         @atom_descriptions[enum] || "no description"
       end

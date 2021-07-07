@@ -266,12 +266,6 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo do
       def __noizu_info__(), do: put_in(@__nzdo__base.__noizu_info__(), [:type], :repo)
       def __noizu_info__(:type), do: :repo
       defdelegate __noizu_info__(report), to: @__nzdo__base
-
-
-      if Module.get_attribute(@__nzdo__base, :__nzdo__enum_list) do
-        def __enum__(), do: __noizu_info__(:enum)
-      end
-
     end
   end
 
