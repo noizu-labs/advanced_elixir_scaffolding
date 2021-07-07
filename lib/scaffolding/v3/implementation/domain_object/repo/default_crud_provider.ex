@@ -124,7 +124,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
       cond do
         options[:version_change] == :disabled -> entity
         options[:version_change] == false -> entity
-        vsn != s.__vsn__ ->
+        vsn != s.vsn ->
           update = s.version_change(vsn, entity, context, options)
           cond do
             update && update.vsn != vsn ->
@@ -147,7 +147,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
       cond do
         options[:version_change] == :disabled -> entity
         options[:version_change] == false -> entity
-        vsn != s.__vsn__ ->
+        vsn != s.vsn ->
           update = s.version_change!(vsn, entity, context, options)
           cond do
             update && update.vsn != vsn ->
