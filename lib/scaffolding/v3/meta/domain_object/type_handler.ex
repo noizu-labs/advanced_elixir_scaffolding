@@ -12,6 +12,8 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.TypeHandler do
       def post_delete_callback(_field, entity, _context, _options), do: entity
       def post_delete_callback!(field, entity, context, options), do: post_delete_callback(field, entity, context, options)
       def cast(field, _segment, value, _type, _layer, _context, _options), do: {field, value}
+      def dump(field, record, _type, _layer, _context, _options), do: [{field, record && get_in(record, [Access.key(:field)])}]
+
       defoverridable [
         pre_create_callback: 4,
         pre_create_callback!: 4,
@@ -20,6 +22,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.TypeHandler do
         post_delete_callback: 4,
         post_delete_callback!: 4,
         cast: 7,
+        dump: 6,
       ]
     end
   end
