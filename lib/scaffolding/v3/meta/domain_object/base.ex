@@ -79,16 +79,27 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject do
       def __noizu_info__(:sref), do: @__nzdo__sref
       def __noizu_info__(:restrict_provider), do: nil
       def __noizu_info__(:poly), do: @__nzdo__poly_settings
-      def __noizu_info__(:json_configuration), do: @__nzdo__entity.__noizu_info__(:json_configuration)
-      def __noizu_info__(:identifier_type), do: @__nzdo__entity.__noizu_info__(:identifier_type)
-      def __noizu_info__(:fields), do: @__nzdo__entity.__noizu_info__(:fields)
-      def __noizu_info__(:field_attributes), do: @__nzdo__entity.__noizu_info__(:field_attributes)
-      def __noizu_info__(:field_types), do: @__nzdo__entity.__noizu_info__(:field_types)
+
+      @entity_driven_properties MapSet.new([
+        :json_configuration,
+        :identifier_type,
+        :fields,
+        :persisted_fields,
+        :field_attributes,
+        :field_permissions,
+        :field_types,
+        :associated_types
+      ])
+      def __noizu_info__(property) when Enum.member?(@entity_driven_properties, property), do: @__nzdo__entity.__noizu_info__(property)
+
       def __noizu_info__(:persistence), do: __persistence__()
-      def __noizu_info__(:associated_types), do: @__nzdo__entity.__noizu_info__(:associated_types)
       def __noizu_info__(:indexing), do: __indexing__()
       def __noizu_info__(:meta), do: @__nzdo__meta__map
       def __noizu_info__(:enum), do: @__nzdo__enum_type
+
+      defdelegate __fields__, to: @__nzdo__entity
+      defdelegate __fields__(setting), to: @__nzdo__entity
+
 
 
       #--------------------

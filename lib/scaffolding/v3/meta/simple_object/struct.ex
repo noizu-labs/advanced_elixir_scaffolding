@@ -206,7 +206,27 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.SimpleObject.Struct do
                                  ))
                                |> Map.new()
       @__nzdo__json_config put_in(@__nzdo__json_config, [:format_settings], @__nzdo__raw__json_format_settings)
-      @__nzdo__field_attributes_map Map.new(@__nzdo__field_attributes)
+      @__nzdo__field_attributes_map Enum.reduce(@__nzdo__field_attributes, %{}, fn({field, options}, acc) ->
+        options = case options do
+                    %{} -> options
+                    v when is_list(v) -> Map.new(v)
+                    v when is_atom(v) -> Map.new([{v, true}])
+                    v when is_tuple(v) -> Map.new([{v, true}])
+                    nil -> %{}
+                  end
+        update_in(acc, [field], &( Map.merge(&1 || %{}, options)))
+      end)
+      @__nzdo__field_permissions_map Enum.reduce(@__nzdo__field_permisions, %{}, fn({field, options}, acc) ->
+        options = case options do
+                    %{} -> options
+                    v when is_list(v) -> Map.new(v)
+                    v when is_atom(v) -> Map.new([{v, true}])
+                    v when is_tuple(v) -> Map.new([{v, true}])
+                    nil -> %{}
+                  end
+        update_in(acc, [field], &( Map.merge(&1 || %{}, options)))
+      end)
+      @__nzdo__persisted_fields Enum.filter(@__nzdo__field_list -- [:initial, :__transient__], &(!@__nzdo__field_attributes_map[&1][:transient]))
 
 
       def __noizu_info__() do
@@ -242,12 +262,26 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.SimpleObject.Struct do
       def __noizu_info__(:json_configuration), do: @__nzdo__json_config
       def __noizu_info__(:identifier_type), do: @__nzdo__identifier_type
       def __noizu_info__(:fields), do: @__nzdo__field_list
+      def __noizu_info__(:persisted_fields), do: @__nzdo__persisted_fields
       def __noizu_info__(:field_attributes), do: @__nzdo__field_attributes_map
+      def __noizu_info__(:field_permissions), do: @__nzdo__field_permissions_map
       def __noizu_info__(:field_types), do: @__nzdo__field_types_map
       def __noizu_info__(:persistence), do: __persistence__()
-      def __noizu_info__(:associated_types), do: @__nzdo__entity.__noizu_info__(:associated_types)
+      def __noizu_info__(:associated_types), do: nil
       def __noizu_info__(:indexing), do: __indexing__()
       def __noizu_info__(:meta), do: @__nzdo__meta__map
+
+      #----------------
+      def __fields__() do
+        Enum.map([:fields, :persisted, :types, :json, :attributes, :permissions], &({&1,__fields__(&1)}))
+      end
+      def __fields__(:fields), do: @__nzdo__field_list
+      def __fields__(:persisted), do: @__nzdo__persisted_fields
+      def __fields__(:types), do: @__nzdo__field_types_map
+      def __fields__(:json), do: @__nzdo__json_config
+      def __fields__(:attributes), do: @__nzdo__field_attributes_map
+      def __fields__(:permissions), do: @__nzdo__field_permissions_map
+
 
 
     end

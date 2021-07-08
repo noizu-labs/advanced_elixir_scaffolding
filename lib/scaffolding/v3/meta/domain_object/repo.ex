@@ -86,6 +86,9 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo do
     crud_provider = options[:erp_imp] || Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCrudProvider
     internal_provider = options[:internal_imp] || Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultInternalProvider
     process_config = quote do
+                       poly_support = unquote(options[:poly_support])
+
+
                        import Noizu.DomainObject, only: [file_rel_dir: 1]
                        require Amnesia
                        require Logger
@@ -134,12 +137,42 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo do
                        @vsn (Module.get_attribute(@__nzdo__base, :vsn) || 1.0)
 
                        #----------------------
+                       # Derives
+                       #----------------------
+                       @__nzdo__derive Noizu.V3.EntityProtocol
+                       @__nzdo__derive Noizu.V3.RestrictedProtocol
+
+
+                       @__nzdo__allowed_refs (case (poly_support || Noizu.DomainObject.extract_attribute(:poly_support, nil)) do
+                                                v  when is_list(v) -> Enum.uniq(v ++ [@__nzdo__entity])
+                                                _ -> [@__nzdo__entity]
+                                              end)
+
+                       # Json Settings
+                       @file unquote(macro_file) <> "<__prepare__json_settings__macro__>"
+                       Noizu.DomainObject.__prepare__json_settings__macro__(@options)
+
+                       # Prep attributes for loading individual fields.
+                       @file unquote(macro_file) <> "<__register__field_attributes__macro__>"
+                       Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity.__register__field_attributes__macro__(@options)
+
+
+                       #----------------------
                        # User block section (define, fields, constraints, json_mapping rules, etc.)
                        #----------------------
                        try do
                          import Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo
+                         import Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity
                          @implement Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo
                          unquote(block)
+
+                         if @__nzdo__fields == [] do
+                           @ref @__nzdo__allowed_refs
+                           public_field :entities
+                           public_field :length
+                           public_field :__transient__
+                         end
+
                        after
                          :ok
                        end
@@ -375,6 +408,11 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo do
       def __noizu_info__(), do: put_in(@__nzdo__base.__noizu_info__(), [:type], :repo)
       def __noizu_info__(:type), do: :repo
       defdelegate __noizu_info__(report), to: @__nzdo__base
+
+      defdelegate __fields__, to: @__nzdo__base
+      defdelegate __fields__(setting), to: @__nzdo__base
+
+
     end
   end
 

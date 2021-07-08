@@ -32,7 +32,29 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
                                  ))
                                |> Map.new()
       @__nzdo__json_config put_in(@__nzdo__json_config, [:format_settings], @__nzdo__raw__json_format_settings)
-      @__nzdo__field_attributes_map Map.new(@__nzdo__field_attributes)
+
+
+      @__nzdo__field_attributes_map Enum.reduce(@__nzdo__field_attributes, %{}, fn({field, options}, acc) ->
+        options = case options do
+          %{} -> options
+          v when is_list(v) -> Map.new(v)
+          v when is_atom(v) -> Map.new([{v, true}])
+          v when is_tuple(v) -> Map.new([{v, true}])
+          nil -> %{}
+        end
+        update_in(acc, [field], &( Map.merge(&1 || %{}, options)))
+      end)
+      @__nzdo__field_permissions_map Enum.reduce(@__nzdo__field_permisions, %{}, fn({field, options}, acc) ->
+        options = case options do
+                    %{} -> options
+                    v when is_list(v) -> Map.new(v)
+                    v when is_atom(v) -> Map.new([{v, true}])
+                    v when is_tuple(v) -> Map.new([{v, true}])
+                    nil -> %{}
+                  end
+        update_in(acc, [field], &( Map.merge(&1 || %{}, options)))
+      end)
+      @__nzdo__persisted_fields Enum.filter(@__nzdo__field_list -- [:initial, :__transient__], &(!@__nzdo__field_attributes_map[&1][:transient]))
 
       @__nzdo_persistence Noizu.Scaffolding.V3.Schema.PersistenceSettings.update_schema_fields(@__nzdo_persistence, @__nzdo__field_types_map)
       if @__nzdo__base_open? do
@@ -87,18 +109,33 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
       defdelegate __nmid__(setting), to: @__nzdo__base
 
 
+
+
+
       def __noizu_info__(), do: put_in(@__nzdo__base.__noizu_info__(), [:type], :entity)
       def __noizu_info__(:type), do: :entity
       def __noizu_info__(:identifier_type), do: @__nzdo__identifier_type
       def __noizu_info__(:fields), do: @__nzdo__field_list
+      def __noizu_info__(:persisted_fields), do: @__nzdo__persisted_fields
       def __noizu_info__(:field_types), do: @__nzdo__field_types_map
       def __noizu_info__(:persistence), do: __persistence__()
       def __noizu_info__(:associated_types), do: @__nzdo_associated_types
       def __noizu_info__(:json_configuration), do: @__nzdo__json_config
       def __noizu_info__(:field_attributes), do: @__nzdo__field_attributes_map
+      def __noizu_info__(:field_permissions), do: @__nzdo__field_permissions_map
       def __noizu_info__(:indexing), do: __indexing__()
       defdelegate __noizu_info__(report), to: @__nzdo__base
 
+      #------------------
+      def __fields__() do
+        Enum.map([:fields, :persisted, :types, :json, :attributes, :permissions], &({&1,__fields__(&1)}))
+      end
+      def __fields__(:fields), do: @__nzdo__field_list
+      def __fields__(:persisted), do: @__nzdo__persisted_fields
+      def __fields__(:types), do: @__nzdo__field_types_map
+      def __fields__(:json), do: @__nzdo__json_config
+      def __fields__(:attributes), do: @__nzdo__field_attributes_map
+      def __fields__(:permissions), do: @__nzdo__field_permissions_map
 
       # only defined for enum types.
       if @__nzdo_persistence.options.enum_table do
@@ -164,6 +201,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
                        #----------------------
                        # Derives
                        #----------------------
+                       Module.register_attribute(__MODULE__, :__nzdo__derive, accumulate: true)
                        @__nzdo__derive Noizu.ERP
                        @__nzdo__derive Noizu.V3.EntityProtocol
                        @__nzdo__derive Noizu.V3.RestrictedProtocol
@@ -396,6 +434,44 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
       end
     )
   end
+
+
+
+  #--------------------------
+  #
+  #--------------------------
+  defmacro transient_field(field, default \\ nil, opts \\ []) do
+    quote do
+      EntityMeta.__set_field_attributes__(__MODULE__, unquote(field), unquote(opts))
+      EntityMeta.__transient_field__(__MODULE__, unquote(field), unquote(default), unquote(opts))
+    end
+  end
+
+  def __transient_field__(mod, field, default, _opts) do
+    # Field which is not persisted to main mnesia record but may be loaded into object for end user convienence
+    Module.put_attribute(mod, :__nzdo__field_permissions, {field, :restricted})
+    Module.put_attribute(mod, :__nzdo__field_attributes, {field, [transient: true]})
+
+    Module.put_attribute(mod, :__nzdo__fields, {field, default})
+  end
+
+  #--------------------------
+  #
+  #--------------------------
+  defmacro transient_fields(fields, opts \\ []) do
+    quote do
+      EntityMeta.__transient_fields__(__MODULE__, unquote(fields), unquote(opts[:default] || nil), unquote(opts))
+    end
+  end
+  def __transient_fields__(mod, fields, default, opts) do
+    Enum.map(
+      fields,
+      fn (field) ->
+        __transient_field__(mod, field, default, opts)
+      end
+    )
+  end
+
 
   #--------------------------
   #
@@ -951,6 +1027,8 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
       @file unquote(macro_file) <> "<__nzdo_fields:2>"
       Module.put_attribute(__MODULE__, :__nzdo__fields, {:meta, %{}})
       @file unquote(macro_file) <> "<__nzdo_fields:3>"
+      Module.put_attribute(__MODULE__, :__nzdo__fields, {:__transient__, nil})
+      @file unquote(macro_file) <> "<__nzdo_fields:4>"
       Module.put_attribute(__MODULE__, :__nzdo__fields, {:vsn, @vsn})
       :ok
     end

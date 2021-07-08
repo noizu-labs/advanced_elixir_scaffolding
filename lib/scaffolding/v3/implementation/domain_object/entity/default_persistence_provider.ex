@@ -37,7 +37,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultP
     def __as_record_type__(domain_object, layer = %PersistenceLayer{type: :mnesia, table: table}, entity, context, options) do
       context = Noizu.ElixirCore.CallingContext.system(context)
       field_types = domain_object.__noizu_info__(:field_types)
-      fields = Map.keys(table.__struct__([])) -- [:__struct__]
+      fields = Map.keys(table.__struct__([])) -- [:__struct__, :__transient__, :initial]
       Enum.map(
         fields,
         fn (field) ->
@@ -72,7 +72,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultP
       context = Noizu.ElixirCore.CallingContext.admin()
       field_types = domain_object.__noizu_info__(:field_types)
       Enum.map(
-        domain_object.__noizu_info__(:fields),
+        domain_object.__fields__(:peristed),
         fn (field) ->
           cond do
             field == :identifier -> {:identifier, Noizu.Ecto.Entity.ecto_identifier(entity)}
