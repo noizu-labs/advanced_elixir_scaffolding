@@ -44,7 +44,8 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
         end
         update_in(acc, [field], &( Map.merge(&1 || %{}, options)))
       end)
-      @__nzdo__field_permissions_map Enum.reduce(@__nzdo__field_permisions, %{}, fn({field, options}, acc) ->
+
+      @__nzdo__field_permissions_map Enum.reduce(@__nzdo__field_permissions, %{}, fn({field, options}, acc) ->
         options = case options do
                     %{} -> options
                     v when is_list(v) -> Map.new(v)

@@ -80,7 +80,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject do
       def __noizu_info__(:restrict_provider), do: nil
       def __noizu_info__(:poly), do: @__nzdo__poly_settings
 
-      @entity_driven_properties MapSet.new([
+      @entity_driven_properties [
         :json_configuration,
         :identifier_type,
         :fields,
@@ -89,8 +89,8 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject do
         :field_permissions,
         :field_types,
         :associated_types
-      ])
-      def __noizu_info__(property) when Enum.member?(@entity_driven_properties, property), do: @__nzdo__entity.__noizu_info__(property)
+      ]
+      def __noizu_info__(property) when property in @entity_driven_properties, do: @__nzdo__entity.__noizu_info__(property)
 
       def __noizu_info__(:persistence), do: __persistence__()
       def __noizu_info__(:indexing), do: __indexing__()

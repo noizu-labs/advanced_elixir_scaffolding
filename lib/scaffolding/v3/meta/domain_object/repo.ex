@@ -85,9 +85,10 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo do
   def __noizu_repo__(caller, options, block) do
     crud_provider = options[:erp_imp] || Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCrudProvider
     internal_provider = options[:internal_imp] || Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultInternalProvider
+    macro_file = __ENV__.file
     process_config = quote do
                        poly_support = unquote(options[:poly_support])
-
+                       @options unquote(options)
 
                        import Noizu.DomainObject, only: [file_rel_dir: 1]
                        require Amnesia
@@ -106,15 +107,14 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo do
                        end
                        @__nzdo__repo_definied {file_rel_dir(unquote(caller.file)), unquote(caller.line)}
 
-                       #---------------------
-                       # Find Base
-                       #---------------------
-                       @__nzdo__base Module.split(__MODULE__)
-                                     |> Enum.slice(0..-2)
-                                     |> Module.concat()
-                       if !Module.get_attribute(@__nzdo__base, :__nzdo__base_definied) do
-                         raise "#{@__nzdo__base} must include use Noizu.DomainObject call."
-                       end
+                       # Extract Base Fields fields since SimbpleObjects are at the same level as their base.
+                       @file unquote(macro_file) <> "<__prepare__base__macro__>"
+                       Noizu.DomainObject.__prepare__base__macro__(@options)
+
+                       # Push details to Base, and read in required settings.
+                       @file unquote(macro_file) <> "<__prepare__poly__macro__>"
+                       Noizu.DomainObject.__prepare__poly__macro__(@options)
+
 
                        #---------------------
                        # Insure sref set
@@ -153,6 +153,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo do
                        Noizu.DomainObject.__prepare__json_settings__macro__(@options)
 
                        # Prep attributes for loading individual fields.
+                       require Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity
                        @file unquote(macro_file) <> "<__register__field_attributes__macro__>"
                        Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity.__register__field_attributes__macro__(@options)
 
@@ -176,17 +177,17 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo do
                        after
                          :ok
                        end
-
-
-
-
-
                      end
 
 
+    generate = quote unquote: false do
+                 @derive @__nzdo__derive
+                 defstruct @__nzdo__fields
+               end
 
     quote do
       unquote(process_config)
+      unquote(generate)
       use unquote(crud_provider)
       # Post User Logic Hook and checks.
       @before_compile unquote(internal_provider)
