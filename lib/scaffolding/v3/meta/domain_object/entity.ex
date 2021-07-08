@@ -12,6 +12,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
   #
   #--------------------------------------------
   defmacro __before_compile__(_) do
+    macro_file = __ENV__.file
     quote do
       defdelegate vsn(), to: @__nzdo__base
       def __entity__(), do: __MODULE__
@@ -21,10 +22,13 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
       defdelegate __sref__(), to: @__nzdo__base
       defdelegate __erp__(), to: @__nzdo__base
 
+
+
+      @file unquote(macro_file) <> "<associated_type>"
       @__nzdo_associated_types (
                                  Enum.map(@__nzdo_persistence__by_table || %{}, fn ({k, v}) -> {k, v.type} end) ++ Enum.map(
                                    @__nzdo__poly_support || %{},
-                                   fn (k, v) -> {k, :poly} end
+                                   fn (k) -> {k, :poly} end
                                  ))
                                |> Map.new()
       @__nzdo__json_config put_in(@__nzdo__json_config, [:format_settings], @__nzdo__raw__json_format_settings)

@@ -16,6 +16,7 @@ defmodule Noizu.DomainObject do
       Module.register_attribute(__MODULE__, :json_white_list, accumulate: false)
       Module.register_attribute(__MODULE__, :json_format_group, accumulate: true)
       Module.register_attribute(__MODULE__, :json_field_group, accumulate: true)
+      Module.register_attribute(__MODULE__, :poly_support, accumulate: true)
 
       # Insure only referenced once.
       if line = Module.get_attribute(__MODULE__, :__nzdo__base_definied) do
@@ -251,7 +252,11 @@ defmodule Noizu.DomainObject do
                             :else -> @__nzdo__base
                           end)
       @__nzdo__poly_base_open? Module.open?(@__nzdo__poly_base)
-      @__nzdo__poly_support poly_support || Noizu.DomainObject.extract_attribute(:poly_support, nil)
+      @__nzdo__poly_support (case (poly_support || Noizu.DomainObject.extract_attribute(:poly_support, nil)) do
+                               nil -> nil
+                               [] -> nil
+                               v -> v
+                             end)
       @__nzdo__poly? ((@__nzdo__poly_base != @__nzdo__base || @__nzdo__poly_support) && true || false)
       @__nzdo__repo repo || Noizu.DomainObject.extract_attribute(:repo, Module.concat([@__nzdo__poly_base, "Repo"]))
       @__nzdo__sref sref || Noizu.DomainObject.extract_attribute(:sref, :unsupported)

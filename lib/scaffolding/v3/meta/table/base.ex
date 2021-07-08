@@ -74,7 +74,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.Table do
         @__nzdo__base @__nzdo__table_provider.expand_base(@__nzdo__entity, unquote(base))
       end
       if @enable_nmid do
-        @__nzdo__nmid_generator unquote(nmid_generator) || (Module.get_attribute(__MODULE__, :nmid_generator) || Noizu.Scaffolding.V3.NmidV3Generator)
+        @__nzdo__nmid_generator unquote(nmid_generator) || (Module.get_attribute(__MODULE__, :nmid_generator) || Noizu.Scaffolding.V3.NmidGenerator)
         @__nzdo__nmid_sequencer unquote(nmid_sequencer) || (Module.get_attribute(__MODULE__, :nmid_sequencer) || __MODULE__)
         @__nzdo__nmid_bare (cond do
                               unquote(nmid_bare) != nil -> unquote(nmid_bare)
