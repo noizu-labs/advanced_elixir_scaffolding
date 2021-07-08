@@ -86,6 +86,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo do
     crud_provider = options[:erp_imp] || Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCrudProvider
     internal_provider = options[:internal_imp] || Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultInternalProvider
     macro_file = __ENV__.file
+    options = put_in(options || [], [:for_repo], true)
     process_config = quote do
                        poly_support = unquote(options[:poly_support])
                        @options unquote(options)
@@ -385,33 +386,71 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo do
   #--------------------------------------------
   defmacro __before_compile__(_) do
     quote do
+
+      #################################################
+      #
+      #################################################
       defdelegate vsn(), to: @__nzdo__base
       def __base__(), do: @__nzdo__base
       defdelegate __entity__(), to: @__nzdo__base
       def __repo__(), do: __MODULE__
       defdelegate __sref__(), to: @__nzdo__base
       defdelegate __erp__(), to: @__nzdo__base
-      defdelegate __enum_type__(), to: @__nzdo__base
       defdelegate id(ref), to: @__nzdo__base
       defdelegate ref(ref), to: @__nzdo__base
       defdelegate sref(ref), to: @__nzdo__base
+
       defdelegate entity(ref, options \\ nil), to: @__nzdo__base
       defdelegate entity!(ref, options \\ nil), to: @__nzdo__base
+
       defdelegate record(ref, options \\ nil), to: @__nzdo__base
       defdelegate record!(ref, options \\ nil), to: @__nzdo__base
+
+      #################################################
+      # __indexing__
+      #################################################
       defdelegate __indexing__(), to: @__nzdo__base
       defdelegate __indexing__(setting), to: @__nzdo__base
-      defdelegate __persistence__(setting \\ :all), to: @__nzdo__base
+
+      #################################################
+      # __persistence__
+      #################################################
+      defdelegate __persistence__(), to: @__nzdo__base
+      defdelegate __persistence__(setting), to: @__nzdo__base
       defdelegate __persistence__(selector, setting), to: @__nzdo__base
+
+      #################################################
+      # __nmid__
+      #################################################
       defdelegate __nmid__(), to: @__nzdo__base
       defdelegate __nmid__(setting), to: @__nzdo__base
 
+      #################################################
+      # __noizu_info__
+      #################################################
       def __noizu_info__(), do: put_in(@__nzdo__base.__noizu_info__(), [:type], :repo)
       def __noizu_info__(:type), do: :repo
       defdelegate __noizu_info__(report), to: @__nzdo__base
 
+      #################################################
+      # __fields__
+      #################################################
       defdelegate __fields__, to: @__nzdo__base
       defdelegate __fields__(setting), to: @__nzdo__base
+
+      #################################################
+      # __enum__
+      #################################################
+      defdelegate __enum__(), to: @__nzdo__base
+      defdelegate __enum__(property), to: @__nzdo__base
+
+      #################################################
+      # __json__
+      #################################################
+      defdelegate __json__(), to: @__nzdo__base
+      defdelegate __json__(property), to: @__nzdo__base
+
+
 
 
     end

@@ -25,8 +25,8 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
         association_type == nil -> nil
         association_type == false -> nil
         association_type == :poly -> associated_struct.ref(entity)
-        config = domain_object.__persistence__(:table)[associated_struct] ->
-          identifier = case config.map_id do
+        config = domain_object.__persistence__(:tables)[associated_struct] ->
+          identifier = case config.id_map do
                          :unsupported -> nil
                          :same -> get_in(entity, [Access.key(:identifier)]) || get_in(entity, [Access.key(:id)])
                          {m, f} -> apply(m, f, [entity])
@@ -73,7 +73,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
         association_type == nil -> nil
         association_type == false -> nil
         association_type == :poly -> entity
-        layer = domain_object.__persistence__(:table)[associated_struct] ->
+        layer = domain_object.__persistence__(:tables)[associated_struct] ->
           context = Noizu.ElixirCore.CallingContext.system(options[:context] || Process.get(:context))
           domain_object.__from_record__(layer, entity, context, options)
         :else -> nil
@@ -81,7 +81,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
     end
     def entity(domain_object, ref, options) do
       cond do
-        ref = domain_object.ref(ref) ->
+        ref = domain_object.id(ref) ->
           context = Noizu.ElixirCore.CallingContext.system(options[:context] || Process.get(:context))
           domain_object.__repo__().get(ref, context, options)
         :else -> nil
@@ -95,7 +95,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
         association_type == nil -> nil
         association_type == false -> nil
         association_type == :poly -> entity
-        layer = domain_object.__persistence__(:table)[associated_struct] ->
+        layer = domain_object.__persistence__(:tables)[associated_struct] ->
           context = Noizu.ElixirCore.CallingContext.system(options[:context] || Process.get(:context))
           domain_object.__from_record__!(layer, entity, context, options)
         :else -> nil
@@ -103,7 +103,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
     end
     def entity!(domain_object, ref, options) do
       cond do
-        ref = domain_object.ref(ref) ->
+        ref = domain_object.id(ref) ->
           context = Noizu.ElixirCore.CallingContext.system(options[:context] || Process.get(:context))
           domain_object.__repo__().get!(ref, context, options)
         :else -> nil

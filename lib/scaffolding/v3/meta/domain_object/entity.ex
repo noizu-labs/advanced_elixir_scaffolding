@@ -17,7 +17,6 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
       defdelegate vsn(), to: @__nzdo__base
       def __entity__(), do: __MODULE__
       def __base__(), do: @__nzdo__base
-      defdelegate __enum_type__(), to: @__nzdo__base
       defdelegate __repo__(), to: @__nzdo__base
       defdelegate __sref__(), to: @__nzdo__base
       defdelegate __erp__(), to: @__nzdo__base
@@ -76,15 +75,22 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
                          end
                        )
 
+      #################################################
+      # __indexing__
+      #################################################
       def __indexing__(), do: __indexing__(:indexes)
       def __indexing__(:indexes), do: @__nzdo__indexes
 
+      #################################################
+      # __persistence__
+      #################################################
       def __persistence__(), do: __persistence__(:all)
       def __persistence__(:all) do
         [:enum_table, :auto_generate, :universal_identifier, :universal_lookup, :reference_type, :layers, :schemas, :tables, :ecto_entity, :options]
         |> Enum.map(&({&1, __persistence__(&1)}))
         |> Map.new()
       end
+      def __persistence__(:ecto_type), do: @__nzdo__enum_ecto_type
       def __persistence__(:enum_table), do: @__nzdo_persistence.options.enum_table
       def __persistence__(:auto_generate), do: @__nzdo_persistence.options.auto_generate
       def __persistence__(:universal_identifier), do: @__nzdo_persistence.options.universal_identifier
@@ -97,6 +103,9 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
       def __persistence__(:options), do: @__nzdo_persistence.options
       def __persistence__(repo, :table), do: @__nzdo_persistence.schemas[repo] && @__nzdo_persistence.schemas[repo].table
 
+      #################################################
+      # __nmid__
+      #################################################
       def __nmid__(), do: __nmid__(:all)
       def __nmid__(:all) do
         %{
@@ -109,10 +118,9 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
       def __nmid__(:index), do: @__nzdo__nmid_index || @__nzdo__schema_helper.__noizu_info__(:nmid_indexes)[__MODULE__]
       defdelegate __nmid__(setting), to: @__nzdo__base
 
-
-
-
-
+      #################################################
+      # __noizu_info__
+      #################################################
       def __noizu_info__(), do: put_in(@__nzdo__base.__noizu_info__(), [:type], :entity)
       def __noizu_info__(:type), do: :entity
       def __noizu_info__(:identifier_type), do: @__nzdo__identifier_type
@@ -127,7 +135,9 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
       def __noizu_info__(:indexing), do: __indexing__()
       defdelegate __noizu_info__(report), to: @__nzdo__base
 
-      #------------------
+      #################################################
+      # __fields__
+      #################################################
       def __fields__() do
         Enum.map([:fields, :persisted, :types, :json, :attributes, :permissions], &({&1,__fields__(&1)}))
       end
@@ -138,13 +148,17 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
       def __fields__(:attributes), do: @__nzdo__field_attributes_map
       def __fields__(:permissions), do: @__nzdo__field_permissions_map
 
-      # only defined for enum types.
-      if @__nzdo_persistence.options.enum_table do
-        def __enum__(), do: __noizu_info__(:enum)
-      end
+      #################################################
+      # __enum__
+      #################################################
+      defdelegate __enum__(), to: @__nzdo__base
+      defdelegate __enum__(property), to: @__nzdo__base
 
-
-
+      #################################################
+      # __json__
+      #################################################
+      defdelegate __json__(), to: @__nzdo__base
+      defdelegate __json__(property), to: @__nzdo__base
     end
   end
 

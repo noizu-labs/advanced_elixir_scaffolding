@@ -55,6 +55,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Scaffolding.Def
       @cache_keys Map.merge(@cache_keys || %{}, %{
         type: :"__nzss__#{@app}__type",
         all: :"__nzss__#{@app}__*",
+        nmid_indexes: :"__nzss__#{@app}__nmid_indexes",
         entities: :"__nzss__#{@app}__entities",
         indexes: :"__nzss__#{@app}__indexes",
         enums: :"__nzss__#{@app}__enums",
@@ -98,6 +99,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Scaffolding.Def
       end
 
       def __noizu_info__(:type), do: :schema
+      def __noizu_info__(:nmid_indexes), do: __nmid_index_list__()
       def __noizu_info__(:entities = property), do: @__nzdo__internal_imp.cached_filter(__cache_key__(property), @app, @base_prefix, :entity)
       def __noizu_info__(:indexes = property), do: @__nzdo__internal_imp.cached_filter(__cache_key__(property), @app, @base_prefix, :index)
       def __noizu_info__(:enums = property), do: @__nzdo__internal_imp.cached_filter(__cache_key__(property), @app, @base_prefix, :entity, &(&1.__noizu_info__(:meta)[:enum_entity]))
@@ -126,6 +128,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Scaffolding.Def
       def info(), do: __noizu_info__()
       def info(property), do: __noizu_info__(property)
 
+      def __nmid_index_list__(), do: []
       def enums(), do: __noizu_info__(:enums)
       def sref_map(), do: __noizu_info__(:sref_map)
       def indexes(), do: __noizu_info__(:indexes)
@@ -159,6 +162,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Scaffolding.Def
         __flush__: 1,
         __noizu_info__: 0,
         __noizu_info__: 1,
+        __nmid_index_list__: 0,
         info: 0,
         info: 1,
         enums: 0,

@@ -26,14 +26,19 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject do
         @__nzdo__enum_type Module.concat([__MODULE__, "Ecto.EnumType"])
       end
 
+      #################################################
+      # __persistence__
+      #################################################
       def vsn(), do: @vsn
       def __base__(), do: __MODULE__
       def __entity__(), do: @__nzdo__entity
       def __repo__(), do: @__nzdo__repo
       def __sref__(), do: @__nzdo__sref
       def __erp__(), do: @__nzdo__entity
-      def __enum_type__(), do: @__nzdo__enum_type
 
+      #################################################
+      # __nmid__
+      #################################################
       def __nmid__(), do: __nmid__(:all)
       def __nmid__(:all), do: @__nzdo__entity.__nmid__(:all)
       def __nmid__(:generator), do: @__nzdo__nmid_generator
@@ -41,12 +46,24 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject do
       def __nmid__(:bare), do: @__nzdo__nmid_bare
       def __nmid__(:index), do: @__nzdo__entity.__noizu_info__(:nmid_index)
 
+      #################################################
+      # __indexing__
+      #################################################
       defdelegate __indexing__(), to: @__nzdo__entity
       defdelegate __indexing__(setting), to: @__nzdo__entity
-      defdelegate __persistence__(setting \\ :all), to: @__nzdo__entity
+
+      #################################################
+      # __persistence__
+      #################################################
+      defdelegate __persistence__(), to: @__nzdo__entity
+      defdelegate __persistence__(setting), to: @__nzdo__entity
       defdelegate __persistence__(selector, setting), to: @__nzdo__entity
 
-      def __noizu_info__() do
+      #################################################
+      # __noizu_info__
+      #################################################
+      def __noizu_info__(), do: __noizu_info__(:all)
+      def __noizu_info__(:all) do
         Enum.map(
           [
             :type,
@@ -61,16 +78,17 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject do
             :identifier_type,
             :fields,
             :field_attributes,
+            :field_permissions,
             :field_types,
-            :persistence,
             :associated_types,
+            :persistence,
             :indexing,
-            :meta
+            :meta,
+            :enum
           ],
           &({&1, __noizu_info__(&1)})
         )
       end
-
       def __noizu_info__(:type), do: :base
       def __noizu_info__(:base), do: __MODULE__
       def __noizu_info__(:entity), do: @__nzdo__entity
@@ -79,7 +97,6 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject do
       def __noizu_info__(:sref), do: @__nzdo__sref
       def __noizu_info__(:restrict_provider), do: nil
       def __noizu_info__(:poly), do: @__nzdo__poly_settings
-
       @entity_driven_properties [
         :json_configuration,
         :identifier_type,
@@ -91,16 +108,43 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject do
         :associated_types
       ]
       def __noizu_info__(property) when property in @entity_driven_properties, do: @__nzdo__entity.__noizu_info__(property)
-
       def __noizu_info__(:persistence), do: __persistence__()
       def __noizu_info__(:indexing), do: __indexing__()
       def __noizu_info__(:meta), do: @__nzdo__meta__map
-      def __noizu_info__(:enum), do: @__nzdo__enum_type
+      def __noizu_info__(:enum), do: __enum__()
 
+      #################################################
+      # __fields__
+      #################################################
       defdelegate __fields__, to: @__nzdo__entity
       defdelegate __fields__(setting), to: @__nzdo__entity
 
+      #################################################
+      # __enum__
+      #################################################
+      def __enum__(), do: __enum__(:all)
+      def __enum__(:all) do
+        Enum.map([:list, :default, :is_enum_table, :value_type, :type], &({&1, __enum__(&1)}))
+      end
+      def __enum__(:list), do: @__nzdo__enum_list
+      def __enum__(:default), do: @__nzdo__enum_default_value
+      def __enum__(:is_enum?), do: @__nzdo__enum_table
+      def __enum__(:value_type), do: @__nzdo__enum_ecto_type
+      def __enum__(:type), do: @__nzdo__enum_type
 
+      #################################################
+      # __json__
+      #################################################
+      def __json__(), do: __json__(:all)
+      def __json__(:all) do
+        Enum.map([:provider, :default, :formats, :white_list, :format_groups, :field_groups], &({&1, __json__(&1)}))
+      end
+      def __json__(:provider), do: @__nzdo__json_provider
+      def __json__(:default), do: @__nzdo__json_format
+      def __json__(:formats), do: @__nzdo__json_supported_formats
+      def __json__(:white_list), do: @__nzdo__json_white_list
+      def __json__(:format_groups), do: @__nzdo__json_format_groups
+      def __json__(:field_groups), do: @__nzdo__json_field_groups
 
       #--------------------
       # EctoEnum
@@ -168,8 +212,6 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject do
           end
         end
       end
-
-
 
     end
   end

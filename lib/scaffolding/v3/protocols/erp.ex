@@ -6,17 +6,100 @@
 
 
 defimpl Noizu.ERP, for: Any do
-  def id(_), do: nil
-  def ref(_), do: nil
-  def sref(_), do: nil
-  def record(entity, options \\ nil)
-  def record(_entity, _options), do: nil
-  def record!(entity, options \\ nil)
-  def record!(_entity, _options), do: nil
-  def entity(entity, options \\ nil)
-  def entity(_entity, _options), do: nil
-  def entity!(entity, options \\ nil)
-  def entity!(_entity, _options), do: nil
+
+  def id(ref) do
+    case ref do
+      %m{} ->
+        cond do
+          function_exported?(m, :__erp__, 0) -> m.__erp__.id(ref)
+          function_exported?(m, :erp_handler, 0) -> m.erp_handler.id(ref)
+          :else -> nil
+        end
+      _ -> nil
+    end
+  end
+
+  def ref(ref) do
+    case ref do
+      %m{} ->
+        cond do
+          function_exported?(m, :__erp__, 0) -> m.__erp__.ref(ref)
+          function_exported?(m, :erp_handler, 0) -> m.erp_handler.ref(ref)
+          :else -> nil
+        end
+      _ -> nil
+    end
+  end
+
+  def sref(ref) do
+    case ref do
+      %m{} ->
+        cond do
+          function_exported?(m, :__erp__, 0) -> m.__erp__.sref(ref)
+          function_exported?(m, :erp_handler, 0) -> m.erp_handler.sref(ref)
+          :else -> nil
+        end
+      _ -> nil
+    end
+  end
+
+  def record(ref, options \\ nil)
+  def record(ref, options) do
+    case ref do
+      %m{} ->
+        cond do
+          function_exported?(m, :__erp__, 0) -> m.__erp__.record(ref, options)
+          function_exported?(m, :erp_handler, 0) -> m.erp_handler.record(ref, options)
+          :else -> nil
+        end
+      _ -> nil
+    end
+  end
+
+
+
+  def record!(ref, options \\ nil)
+  def record!(ref, options) do
+    case ref do
+      %m{} ->
+        cond do
+          function_exported?(m, :__erp__, 0) -> m.__erp__.record!(ref, options)
+          function_exported?(m, :erp_handler, 0) -> m.erp_handler.record!(ref, options)
+          :else -> nil
+        end
+      _ -> nil
+    end
+  end
+
+
+
+
+  def entity(ref, options \\ nil)
+  def entity(ref, options) do
+    case ref do
+      %m{} ->
+        cond do
+          function_exported?(m, :__erp__, 0) -> m.__erp__.entity(ref, options)
+          function_exported?(m, :erp_handler, 0) -> m.erp_handler.entity(ref, options)
+          :else -> nil
+        end
+      _ -> nil
+    end
+  end
+
+
+  def entity!(ref, options \\ nil)
+  def entity!(ref, options) do
+    case ref do
+      %m{} ->
+        cond do
+          function_exported?(m, :__erp__, 0) -> m.__erp__.entity!(ref, options)
+          function_exported?(m, :erp_handler, 0) -> m.erp_handler.entity!(ref, options)
+          :else -> nil
+        end
+      _ -> nil
+    end
+  end
 
   defmacro __deriving__(module, _struct, _options) do
     quote do

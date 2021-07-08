@@ -168,13 +168,90 @@ defmodule Noizu.DomainObject do
   #--------------------------------------------
   # extract_has_attribute
   #--------------------------------------------
-  defmacro extract_has_attribute(attribute, default) do
+  defmacro extract_has_attribute(attribute, property \\ nil, default) do
+    property = property || attribute
     quote do
       cond do
         Module.has_attribute?(__MODULE__, unquote(attribute)) -> Module.get_attribute(__MODULE__, unquote(attribute))
-        !@__nzdo__base_open? && @__nzdo__base.__noizu_info__(unquote(attribute)) != nil -> @__nzdo__base.__noizu_info__(unquote(attribute))
+        !@__nzdo__base_open? && @__nzdo__base.__noizu_info__(unquote(property)) != nil -> @__nzdo__base.__noizu_info__(unquote(property))
         @__nzdo__base_open? && Module.has_attribute?(@__nzdo__base, unquote(attribute)) -> Module.get_attribute(@__nzdo__base, unquote(attribute))
-        !@__nzdo__poly_base_open? && @__nzdo__poly_base.__noizu_info__(unquote(attribute)) != nil -> @__nzdo__poly_base.__noizu_info__(unquote(attribute))
+        !@__nzdo__poly_base_open? && @__nzdo__poly_base.__noizu_info__(unquote(property)) != nil -> @__nzdo__poly_base.__noizu_info__(unquote(property))
+        @__nzdo__poly_base_open? && Module.has_attribute?(@__nzdo__poly_base, unquote(attribute)) -> Module.get_attribute(@__nzdo__poly_base, unquote(attribute))
+        :else -> unquote(default)
+      end
+    end
+  end
+
+
+
+  #--------------------------------------------
+  # extract_has_json_attribute
+  #--------------------------------------------
+  defmacro extract_has_json_attribute(attribute, property \\ nil, default) do
+    property = property || attribute
+    quote do
+      cond do
+        Module.has_attribute?(__MODULE__, unquote(attribute)) -> Module.get_attribute(__MODULE__, unquote(attribute))
+        !@__nzdo__base_open? && @__nzdo__base.__json__(unquote(property)) != nil -> @__nzdo__base.__json__(unquote(property))
+        @__nzdo__base_open? && Module.has_attribute?(@__nzdo__base, unquote(attribute)) -> Module.get_attribute(@__nzdo__base, unquote(attribute))
+        !@__nzdo__poly_base_open? && @__nzdo__poly_base.__json__(unquote(property)) != nil -> @__nzdo__poly_base.__json__(unquote(property))
+        @__nzdo__poly_base_open? && Module.has_attribute?(@__nzdo__poly_base, unquote(attribute)) -> Module.get_attribute(@__nzdo__poly_base, unquote(attribute))
+        :else -> unquote(default)
+      end
+    end
+  end
+
+
+  #--------------------------------------------
+  # extract_has_enum_attribute
+  #--------------------------------------------
+  defmacro extract_has_enum_attribute(attribute, property \\ nil, default) do
+    property = property || attribute
+    quote do
+      cond do
+        Module.has_attribute?(__MODULE__, unquote(attribute)) -> Module.get_attribute(__MODULE__, unquote(attribute))
+        !@__nzdo__base_open? && @__nzdo__base.__enum__(unquote(property)) != nil -> @__nzdo__base.__enum__(unquote(property))
+        @__nzdo__base_open? && Module.has_attribute?(@__nzdo__base, unquote(attribute)) -> Module.get_attribute(@__nzdo__base, unquote(attribute))
+        !@__nzdo__poly_base_open? && @__nzdo__poly_base.__enum__(unquote(property)) != nil -> @__nzdo__poly_base.__enum__(unquote(property))
+        @__nzdo__poly_base_open? && Module.has_attribute?(@__nzdo__poly_base, unquote(attribute)) -> Module.get_attribute(@__nzdo__poly_base, unquote(attribute))
+        :else -> unquote(default)
+      end
+    end
+  end
+
+
+
+  #--------------------------------------------
+  # extract_has_nmid_attribute
+  #--------------------------------------------
+  defmacro extract_has_nmid_attribute(attribute, property \\ nil, default) do
+    property = property || attribute
+    quote do
+      cond do
+        Module.has_attribute?(__MODULE__, unquote(attribute)) -> Module.get_attribute(__MODULE__, unquote(attribute))
+        !@__nzdo__base_open? && @__nzdo__base.__nmid__(unquote(property)) != nil -> @__nzdo__base.__nmid__(unquote(property))
+        @__nzdo__base_open? && Module.has_attribute?(@__nzdo__base, unquote(attribute)) -> Module.get_attribute(@__nzdo__base, unquote(attribute))
+        !@__nzdo__poly_base_open? && @__nzdo__poly_base.__nmid__(unquote(property)) != nil -> @__nzdo__poly_base.__nmid__(unquote(property))
+        @__nzdo__poly_base_open? && Module.has_attribute?(@__nzdo__poly_base, unquote(attribute)) -> Module.get_attribute(@__nzdo__poly_base, unquote(attribute))
+        :else -> unquote(default)
+      end
+    end
+  end
+
+
+
+
+  #--------------------------------------------
+  # extract_has_persistence_attribute
+  #--------------------------------------------
+  defmacro extract_has_persistence_attribute(attribute, property \\ nil, default) do
+    property = property || attribute
+    quote do
+      cond do
+        Module.has_attribute?(__MODULE__, unquote(attribute)) -> Module.get_attribute(__MODULE__, unquote(attribute))
+        !@__nzdo__base_open? && @__nzdo__base.__persistence__(unquote(property)) != nil -> @__nzdo__base.__persistence__(unquote(property))
+        @__nzdo__base_open? && Module.has_attribute?(@__nzdo__base, unquote(attribute)) -> Module.get_attribute(@__nzdo__base, unquote(attribute))
+        !@__nzdo__poly_base_open? && @__nzdo__poly_base.__persistence__(unquote(property)) != nil -> @__nzdo__poly_base.__persistence__(unquote(property))
         @__nzdo__poly_base_open? && Module.has_attribute?(@__nzdo__poly_base, unquote(attribute)) -> Module.get_attribute(@__nzdo__poly_base, unquote(attribute))
         :else -> unquote(default)
       end
@@ -184,18 +261,38 @@ defmodule Noizu.DomainObject do
   #--------------------------------------------
   # extract_attribute
   #--------------------------------------------
-  defmacro extract_attribute(attribute, default) do
+  defmacro extract_attribute(attribute, property \\ nil, default) do
+    property = property || attribute
     quote do
       cond do
         v = Module.get_attribute(__MODULE__, unquote(attribute)) -> v
-        !@__nzdo__base_open? && @__nzdo__base.__noizu_info__(unquote(attribute)) -> @__nzdo__base.__noizu_info__(unquote(attribute))
+        !@__nzdo__base_open? && @__nzdo__base.__noizu_info__(unquote(property)) -> @__nzdo__base.__noizu_info__(unquote(property))
         @__nzdo__base_open? && Module.get_attribute(@__nzdo__base, unquote(attribute)) -> Module.get_attribute(@__nzdo__base, unquote(attribute))
-        !@__nzdo__poly_base_open? && @__nzdo__poly_base.__noizu_info__(unquote(attribute)) -> @__nzdo__poly_base.__noizu_info__(unquote(attribute))
+        !@__nzdo__poly_base_open? && @__nzdo__poly_base.__noizu_info__(unquote(property)) -> @__nzdo__poly_base.__noizu_info__(unquote(property))
         @__nzdo__poly_base_open? && Module.get_attribute(@__nzdo__poly_base, unquote(attribute)) -> Module.get_attribute(@__nzdo__poly_base, unquote(attribute))
         :else -> unquote(default)
       end
     end
   end
+
+
+  #--------------------------------------------
+  # extract_json_attribute
+  #--------------------------------------------
+  defmacro extract_json_attribute(attribute, property \\ nil, default) do
+    property = property || attribute
+    quote do
+      cond do
+        v = Module.get_attribute(__MODULE__, unquote(attribute)) -> v
+        !@__nzdo__base_open? && @__nzdo__base.__json__(unquote(property)) -> @__nzdo__base.__json__(unquote(property))
+        @__nzdo__base_open? && Module.get_attribute(@__nzdo__base, unquote(attribute)) -> Module.get_attribute(@__nzdo__base, unquote(attribute))
+        !@__nzdo__poly_base_open? && @__nzdo__poly_base.__json__(unquote(property)) -> @__nzdo__poly_base.__json__(unquote(property))
+        @__nzdo__poly_base_open? && Module.get_attribute(@__nzdo__poly_base, unquote(attribute)) -> Module.get_attribute(@__nzdo__poly_base, unquote(attribute))
+        :else -> unquote(default)
+      end
+    end
+  end
+
 
   #----------------------------------------------------
   # __prepare__base__macro__
@@ -218,7 +315,7 @@ defmodule Noizu.DomainObject do
       Module.register_attribute(__MODULE__, :__nzdo__entity, accumulate: false)
       Module.register_attribute(__MODULE__, :__nzdo__struct, accumulate: false)
 
-      if !@__nzdo__base_open? && !Module.get_attribute(@__nzdo__base, :__nzdo__base_definied) do
+      if @__nzdo__base_open? && !Module.get_attribute(@__nzdo__base, :__nzdo__base_definied) do
         raise "#{@__nzdo__base} must include use Noizu.SimpleObject/DomainObject call."
       end
     end
@@ -238,8 +335,15 @@ defmodule Noizu.DomainObject do
       sref = options[:sref]
 
 
-      Module.put_attribute(__MODULE__, :__nzdo__entity, __MODULE__)
-      Module.put_attribute(__MODULE__, :__nzdo__struct, __MODULE__)
+      entity = cond do
+                 options[:for_repo] ->
+                  entity = Module.concat(Enum.slice(Module.split(__MODULE__), 0..-2) ++ [Entity])
+                   Module.put_attribute(__MODULE__, :__nzdo__entity, entity)
+                   Module.put_attribute(__MODULE__, :__nzdo__struct, entity)
+                 :else ->
+                   Module.put_attribute(__MODULE__, :__nzdo__entity, __MODULE__)
+                   Module.put_attribute(__MODULE__, :__nzdo__struct, __MODULE__)
+               end
 
       @__nzdo__schema_helper noizu_domain_object_schema || raise "#{
         __MODULE__
@@ -252,18 +356,21 @@ defmodule Noizu.DomainObject do
                             :else -> @__nzdo__base
                           end)
       @__nzdo__poly_base_open? Module.open?(@__nzdo__poly_base)
-      @__nzdo__poly_support (case (poly_support || Noizu.DomainObject.extract_attribute(:poly_support, nil)) do
-                               nil -> nil
-                               [] -> nil
-                               v -> v
-                             end)
+      @__nzdo__poly_support (cond do
+                                poly_support -> poly_support
+                                v = Module.get_attribute(__MODULE__, :poly_support) -> v
+                                v = @__nzdo__base_open? && Module.get_attribute(@__nzdo__base, :poly_support) -> v
+                                v = !@__nzdo__base_open? && @__nzdo__base.__noizu_info__(:poly)[:support] -> v
+                                v = @__nzdo__poly_base_open? && Module.get_attribute(@__nzdo__poly_base, :poly_support) -> v
+                                v = !@__nzdo__poly_base_open? && @__nzdo__poly_base.__noizu_info__(:poly)[:support] -> v
+                                :else -> nil
+                              end)
       @__nzdo__poly? ((@__nzdo__poly_base != @__nzdo__base || @__nzdo__poly_support) && true || false)
       @__nzdo__repo repo || Noizu.DomainObject.extract_attribute(:repo, Module.concat([@__nzdo__poly_base, "Repo"]))
       @__nzdo__sref sref || Noizu.DomainObject.extract_attribute(:sref, :unsupported)
       @vsn vsn || Noizu.DomainObject.extract_attribute(:vsn, 1.0)
 
-
-      if @__nzdo__base_open? do
+      if @__nzdo__base_open? && !options[:for_repo] do
         Module.put_attribute(@__nzdo__base, :__nzdo__sref, @__nzdo__sref)
         Module.put_attribute(@__nzdo__base, :__nzdo__entity, __MODULE__)
         Module.put_attribute(@__nzdo__base, :__nzdo__struct, __MODULE__)
@@ -278,8 +385,10 @@ defmodule Noizu.DomainObject do
   #----------------------------------------------------
   # __prepare__sphinx__macro__
   #----------------------------------------------------
-  defmacro __prepare__sphinx__macro__(_) do
+  defmacro __prepare__sphinx__macro__(options) do
     quote do
+      options = unquote(options)
+
       #----------------------
       # Load Sphinx Settings from base.
       #----------------------
@@ -287,7 +396,7 @@ defmodule Noizu.DomainObject do
       @__nzdo__index_list Enum.map(@__nzdo__indexes, fn ({k, _v}) -> k end)
       @__nzdo__inline_index Noizu.ElixirScaffolding.V3.Meta.DomainObject.Index.domain_object_indexer(@__nzdo__base)
 
-      if (@__nzdo__base_open?) do
+      if (@__nzdo__base_open? && !options[:for_repo]) do
         Module.put_attribute(@__nzdo__base, :__nzdo__indexes, @__nzdo__indexes)
         Module.put_attribute(@__nzdo__base, :__nzdo__index_list, @__nzdo__index_list)
         Module.put_attribute(@__nzdo__base, :__nzdo__inline_index, @__nzdo__inline_index)
@@ -298,12 +407,13 @@ defmodule Noizu.DomainObject do
   #----------------------------------------------------
   # __prepare__persistence_settings__macro__
   #----------------------------------------------------
-  defmacro __prepare__persistence_settings__macro__(_) do
+  defmacro __prepare__persistence_settings__macro__(options) do
     quote do
-      @__nzdo__auto_generate Noizu.DomainObject.extract_has_attribute(:auto_generate, nil)
-      @__nzdo__enum_list Noizu.DomainObject.extract_has_attribute(:enum_list, false)
-      @__nzdo__enum_default_value Noizu.DomainObject.extract_has_attribute(:default_value, :none)
-      @__nzdo__enum_ecto_type Noizu.DomainObject.extract_has_attribute(:ecto_type, :integer)
+      options = unquote(options)
+      @__nzdo__auto_generate Noizu.DomainObject.extract_has_persistence_attribute(:auto_generate, nil)
+      @__nzdo__enum_list Noizu.DomainObject.extract_has_enum_attribute(:enum_list, :list, false)
+      @__nzdo__enum_default_value Noizu.DomainObject.extract_has_enum_attribute(:default_value, :default, :none)
+      @__nzdo__enum_ecto_type Noizu.DomainObject.extract_has_enum_attribute(:ecto_type, :value_type, :integer)
 
       case Noizu.DomainObject.extract_has_attribute(:universal_identifier, :not_set) do
         :not_set -> :skip
@@ -333,7 +443,9 @@ defmodule Noizu.DomainObject do
 
       if (@__nzdo__base_open?) do
         Module.put_attribute(@__nzdo__base, :__nzdo__auto_generate, @__nzdo__auto_generate)
+
         Module.put_attribute(@__nzdo__base, :__nzdo__enum_list, @__nzdo__enum_list)
+        Module.put_attribute(@__nzdo__base, :__nzdo__enum_table, @__nzdo_persistence.options.enum_table)
         Module.put_attribute(@__nzdo__base, :__nzdo__enum_default_value, @__nzdo__enum_default_value)
         Module.put_attribute(@__nzdo__base, :__nzdo__enum_ecto_type, @__nzdo__enum_ecto_type)
 
@@ -352,12 +464,10 @@ defmodule Noizu.DomainObject do
   defmacro __prepare__nmid__macro__(_) do
     default_nmid_generator = Application.get_env(:noizu_scaffolding, :default_nmid_generator, Noizu.Scaffolding.V3.NmidGenerator)
     quote do
-
-
-      @__nzdo__nmid_generator Noizu.DomainObject.extract_has_attribute(:nmid_generator, unquote(default_nmid_generator))
-      @__nzdo__nmid_sequencer Noizu.DomainObject.extract_has_attribute(:nmid_sequencer, __MODULE__)
-      @__nzdo__nmid_index Noizu.DomainObject.extract_has_attribute(:nmid_index, nil)
-      @__nzdo__nmid_bare Noizu.DomainObject.extract_has_attribute(:nmid_bare, @__nzdo_persistence.options[:enum_table] && true || false)
+      @__nzdo__nmid_generator Noizu.DomainObject.extract_has_nmid_attribute(:nmid_generator, :generator, unquote(default_nmid_generator))
+      @__nzdo__nmid_sequencer Noizu.DomainObject.extract_has_nmid_attribute(:nmid_sequencer, :sequencer, __MODULE__)
+      @__nzdo__nmid_index Noizu.DomainObject.extract_has_nmid_attribute(:nmid_index, :index, nil)
+      @__nzdo__nmid_bare Noizu.DomainObject.extract_has_nmid_attribute(:nmid_bare, :bare,  @__nzdo_persistence.options[:enum_table] && true || false)
 
       if (@__nzdo__base_open?) do
         Module.put_attribute(@__nzdo__base, :__nzdo__nmid_generator, @__nzdo__nmid_generator)
@@ -379,15 +489,15 @@ defmodule Noizu.DomainObject do
       json_white_list = options[:json_white_list]
       json_supported_formats = options[:json_supported_formats]
 
-      @__nzdo__json_provider json_provider || Noizu.DomainObject.extract_attribute(:json_provider, Noizu.Scaffolding.V3.Poison.Encoder)
-      @__nzdo__json_format json_format || Noizu.DomainObject.extract_has_attribute(:json_format, :default)
-      @__nzdo__json_supported_formats json_supported_formats || Noizu.DomainObject.extract_has_attribute(
-        :json_supported_formats,
+      @__nzdo__json_provider json_provider || Noizu.DomainObject.extract_json_attribute(:json_provider, :provider, Noizu.Scaffolding.V3.Poison.Encoder)
+      @__nzdo__json_format json_format || Noizu.DomainObject.extract_has_json_attribute(:json_format, :default, :default)
+      @__nzdo__json_supported_formats json_supported_formats || Noizu.DomainObject.extract_has_json_attribute(
+        :json_supported_formats, :formats,
         [:standard, :admin, :verbose, :compact, :mobile, :verbose_mobile]
       )
       @__nzdo__json_format_groups (
                                     Enum.map(
-                                      Noizu.DomainObject.extract_attribute(:json_format_group, []),
+                                      Noizu.DomainObject.extract_json_attribute(:json_format_group, :format_groups, []),
                                       fn (group) ->
                                         case group do
                                           {alias, member} when is_atom(member) -> {alias, [members: [member]]}
@@ -401,7 +511,7 @@ defmodule Noizu.DomainObject do
                                     |> Map.new())
       @__nzdo__json_field_groups (
                                    Enum.map(
-                                     Noizu.DomainObject.extract_attribute(:json_field_group, []),
+                                     Noizu.DomainObject.extract_json_attribute(:json_field_group, :field_groups, []),
                                      fn (group) ->
                                        case group do
                                          {alias, member} when is_atom(member) -> {alias, [members: [member]]}
@@ -415,7 +525,7 @@ defmodule Noizu.DomainObject do
                                    |> Map.new())
       @__nzdo__json_white_list (cond do
                                   json_white_list -> json_white_list
-                                  :else -> Noizu.DomainObject.extract_has_attribute(:json_white_list, false)
+                                  :else -> Noizu.DomainObject.extract_has_json_attribute(:json_white_list, :white_list, false)
                                 end)
 
       __nzdo__json_config = %{
@@ -428,7 +538,7 @@ defmodule Noizu.DomainObject do
       }
       Module.put_attribute(__MODULE__, :__nzdo__json_config, __nzdo__json_config)
 
-      if (@__nzdo__base_open?) do
+      if (@__nzdo__base_open? && !options[:for_repo]) do
         Module.put_attribute(@__nzdo__base, :__nzdo__json_provider, @__nzdo__json_provider)
         Module.put_attribute(@__nzdo__base, :__nzdo__json_format, @__nzdo__json_format)
         Module.put_attribute(@__nzdo__base, :__nzdo__json_supported_formats, @__nzdo__json_supported_formats)

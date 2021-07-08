@@ -349,7 +349,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
     # Create - post_create_callback
     #------------------------------------------
     def post_create_callback(_m, %{__struct__: s} = entity, context, options) do
-      spawn fn -> s.__write_indexes__(entity, context, options) end
+      spawn fn -> s.__write_indexes__(entity, context, options[:indexes]) end
       entity
     end
     def post_create_callback(_m, entity, _context, _options) do
@@ -497,7 +497,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
     # Update - post_update_callback
     #------------------------------------------
     def post_update_callback(_m, %{__struct__: s} = entity, context, options) do
-      spawn fn -> s.__update_indexes__(entity, context, options) end
+      spawn fn -> s.__update_indexes__(entity, context, options[:indexes]) end
       entity
     end
     def post_update_callback(_m, entity, _context, _options) do
@@ -616,21 +616,21 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
     #------------------------------------------
     # Delete - pre_delete_callback
     #------------------------------------------
-    def pre_delete_callback(m, ref, _context, _options) do
+    def pre_delete_callback(m, ref, context, options) do
       # we attempt to load the entity so we can properly wipe any nested elements
       cond do
         entity = m.__entity__.entity(ref) ->
-          spawn fn -> m.__entity__.__delete_indexes__(entity) end
+          spawn fn -> m.__entity__.__delete_indexes__(entity, context, options[:indexes]) end
           entity
         :else -> ref
       end
     end
 
-    def pre_delete_callback!(m, ref, _context, _options) do
+    def pre_delete_callback!(m, ref, context, options) do
       # we attempt to load the entity so we can properly wipe any nested elements
       cond do
         entity = m.__entity__.entity!(ref) ->
-          spawn fn -> m.__entity__.__delete_indexes__(entity) end
+          spawn fn -> m.__entity__.__delete_indexes__(entity, context, options[:indexes]) end
           entity
         :else -> ref
       end
