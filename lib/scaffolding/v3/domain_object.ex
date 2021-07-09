@@ -315,7 +315,7 @@ defmodule Noizu.DomainObject do
       Module.register_attribute(__MODULE__, :__nzdo__entity, accumulate: false)
       Module.register_attribute(__MODULE__, :__nzdo__struct, accumulate: false)
 
-      if @__nzdo__base_open? && !Module.get_attribute(@__nzdo__base, :__nzdo__base_definied) do
+      if @__nzdo__base_open? && !(Module.get_attribute(@__nzdo__base, :__nzdo__base_definied) || Module.get_attribute(@__nzdo__base, :__nzdo__simple_definied))do
         raise "#{@__nzdo__base} must include use Noizu.SimpleObject/DomainObject call."
       end
     end

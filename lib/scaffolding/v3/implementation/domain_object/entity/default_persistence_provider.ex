@@ -72,7 +72,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultP
       context = Noizu.ElixirCore.CallingContext.admin()
       field_types = domain_object.__noizu_info__(:field_types)
       Enum.map(
-        domain_object.__fields__(:peristed),
+        domain_object.__fields__(:persisted),
         fn (field) ->
           cond do
             field == :identifier -> {:identifier, Noizu.Ecto.Entity.ecto_identifier(entity)}
