@@ -416,11 +416,12 @@ defmodule Noizu.DomainObject do
   # __prepare__persistence_settings__macro__
   #----------------------------------------------------
   defmacro __prepare__persistence_settings__macro__(options) do
+    enum_list = options[:enum_list]
     quote do
       options = unquote(options)
 
       a__nzdo__auto_generate = Noizu.DomainObject.extract_has_persistence_attribute(:auto_generate, nil)
-      a__nzdo__enum_list = Noizu.DomainObject.extract_has_enum_attribute(:enum_list, :list, false)
+      a__nzdo__enum_list = unquote(enum_list) || Noizu.DomainObject.extract_has_enum_attribute(:enum_list, :list, false)
       a__nzdo__enum_default_value  = Noizu.DomainObject.extract_has_enum_attribute(:default_value, :default, :none)
       a__nzdo__enum_ecto_type = Noizu.DomainObject.extract_has_enum_attribute(:ecto_type, :value_type, :integer)
 

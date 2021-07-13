@@ -51,6 +51,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.Table do
     nmid_bare = options[:nmid_bare]
     auto_generate = options[:auto_generate]
     enum_list = options[:enum_list]
+    is_enum_list = enum_list && true || false
     default_value = options[:default_value]
     ecto_type = options[:ecto_type]
     repo = options[:repo]
@@ -86,7 +87,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.Table do
       #----------------------
       # Load Persistence Settings from base, we need them to control some submodules.
       #----------------------
-      @__nzdo__enum_list unquote(enum_list) || Module.get_attribute(__MODULE__, :enum_list) || false
+      @__nzdo__enum_list unquote(is_enum_list) || Module.has_attribute?(__MODULE__, :enum_list) || false
       @__nzdo__auto_generate  (cond do
                                  unquote(auto_generate) != nil -> unquote(auto_generate)
                                  Module.has_attribute?(__MODULE__,:auto_generate) -> Module.get_attribute(__MODULE__, :auto_generate)

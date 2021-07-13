@@ -68,48 +68,90 @@ defmodule Noizu.Ecto.EnumTypeBehaviour do
   end
 
 
+  defmacro enum_type(options \\ nil) do
+    options = Macro.expand(options, __ENV__)
+    Noizu.Ecto.EnumTypeBehaviour.__enum_type__(options)
+  end
+
   def __enum_type__(options) do
-    ecto_type = options[:ecto_type]
-    default_value = options[:default]
-    values = options[:values]
     quote do
       use Ecto.Type
 
+      domain_object = Module.split(__MODULE__) |> Enum.slice(0 .. -3) |> Module.concat
+      @__nzdo__base domain_object
+      {values, default_value, ecto_type} = case Module.get_attribute(domain_object, :__nzdo__enum_list) do
+                                             {v, o} ->
+                                               {
+                                                 v,
+                                                 o[:default_value] || Module.get_attribute(domain_object , :__nzdo__enum_default_value) || :none,
+                                                 o[:ecto_type] || Module.get_attribute(domain_object, :__nzdo__enum_ecto_type) || :integer
+                                               }
+                                             v when is_list(v) ->
+                                               {
+                                                 v,
+                                                 Module.get_attribute(domain_object, :__nzdo__enum_default_value) || :none,
+                                                 Module.get_attribute(domain_object, :__nzdo__enum_ecto_type) || :integer
+                                               }
+                                             :callback ->
+                                               {
+                                                 :callback,
+                                                 Module.get_attribute(domain_object, :__nzdo__enum_default_value) || :none,
+                                                 Module.get_attribute(domain_object, :__nzdo__enum_ecto_type) || :integer
+                                               }
+                                           end
 
-      @ecto_type unquote(ecto_type) || :integer
-      @default_value unquote(default_value) || :none
-
-      raw_atom_list = (unquote(values) || [{:none, 0}])
-                      |> Enum.map(
-                           fn
-                             ({k,{v,d}}) -> {k, v, "#{d}"}
-                             ({k,v}) -> {k, v, nil}
-                           end
-                         )
-      @atom_to_enum Enum.map(raw_atom_list, fn({k,v,_}) -> {k,v} end) |> Map.new()
-      @atom_descriptions Enum.map(raw_atom_list, fn({k,_,d}) -> d && {k,d} end) |> Enum.filter(&(&1)) |> Map.new()
-
-      @enum_to_atom Enum.map(@atom_to_enum, fn ({a, e}) -> {e, a} end)
-                    |> Map.new()
-      @json_to_atom Enum.map(@atom_to_enum, fn ({a, _e}) -> {"#{a}", a} end)
-                    |> Map.new()
-
-
-      def description(enum) when is_atom(enum) do
-        Map.has_key?(@atom_to_enum, enum) && (@atom_descriptions[enum] || "no description") || throw "#{enum} is not a member of #{__MODULE__}"
-      end
-      def description(enum) when is_integer(enum) do
-        enum = @enum_to_atom[enum] || throw "#{enum} enum not found in #{__MODULE__}"
-        @atom_descriptions[enum] || "no description"
-      end
+     @ecto_type ecto_type || :integer
+      @default_value default_value || :none
 
       def default_value(), do: @default_value
-      def atom_to_enum(), do: @atom_to_enum
-      def atom_to_enum(k), do: atom_to_enum()[k]
-      def enum_to_atom(), do: @enum_to_atom
-      def enum_to_atom(k), do: enum_to_atom()[k]
-      def json_to_atom(), do: @json_to_atom
-      def json_to_atom(k), do: json_to_atom()[k]
+
+      if values == :callback do
+        def description(enum), do: @__nzdo__base.description(enum)
+        def atom_to_enum(), do: @__nzdo__base.atom_to_enum()
+        def atom_to_enum(k), do: @__nzdo__base.atom_to_enum(k)
+        def enum_to_atom(), do: @__nzdo__base.enum_to_atom()
+        def enum_to_atom(k), do: @__nzdo__base.enum_to_atom(k)
+        def json_to_atom(), do: @__nzdo__base.json_to_atom()
+        def json_to_atom(k), do: @__nzdo__base.json_to_atom(k)
+      else
+        raw_atom_list = (values || [{:none, 0}])
+                        |> Enum.map(
+                             fn
+                               ({k,{v,d}}) -> {k, v, "#{d}"}
+                               ({k,v}) -> {k, v, nil}
+                             end
+                           )
+        @atom_to_enum Enum.map(raw_atom_list, fn({k,v,_}) -> {k,v} end) |> Map.new()
+        @atom_descriptions Enum.map(raw_atom_list, fn({k,_,d}) -> d && {k,d} end) |> Enum.filter(&(&1)) |> Map.new()
+
+        @enum_to_atom Enum.map(@atom_to_enum, fn ({a, e}) -> {e, a} end)
+                      |> Map.new()
+        @json_to_atom Enum.map(@atom_to_enum, fn ({a, _e}) -> {"#{a}", a} end)
+                      |> Map.new()
+
+        def description(enum) when is_atom(enum) do
+          Map.has_key?(@atom_to_enum, enum) && (@atom_descriptions[enum] || "no description") || throw "#{enum} is not a member of #{__MODULE__}"
+        end
+        def description(enum) when is_integer(enum) do
+          enum = @enum_to_atom[enum] || throw "#{enum} enum not found in #{__MODULE__}"
+          @atom_descriptions[enum] || "no description"
+        end
+
+
+        def atom_to_enum(), do: @atom_to_enum
+        def atom_to_enum(k), do: atom_to_enum()[k]
+        def enum_to_atom(), do: @enum_to_atom
+        def enum_to_atom(k), do: enum_to_atom()[k]
+        def json_to_atom(), do: @json_to_atom
+        def json_to_atom(k), do: json_to_atom()[k]
+
+
+      end
+
+
+
+
+
 
       @doc false
       def type, do: @ecto_type
