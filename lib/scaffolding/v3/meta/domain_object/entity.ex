@@ -172,6 +172,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
     internal_provider = options[:internal_imp] || Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultInternalProvider
     persistence_provider = options[:persistence_imp] || Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultPersistenceProvider
     macro_file = __ENV__.file
+
     process_config = quote do
                        import Noizu.DomainObject, only: [file_rel_dir: 1]
                        require Noizu.DomainObject
@@ -191,27 +192,27 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
 
                        # Extract Base Fields fields since SimbpleObjects are at the same level as their base.
                        @file unquote(macro_file) <> "<__prepare__base__macro__>"
-                       Noizu.DomainObject.__prepare__base__macro__(@options)
+                       Noizu.DomainObject.__prepare__base__macro__(unquote(options))
 
                        # Push details to Base, and read in required settings.
                        @file unquote(macro_file) <> "<__prepare__poly__macro__>"
-                       Noizu.DomainObject.__prepare__poly__macro__(@options)
+                       Noizu.DomainObject.__prepare__poly__macro__(unquote(options))
 
                        # Load Sphinx Settings from base.
                        @file unquote(macro_file) <> "<__prepare__sphinx__macro__>"
-                       Noizu.DomainObject.__prepare__sphinx__macro__(@options)
+                       Noizu.DomainObject.__prepare__sphinx__macro__(unquote(options))
 
                        # Load Persistence Settings from base, we need them to control some submodules.
                        @file unquote(macro_file) <> "<__prepare__persistence_settings__macro__>"
-                       Noizu.DomainObject.__prepare__persistence_settings__macro__(@options)
+                       Noizu.DomainObject.__prepare__persistence_settings__macro__(unquote(options))
 
                        # Nmid
                        @file unquote(macro_file) <> "<__prepare__nmid__macro__>"
-                       Noizu.DomainObject.__prepare__nmid__macro__(@options)
+                       Noizu.DomainObject.__prepare__nmid__macro__(unquote(options))
 
                        # Json Settings
                        @file unquote(macro_file) <> "<__prepare__json_settings__macro__>"
-                       Noizu.DomainObject.__prepare__json_settings__macro__(@options)
+                       Noizu.DomainObject.__prepare__json_settings__macro__(unquote(options))
 
                        #----------------------
                        # Derives
@@ -223,7 +224,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
 
                        # Prep attributes for loading individual fields.
                        @file unquote(macro_file) <> "<__register__field_attributes__macro__>"
-                       Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity.__register__field_attributes__macro__(@options)
+                       Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity.__register__field_attributes__macro__(unquote(options))
 
                        #----------------------
                        # User block section (define, fields, constraints, json_mapping rules, etc.)
@@ -238,7 +239,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
                        end
 
                        @file unquote(macro_file) <> "<__post_struct_definition_macro__>"
-                       Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity.__post_struct_definition_macro__(@options)
+                       Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity.__post_struct_definition_macro__(unquote(options))
 
                        :ok
                      end

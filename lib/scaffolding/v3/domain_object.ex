@@ -46,6 +46,7 @@ defmodule Noizu.DomainObject do
   # noizu_table
   #--------------------------------------------
   defmacro noizu_table(options \\ []) do
+    options = Macro.expand(options, __ENV__)
     Noizu.ElixirScaffolding.V3.Meta.Table.__noizu_table__(__CALLER__, options)
   end
 
@@ -53,6 +54,7 @@ defmodule Noizu.DomainObject do
   # noizu_scaffolding_schema
   #--------------------------------------------
   defmacro noizu_scaffolding_schema(options \\ [], [do: block]) do
+    options = Macro.expand(options, __ENV__)
     Noizu.ElixirScaffolding.V3.Meta.DomainObject.ScaffoldingSchema.__noizu_scaffolding_schema__(__CALLER__, options, block)
   end
 
@@ -60,6 +62,7 @@ defmodule Noizu.DomainObject do
   # noizu_type_handler
   #--------------------------------------------
   defmacro noizu_type_handler(options \\ []) do
+    options = Macro.expand(options, __ENV__)
     Noizu.ElixirScaffolding.V3.Meta.DomainObject.TypeHandler.__noizu_type_handler__(__CALLER__, options)
   end
 
@@ -68,6 +71,7 @@ defmodule Noizu.DomainObject do
   # noizu_entity
   #--------------------------------------------
   defmacro noizu_entity(options \\ [], [do: block]) do
+    options = Macro.expand(options, __ENV__)
     Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity.__noizu_entity__(__CALLER__, options, block)
   end
 
@@ -76,6 +80,7 @@ defmodule Noizu.DomainObject do
   # noizu_index
   #--------------------------------------------
   defmacro noizu_index(options \\ [], [do: block]) do
+    options = Macro.expand(options, __ENV__)
     Noizu.ElixirScaffolding.V3.Meta.DomainObject.Index.__noizu_index__(__CALLER__, options, block)
   end
 
@@ -83,6 +88,7 @@ defmodule Noizu.DomainObject do
   # noizu_sphinx
   #--------------------------------------------
   defmacro noizu_sphinx(options \\ [], [do: block]) do
+    options = Macro.expand(options, __ENV__)
     Noizu.ElixirScaffolding.V3.Meta.DomainObject.Sphinx.__noizu_sphinx__(__CALLER__, options, block)
   end
 
@@ -90,6 +96,7 @@ defmodule Noizu.DomainObject do
   # noizu_struct
   #--------------------------------------------
   defmacro noizu_struct(options \\ [], [do: block]) do
+    options = Macro.expand(options, __ENV__)
     Noizu.ElixirScaffolding.V3.Meta.SimpleObject.Struct.__noizu_struct__(__CALLER__, options, block)
   end
 
@@ -97,6 +104,7 @@ defmodule Noizu.DomainObject do
   # noizu_repo
   #--------------------------------------------
   defmacro noizu_repo(options \\ [], [do: block]) do
+    options = Macro.expand(options, __ENV__)
     Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo.__noizu_repo__(__CALLER__, options, block)
   end
 

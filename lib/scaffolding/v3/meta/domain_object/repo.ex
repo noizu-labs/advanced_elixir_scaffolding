@@ -110,11 +110,11 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo do
 
                        # Extract Base Fields fields since SimbpleObjects are at the same level as their base.
                        @file unquote(macro_file) <> "<__prepare__base__macro__>"
-                       Noizu.DomainObject.__prepare__base__macro__(@options)
+                       Noizu.DomainObject.__prepare__base__macro__(unquote(options))
 
                        # Push details to Base, and read in required settings.
                        @file unquote(macro_file) <> "<__prepare__poly__macro__>"
-                       Noizu.DomainObject.__prepare__poly__macro__(@options)
+                       Noizu.DomainObject.__prepare__poly__macro__(unquote(options))
 
 
                        #---------------------
@@ -151,12 +151,12 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo do
 
                        # Json Settings
                        @file unquote(macro_file) <> "<__prepare__json_settings__macro__>"
-                       Noizu.DomainObject.__prepare__json_settings__macro__(@options)
+                       Noizu.DomainObject.__prepare__json_settings__macro__(unquote(options))
 
                        # Prep attributes for loading individual fields.
                        require Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity
                        @file unquote(macro_file) <> "<__register__field_attributes__macro__>"
-                       Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity.__register__field_attributes__macro__(@options)
+                       Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity.__register__field_attributes__macro__(unquote(options))
 
 
                        #----------------------
