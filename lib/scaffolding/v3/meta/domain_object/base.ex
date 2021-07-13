@@ -21,10 +21,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject do
       }
       @__nzdo__meta__map Map.new(@__nzdo__meta || [])
 
-      @__nzdo__enum_type nil
-      if Module.get_attribute(__MODULE__, :__nzdo__enum_list) do
-        @__nzdo__enum_type Module.concat([__MODULE__, "Ecto.EnumType"])
-      end
+
 
       #################################################
       # __persistence__
@@ -149,15 +146,24 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject do
       #--------------------
       # EctoEnum
       #--------------------
-      if options = Module.get_attribute(__MODULE__, :__nzdo__enum_list) do
-        domain_object = __MODULE__
+      domain_object = __MODULE__
+      has_list = Module.get_attribute(__MODULE__, :__nzdo__enum_list) || false
+
+      @__nzdo__enum_type nil
+      if Module.get_attribute(__MODULE__, :__nzdo__enum_list) do
+        @__nzdo__enum_type Module.concat([__MODULE__, "Ecto.EnumType"])
+      end
+
+      if has_list do
         defmodule Ecto.EnumType do
-          {values, default_value, ecto_type} = case options do
-                                                 {v, options} ->
+
+
+          {values, default_value, ecto_type} = case Module.get_attribute(domain_object, :__nzdo__enum_list) do
+                                                 {v, o} ->
                                                    {
                                                      v,
-                                                     options[:default_value] || Module.get_attribute(domain_object, :__nzdo__enum_default_value) || :none,
-                                                     options[:ecto_type] || Module.get_attribute(domain_object, :__nzdo__enum_ecto_type) || :integer
+                                                     o[:default_value] || Module.get_attribute(domain_object , :__nzdo__enum_default_value) || :none,
+                                                     o[:ecto_type] || Module.get_attribute(domain_object, :__nzdo__enum_ecto_type) || :integer
                                                    }
                                                  v when is_list(v) ->
                                                    {
@@ -165,15 +171,20 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject do
                                                      Module.get_attribute(domain_object, :__nzdo__enum_default_value) || :none,
                                                      Module.get_attribute(domain_object, :__nzdo__enum_ecto_type) || :integer
                                                    }
+                                                 _ -> {nil, nil, nil}
                                                end
-          use Noizu.Ecto.EnumTypeBehaviour,
-              values: values,
-              default: default_value,
-              ecto_type: ecto_type
+
+          Noizu.Ecto.EnumTypeBehaviour.__enum_type__(
+            values: values,
+            default: default_value,
+            ecto_type: ecto_type
+          )
         end
 
         def atoms(), do: @__nzdo__enum_type.atom_to_enum()
       end
+
+
 
       #--------------------
       # Ref

@@ -418,10 +418,16 @@ defmodule Noizu.DomainObject do
   defmacro __prepare__persistence_settings__macro__(options) do
     quote do
       options = unquote(options)
-      @__nzdo__auto_generate Noizu.DomainObject.extract_has_persistence_attribute(:auto_generate, nil)
-      @__nzdo__enum_list Noizu.DomainObject.extract_has_enum_attribute(:enum_list, :list, false)
-      @__nzdo__enum_default_value Noizu.DomainObject.extract_has_enum_attribute(:default_value, :default, :none)
-      @__nzdo__enum_ecto_type Noizu.DomainObject.extract_has_enum_attribute(:ecto_type, :value_type, :integer)
+
+      a__nzdo__auto_generate = Noizu.DomainObject.extract_has_persistence_attribute(:auto_generate, nil)
+      a__nzdo__enum_list = Noizu.DomainObject.extract_has_enum_attribute(:enum_list, :list, false)
+      a__nzdo__enum_default_value  = Noizu.DomainObject.extract_has_enum_attribute(:default_value, :default, :none)
+      a__nzdo__enum_ecto_type = Noizu.DomainObject.extract_has_enum_attribute(:ecto_type, :value_type, :integer)
+
+      @__nzdo__auto_generate a__nzdo__auto_generate
+      @__nzdo__enum_list a__nzdo__enum_list
+      @__nzdo__enum_default_value a__nzdo__enum_default_value
+      @__nzdo__enum_ecto_type a__nzdo__enum_ecto_type
 
       case Noizu.DomainObject.extract_has_attribute(:universal_identifier, :not_set) do
         :not_set -> :skip
@@ -438,29 +444,35 @@ defmodule Noizu.DomainObject do
         v -> Module.put_attribute(__MODULE__, :universal_lookup, v)
       end
 
-      @__nzdo_persistence Noizu.DomainObject.extract_transform_attribute(:persistence_layer, :persistence, {Noizu.DomainObject, :expand_persistence_layers, [__MODULE__]})
-      @__nzdo_persistence__layers Enum.map(@__nzdo_persistence.layers, fn (layer) -> {layer.schema, layer} end)
+      a__nzdo_persistence = Noizu.DomainObject.extract_transform_attribute(:persistence_layer, :persistence, {Noizu.DomainObject, :expand_persistence_layers, [__MODULE__]})
+      @__nzdo_persistence a__nzdo_persistence
+      a__nzdo_persistence__layers = Enum.map(a__nzdo_persistence.layers, fn (layer) -> {layer.schema, layer} end)
                                   |> Map.new()
-      @__nzdo_persistence__by_table Enum.map(@__nzdo_persistence.layers, fn (layer) -> {layer.table, layer} end)
+      @__nzdo_persistence__layers a__nzdo_persistence__layers
+      a__nzdo_persistence__by_table = Enum.map(a__nzdo_persistence.layers, fn (layer) -> {layer.table, layer} end)
                                     |> Map.new()
-      @__nzdo_ecto_entity (@__nzdo_persistence.ecto_entity && true || false)
+      @__nzdo_persistence__by_table a__nzdo_persistence__by_table
+
+      a__nzdo_ecto_entity = (a__nzdo_persistence.ecto_entity && true || false)
+      @__nzdo_ecto_entity a__nzdo_ecto_entity
+
+
 
       if @__nzdo_ecto_entity do
         @__nzdo__derive Noizu.Ecto.Entity
       end
 
       if (@__nzdo__base_open?) do
-        Module.put_attribute(@__nzdo__base, :__nzdo__auto_generate, @__nzdo__auto_generate)
+        Module.put_attribute(@__nzdo__base, :__nzdo__auto_generate, a__nzdo__auto_generate)
+        Module.put_attribute(@__nzdo__base, :__nzdo__enum_list, a__nzdo__enum_list)
+        Module.put_attribute(@__nzdo__base, :__nzdo__enum_table, a__nzdo_persistence.options.enum_table)
+        Module.put_attribute(@__nzdo__base, :__nzdo__enum_default_value, a__nzdo__enum_default_value)
+        Module.put_attribute(@__nzdo__base, :__nzdo__enum_ecto_type, a__nzdo__enum_ecto_type)
 
-        Module.put_attribute(@__nzdo__base, :__nzdo__enum_list, @__nzdo__enum_list)
-        Module.put_attribute(@__nzdo__base, :__nzdo__enum_table, @__nzdo_persistence.options.enum_table)
-        Module.put_attribute(@__nzdo__base, :__nzdo__enum_default_value, @__nzdo__enum_default_value)
-        Module.put_attribute(@__nzdo__base, :__nzdo__enum_ecto_type, @__nzdo__enum_ecto_type)
-
-        Module.put_attribute(@__nzdo__base, :__nzdo_persistence, @__nzdo_persistence)
-        Module.put_attribute(@__nzdo__base, :__nzdo_persistence__layers, @__nzdo_persistence__layers)
-        Module.put_attribute(@__nzdo__base, :__nzdo_persistence__by_table, @__nzdo_persistence__by_table)
-        Module.put_attribute(@__nzdo__base, :__nzdo_ecto_entity, @__nzdo_ecto_entity)
+        Module.put_attribute(@__nzdo__base, :__nzdo_persistence, a__nzdo_persistence)
+        Module.put_attribute(@__nzdo__base, :__nzdo_persistence__layers, a__nzdo_persistence__layers)
+        Module.put_attribute(@__nzdo__base, :__nzdo_persistence__by_table, a__nzdo_persistence__by_table)
+        Module.put_attribute(@__nzdo__base, :__nzdo_ecto_entity, a__nzdo_ecto_entity)
       end
     end
   end

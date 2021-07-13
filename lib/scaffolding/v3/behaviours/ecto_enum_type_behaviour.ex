@@ -67,14 +67,19 @@ defmodule Noizu.Ecto.EnumTypeBehaviour do
 
   end
 
-  defmacro __using__(options) do
+
+  def __enum_type__(options) do
+    ecto_type = options[:ecto_type]
+    default_value = options[:default]
+    values = options[:values]
     quote do
       use Ecto.Type
-      @ecto_type (unquote(options[:ecto_type]) || :integer)
-      @default_value (unquote(options[:default]) || :none)
 
 
-      raw_atom_list = (unquote(options[:values]) || [{:none, 0}])
+      @ecto_type unquote(ecto_type) || :integer
+      @default_value unquote(default_value) || :none
+
+      raw_atom_list = (unquote(values) || [{:none, 0}])
                       |> Enum.map(
                            fn
                              ({k,{v,d}}) -> {k, v, "#{d}"}
@@ -124,5 +129,10 @@ defmodule Noizu.Ecto.EnumTypeBehaviour do
       def load(v), do: Noizu.Ecto.EnumTypeBehaviour.Default.load(__MODULE__, v)
 
     end
+  end
+
+  defmacro __using__(options \\ nil) do
+    options = Macro.expand(options, __ENV__)
+    Noizu.Ecto.EnumTypeBehaviour.__enum_type__(options)
   end
 end
