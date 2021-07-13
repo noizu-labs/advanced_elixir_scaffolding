@@ -295,6 +295,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
   #
   #--------------------------
   defmacro identifier(type \\ :integer, opts \\ []) do
+    opts = Macro.expand(opts, __ENV__)
     quote do
       EntityMeta.__set_field_attributes__(__MODULE__, :identifier, unquote(opts))
       EntityMeta.__identifier__(__MODULE__, unquote(type), unquote(opts))
@@ -311,6 +312,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
   #
   #--------------------------
   defmacro ecto_identifier(type \\ :integer, opts \\ []) do
+    opts = Macro.expand(opts, __ENV__)
     quote do
       EntityMeta.__set_field_attributes__(__MODULE__, :ecto_identifier, unquote(opts))
       EntityMeta.__ecto_identifier__(__MODULE__, unquote(type), unquote(opts))
@@ -326,6 +328,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
   #
   #--------------------------
   defmacro public_field(field, default \\ nil, opts \\ []) do
+    opts = Macro.expand(opts, __ENV__)
     quote do
       EntityMeta.__set_field_attributes__(__MODULE__, unquote(field), unquote(opts))
       EntityMeta.__public_field__(__MODULE__, unquote(field), unquote(default), unquote(opts))
@@ -341,6 +344,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
   #
   #--------------------------
   defmacro public_fields(fields, opts \\ []) do
+    opts = Macro.expand(opts, __ENV__)
     quote do
       EntityMeta.__public_fields__(__MODULE__, unquote(fields), unquote(opts[:default] || nil), unquote(opts))
     end
@@ -358,6 +362,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
   #
   #--------------------------
   defmacro restricted_field(field, default \\ nil, opts \\ []) do
+    opts = Macro.expand(opts, __ENV__)
     quote do
       EntityMeta.__set_field_attributes__(__MODULE__, unquote(field), unquote(opts))
       EntityMeta.__restricted_field__(__MODULE__, unquote(field), unquote(default), unquote(opts))
@@ -373,6 +378,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
   #
   #--------------------------
   defmacro restricted_fields(fields, opts \\ []) do
+    opts = Macro.expand(opts, __ENV__)
     quote do
       EntityMeta.__restricted_fields__(__MODULE__, unquote(fields), unquote(opts[:default] || nil), unquote(opts))
     end
@@ -390,6 +396,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
   #
   #--------------------------
   defmacro private_field(field, default \\ nil, opts \\ []) do
+    opts = Macro.expand(opts, __ENV__)
     quote do
       EntityMeta.__set_field_attributes__(__MODULE__, unquote(field), unquote(opts))
       EntityMeta.__private_field__(__MODULE__, unquote(field), unquote(default), unquote(opts))
@@ -405,6 +412,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
   #
   #--------------------------
   defmacro private_fields(fields, opts \\ []) do
+    opts = Macro.expand(opts, __ENV__)
     quote do
       EntityMeta.__private_fields__(__MODULE__, unquote(fields), unquote(opts[:default] || nil), unquote(opts))
     end
@@ -422,6 +430,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
   #
   #--------------------------
   defmacro internal_field(field, default \\ nil, opts \\ []) do
+    opts = Macro.expand(opts, __ENV__)
     quote do
       EntityMeta.__set_field_attributes__(__MODULE__, unquote(field), unquote(opts))
       EntityMeta.__internal_field__(__MODULE__, unquote(field), unquote(default), unquote(opts))
@@ -437,6 +446,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
   #
   #--------------------------
   defmacro internal_fields(fields, opts \\ []) do
+    opts = Macro.expand(opts, __ENV__)
     quote do
       EntityMeta.__internal_fields__(__MODULE__, unquote(fields), unquote(opts[:default] || nil), unquote(opts))
     end
@@ -456,6 +466,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
   #
   #--------------------------
   defmacro transient_field(field, default \\ nil, opts \\ []) do
+    opts = Macro.expand(opts, __ENV__)
     quote do
       EntityMeta.__set_field_attributes__(__MODULE__, unquote(field), unquote(opts))
       EntityMeta.__transient_field__(__MODULE__, unquote(field), unquote(default), unquote(opts))
@@ -474,6 +485,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
   #
   #--------------------------
   defmacro transient_fields(fields, opts \\ []) do
+    opts = Macro.expand(opts, __ENV__)
     quote do
       EntityMeta.__transient_fields__(__MODULE__, unquote(fields), unquote(opts[:default] || nil), unquote(opts))
     end
@@ -598,6 +610,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
       :else -> :ok
     end
 
+    opts = []
     EntityMeta.__set_json_settings__(mod, field, opts)
     EntityMeta.__set_index_settings__(mod, field, opts)
     EntityMeta.__set_permission_settings__(mod, field, opts)
