@@ -1,11 +1,13 @@
 defmodule Noizu.DomainObject do
 
   defmacro __using__(options \\ nil) do
+    options = Macro.expand(options, __ENV__)
     nmid_generator = options[:nmid_generator]
     nmid_sequencer = options[:nmid_sequencer]
     nmid_index = options[:nmid_index]
     auto_generate = options[:auto_generate]
     caller = __CALLER__
+    internal_provider = options[:internal_provider] || Noizu.ElixirScaffolding.V3.Meta.DomainObject
     quote do
       import Noizu.DomainObject, only: [file_rel_dir: 1]
       Module.register_attribute(__MODULE__, :index, accumulate: true)
@@ -36,7 +38,7 @@ defmodule Noizu.DomainObject do
       if unquote(auto_generate) != nil do
         Module.put_attribute(__MODULE__, :auto_generate, unquote(auto_generate))
       end
-      @before_compile Noizu.ElixirScaffolding.V3.Meta.DomainObject
+      @before_compile unquote(internal_provider)
     end
   end
 

@@ -1,4 +1,5 @@
 defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.TypeHandler do
+
   #--------------------------------------------
   #
   #--------------------------------------------
