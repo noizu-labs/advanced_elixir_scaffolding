@@ -939,7 +939,6 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
         layer_post_delete_callback: 4,
         layer_post_delete_callback!: 4,
       ]
-
     end
   end
 

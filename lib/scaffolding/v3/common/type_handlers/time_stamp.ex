@@ -2,15 +2,14 @@
 # Author: Keith Brings <keith.brings@noizu.com>
 # Copyright (C) 2021 Noizu Labs, Inc. All rights reserved.
 #-------------------------------------------------------------------------------
-
 defmodule Noizu.Scaffolding.V3.TimeStamp do
   use Noizu.SimpleObject
   @vsn 1.0
-  @date_time_handler Application.get_env(:noizu_scaffolding, :data_time_handler, Noizu.Scaffolding.V3.DateTime.Second.PersistenceStrategy)
   Noizu.SimpleObject.noizu_struct() do
-    public_field :created_on, nil, @date_time_handler
-    public_field :modified_on, nil, @date_time_handler
-    public_field :deleted_on, nil, @date_time_handler
+    date_time_handler = Application.get_env(:noizu_scaffolding, :data_time_handler, Noizu.Scaffolding.V3.DateTime.Second.PersistenceStrategy)
+    public_field :created_on, nil, date_time_handler
+    public_field :modified_on, nil, date_time_handler
+    public_field :deleted_on, nil, date_time_handler
   end
 
   #---------------------------------------------------------------
@@ -111,6 +110,10 @@ defmodule Noizu.Scaffolding.V3.TimeStamp do
       }
     end
     def dump(field, record, type, layer, context, options), do: super(field, record, type, layer, context, options)
+
+
+
+
   end
 
 end
