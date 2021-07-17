@@ -85,8 +85,25 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo do
   def __noizu_repo__(caller, options, block) do
     crud_provider = options[:erp_imp] || Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCrudProvider
     internal_provider = options[:internal_imp] || Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultInternalProvider
+    extension_provider = options[:extension_imp] || nil
+    has_extension = extension_provider && true || false
     macro_file = __ENV__.file
     options = put_in(options || [], [:for_repo], true)
+
+
+
+    extension_block_a = if has_extension do
+                          quote do
+                            use unquote(extension_provider)
+                          end
+                        end
+    extension_block_b = if has_extension do
+                          quote do
+                            @before_compile unquote(extension_provider)
+                            @after_compile  unquote(extension_provider)
+                          end
+                        end
+
     process_config = quote do
                        poly_support = unquote(options[:poly_support])
                        @options unquote(options)
@@ -168,6 +185,8 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo do
                          @implement Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo
                          unquote(block)
 
+                         unquote(extension_block_a)
+
                          if @__nzdo__fields == [] do
                            @ref @__nzdo__allowed_refs
                            public_field :entities
@@ -190,9 +209,13 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo do
       unquote(process_config)
       unquote(generate)
       use unquote(crud_provider)
+
       # Post User Logic Hook and checks.
       @before_compile unquote(internal_provider)
       @before_compile Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo
+
+      unquote(extension_block_b)
+
       @after_compile unquote(internal_provider)
     end
   end

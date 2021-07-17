@@ -5,14 +5,16 @@
 
 defmodule Noizu.Scaffolding.V3.DateTime do
 
-
-  def import(value, type \\ :microsecond)
-  def import(value, :microsecond), do: value && DateTime.from_unix!(DateTime.to_unix(value, :microsecond), :microsecond)
-
   defmodule Millisecond.PersistenceStrategy do
     @behaviour Noizu.Scaffolding.V3.SphinxFieldBehaviour
     require  Noizu.DomainObject
     Noizu.DomainObject.noizu_type_handler()
+
+
+    def import(value, type \\ :microsecond)
+    def import(value, :microsecond), do: value && DateTime.from_unix!(DateTime.to_unix(value, :microsecond), :microsecond)
+
+
     def pre_create_callback(_field, entity, _context, _options) do
       entity
     end
@@ -61,6 +63,12 @@ defmodule Noizu.Scaffolding.V3.DateTime do
   defmodule Second.PersistenceStrategy do
     require  Noizu.DomainObject
     Noizu.DomainObject.noizu_type_handler()
+
+
+    def import(value, type \\ :microsecond)
+    def import(value, :microsecond), do: value && DateTime.from_unix!(DateTime.to_unix(value, :microsecond), :microsecond)
+
+
     def pre_create_callback(_field, entity, _context, _options) do
       entity
     end

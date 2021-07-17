@@ -6,12 +6,16 @@
 defmodule Noizu.Scaffolding.V3.Millisecond.TimeStamp do
   use Noizu.SimpleObject
   @vsn 1.0
-  date_time_handler = Application.get_env(:noizu_scaffolding, :usec_data_time_handler, Noizu.Scaffolding.V3.DateTime.Millisecond.PersistenceStrategy)
+
+
   Noizu.SimpleObject.noizu_struct() do
+    date_time_handler = Application.get_env(:noizu_scaffolding, :usec_data_time_handler, Noizu.Scaffolding.V3.DateTime.Millisecond.PersistenceStrategy)
     public_field :created_on, nil, date_time_handler
     public_field :modified_on, nil, date_time_handler
     public_field :deleted_on, nil, date_time_handler
   end
+  date_time_handler = Application.get_env(:noizu_scaffolding, :usec_data_time_handler, Noizu.Scaffolding.V3.DateTime.Millisecond.PersistenceStrategy)
+  @date_time_handler date_time_handler
 
   #---------------------------------------------------------------
   # Methods
@@ -45,7 +49,7 @@ defmodule Noizu.Scaffolding.V3.Millisecond.TimeStamp do
 
 
   def compare(a, b, options \\ nil)
-  def compare(a = %__MODULE__{}, b = %__MODULE__{}, options) do
+  def compare(a = %__MODULE__{}, b = %__MODULE__{}, _options) do
     cond do
       a.created_on != b.created_on -> :neq
       a.modified_on != b.modified_on -> :neq

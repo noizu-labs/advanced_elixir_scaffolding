@@ -168,10 +168,28 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
   #--------------------------------------------
   def __noizu_entity__(caller, options, block) do
     erp_provider = options[:erp_imp] || Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultErpProvider
+
+    extension_provider = options[:extension_imp] || nil
+    has_extension = extension_provider && true || false
+
     index_provider = options[:index_imp] || Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultIndexProvider
     internal_provider = options[:internal_imp] || Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultInternalProvider
     persistence_provider = options[:persistence_imp] || Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultPersistenceProvider
     macro_file = __ENV__.file
+
+    extension_block_a = if has_extension do
+                            quote do
+                              use unquote(extension_provider)
+                            end
+                        end
+    extension_block_b = if has_extension do
+                            quote do
+                              @before_compile unquote(extension_provider)
+                              @after_compile  unquote(extension_provider)
+                            end
+                        end
+
+
 
     process_config = quote do
                        import Noizu.DomainObject, only: [file_rel_dir: 1]
@@ -238,6 +256,10 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
                          :ok
                        end
 
+                       unquote(extension_block_a)
+
+
+
                        @file unquote(macro_file) <> "<__post_struct_definition_macro__>"
                        Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity.__post_struct_definition_macro__(unquote(options))
 
@@ -285,6 +307,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
       use unquote(internal_provider)
       @before_compile unquote(internal_provider)
       @before_compile Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity
+      unquote(extension_block_b)
       @after_compile unquote(internal_provider)
     end
   end

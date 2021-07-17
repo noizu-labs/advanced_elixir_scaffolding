@@ -8,6 +8,19 @@ defmodule Noizu.DomainObject do
     auto_generate = options[:auto_generate]
     caller = __CALLER__
     internal_provider = options[:internal_provider] || Noizu.ElixirScaffolding.V3.Meta.DomainObject
+
+    extension_provider = options[:extension_imp] || nil
+    has_extension = extension_provider && true || false
+
+
+    extension_block_a = if has_extension do
+                          quote do
+                            use unquote(extension_provider)
+                            @before_compile unquote(extension_provider)
+                            @after_compile  unquote(extension_provider)
+                          end
+                        end
+
     quote do
       import Noizu.DomainObject, only: [file_rel_dir: 1]
       Module.register_attribute(__MODULE__, :index, accumulate: true)
@@ -39,6 +52,9 @@ defmodule Noizu.DomainObject do
         Module.put_attribute(__MODULE__, :auto_generate, unquote(auto_generate))
       end
       @before_compile unquote(internal_provider)
+
+      unquote(extension_block_a)
+
     end
   end
 
@@ -365,6 +381,7 @@ defmodule Noizu.DomainObject do
                             @__nzdo__base_open? -> (Module.get_attribute(@__nzdo__base, :poly_base) || @__nzdo__base)
                             :else -> @__nzdo__base
                           end)
+
       @__nzdo__poly_base_open? Module.open?(@__nzdo__poly_base)
       @__nzdo__poly_support (cond do
                                 poly_support -> poly_support
