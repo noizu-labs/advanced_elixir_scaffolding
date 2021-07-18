@@ -33,6 +33,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject do
       #################################################
       def vsn(), do: @vsn
       def __base__(), do: __MODULE__
+      def __poly_base__(), do: @__nzdo__poly_base
       def __entity__(), do: @__nzdo__entity
       def __repo__(), do: @__nzdo__repo
       def __sref__(), do: @__nzdo__sref

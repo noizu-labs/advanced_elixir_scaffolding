@@ -90,19 +90,15 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo do
     macro_file = __ENV__.file
     options = put_in(options || [], [:for_repo], true)
 
-
-
-    extension_block_a = if has_extension do
-                          quote do
-                            use unquote(extension_provider)
-                          end
-                        end
-    extension_block_b = if has_extension do
-                          quote do
-                            @before_compile unquote(extension_provider)
-                            @after_compile  unquote(extension_provider)
-                          end
-                        end
+    extension_block_a = extension_provider && quote do
+                                                use unquote(extension_provider), unquote(options)
+                                              end
+    extension_block_b = has_extension && extension_provider.pre_defstruct(options)
+    extension_block_c = has_extension && extension_provider.post_defstruct(options)
+    extension_block_d = extension_provider && quote do
+                                                @before_compile unquote(extension_provider)
+                                                @after_compile  unquote(extension_provider)
+                                              end
 
     process_config = quote do
                        poly_support = unquote(options[:poly_support])
@@ -175,7 +171,6 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo do
                        @file unquote(macro_file) <> "<__register__field_attributes__macro__>"
                        Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity.__register__field_attributes__macro__(unquote(options))
 
-
                        #----------------------
                        # User block section (define, fields, constraints, json_mapping rules, etc.)
                        #----------------------
@@ -183,9 +178,12 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo do
                          import Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo
                          import Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity
                          @implement Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo
+                         unquote(extension_block_a)
+
+
                          unquote(block)
 
-                         unquote(extension_block_a)
+                         unquote(extension_block_b)
 
                          if @__nzdo__fields == [] do
                            @ref @__nzdo__allowed_refs
@@ -209,14 +207,13 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo do
       unquote(process_config)
       unquote(generate)
       use unquote(crud_provider)
+      unquote(extension_block_c)
 
       # Post User Logic Hook and checks.
       @before_compile unquote(internal_provider)
       @before_compile Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo
-
-      unquote(extension_block_b)
-
       @after_compile unquote(internal_provider)
+      unquote(extension_block_d)
     end
   end
 
@@ -415,6 +412,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo do
       #################################################
       defdelegate vsn(), to: @__nzdo__base
       def __base__(), do: @__nzdo__base
+      def __poly_base__(), do: @__nzdo__poly_base
       defdelegate __entity__(), to: @__nzdo__base
       def __repo__(), do: __MODULE__
       defdelegate __sref__(), to: @__nzdo__base

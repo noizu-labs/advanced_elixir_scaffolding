@@ -12,14 +12,11 @@ defmodule Noizu.DomainObject do
     extension_provider = options[:extension_imp] || nil
     has_extension = extension_provider && true || false
 
-
-    extension_block_a = if has_extension do
-                          quote do
-                            use unquote(extension_provider)
-                            @before_compile unquote(extension_provider)
-                            @after_compile  unquote(extension_provider)
-                          end
-                        end
+    extension_block_a = extension_provider && quote do
+                                                use unquote(extension_provider)
+                                                @before_compile unquote(extension_provider)
+                                                @after_compile unquote(extension_provider)
+                                              end
 
     quote do
       import Noizu.DomainObject, only: [file_rel_dir: 1]
@@ -371,9 +368,7 @@ defmodule Noizu.DomainObject do
                    Module.put_attribute(__MODULE__, :__nzdo__struct, __MODULE__)
                end
 
-      @__nzdo__schema_helper noizu_domain_object_schema || raise "#{
-        __MODULE__
-      } you must pass in noizu_domain_object_schema or set {:noizu_scaffolding, :domain_object_schema} config value."
+      @__nzdo__schema_helper noizu_domain_object_schema
       @__nzdo__poly_base (cond do
                             v = poly_base -> v
                             v = Module.get_attribute(__MODULE__, :poly_base) -> v

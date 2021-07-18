@@ -210,6 +210,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.Persistence do
              %Noizu.Scaffolding.V3.Schema.EctoMetadata{} -> :ecto
              %Noizu.Scaffolding.V3.Schema.RedisMetadata{} -> :redis
              %Amnesia.Metadata{} -> :mnesia
+             %Noizu.Scaffolding.V3.Schema.Metadata{type: type} -> type
            end
 
     id_map = cond do

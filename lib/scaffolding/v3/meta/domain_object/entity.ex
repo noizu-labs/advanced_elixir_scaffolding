@@ -17,6 +17,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
       defdelegate vsn(), to: @__nzdo__base
       def __entity__(), do: __MODULE__
       def __base__(), do: @__nzdo__base
+      def __poly_base__(), do: @__nzdo__poly_base
       defdelegate __repo__(), to: @__nzdo__base
       defdelegate __sref__(), to: @__nzdo__base
       defdelegate __erp__(), to: @__nzdo__base
@@ -115,7 +116,21 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
           index: __nmid__(:index),
         }
       end
-      def __nmid__(:index), do: @__nzdo__nmid_index || @__nzdo__schema_helper.__noizu_info__(:nmid_indexes)[__MODULE__]
+      def __nmid__(:index) do
+        cond do
+          @__nzdo__nmid_index -> @__nzdo__nmid_index
+          !@__nzdo__schema_helper ->
+            raise """
+            #{__MODULE__} nmid_index required to generate node/entity unique identifiers.
+            You must pass in noizu_domain_object_schema to the Entity, set the noizu_scaffolding: DomainObjectSchema config option (@see Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Scaffolding.DefaultScaffoldingSchemaProvider.Default)
+            Or specify a one off for this specific table by adding @nmid_index annotation or [nmid_index: value] to the DomainObject.noizu_entity or derived macro.
+            """
+          v =  @__nzdo__schema_helper.__noizu_info__(:nmid_indexes)[__MODULE__] -> v
+          :else -> raise """
+          #{__MODULE__} nmid_index entry not supported by schema helper. Update schema helper or provide a one off declaration @nmid_index 123. #{@__nzdo__schema_helper}.__noizu_info__(:nmid_indexes)[#{__MODULE__}]
+          """
+        end
+      end
       defdelegate __nmid__(setting), to: @__nzdo__base
 
       #################################################
@@ -177,19 +192,15 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
     persistence_provider = options[:persistence_imp] || Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultPersistenceProvider
     macro_file = __ENV__.file
 
-    extension_block_a = if has_extension do
-                            quote do
-                              use unquote(extension_provider)
-                            end
-                        end
-    extension_block_b = if has_extension do
-                            quote do
-                              @before_compile unquote(extension_provider)
-                              @after_compile  unquote(extension_provider)
-                            end
-                        end
-
-
+    extension_block_a = extension_provider && quote do
+                                                use unquote(extension_provider), unquote(options)
+                                              end
+    extension_block_b = has_extension && extension_provider.pre_defstruct(options)
+    extension_block_c = has_extension && extension_provider.post_defstruct(options)
+    extension_block_d = extension_provider && quote do
+                                                @before_compile unquote(extension_provider)
+                                                @after_compile  unquote(extension_provider)
+                                              end
 
     process_config = quote do
                        import Noizu.DomainObject, only: [file_rel_dir: 1]
@@ -201,12 +212,12 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
                        # Insure Single Call
                        #---------------------
                        @file unquote(macro_file) <> "<single_call>"
-                       if line = Module.get_attribute(__MODULE__, :__nzdo__entity_definied) do
+                       if line = Module.get_attribute(__MODULE__, :__nzdo__entity_defined) do
                          raise "#{file_rel_dir(unquote(caller.file))}:#{unquote(caller.line)} attempting to redefine #{__MODULE__}.noizu_entity first defined on #{elem(line, 0)}:#{
                            elem(line, 1)
                          }"
                        end
-                       @__nzdo__entity_definied {file_rel_dir(unquote(caller.file)), unquote(caller.line)}
+                       @__nzdo__entity_defined {file_rel_dir(unquote(caller.file)), unquote(caller.line)}
 
                        # Extract Base Fields fields since SimbpleObjects are at the same level as their base.
                        @file unquote(macro_file) <> "<__prepare__base__macro__>"
@@ -251,15 +262,12 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
                          # we rely on the same providers as used in the Entity type for providing json encoding, restrictions, etc.
                          import Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity
                          @file unquote(macro_file) <> "<block>"
+                         unquote(extension_block_a)
                          unquote(block)
                        after
                          :ok
                        end
-
-                       unquote(extension_block_a)
-
-
-
+                       unquote(extension_block_b)
                        @file unquote(macro_file) <> "<__post_struct_definition_macro__>"
                        Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity.__post_struct_definition_macro__(unquote(options))
 
@@ -278,7 +286,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
       unquote(process_config)
       @file unquote(macro_file) <> "<generate>"
       unquote(generate)
-
+      unquote(extension_block_c)
 
       #---------------
       # Poison
@@ -307,8 +315,8 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
       use unquote(internal_provider)
       @before_compile unquote(internal_provider)
       @before_compile Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity
-      unquote(extension_block_b)
       @after_compile unquote(internal_provider)
+      unquote(extension_block_d)
     end
   end
 
