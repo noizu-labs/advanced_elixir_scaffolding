@@ -18,8 +18,8 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
     #
     #------------------
     def ref(_domain_object, nil), do: nil
-    def ref(domain_object, %domain_object{identifier: identifier}), do: {:ref, domain_object, identifier}
-    def ref(domain_object, %associated_struct{} = entity) do
+    def ref(domain_object, %{__struct__: domain_object, identifier: identifier}), do: {:ref, domain_object, identifier}
+    def ref(domain_object, %{__struct__: associated_struct} = entity) do
       association_type = domain_object.__noizu_info__(:associated_types)[associated_struct]
       cond do
         association_type == nil -> nil
@@ -66,8 +66,8 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
     end
 
     # entity load
-    def entity(domain_object, %domain_object{} = entity, _options), do: entity
-    def entity(domain_object, %associated_struct{} = entity, options) do
+    def entity(domain_object, %{__struct__: domain_object} = entity, _options), do: entity
+    def entity(domain_object, %{__struct__: associated_struct} = entity, options) do
       association_type = domain_object.__noizu_info__(:associated_types)[associated_struct]
       cond do
         association_type == nil -> nil
@@ -88,8 +88,8 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
       end
     end
 
-    def entity!(domain_object, %domain_object{} = entity, _options), do: entity
-    def entity!(domain_object, %associated_struct{} = entity, options) do
+    def entity!(domain_object, %{__struct__: domain_object} = entity, _options), do: entity
+    def entity!(domain_object, %{__struct__: associated_struct} = entity, options) do
       association_type = domain_object.__noizu_info__(:associated_types)[associated_struct]
       cond do
         association_type == nil -> nil

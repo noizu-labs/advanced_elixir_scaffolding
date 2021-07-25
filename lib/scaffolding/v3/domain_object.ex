@@ -387,6 +387,7 @@ defmodule Noizu.DomainObject do
                                 v = !@__nzdo__poly_base_open? && @__nzdo__poly_base.__noizu_info__(:poly)[:support] -> v
                                 :else -> nil
                               end)
+      @__nzdo__poly_support is_list(@__nzdo__poly_support) && List.flatten(@__nzdo__poly_support) || @__nzdo__poly_support
       @__nzdo__poly? ((@__nzdo__poly_base != @__nzdo__base || @__nzdo__poly_support) && true || false)
       @__nzdo__repo repo || Noizu.DomainObject.extract_attribute(:repo, Module.concat([@__nzdo__poly_base, "Repo"]))
       @__nzdo__sref sref || Noizu.DomainObject.extract_attribute(:sref, :unsupported)

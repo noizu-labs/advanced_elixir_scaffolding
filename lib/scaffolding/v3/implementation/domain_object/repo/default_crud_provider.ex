@@ -776,8 +776,12 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
           post_create_callback(entity, context, options)
         end
       end
-      def layer_create(%PersistenceLayer{} = layer, entity, context, options), do: @__nzdo__crud_imp.layer_create(__MODULE__, layer, entity, context, options)
-      def layer_create!(%PersistenceLayer{} = layer, entity, context, options), do: @__nzdo__crud_imp.layer_create!(__MODULE__, layer, entity, context, options)
+      def layer_create(%PersistenceLayer{} = layer, entity, context, options) do
+        @__nzdo__crud_imp.layer_create(__MODULE__, layer, entity, context, options)
+      end
+      def layer_create!(%PersistenceLayer{} = layer, entity, context, options) do
+        @__nzdo__crud_imp.layer_create!(__MODULE__, layer, entity, context, options)
+      end
       def layer_pre_create_callback(%PersistenceLayer{} = layer, entity, context, options),
           do: @__nzdo__crud_imp.layer_pre_create_callback(__MODULE__, layer, entity, context, options)
       def layer_pre_create_callback!(%PersistenceLayer{} = layer, entity, context, options) do

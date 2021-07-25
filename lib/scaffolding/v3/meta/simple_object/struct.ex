@@ -213,8 +213,8 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.SimpleObject.Struct do
       #################################################
       @__nzdo_associated_types (
                                  Enum.map(@__nzdo_persistence__by_table || %{}, fn ({k, v}) -> {k, v.type} end) ++ Enum.map(
-                                   @__nzdo__poly_support || %{},
-                                   fn (k, v) -> {k, :poly} end
+                                   @__nzdo__poly_support || [],
+                                   fn (k) -> {Module.concat([k, "Entity"]), :poly} end
                                  ))
                                |> Map.new()
       @__nzdo__json_config put_in(@__nzdo__json_config, [:format_settings], @__nzdo__raw__json_format_settings)
