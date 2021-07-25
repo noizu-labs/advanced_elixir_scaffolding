@@ -116,21 +116,31 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
           index: __nmid__(:index),
         }
       end
-      def __nmid__(:index) do
-        cond do
-          @__nzdo__nmid_index -> @__nzdo__nmid_index
-          !@__nzdo__schema_helper ->
-            raise """
-            #{__MODULE__} nmid_index required to generate node/entity unique identifiers.
-            You must pass in noizu_domain_object_schema to the Entity, set the noizu_scaffolding: DomainObjectSchema config option (@see Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Scaffolding.DefaultScaffoldingSchemaProvider.Default)
-            Or specify a one off for this specific table by adding @nmid_index annotation or [nmid_index: value] to the DomainObject.noizu_entity or derived macro.
+
+
+      if @__nzdo__nmid_index do
+        def __nmid__(:index) do
+          @__nzdo__nmid_index
+        end
+      else
+        def __nmid__(:index) do
+          cond do
+            !@__nzdo__schema_helper ->
+              raise """
+              #{__MODULE__} nmid_index required to generate node/entity unique identifiers.
+              You must pass in noizu_domain_object_schema to the Entity, set the noizu_scaffolding: DomainObjectSchema config option (@see Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Scaffolding.DefaultScaffoldingSchemaProvider.Default)
+              Or specify a one off for this specific table by adding @nmid_index annotation or [nmid_index: value] to the DomainObject.noizu_entity or derived macro.
+              """
+            v = Kernel.function_exported?(@__nzdo__schema_helper, :__noizu_info__, 1) && apply(@__nzdo__schema_helper, :__noizu_info__, [:nmid_indexes])[__MODULE__] -> v
+            :else -> raise """
+            #{__MODULE__} nmid_index entry not supported by schema helper. Update schema helper or provide a one off declaration @nmid_index 123. #{@__nzdo__schema_helper}.__noizu_info__(:nmid_indexes)[#{__MODULE__}]
             """
-          v =  @__nzdo__schema_helper.__noizu_info__(:nmid_indexes)[__MODULE__] -> v
-          :else -> raise """
-          #{__MODULE__} nmid_index entry not supported by schema helper. Update schema helper or provide a one off declaration @nmid_index 123. #{@__nzdo__schema_helper}.__noizu_info__(:nmid_indexes)[#{__MODULE__}]
-          """
+          end
         end
       end
+
+
+
       defdelegate __nmid__(setting), to: @__nzdo__base
 
       #################################################

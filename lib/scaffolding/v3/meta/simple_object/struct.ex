@@ -151,7 +151,20 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.SimpleObject.Struct do
       def __nmid__(:generator), do: @__nzdo__nmid_generator
       def __nmid__(:sequencer), do: @__nzdo__nmid_sequencer
       def __nmid__(:bare), do: @__nzdo__nmid_bare
-      def __nmid__(:index), do: @__nzdo__nmid_index || @__nzdo__schema_helper.__noizu_info__(:nmid_indexes)[__MODULE__]
+
+      if @__nzdo__nmid_index do
+        def __nmid__(:index), do: @__nzdo__nmid_index
+      else
+        def __nmid__(:index) do
+          cond do
+            !Kernel.function_exported?(@__nzdo__schema_helper, :__noizu_info__, 1) -> nil
+            v = apply(@__nzdo__schema_helper, :__noizu_info__, [:nmid_indexes])[__MODULE__] -> v
+            :else -> nil
+          end
+        end
+      end
+
+
 
       #################################################
       # __indexing__
