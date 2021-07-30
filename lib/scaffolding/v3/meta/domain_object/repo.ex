@@ -87,7 +87,6 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo do
     internal_provider = options[:internal_imp] || Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultInternalProvider
     extension_provider = options[:extension_imp] || nil
     has_extension = extension_provider && true || false
-    macro_file = __ENV__.file
     options = put_in(options || [], [:for_repo], true)
 
     extension_block_a = extension_provider && quote do
@@ -122,11 +121,11 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo do
                        @__nzdo__repo_definied {file_rel_dir(unquote(caller.file)), unquote(caller.line)}
 
                        # Extract Base Fields fields since SimbpleObjects are at the same level as their base.
-                       @file unquote(macro_file) <> "<__prepare__base__macro__>"
+                       @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
                        Noizu.DomainObject.__prepare__base__macro__(unquote(options))
 
                        # Push details to Base, and read in required settings.
-                       @file unquote(macro_file) <> "<__prepare__poly__macro__>"
+                       @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
                        Noizu.DomainObject.__prepare__poly__macro__(unquote(options))
 
 
@@ -163,12 +162,12 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo do
                                               end)
 
                        # Json Settings
-                       @file unquote(macro_file) <> "<__prepare__json_settings__macro__>"
+                       @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
                        Noizu.DomainObject.__prepare__json_settings__macro__(unquote(options))
 
                        # Prep attributes for loading individual fields.
                        require Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity
-                       @file unquote(macro_file) <> "<__register__field_attributes__macro__>"
+                       @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
                        Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity.__register__field_attributes__macro__(unquote(options))
 
                        #----------------------
@@ -222,6 +221,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo do
   #--------------------------------------------
   defmacro __transaction_block__(_options \\ [], [do: block]) do
     quote do
+      #@file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
       case @__nzdo_top_layer_tx_block do
         :none ->
           unquote(block)
@@ -315,6 +315,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo do
 
   def __layer_transaction_block__d(_caller, layer, _options, block) do
     quote do
+      #@file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
       case is_map(unquote(layer)) && unquote(layer).tx_block do
         :none ->
           unquote(block)

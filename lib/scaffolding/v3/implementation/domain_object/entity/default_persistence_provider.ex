@@ -159,40 +159,54 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultP
 
   defmacro __using__(_options \\ nil) do
     quote do
+      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
       alias Noizu.Scaffolding.V3.Schema.PersistenceLayer
       @__nzdo__persistence_imp Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultPersistenceProvider.Default
 
+      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
       def __as_record__(%PersistenceLayer{} = layer, entity, context, options \\ nil), do: @__nzdo__persistence_imp.__as_record__(__MODULE__, layer, entity, context, options)
       def __as_record__!(%PersistenceLayer{} = layer, entity, context, options \\ nil), do: @__nzdo__persistence_imp.__as_record__!(__MODULE__, layer, entity, context, options)
 
+      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
       def __as_record_type__(%PersistenceLayer{} = layer, entity, context, options \\ nil),
           do: @__nzdo__persistence_imp.__as_record_type__(__MODULE__, layer, entity, context, options)
       def __as_record_type__!(%PersistenceLayer{} = layer, entity, context, options \\ nil),
           do: @__nzdo__persistence_imp.__as_record_type__!(__MODULE__, layer, entity, context, options)
 
+      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
       def __from_record__(%PersistenceLayer{} = layer, record, context, options \\ nil), do: @__nzdo__persistence_imp.__from_record__(__MODULE__, layer, record, context, options)
       def __from_record__!(%PersistenceLayer{} = layer, record, context, options \\ nil), do: @__nzdo__persistence_imp.__from_record__!(__MODULE__, layer, record, context, options)
 
+
       if (@__nzdo_persistence.ecto_entity) do
+        @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
         def ecto_entity?(), do: true
+
+        @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
         cond do
           Module.has_attribute?(__MODULE__, :__nzdo__ecto_identifier_field) -> def ecto_identifier(ref), do: @__nzdo__persistence_imp.ecto_identifier(__MODULE__, ref)
           Module.get_attribute(__MODULE__, :__nzdo__identifier_type) == :integer -> def ecto_identifier(ref), do: __MODULE__.id(ref)
           :else -> def ecto_identifier(_), do: raise "Not Supported"
         end
+
+        @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
         def source(_), do: @__nzdo_persistence.ecto_entity
+
+        @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
         cond do
           @__nzdo_persistence.options[:universal_identifier] -> def universal_identifier(ref), do: __MODULE__.id(ref)
           @__nzdo_persistence.options[:universal_lookup] -> def universal_identifier(ref), do: @__nzdo__persistence_imp.universal_identifier_lookup(__MODULE__, ref)
           :else -> def universal_identifier(_), do: raise "Not Supported"
         end
       else
+        @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
         def ecto_entity?(), do: false
         def ecto_identifier(_), do: nil
         def source(_), do: nil
         def universal_identifier(_), do: nil
       end
 
+      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
       defoverridable [
         __as_record__: 3,
         __as_record__: 4,
