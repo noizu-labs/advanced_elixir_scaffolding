@@ -318,6 +318,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Index.DefaultSp
   end
 
   defmacro __using__(options) do
+    options = Macro.expand(options, __ENV__)
     index_stem = options[:index_stem]
     source_dir = options[:source_dir] || Application.get_env(:noizu_scaffolding, :sphinx_data_dir, "/sphinx/data")
 
@@ -331,18 +332,34 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Index.DefaultSp
 
 
     quote do
+      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
       alias Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Index.DefaultSphinxProvider.Default, as: SphinxProvider
+
+      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
       def extract_field(field, entity, context, options), do: SphinxProvider.extract_field(__MODULE__, field, entity, context, options)
+
+      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
       def fields(context, options), do: SphinxProvider.fields(__MODULE__, context, options)
+
+      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
       def build(type, context, options), do: SphinxProvider.build(__MODULE__, type, context, options)
 
+      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
       def __index_schema_fields__(context, options), do: SphinxProvider.__index_schema_fields__(__MODULE__, context, options)
+
+      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
       def __index_header__(type, context, options), do: SphinxProvider.__index_header__(__MODULE__, type, context, options)
+
+      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
       def __index_record__(type, entity, context, options), do: SphinxProvider.__index_record__(__MODULE__, type, entity, context, options)
 
+      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
       def update_index(entity, context, options), do: SphinxProvider.update_index(__MODULE__, entity, context, options)
+
+      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
       def delete_index(entity, context, options), do: SphinxProvider.delete_index(__MODULE__, entity, context, options)
 
+      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
       @__nzdo__sref Module.get_attribute(@__nzdo__base, :__nzdo__sref)
       @index_stem unquote(index_stem) || @__nzdo__sref
       @rt_index unquote(rt_index) || :"rt_index__#{@index_stem}"
@@ -353,7 +370,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Index.DefaultSp
       @primary_source unquote(primary_source) || :"primary_source__#{@index_stem}"
       @data_dir unquote(source_dir)
 
-
+      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
       def __index_stem__(), do: @index_stem
       def __rt_index__(), do: @rt_index
       def __delta_index__(), do: @delta_index
@@ -363,10 +380,11 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Index.DefaultSp
       def __primary_source__(), do: @primary_source
       def __data_dir__(), do: @data_dir
 
+      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
       defdelegate sql_escape_string(v), to: SphinxProvider
-
       def __config__(context, options), do: SphinxProvider.__config__(__MODULE__, context, options)
 
+      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
       defoverridable [
         extract_field: 4,
         fields: 2,

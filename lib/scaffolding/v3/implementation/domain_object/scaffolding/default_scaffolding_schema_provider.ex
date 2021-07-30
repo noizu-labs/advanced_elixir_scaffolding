@@ -67,15 +67,19 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Scaffolding.Def
 
 
       Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Scaffolding.DefaultScaffoldingSchemaProvider.Default
-
+      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
       def module_children(scope), do: @__nzdo__internal_imp.module_children(@app, scope)
 
+      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
       def __all_properties__(), do: @all_properties
 
+      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
       def __cache_key__(property), do: @cache_keys[property]
 
+      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
       def __valid_table_types__(), do: @valid_table_types
 
+      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
       def __flush__(), do: __flush__(__all_properties__())
       def __flush__(property) when is_atom(property), do: __flush__([property])
       def __flush__(properties) when is_list(properties) do
@@ -86,6 +90,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Scaffolding.Def
         end)
       end
 
+      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
       def __noizu_info__() do
         key = __cache_key__(:all)
         case FastGlobal.get(key, :cache_miss) do
@@ -98,12 +103,14 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Scaffolding.Def
         end
       end
 
+      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
       def __noizu_info__(:type), do: :schema
       def __noizu_info__(:nmid_indexes), do: __nmid_index_list__()
       def __noizu_info__(:entities = property), do: @__nzdo__internal_imp.cached_filter(__cache_key__(property), @app, @base_prefix, :entity)
       def __noizu_info__(:indexes = property), do: @__nzdo__internal_imp.cached_filter(__cache_key__(property), @app, @base_prefix, :index)
       def __noizu_info__(:enums = property), do: @__nzdo__internal_imp.cached_filter(__cache_key__(property), @app, @base_prefix, :entity, &(&1.__noizu_info__(:meta)[:enum_entity]))
       def __noizu_info__(:tables = property), do: @__nzdo__internal_imp.cached_filter(__cache_key__(property), @app, @database_prefix, __valid_table_types__())
+      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
       def __noizu_info__(:sref_map = property) do
         key = __cache_key__(property)
         case FastGlobal.get(key, :cache_miss) do
@@ -114,6 +121,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Scaffolding.Def
           cache_hit -> cache_hit
         end
       end
+      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
       def __noizu_info__(:meta = property) do
         key = __cache_key__(property)
         case FastGlobal.get(key, :cache_miss) do
@@ -125,9 +133,11 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Scaffolding.Def
         end
       end
 
+      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
       def info(), do: __noizu_info__()
       def info(property), do: __noizu_info__(property)
 
+      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
       def __nmid_index_list__(), do: []
       def enums(), do: __noizu_info__(:enums)
       def sref_map(), do: __noizu_info__(:sref_map)
@@ -136,6 +146,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Scaffolding.Def
       def tables(), do: __noizu_info__(:tables)
       def meta(), do: __noizu_info__(:meta)
 
+      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
       def parse_sref(sref) do
         cond do
           Regex.match?(~r/^ref\.([^.]*)\.(.*)$/, sref) ->
@@ -154,6 +165,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Scaffolding.Def
         end
       end
 
+      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
       defoverridable [
         __valid_table_types__: 0,
         __all_properties__: 0,

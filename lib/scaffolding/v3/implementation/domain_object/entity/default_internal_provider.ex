@@ -140,10 +140,16 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultI
 
   defmacro __using__(_options \\ nil) do
     quote do
+      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
       @__nzdo__internal_imp Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultInternalProvider.Default
+
+      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
       defdelegate strip_pii(entity, level), to: @__nzdo__internal_imp
+
+      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
       def valid?(%__MODULE__{} = entity, context, options \\ nil), do: @__nzdo__internal_imp.valid?(__MODULE__, entity, context, options)
 
+      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
       defoverridable [
         strip_pii: 2,
         valid?: 2,
