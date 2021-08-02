@@ -50,7 +50,11 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
       cond do
         sref_name == :undefined -> nil
         identifier ->
-          sref_identifier = domain_object.id_to_string(identifier) || throw "#{domain_object}.id_to_string failed for #{inspect identifier}"
+          sref_identifier = case domain_object.id_to_string(identifier) do
+                              {:ok, v} -> v
+                              {:error, _} -> throw "#{domain_object}.id_to_string failed for #{inspect identifier}"
+                              v -> v || throw "#{domain_object}.id_to_string failed for #{inspect identifier}"
+                            end
           identifier_type = case domain_object.__noizu_info__(:identifier_type) do
                               identifier_type when is_tuple(identifier_type) -> elem(identifier_type, 0)
                               identifier_type -> identifier_type
@@ -129,14 +133,15 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
     #
     #-----------------------------------
     def id_to_string(_m, _, nil), do: nil
-    def id_to_string(_m, :integer, id) when is_integer(id), do: Integer.to_string(id)
-    def id_to_string(_m, :string, id) when is_bitstring(id), do: id
-    def id_to_string(_m, :hash, id) when is_bitstring(id), do: id
-    def id_to_string(_m, :uuid, id), do: UUID.binary_to_string!(id)
+    def id_to_string(_m, :integer, id) when is_integer(id), do: {:ok, Integer.to_string(id)}
+    def id_to_string(_m, :string, id) when is_bitstring(id), do: {:ok, id}
+    def id_to_string(_m, :hash, id) when is_bitstring(id), do: {:ok, id}
+    def id_to_string(_m, :uuid, id), do: {:ok, UUID.binary_to_string!(id)}
     def id_to_string(m, {:list, template}, id) do
-      "[" <> (
-               Enum.map(id, &(m.id_to_string(template, &1)))
-               |> Enum.join(",")) <> "]"
+      v = "[" <> (
+                   Enum.map(id, &(m.id_to_string(template, &1)))
+                   |> Enum.join(",")) <> "]"
+      {:ok, v}
     end
     def id_to_string(m, {:compound, template, prep}, id) do
       case prep do
@@ -150,10 +155,10 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
       id_list = Tuple.to_list(id)
       length(template_list) != length(id_list) && throw "invalid compound id #{inspect id}"
       l = Enum.map_reduce(id_list, 0, &({m.id_to_string(Enum.at(template_list, &2), &1), &2 + 1}))
-      "{" <> Enum.join(l, ",") <> "}"
+      {:ok, "{" <> Enum.join(l, ",") <> "}"}
     end
-    def id_to_string(_m, :atom, id), do: Atom.to_string(id)
-    def id_to_string(_m, {:atom, :existing}, id), do: Atom.to_string(id)
+    def id_to_string(_m, :atom, id), do: {:ok, Atom.to_string(id)}
+    def id_to_string(_m, {:atom, :existing}, id), do: {:ok, Atom.to_string(id)}
     def id_to_string(_m, {:atom, constraint}, id) do
       sref = case constraint do
                v when is_list(v) -> Enum.member?(v, id) && Atom.to_string(id) || throw "unsupported atom id #{inspect id}"
@@ -163,23 +168,30 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
                {m, f} -> apply(m, f, [id]) && Atom.to_string(id) || throw "unsupported atom id #{inspect id}"
                _ -> throw "invalid atom constraint #{inspect constraint}"
              end
-      "[#{sref}]"
+      {:ok, "[#{sref}]"}
     end
-    def id_to_string(_m, :ref, id), do: Noizu.ERP.sref(id) || throw "invalid ref"
+    def id_to_string(_m, :ref, id) do
+      if v = Noizu.ERP.sref(id) do
+        {:ok, v}
+      else
+        throw "invalid ref"
+      end
+    end
     def id_to_string(_m, {:ref, constraint}, id) do
       m = case Noizu.ERP.ref(id) do
             {:ref, m, _} -> m
             _else -> throw "invalid ref"
           end
       sref = Noizu.ERP.sref(id) || throw "invalid ref"
-      case constraint do
-        v when is_list(v) -> Enum.member?(v, m) && sref || throw "unsupported ref id #{inspect sref}"
-        v = %MapSet{} -> Enum.member?(v, m) && sref || throw "unsupported ref id #{inspect sref}"
-        v when is_function(v, 0) -> v.()[m] && sref || throw "unsupported ref id #{inspect sref}"
-        v when is_function(v, 1) -> v.(m) && sref || throw "unsupported ref id #{inspect sref}"
-        {m, f} -> apply(m, f, [m]) && sref || throw "unsupported ref id #{inspect sref}"
-        _ -> throw "invalid ref constraint #{inspect constraint}"
-      end
+      v = case constraint do
+            v when is_list(v) -> Enum.member?(v, m) && sref || throw "unsupported ref id #{inspect sref}"
+            v = %MapSet{} -> Enum.member?(v, m) && sref || throw "unsupported ref id #{inspect sref}"
+            v when is_function(v, 0) -> v.()[m] && sref || throw "unsupported ref id #{inspect sref}"
+            v when is_function(v, 1) -> v.(m) && sref || throw "unsupported ref id #{inspect sref}"
+            {m, f} -> apply(m, f, [m]) && sref || throw "unsupported ref id #{inspect sref}"
+            _ -> throw "invalid ref constraint #{inspect constraint}"
+          end
+      {:ok, v}
     end
 
     #-----------------------------------
@@ -285,12 +297,20 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
           #-----------------
           @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
           def ref("ref.#{@__nzdo__sref}{" <> id) do
-            identifier = string_to_id(String.slice(id, 0..-2))
+            identifier = case string_to_id(String.slice(id, 0..-2)) do
+                           {:ok, v} -> v
+                           {:error, _} -> nil
+                           v -> v
+                         end
             identifier && {:ref, __MODULE__, identifier}
           end
           @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
           def ref("ref.#{@__nzdo__sref}." <> id) do
-            identifier = string_to_id(id)
+            identifier = case string_to_id(id) do
+                           {:ok, v} -> v
+                           {:error, _} -> nil
+                           v -> v
+                         end
             identifier && {:ref, __MODULE__, identifier}
           end
           def ref(ref), do: @__nzdo__erp_imp.ref(__MODULE__, ref)

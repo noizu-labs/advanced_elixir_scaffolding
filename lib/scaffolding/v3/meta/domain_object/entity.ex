@@ -304,7 +304,6 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
       unquote(process_config)
       @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
       unquote(generate)
-      unquote(extension_block_c)
 
       #---------------
       # Poison
@@ -331,6 +330,10 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
       use unquote(persistence_provider)
       @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
       use unquote(internal_provider)
+
+      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      unquote(extension_block_c)
+
       @before_compile unquote(internal_provider)
       @before_compile Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity
       @after_compile unquote(internal_provider)
