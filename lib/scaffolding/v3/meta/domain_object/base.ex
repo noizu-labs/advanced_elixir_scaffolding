@@ -110,7 +110,14 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject do
       def __noizu_info__(:base), do: __MODULE__
       def __noizu_info__(:entity), do: @__nzdo__entity
       def __noizu_info__(:struct), do: @__nzdo__entity
-      def __noizu_info__(:repo), do: @__nzdo__repo
+
+
+      if @__nzdo__poly_base == __MODULE__ do
+        def __noizu_info__(:repo), do: @__nzdo__repo
+      else
+        def __noizu_info__(:repo), do: __poly_base__().__repo__()
+      end
+
       def __noizu_info__(:sref), do: @__nzdo__sref
       def __noizu_info__(:restrict_provider), do: nil
       def __noizu_info__(:poly), do: @__nzdo__poly_settings

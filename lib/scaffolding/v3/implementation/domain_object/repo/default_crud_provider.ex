@@ -332,7 +332,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
               :ok
           end
       end
-      # todo unviersal lookup logic
+      # todo universal lookup logic
       entity = update_in(entity, [Access.key(:identifier)], &(&1 || m.generate_identifier!()))
 
       # prep/load fields so they are insertable
