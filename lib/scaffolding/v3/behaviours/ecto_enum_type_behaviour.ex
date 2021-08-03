@@ -72,10 +72,10 @@ defmodule Noizu.Ecto.EnumTypeBehaviour do
 
   def __enum_type__(options) do
     quote do
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       use Ecto.Type
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       domain_object = Module.split(__MODULE__) |> Enum.slice(0 .. -3) |> Module.concat
       @__nzdo__base domain_object
       {values, default_value, ecto_type} = case Module.get_attribute(domain_object, :__nzdo__enum_list) do
@@ -102,11 +102,11 @@ defmodule Noizu.Ecto.EnumTypeBehaviour do
      @ecto_type ecto_type || :integer
       @default_value default_value || :none
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def default_value(), do: @default_value
 
       if values == :callback do
-        @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+        @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
         def description(enum), do: @__nzdo__base.description(enum)
         def atom_to_enum(), do: @__nzdo__base.atom_to_enum()
         def atom_to_enum(k), do: @__nzdo__base.atom_to_enum(k)
@@ -115,7 +115,7 @@ defmodule Noizu.Ecto.EnumTypeBehaviour do
         def json_to_atom(), do: @__nzdo__base.json_to_atom()
         def json_to_atom(k), do: @__nzdo__base.json_to_atom(k)
       else
-        @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+        @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
         raw_atom_list = (values || [{:none, 0}])
                         |> Enum.map(
                              fn
@@ -131,18 +131,18 @@ defmodule Noizu.Ecto.EnumTypeBehaviour do
         @json_to_atom Enum.map(@atom_to_enum, fn ({a, _e}) -> {"#{a}", a} end)
                       |> Map.new()
 
-        @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+        @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
         def description(enum) when is_atom(enum) do
           Map.has_key?(@atom_to_enum, enum) && (@atom_descriptions[enum] || "no description") || throw "#{enum} is not a member of #{__MODULE__}"
         end
 
-        @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+        @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
         def description(enum) when is_integer(enum) do
           enum = @enum_to_atom[enum] || throw "#{enum} enum not found in #{__MODULE__}"
           @atom_descriptions[enum] || "no description"
         end
 
-        @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+        @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
         def atom_to_enum(), do: @atom_to_enum
         def atom_to_enum(k), do: atom_to_enum()[k]
         def enum_to_atom(), do: @enum_to_atom
@@ -155,26 +155,26 @@ defmodule Noizu.Ecto.EnumTypeBehaviour do
 
 
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       @doc false
       def type, do: @ecto_type
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       @doc """
       Casts to Enum.
       """
       def cast(v), do: Noizu.Ecto.EnumTypeBehaviour.Default.cast(__MODULE__, v)
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       @doc """
       Same as `cast/1` but raises `Ecto.CastError` on invalid arguments.
       """
       def cast!(v), do: Noizu.Ecto.EnumTypeBehaviour.Default.cast!(__MODULE__, v)
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def dump(v), do: Noizu.Ecto.EnumTypeBehaviour.Default.dump(__MODULE__, v)
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def load(v), do: Noizu.Ecto.EnumTypeBehaviour.Default.load(__MODULE__, v)
     end
   end

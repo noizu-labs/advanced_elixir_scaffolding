@@ -75,6 +75,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.ScaffoldingSchema do
       @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
       @before_compile unquote(scaffolding_schema_provider)
       @after_compile unquote(scaffolding_schema_provider)
+      @file __ENV__.file
     end
   end
 

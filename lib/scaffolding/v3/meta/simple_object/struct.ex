@@ -14,7 +14,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.SimpleObject.Struct do
                        #---------------------
                        # Insure Single Call
                        #---------------------
-                       @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+                       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
                        if line = Module.get_attribute(__MODULE__, :__nzdo__struct_definied) do
                          raise "#{file_rel_dir(unquote(caller.file))}:#{unquote(caller.line)} attempting to redefine #{__MODULE__}.noizu_struct first defined on #{elem(line, 0)}:#{
                            elem(line, 1)
@@ -23,28 +23,28 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.SimpleObject.Struct do
                        @__nzdo__struct_definied {file_rel_dir(unquote(caller.file)), unquote(caller.line)}
 
                        # Extract Base Fields fields since SimbpleObjects are at the same level as their base.
-                       @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+                       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
                        @simple_object __MODULE__
                        Noizu.DomainObject.__prepare__base__macro__(unquote(options))
 
                        # Push details to Base, and read in required settings.
-                       @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+                       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
                        Noizu.DomainObject.__prepare__poly__macro__(unquote(options))
 
                        # Load Sphinx Settings from base.
-                       @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+                       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
                        Noizu.DomainObject.__prepare__sphinx__macro__(unquote(options))
 
                        # Load Persistence Settings from base, we need them to control some submodules.
-                       @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+                       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
                        Noizu.DomainObject.__prepare__persistence_settings__macro__(unquote(options))
 
                        # Nmid
-                       @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+                       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
                        Noizu.DomainObject.__prepare__nmid__macro__(unquote(options))
 
                        # Json Settings
-                       @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+                       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
                        Noizu.DomainObject.__prepare__json_settings__macro__(unquote(options))
 
                        #----------------------
@@ -54,7 +54,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.SimpleObject.Struct do
                        @__nzdo__derive Noizu.V3.RestrictedProtocol
 
                        # Prep attributes for loading individual fields.
-                       @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+                       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
                        Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity.__register__field_attributes__macro__(unquote(options))
 
                        #----------------------
@@ -63,13 +63,13 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.SimpleObject.Struct do
                        try do
                          # we rely on the same providers as used in the Entity type for providing json encoding, restrictions, etc.
                          import Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity
-                         @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+                         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
                          unquote(block)
                        after
                          :ok
                        end
 
-                       @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+                       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
                        Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity.__post_struct_definition_macro__(unquote(options))
 
 
@@ -98,24 +98,24 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.SimpleObject.Struct do
                end
 
     quote do
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       unquote(process_config)
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       unquote(generate)
 
 
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       use unquote(index_provider)
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       use unquote(persistence_provider)
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       use unquote(internal_provider)
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       @before_compile unquote(internal_provider)
       @before_compile Noizu.ElixirScaffolding.V3.Meta.SimpleObject.Struct
       #@after_compile unquote(internal_provider)
@@ -124,7 +124,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.SimpleObject.Struct do
 
   defmacro __before_compile__(_) do
     quote do
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       @__nzdo__poly_settings  %{
         poly: @__nzdo__poly?,
         support: @__nzdo__poly_support,
@@ -323,6 +323,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.SimpleObject.Struct do
       def __json__(:format_groups), do: @__nzdo__json_format_groups
       def __json__(:field_groups), do: @__nzdo__json_field_groups
 
+      @file __ENV__.file
 
     end
   end

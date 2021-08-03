@@ -213,6 +213,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo do
       @before_compile Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo
       @after_compile unquote(internal_provider)
       unquote(extension_block_d)
+      @file __ENV__.file
     end
   end
 

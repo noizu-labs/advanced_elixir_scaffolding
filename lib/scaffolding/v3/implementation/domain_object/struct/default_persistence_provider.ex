@@ -68,33 +68,33 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Struct.DefaultP
 
   defmacro __using__(_options \\ nil) do
     quote do
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       alias Noizu.Scaffolding.V3.Schema.PersistenceLayer
       @__nzdo__persistence_imp Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Struct.DefaultPersistenceProvider.Default
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def __as_record__(%PersistenceLayer{} = layer, identifier, entity, context, options \\ nil),
           do: @__nzdo__persistence_imp.__as_record__(__MODULE__, layer, identifier, entity, context, options)
       def __as_record__!(%PersistenceLayer{} = layer, identifier, entity, context, options \\ nil),
           do: @__nzdo__persistence_imp.__as_record__!(__MODULE__, layer, identifier, entity, context, options)
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def __as_record_type__(%PersistenceLayer{} = layer, identifier, entity, context, options \\ nil),
           do: @__nzdo__persistence_imp.__as_record_type__(__MODULE__, layer, identifier, entity, context, options)
       def __as_record_type__!(%PersistenceLayer{} = layer, identifier, entity, context, options \\ nil),
           do: @__nzdo__persistence_imp.__as_record_type__!(__MODULE__, layer, identifier, entity, context, options)
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def __from_record__(%PersistenceLayer{} = layer, record, context, options \\ nil), do: @__nzdo__persistence_imp.__from_record__(__MODULE__, layer, record, context, options)
       def __from_record__!(%PersistenceLayer{} = layer, record, context, options \\ nil), do: @__nzdo__persistence_imp.__from_record__!(__MODULE__, layer, record, context, options)
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def ecto_entity?(), do: false
       def ecto_identifier(_), do: nil
       def source(_), do: nil
       def universal_identifier(_), do: nil
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       defoverridable [
         __as_record__: 4,
         __as_record__: 5,

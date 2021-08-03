@@ -60,7 +60,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.Table do
     base = options[:base] || :auto
 
     quote do
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       import Ecto.Changeset
       require Noizu.DomainObject
       @__nzdo__table_provider unquote(provider)
@@ -72,13 +72,13 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.Table do
                                         :else -> false
                                       end)
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       if !@__nzdo__no_entity_association do
         @__nzdo__entity @__nzdo__table_provider.expand_entity(__MODULE__, unquote(entity), unquote(app_name))
         @__nzdo__base @__nzdo__table_provider.expand_base(@__nzdo__entity, unquote(base))
       end
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       if @enable_nmid do
         @__nzdo__nmid_generator unquote(nmid_generator) || (Module.get_attribute(__MODULE__, :nmid_generator) || Noizu.Scaffolding.V3.NmidGenerator)
         @__nzdo__nmid_sequencer unquote(nmid_sequencer) || (Module.get_attribute(__MODULE__, :nmid_sequencer) || __MODULE__)
@@ -92,7 +92,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.Table do
       #----------------------
       # Load Persistence Settings from base, we need them to control some submodules.
       #----------------------
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       @__nzdo__enum_list unquote(is_enum_list) || Module.has_attribute?(__MODULE__, :enum_list) || false
       @__nzdo__auto_generate  (cond do
                                  unquote(auto_generate) != nil -> unquote(auto_generate)
@@ -172,7 +172,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.Table do
         #----------------------
         #  __noizu_info__
         #----------------------
-        @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+        @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
         if @__nzdo__enum_list do
           def __noizu_info__(), do: put_in(@__nzdo__base.__noizu_info__(), [:type], :enum_table)
           def __noizu_info__(:type), do: :enum_table
@@ -188,7 +188,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.Table do
         #----------------------
         #  __nmid__
         #----------------------
-        @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+        @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
         if @enable_nmid do
           defdelegate __nmid__(), to: @__nzdo__base
           defdelegate __nmid__(setting), to: @__nzdo__base
@@ -196,7 +196,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.Table do
       end
 
       if @__nzdo__no_entity_association do
-        @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+        @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
         @__nzdo__table_repo unquote(repo) || throw "#{__MODULE__} must specify repo option for non entity linked tables."
 
         #----------------------
@@ -220,7 +220,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.Table do
         #----------------------
         #  __persistence__
         #----------------------
-        @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+        @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
         @__nzdo_persistence Noizu.DomainObject.expand_persistence_layers(Module.get_attribute(__MODULE__, :persistence_layers, [@__nzdo__table_repo]), __MODULE__)
         def __persistence__(), do: __persistence__(:all)
         def __persistence__(:all) do
@@ -242,7 +242,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.Table do
         def __persistence__(_, :table), do: nil
 
         if @enable_nmid do
-          @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+          @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
           @__nzdo__noizu_domain_object_schema unquote(noizu_domain_object_schema) || throw "No-Entity Nmid enabled table require that noizu_domain_object_schema option or :noizu_scaffolding, :domain_object_schema value be provided"
           @nmid_source unquote(nmid_source)
 
@@ -262,7 +262,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.Table do
         end
       end
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       defoverridable [
         new: 0,
         new: 1,
@@ -284,6 +284,8 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.Table do
       if !@__nzdo__no_entity_association do
         defoverridable [__entity__: 0, __repo__: 0, __sref__: 0, __erp__: 0]
       end
+
+      @file __ENV__.file
     end
   end
 

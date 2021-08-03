@@ -10,7 +10,7 @@ defmodule Noizu.DomainObject do
     internal_provider = options[:internal_provider] || Noizu.ElixirScaffolding.V3.Meta.DomainObject
 
     extension_provider = options[:extension_imp] || nil
-    has_extension = extension_provider && true || false
+
 
     extension_block_a = extension_provider && quote do
                                                 use unquote(extension_provider)
@@ -445,17 +445,17 @@ defmodule Noizu.DomainObject do
       @__nzdo__enum_default_value a__nzdo__enum_default_value
       @__nzdo__enum_ecto_type a__nzdo__enum_ecto_type
 
-      case Noizu.DomainObject.extract_has_attribute(:universal_identifier, :not_set) do
+      case Noizu.DomainObject.extract_has_persistence_attribute(:universal_identifier, :not_set) do
         :not_set -> :skip
         v -> Module.put_attribute(__MODULE__, :universal_identifier, v)
       end
 
-      case Noizu.DomainObject.extract_has_attribute(:generate_reference_type, :not_set) do
+      case Noizu.DomainObject.extract_has_persistence_attribute(:generate_reference_type, :reference_type, :not_set) do
         :not_set -> :skip
         v -> Module.put_attribute(__MODULE__, :generate_reference_type, v)
       end
 
-      case Noizu.DomainObject.extract_has_attribute(:universal_lookup, :not_set) do
+      case Noizu.DomainObject.extract_has_persistence_attribute(:universal_lookup, :not_set) do
         :not_set -> :skip
         v -> Module.put_attribute(__MODULE__, :universal_lookup, v)
       end

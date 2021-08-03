@@ -3,7 +3,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject do
   defmacro __before_compile__(_) do
     quote do
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       @__nzdo__entity Module.get_attribute(__MODULE__, :__nzdo__entity)
       @__nzdo__struct Module.get_attribute(__MODULE__, :__nzdo__struct)
 
@@ -12,7 +12,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject do
         @__nzdo__enum_type Module.concat([__MODULE__, "Ecto.EnumType"])
       end
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       defdelegate id(ref), to: @__nzdo__entity
       defdelegate ref(ref), to: @__nzdo__entity
       defdelegate sref(ref), to: @__nzdo__entity
@@ -33,7 +33,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject do
       #################################################
       # __persistence__
       #################################################
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def vsn(), do: @vsn
       def __base__(), do: __MODULE__
       def __poly_base__(), do: @__nzdo__poly_base
@@ -52,25 +52,27 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject do
       #################################################
       # __nmid__
       #################################################
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def __nmid__(), do: __nmid__(:all)
       def __nmid__(:all), do: @__nzdo__entity.__nmid__(:all)
       def __nmid__(:generator), do: @__nzdo__nmid_generator
       def __nmid__(:sequencer), do: @__nzdo__nmid_sequencer
       def __nmid__(:bare), do: @__nzdo__nmid_bare
-      def __nmid__(:index), do: @__nzdo__entity.__noizu_info__(:nmid_index)
+      def __nmid__(:index), do: @__nzdo__entity.__nmid__(:index)
+      # , do: @__nzdo__noizu_domain_object_schema.__noizu_info__(@nmid_source)[@__nzdo__nmid_sequencer]
+
 
       #################################################
       # __indexing__
       #################################################
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       defdelegate __indexing__(), to: @__nzdo__entity
       defdelegate __indexing__(setting), to: @__nzdo__entity
 
       #################################################
       # __persistence__
       #################################################
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       defdelegate __persistence__(), to: @__nzdo__entity
       defdelegate __persistence__(setting), to: @__nzdo__entity
       defdelegate __persistence__(selector, setting), to: @__nzdo__entity
@@ -78,7 +80,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject do
       #################################################
       # __noizu_info__
       #################################################
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def __noizu_info__(), do: __noizu_info__(:all)
       def __noizu_info__(:all) do
         Enum.map(
@@ -140,14 +142,14 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject do
       #################################################
       # __fields__
       #################################################
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       defdelegate __fields__, to: @__nzdo__entity
       defdelegate __fields__(setting), to: @__nzdo__entity
 
       #################################################
       # __enum__
       #################################################
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def __enum__(), do: __enum__(:all)
       def __enum__(:all) do
         Enum.map([:list, :default, :is_enum_table, :value_type, :type], &({&1, __enum__(&1)}))
@@ -161,7 +163,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject do
       #################################################
       # __json__
       #################################################
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def __json__(), do: __json__(:all)
       def __json__(:all) do
         Enum.map([:provider, :default, :formats, :white_list, :format_groups, :field_groups], &({&1, __json__(&1)}))
@@ -230,7 +232,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject do
           end
         end
       end
-
+      @file __ENV__.file
     end
   end
 
