@@ -12,7 +12,26 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultI
       level_6: 6,
     }
 
-    def strip_pii(entity, max_level) do
+    def strip_inspect(_m, entity, opts) do
+      field_types = entity.__struct__.__noizu_info__(:field_types)
+      v = Enum.map(
+        Map.from_struct(entity),
+        fn ({field, value}) ->
+          cond do
+            value == :"*RESTRICTED*" -> {field, value}
+            entity.__struct__.__noizu_info__(:field_attributes)[field][:inspect][:ignore] -> nil
+            type = field_types[field] -> type.handler.strip_inspect(field, value, opts)
+            entity.__struct__.__noizu_info__(:field_attributes)[field][:inspect][:ref] -> {field, Noizu.ERP.ref(value)}
+            entity.__struct__.__noizu_info__(:field_attributes)[field][:inspect][:sref] -> {field, Noizu.ERP.sref(value)}
+            :else -> {field, value}
+          end
+        end
+      )
+          |> Enum.filter(&(&1))
+          |> Map.new()
+    end
+
+    def strip_pii(m, entity, max_level) do
       max_level = @pii_levels[max_level] || @pii_levels[:level_3]
       v = Enum.map(
         Map.from_struct(entity),
@@ -144,7 +163,9 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultI
       @__nzdo__internal_imp Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultInternalProvider.Default
 
       @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
-      defdelegate strip_pii(entity, level), to: @__nzdo__internal_imp
+      def strip_pii(entity, level), do: @__nzdo__internal_imp.strip_pii(__MODULE__, entity, level)
+
+      def strip_inspect(entity, opts), do: @__nzdo__internal_imp.strip_inspect(__MODULE__, entity, opts)
 
       @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
       def valid?(%__MODULE__{} = entity, context, options \\ nil), do: @__nzdo__internal_imp.valid?(__MODULE__, entity, context, options)
@@ -159,6 +180,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultI
       @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
       defoverridable [
         strip_pii: 2,
+        strip_inspect: 2,
         valid?: 2,
         valid?: 3,
         version_change: 3,

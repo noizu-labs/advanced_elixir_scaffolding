@@ -68,6 +68,8 @@ defmodule Noizu.Scaffolding.V3.Millisecond.TimeStamp do
     require  Noizu.DomainObject
     Noizu.DomainObject.noizu_type_handler()
 
+    #def strip_inspect(field, value, _opts), do: {field, value && DateTime.to_iso8601(value)}
+
     #----------------------------------
     # pre_create_callback
     #----------------------------------

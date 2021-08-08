@@ -65,6 +65,14 @@ defmodule Noizu.Scaffolding.V3.TimeStamp do
     require  Noizu.DomainObject
     Noizu.DomainObject.noizu_type_handler()
 
+    def strip_inspect(field, value, _opts) do
+      case value do
+        %Noizu.Scaffolding.V3.TimeStamp{} -> {field, {value.created_on, value.modified_on, value.deleted_on}}
+        %Noizu.Scaffolding.V3.TimeStamp{} -> {field, {value, value, nil}}
+        _ -> {field, :auto}
+      end
+    end
+
     #----------------------------------
     #
     #----------------------------------

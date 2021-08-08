@@ -13,13 +13,13 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject do
       end
 
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-      defdelegate id(ref), to: @__nzdo__entity
-      defdelegate ref(ref), to: @__nzdo__entity
-      defdelegate sref(ref), to: @__nzdo__entity
-      defdelegate entity(ref, options \\ nil), to: @__nzdo__entity
-      defdelegate entity!(ref, options \\ nil), to: @__nzdo__entity
-      defdelegate record(ref, options \\ nil), to: @__nzdo__entity
-      defdelegate record!(ref, options \\ nil), to: @__nzdo__entity
+      def id(ref), do: @__nzdo__entity.id(ref)
+      def ref(ref), do: @__nzdo__entity.ref(ref)
+      def sref(ref), do: @__nzdo__entity.sref(ref)
+      def entity(ref, options \\ nil), do: @__nzdo__entity.entity(ref, options)
+      def entity!(ref, options \\ nil), do: @__nzdo__entity.entity!(ref, options)
+      def record(ref, options \\ nil), do: @__nzdo__entity.record(ref, options)
+      def record!(ref, options \\ nil), do: @__nzdo__entity.record!(ref, options)
 
       @__nzdo__poly_settings  %{
         poly: @__nzdo__poly?,
@@ -66,16 +66,16 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject do
       # __indexing__
       #################################################
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-      defdelegate __indexing__(), to: @__nzdo__entity
-      defdelegate __indexing__(setting), to: @__nzdo__entity
+      def __indexing__(), do: @__nzdo__entity.__indexing__()
+      def __indexing__(setting), do: @__nzdo__entity.__indexing__(setting)
 
       #################################################
       # __persistence__
       #################################################
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-      defdelegate __persistence__(), to: @__nzdo__entity
-      defdelegate __persistence__(setting), to: @__nzdo__entity
-      defdelegate __persistence__(selector, setting), to: @__nzdo__entity
+      def __persistence__(), do: @__nzdo__entity.__persistence__()
+      def __persistence__(setting), do: @__nzdo__entity.__persistence__(setting)
+      def __persistence__(selector, setting), do: @__nzdo__entity.__persistence__(selector, setting)
 
       #################################################
       # __noizu_info__
@@ -143,8 +143,8 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject do
       # __fields__
       #################################################
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-      defdelegate __fields__, to: @__nzdo__entity
-      defdelegate __fields__(setting), to: @__nzdo__entity
+      def __fields__(), do: @__nzdo__entity.__fields__()
+      def __fields__(setting), do: @__nzdo__entity.__fields__(setting)
 
       #################################################
       # __enum__

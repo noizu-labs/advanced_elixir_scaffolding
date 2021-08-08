@@ -6,6 +6,8 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.TypeHandler do
   def __noizu_type_handler__(_caller, _options) do
     quote do
       import Noizu.ElixirCore.Guards
+
+      def strip_inspect(field, value, _opts), do: {field, value}
       def pre_create_callback(_field, entity, _context, _options), do: entity
       def pre_create_callback!(field, entity, context, options), do: pre_create_callback(field, entity, context, options)
       def pre_update_callback(_field, entity, _context, _options), do: entity
@@ -16,6 +18,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.TypeHandler do
       def dump(field, record, _type, _layer, _context, _options), do: [{field, record && get_in(record, [Access.key(:field)])}]
 
       defoverridable [
+        strip_inspect: 3,
         pre_create_callback: 4,
         pre_create_callback!: 4,
         pre_update_callback: 4,

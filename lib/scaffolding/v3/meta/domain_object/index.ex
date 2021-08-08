@@ -72,33 +72,33 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Index do
   defmacro __before_compile__(_) do
     quote do
 
-      defdelegate vsn(), to: @__nzdo__base
+      def vsn(), do: @__nzdo__base.vsn()
       def __base__(), do: @__nzdo__base
-      defdelegate __entity__(), to: @__nzdo__base
-      defdelegate __repo__(), to: @__nzdo__base
-      defdelegate __sref__(), to: @__nzdo__base
-      defdelegate __erp__(), to: @__nzdo__base
+      def __entity__(), do: @__nzdo__base.__entity__()
+      def __repo__(), do: @__nzdo__base.__repo__()
+      def __sref__(), do: @__nzdo__base.__sref__()
+      def __erp__(), do: @__nzdo__base.__erp__()
 
-      defdelegate id(ref), to: @__nzdo__base
-      defdelegate ref(ref), to: @__nzdo__base
-      defdelegate sref(ref), to: @__nzdo__base
-      defdelegate entity(ref, options \\ nil), to: @__nzdo__base
-      defdelegate entity!(ref, options \\ nil), to: @__nzdo__base
-      defdelegate record(ref, options \\ nil), to: @__nzdo__base
-      defdelegate record!(ref, options \\ nil), to: @__nzdo__base
+      def id(ref), do: @__nzdo__base.id(ref)
+      def ref(ref), do: @__nzdo__base.ref(ref)
+      def sref(ref), do: @__nzdo__base.sref(ref)
+      def entity(ref, options \\ nil), do: @__nzdo__base.entity(ref, options)
+      def entity!(ref, options \\ nil), do: @__nzdo__base.entity!(ref, options)
+      def record(ref, options \\ nil), do: @__nzdo__base.record(ref, options)
+      def record!(ref, options \\ nil), do: @__nzdo__base.record!(ref, options)
 
-      defdelegate __indexing__(), to: @__nzdo__base
-      defdelegate __indexing__(setting), to: @__nzdo__base
+      def __indexing__(), do: @__nzdo__base.__indexing__()
+      def __indexing__(setting), do: @__nzdo__base.__indexing__(setting)
 
-      defdelegate __persistence__(setting \\ :all), to: @__nzdo__base
-      defdelegate __persistence__(selector, setting), to: @__nzdo__base
+      def __persistence__(setting \\ :all), do: @__nzdo__base.__persistence__(setting)
+      def __persistence__(selector, setting), do: @__nzdo__base.__persistence__(selector, setting)
 
-      defdelegate __nmid__(), to: @__nzdo__base
-      defdelegate __nmid__(setting), to: @__nzdo__base
+      def __nmid__(), do: @__nzdo__base.__nmid__()
+      def __nmid__(setting), do: @__nzdo__base.__nmid__(setting)
 
       def __noizu_info__(), do: put_in(@__nzdo__base.__noizu_info__(), [:type], :index)
       def __noizu_info__(:type), do: :index
-      defdelegate __noizu_info__(report), to: @__nzdo__base
+      def __noizu_info__(report), do: @__nzdo__base.__noizu_info__(report)
     end
   end
 

@@ -188,6 +188,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo do
                            @ref @__nzdo__allowed_refs
                            public_field :entities
                            public_field :length
+                           @inspect [ignore: true]
                            public_field :__transient__
                          end
 
@@ -412,66 +413,66 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo do
       #################################################
       #
       #################################################
-      defdelegate vsn(), to: @__nzdo__base
+      def vsn(), do: @__nzdo__base.vsn()
       def __base__(), do: @__nzdo__base
       def __poly_base__(), do: @__nzdo__poly_base
-      defdelegate __entity__(), to: @__nzdo__base
+      def __entity__(), do: @__nzdo__base.__entity__()
       def __repo__(), do: __MODULE__
-      defdelegate __sref__(), to: @__nzdo__base
-      defdelegate __erp__(), to: @__nzdo__base
-      defdelegate id(ref), to: @__nzdo__base
-      defdelegate ref(ref), to: @__nzdo__base
-      defdelegate sref(ref), to: @__nzdo__base
+      def __sref__(), do: @__nzdo__base.__sref__()
+      def __erp__(), do: @__nzdo__base.__erp__()
+      def id(ref), do: @__nzdo__base.id(ref)
+      def ref(ref), do: @__nzdo__base.ref(ref)
+      def sref(ref), do: @__nzdo__base.sref(ref)
 
-      defdelegate entity(ref, options \\ nil), to: @__nzdo__base
-      defdelegate entity!(ref, options \\ nil), to: @__nzdo__base
+      def entity(ref, options \\ nil), do: @__nzdo__base.entity(ref, options)
+      def entity!(ref, options \\ nil), do: @__nzdo__base.entity!(ref, options)
 
-      defdelegate record(ref, options \\ nil), to: @__nzdo__base
-      defdelegate record!(ref, options \\ nil), to: @__nzdo__base
+      def record(ref, options \\ nil), do: @__nzdo__base.record(ref, options)
+      def record!(ref, options \\ nil), do: @__nzdo__base.record!(ref, options)
 
       #################################################
       # __indexing__
       #################################################
-      defdelegate __indexing__(), to: @__nzdo__base
-      defdelegate __indexing__(setting), to: @__nzdo__base
+      def __indexing__(), do: @__nzdo__base.__indexing__()
+      def __indexing__(setting), do: @__nzdo__base.__indexing__(setting)
 
       #################################################
       # __persistence__
       #################################################
-      defdelegate __persistence__(), to: @__nzdo__base
-      defdelegate __persistence__(setting), to: @__nzdo__base
-      defdelegate __persistence__(selector, setting), to: @__nzdo__base
+      def __persistence__(), do: @__nzdo__base.__persistence__()
+      def __persistence__(setting), do: @__nzdo__base.__persistence__(setting)
+      def __persistence__(selector, setting), do: @__nzdo__base.__persistence__(selector, setting)
 
       #################################################
       # __nmid__
       #################################################
-      defdelegate __nmid__(), to: @__nzdo__base
-      defdelegate __nmid__(setting), to: @__nzdo__base
+      def __nmid__(), do: @__nzdo__base.__nmid__()
+      def __nmid__(setting), do: @__nzdo__base.__nmid__(setting)
 
       #################################################
       # __noizu_info__
       #################################################
       def __noizu_info__(), do: put_in(@__nzdo__base.__noizu_info__(), [:type], :repo)
       def __noizu_info__(:type), do: :repo
-      defdelegate __noizu_info__(report), to: @__nzdo__base
+      def __noizu_info__(report), do: @__nzdo__base.__noizu_info__(report)
 
       #################################################
       # __fields__
       #################################################
-      defdelegate __fields__, to: @__nzdo__base
-      defdelegate __fields__(setting), to: @__nzdo__base
+      def __fields__, do: @__nzdo__base.__fields__
+      def __fields__(setting), do: @__nzdo__base.__fields__(setting)
 
       #################################################
       # __enum__
       #################################################
-      defdelegate __enum__(), to: @__nzdo__base
-      defdelegate __enum__(property), to: @__nzdo__base
+      def __enum__(), do: @__nzdo__base.__enum__()
+      def __enum__(property), do: @__nzdo__base.__enum__(property)
 
       #################################################
       # __json__
       #################################################
-      defdelegate __json__(), to: @__nzdo__base
-      defdelegate __json__(property), to: @__nzdo__base
+      def __json__(), do: @__nzdo__base.__json__()
+      def __json__(property), do: @__nzdo__base.__json__(property)
 
 
 

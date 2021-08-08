@@ -273,28 +273,28 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Index.DefaultSp
 
       """
       # =====================================================================
-      # #{mod} : #{mod.__index_stem__}
+      # #{mod} : #{mod.__index_stem__()}
       # Generated Index Definition
       # =====================================================================
       source #{mod.__primary_source__()} : primary_source__base
       {
-            xmlpipe_command = sphinx_xml_pipe primary #{mod.__index_stem__}
+            xmlpipe_command = sphinx_xml_pipe primary #{mod.__index_stem__()}
       }
 
       source #{mod.__delta_source__()} : primary_source__base
       {
-            xmlpipe_command = sphinx_xml_pipe delta #{mod.__index_stem__}
+            xmlpipe_command = sphinx_xml_pipe delta #{mod.__index_stem__()}
       }
 
       index #{mod.__primary_index__()} : index__base
       {
             source = #{mod.__primary_source__()}
-            path = #{mod.__data_dir__}/#{mod.__primary_index__()}
+            path = #{mod.__data_dir__()}/#{mod.__primary_index__()}
       }
       index #{mod.__delta_index__()} : index__base
       {
             source = #{mod.__delta_source__()}
-            path = #{mod.__data_dir__}/#{mod.__delta_index__()}
+            path = #{mod.__data_dir__()}/#{mod.__delta_index__()}
       }
 
       index #{mod.__rt_index__()}
@@ -306,7 +306,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Index.DefaultSp
             min_stemming_len = 3
             min_word_len = 3
             html_strip = 1
-            path = #{mod.__data_dir__}/#{mod.__rt_index__()}
+            path = #{mod.__data_dir__()}/#{mod.__rt_index__()}
 
           #{rt_fields}
       }
@@ -381,7 +381,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Index.DefaultSp
       def __data_dir__(), do: @data_dir
 
       @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
-      defdelegate sql_escape_string(v), to: SphinxProvider
+      def sql_escape_string(v), do: SphinxProvider.sql_escape_string(v)
       def __config__(context, options), do: SphinxProvider.__config__(__MODULE__, context, options)
 
       @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"

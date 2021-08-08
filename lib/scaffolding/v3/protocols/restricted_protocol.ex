@@ -74,9 +74,9 @@ defimpl Noizu.V3.RestrictedProtocol, for: Any do
     provider = options[:with] || Noizu.V3.RestrictedProtocol.Derive.NoizuStruct
     quote do
       defimpl Noizu.V3.RestrictedProtocol, for: unquote(module) do
-        defdelegate restricted_view(entity, context, options), to: unquote(provider)
-        defdelegate restricted_update(entity, current, context, options), to: unquote(provider)
-        defdelegate restricted_create(entity, context, options), to: unquote(provider)
+        def restricted_view(entity, context, options), do: unquote(provider).restricted_view(entity, context, options)
+        def restricted_update(entity, current, context, options), do: unquote(provider).restricted_update(entity, current, context, options)
+        def restricted_create(entity, context, options), do: unquote(provider).restricted_create(entity, context, options)
       end
     end
   end

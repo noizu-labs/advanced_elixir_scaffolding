@@ -86,6 +86,9 @@ defmodule Noizu.Scaffolding.V3.DateTime do
     def cast(field, _segment, v, _type, %{type: :mnesia}, _context, _options), do: {field, DateTime.to_unix(v, :second)}
 
 
+
+    #def strip_inspect(field, value, _opts), do: {field, value && DateTime.to_iso8601(value)}
+
     def __sphinx_field__(), do: true
     def __sphinx_expand_field__(field, indexing, _settings), do: {field, __MODULE__, indexing}
     def __sphinx_has_default__(_field, _indexing, _settings), do: false

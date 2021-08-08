@@ -154,20 +154,20 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.Table do
         #----------------------
         # modules
         #----------------------
-        defdelegate __entity__(), to: @__nzdo__entity
-        defdelegate __repo__(), to: @__nzdo__entity
-        defdelegate __sref__(), to: @__nzdo__entity
+        def __entity__(), do: @__nzdo__entity.__entity__()
+        def __repo__(), do: @__nzdo__entity.__repo__()
+        def __sref__(), do: @__nzdo__entity.__sref__()
         #----------------------
         # erp
         #----------------------
-        defdelegate __erp__(), to: @__nzdo__entity
+        def __erp__(), do: @__nzdo__entity.__erp__()
 
         #----------------------
         #  persistence
         #----------------------
-        defdelegate __persistence__(), to:  @__nzdo__base
-        defdelegate __persistence__(setting), to:  @__nzdo__base
-        defdelegate __persistence__(selector, setting), to:  @__nzdo__base
+        def __persistence__(), do:  @__nzdo__base.__persistence__()
+        def __persistence__(setting), do:  @__nzdo__base.__persistence__(setting)
+        def __persistence__(selector, setting), do:  @__nzdo__base.__persistence__(selector, setting)
 
         #----------------------
         #  __noizu_info__
@@ -177,12 +177,12 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.Table do
           def __noizu_info__(), do: put_in(@__nzdo__base.__noizu_info__(), [:type], :enum_table)
           def __noizu_info__(:type), do: :enum_table
           def __noizu_info__(:persistence), do: __persistence__()
-          defdelegate __noizu_info__(setting), to: @__nzdo__base
+          def __noizu_info__(setting), do: @__nzdo__base.__noizu_info__(setting)
         else
           def __noizu_info__(), do: put_in(@__nzdo__base.__noizu_info__(), [:type], :entity_table)
           def __noizu_info__(:type), do: :entity_table
           def __noizu_info__(:persistence), do: __persistence__()
-          defdelegate __noizu_info__(setting), to: @__nzdo__base
+          def __noizu_info__(setting), do: @__nzdo__base.__noizu_info__(setting)
         end
 
         #----------------------
@@ -190,8 +190,8 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.Table do
         #----------------------
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
         if @enable_nmid do
-          defdelegate __nmid__(), to: @__nzdo__base
-          defdelegate __nmid__(setting), to: @__nzdo__base
+          def __nmid__(), do: @__nzdo__base.__nmid__()
+          def __nmid__(setting), do: @__nzdo__base.__nmid__(setting)
         end
       end
 

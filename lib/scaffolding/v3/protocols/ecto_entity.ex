@@ -21,10 +21,10 @@ defimpl Noizu.Ecto.Entity, for: Any do
       defimpl Noizu.Ecto.Entity, for: unquote(module) do
         def universal_reference?(_), do: false
         def supported?(_), do: true
-        defdelegate ecto_identifier(m), to: unquote(module)
-        defdelegate universal_identifier(m), to: unquote(module)
-        defdelegate ref(m), to: unquote(module)
-        defdelegate source(m), to: unquote(module)
+        def ecto_identifier(m), do: unquote(module).ecto_identifier(m)
+        def universal_identifier(m), do: unquote(module).universal_identifier(m)
+        def ref(m), do: unquote(module).ref(m)
+        def source(m), do: unquote(module).source(m)
       end
     end
   end

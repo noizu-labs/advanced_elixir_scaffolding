@@ -5,7 +5,8 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Struct.DefaultI
       @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
       # We forward down tot he entity profider's implementations
       @__nzdo__internal_imp Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultInternalProvider.Default
-      defdelegate strip_pii(entity, level), to: @__nzdo__internal_imp
+      def strip_pii(entity, level), do: @__nzdo__internal_imp.strip_pii(__MODULE__, entity, level)
+      def strip_inspect(entity, opts), do: @__nzdo__internal_imp.strip_inspect(__MODULE__, entity, opts)
       def valid?(%__MODULE__{} = entity, context, options \\ nil), do: @__nzdo__internal_imp.valid?(__MODULE__, entity, context, options)
 
       @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"

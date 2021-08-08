@@ -14,13 +14,13 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
   defmacro __before_compile__(_) do
     quote do
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-      defdelegate vsn(), to: @__nzdo__base
+      def vsn(), do: @__nzdo__base.vsn()
       def __entity__(), do: __MODULE__
       def __base__(), do: @__nzdo__base
       def __poly_base__(), do: @__nzdo__poly_base
-      defdelegate __repo__(), to: @__nzdo__base
-      defdelegate __sref__(), to: @__nzdo__base
-      defdelegate __erp__(), to: @__nzdo__base
+      def __repo__(), do: @__nzdo__base.__repo__()
+      def __sref__(), do: @__nzdo__base.__sref__()
+      def __erp__(), do: @__nzdo__base.__erp__()
 
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       @__nzdo_associated_types (
@@ -145,7 +145,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
 
 
 
-      defdelegate __nmid__(setting), to: @__nzdo__base
+      def __nmid__(setting), do: @__nzdo__base.__nmid__(setting)
 
       #################################################
       # __noizu_info__
@@ -163,7 +163,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
       def __noizu_info__(:field_attributes), do: @__nzdo__field_attributes_map
       def __noizu_info__(:field_permissions), do: @__nzdo__field_permissions_map
       def __noizu_info__(:indexing), do: __indexing__()
-      defdelegate __noizu_info__(report), to: @__nzdo__base
+      def __noizu_info__(report), do: @__nzdo__base.__noizu_info__(report)
 
       #################################################
       # __fields__
@@ -183,15 +183,15 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
       # __enum__
       #################################################
       @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
-      defdelegate __enum__(), to: @__nzdo__base
-      defdelegate __enum__(property), to: @__nzdo__base
+      def __enum__(), do: @__nzdo__base.__enum__()
+      def __enum__(property), do: @__nzdo__base.__enum__(property)
 
       #################################################
       # __json__
       #################################################
       @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
-      defdelegate __json__(), to: @__nzdo__base
-      defdelegate __json__(property), to: @__nzdo__base
+      def __json__(), do: @__nzdo__base.__json__()
+      def __json__(property), do: @__nzdo__base.__json__(property)
 
       @file __ENV__.file
     end
@@ -203,6 +203,11 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
   #--------------------------------------------
   def __noizu_entity__(caller, options, block) do
     erp_provider = options[:erp_imp] || Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultErpProvider
+
+    inspect_provider = cond do
+                         options[:inspect_imp] == false -> false
+                         :else -> options[:inspect_imp] || Noizu.ElixirScaffolding.V3.Meta.DomainObject.Inspect
+                       end
 
     extension_provider = options[:extension_imp] || nil
     has_extension = extension_provider && true || false
@@ -313,16 +318,20 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
       if (@__nzdo__json_provider) do
         __nzdo__json_provider = @__nzdo__json_provider
         defimpl Poison.Encoder  do
-          defdelegate encode(entity, options \\ nil), to: __nzdo__json_provider
+          @__nzdo__json_provider __nzdo__json_provider
+          def encode(entity, options \\ nil), do: @__nzdo__json_provider.encode(entity, options)
         end
       end
 
       #---------------
       # Inspect
       #---------------
-      defimpl Inspect do
-        defdelegate inspect(entity, opts), to: Noizu.ElixirScaffolding.V3.Meta.DomainObject.Inspect
+      if unquote(inspect_provider) do
+        defimpl Inspect do
+          def inspect(entity, opts), do: unquote(inspect_provider).inspect(entity, opts)
+        end
       end
+
 
       @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
       use unquote(erp_provider)
@@ -584,7 +593,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
   end
 
 
-
+  def __field_attribute_normalize__(:inspect, attr_value), do: attr_value
   def __field_attribute_normalize__(:pii, attr_value), do: EntityMeta.pii_level(attr_value)
   def __field_attribute_normalize__(:required, attr_value) do
     case attr_value do
@@ -614,6 +623,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
 
 
 
+  def __field_attribute_valid__?(:inspect, attr_value), do: true
   def __field_attribute_valid__?(:pii, attr_value) do
 
     cond do
@@ -672,7 +682,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
     EntityMeta.__set_permission_settings__(mod, field, opts)
 
     options = Enum.map(
-                [:pii, :ref, :enum, :struct, :required],
+                [:pii, :ref, :enum, :struct, :required, :inspect],
                 fn (attribute) ->
                   cond do
                     Module.has_attribute?(mod, attribute) ->
@@ -686,6 +696,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
                         valid? == :ignore -> nil
                         :else ->
                           case attribute do
+                            :inspect -> {:inspect, attr_value}
                             :pii -> {:pii, attr_value}
                             :ref -> {:type_constraint, {:ref, attr_value}}
                             :struct -> {:type_constraint, {:struct, attr_value}}
@@ -1106,11 +1117,18 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
       # Universals Fields (always include)
       #----------------------
       @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
-      Module.put_attribute(__MODULE__, :__nzdo__fields, {:initial, nil})
+      #Module.put_attribute(__MODULE__, :__nzdo__fields, {:initial, nil})
+      @inspect [ignore: true]
+      Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity.transient_field :initial
+
       @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
       Module.put_attribute(__MODULE__, :__nzdo__fields, {:meta, %{}})
+
       @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
-      Module.put_attribute(__MODULE__, :__nzdo__fields, {:__transient__, nil})
+      #Module.put_attribute(__MODULE__, :__nzdo__fields, {:__transient__, nil})
+      @inspect [ignore: true]
+      Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity.transient_field :__transient__
+
       @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
       Module.put_attribute(__MODULE__, :__nzdo__fields, {:vsn, @vsn})
       @file __ENV__.file

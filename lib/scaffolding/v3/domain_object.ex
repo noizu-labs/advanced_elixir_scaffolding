@@ -153,12 +153,12 @@ defmodule Noizu.DomainObject do
   #--------------------------------------------
   # expand_indexes
   #--------------------------------------------
-  defdelegate expand_indexes(layers, module), to: Noizu.ElixirScaffolding.V3.Meta.DomainObject.Index
+  def expand_indexes(layers, module), do: Noizu.ElixirScaffolding.V3.Meta.DomainObject.Index.expand_indexes(layers, module)
 
   #--------------------------------------------
   # expand_persistence_layers
   #--------------------------------------------
-  defdelegate expand_persistence_layers(layers, module), to: Noizu.ElixirScaffolding.V3.Meta.Persistence
+  def expand_persistence_layers(layers, module), do: Noizu.ElixirScaffolding.V3.Meta.Persistence.expand_persistence_layers(layers, module)
 
 
   #--------------------------------------------

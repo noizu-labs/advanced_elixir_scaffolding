@@ -5,6 +5,13 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.SimpleObject.Struct do
     index_provider = options[:index_imp] || Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Struct.DefaultIndexProvider
     internal_provider = options[:internal_imp] || Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Struct.DefaultInternalProvider
     persistence_provider = options[:persistence_imp] || Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Struct.DefaultPersistenceProvider
+
+
+    inspect_provider = cond do
+                         options[:inspect_imp] == false -> false
+                         :else -> options[:inspect_imp] || Noizu.ElixirScaffolding.V3.Meta.DomainObject.Inspect
+                       end
+
     process_config = quote do
                        import Noizu.DomainObject, only: [file_rel_dir: 1]
                        require Noizu.DomainObject
@@ -79,22 +86,6 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.SimpleObject.Struct do
                  @derive @__nzdo__derive
                  defstruct @__nzdo__fields
 
-                 #---------------
-                 # Poison
-                 #---------------
-                 if (@__nzdo__json_provider) do
-                   __nzdo__json_provider = @__nzdo__json_provider
-                   defimpl Poison.Encoder do
-                     defdelegate encode(entity, options \\ nil), to: __nzdo__json_provider
-                   end
-                 end
-
-                 #---------------
-                 # Inspect
-                 #---------------
-                 defimpl Inspect do
-                   defdelegate inspect(entity, opts), to: Noizu.ElixirScaffolding.V3.Meta.SimpleObject.Inspect
-                 end
                end
 
     quote do
@@ -104,6 +95,25 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.SimpleObject.Struct do
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       unquote(generate)
 
+      #---------------
+      # Poison
+      #---------------
+      if (@__nzdo__json_provider) do
+        __nzdo__json_provider = @__nzdo__json_provider
+        defimpl Poison.Encoder do
+          @__nzdo__json_provider __nzdo__json_provider
+          def encode(entity, options \\ nil), do: @__nzdo__json_provider.encode(entity, options)
+        end
+      end
+
+      #---------------
+      # Inspect
+      #---------------
+      if unquote(inspect_provider) do
+        defimpl Inspect do
+          def inspect(entity, opts), do: unquote(inspect_provider).inspect(entity, opts)
+        end
+      end
 
 
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
