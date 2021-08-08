@@ -67,7 +67,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultI
                                                      case value do
                                                        {:ref, domain_object, _identifier} ->
                                                          (permitted == :any || Enum.member?(permitted, domain_object)) || {:error, {:ref, {field, domain_object}}}
-                                                       %domain_object{} ->
+                                                       %{__struct__: domain_object} ->
                                                          (permitted == :any || Enum.member?(permitted, domain_object)) || {:error, {:ref, {field, domain_object}}}
                                                        nil ->
                                                          cond do
@@ -79,7 +79,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultI
                                                      end
                                                    {:struct, permitted} ->
                                                      case value do
-                                                       %domain_object{} ->
+                                                       %{__struct__: domain_object} ->
                                                          (permitted == :any || Enum.member?(permitted, domain_object)) || {:error, {:struct, {field, domain_object}}}
                                                        nil ->
                                                          cond do
@@ -150,10 +150,21 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultI
       def valid?(%__MODULE__{} = entity, context, options \\ nil), do: @__nzdo__internal_imp.valid?(__MODULE__, entity, context, options)
 
       @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      def version_change(_vsn, entity, _context, _options \\ nil), do: entity
+
+      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      def version_change!(_vsn, entity, _context, _options \\ nil), do: entity
+
+
+      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
       defoverridable [
         strip_pii: 2,
         valid?: 2,
         valid?: 3,
+        version_change: 3,
+        version_change: 4,
+        version_change!: 3,
+        version_change!: 4,
       ]
     end
   end

@@ -9,7 +9,7 @@ defimpl Noizu.ERP, for: Any do
 
   def id(ref) do
     case ref do
-      %m{} ->
+      %{__struct__: m} ->
         cond do
           function_exported?(m, :__erp__, 0) -> m.__erp__.id(ref)
           function_exported?(m, :erp_handler, 0) -> m.erp_handler.id(ref)
@@ -21,7 +21,7 @@ defimpl Noizu.ERP, for: Any do
 
   def ref(ref) do
     case ref do
-      %m{} ->
+      %{__struct__: m} ->
         cond do
           function_exported?(m, :__erp__, 0) -> m.__erp__.ref(ref)
           function_exported?(m, :erp_handler, 0) -> m.erp_handler.ref(ref)
@@ -33,7 +33,7 @@ defimpl Noizu.ERP, for: Any do
 
   def sref(ref) do
     case ref do
-      %m{} ->
+      %{__struct__: m} ->
         cond do
           function_exported?(m, :__erp__, 0) -> m.__erp__.sref(ref)
           function_exported?(m, :erp_handler, 0) -> m.erp_handler.sref(ref)
@@ -46,7 +46,7 @@ defimpl Noizu.ERP, for: Any do
   def record(ref, options \\ nil)
   def record(ref, options) do
     case ref do
-      %m{} ->
+      %{__struct__: m} ->
         cond do
           function_exported?(m, :__erp__, 0) -> m.__erp__.record(ref, options)
           function_exported?(m, :erp_handler, 0) -> m.erp_handler.record(ref, options)
@@ -61,7 +61,7 @@ defimpl Noizu.ERP, for: Any do
   def record!(ref, options \\ nil)
   def record!(ref, options) do
     case ref do
-      %m{} ->
+      %{__struct__: m} ->
         cond do
           function_exported?(m, :__erp__, 0) -> m.__erp__.record!(ref, options)
           function_exported?(m, :erp_handler, 0) -> m.erp_handler.record!(ref, options)
@@ -77,7 +77,7 @@ defimpl Noizu.ERP, for: Any do
   def entity(ref, options \\ nil)
   def entity(ref, options) do
     case ref do
-      %m{} ->
+      %{__struct__: m} ->
         cond do
           function_exported?(m, :__erp__, 0) -> m.__erp__.entity(ref, options)
           function_exported?(m, :erp_handler, 0) -> m.erp_handler.entity(ref, options)
@@ -91,7 +91,7 @@ defimpl Noizu.ERP, for: Any do
   def entity!(ref, options \\ nil)
   def entity!(ref, options) do
     case ref do
-      %m{} ->
+      %{__struct__: m} ->
         cond do
           function_exported?(m, :__erp__, 0) -> m.__erp__.entity!(ref, options)
           function_exported?(m, :erp_handler, 0) -> m.erp_handler.entity!(ref, options)
