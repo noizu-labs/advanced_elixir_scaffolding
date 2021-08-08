@@ -14,7 +14,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultI
 
     def strip_inspect(_m, entity, opts) do
       field_types = entity.__struct__.__noizu_info__(:field_types)
-      v = Enum.map(
+      Enum.map(
         Map.from_struct(entity),
         fn ({field, value}) ->
           cond do
@@ -27,11 +27,11 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultI
           end
         end
       )
-          |> Enum.filter(&(&1))
-          |> Map.new()
+      |> Enum.filter(&(&1))
+      |> Map.new()
     end
 
-    def strip_pii(m, entity, max_level) do
+    def strip_pii(_m, entity, max_level) do
       max_level = @pii_levels[max_level] || @pii_levels[:level_3]
       v = Enum.map(
         Map.from_struct(entity),
@@ -159,25 +159,26 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultI
 
   defmacro __using__(_options \\ nil) do
     quote do
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       @__nzdo__internal_imp Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultInternalProvider.Default
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def strip_pii(entity, level), do: @__nzdo__internal_imp.strip_pii(__MODULE__, entity, level)
 
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def strip_inspect(entity, opts), do: @__nzdo__internal_imp.strip_inspect(__MODULE__, entity, opts)
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def valid?(%__MODULE__{} = entity, context, options \\ nil), do: @__nzdo__internal_imp.valid?(__MODULE__, entity, context, options)
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def version_change(_vsn, entity, _context, _options \\ nil), do: entity
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def version_change!(_vsn, entity, _context, _options \\ nil), do: entity
 
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       defoverridable [
         strip_pii: 2,
         strip_inspect: 2,

@@ -34,7 +34,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.ScaffoldingSchema do
            #---------------------
            # Insure Single Call
            #---------------------
-           @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+           @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
            if line = Module.get_attribute(__MODULE__, :__nzdo__scaffolding_definied) do
              raise "#{file_rel_dir(unquote(caller.file))}:#{unquote(caller.line)} attempting to redefine #{__MODULE__}.noizu_scaffolding_schema first defined on #{elem(line, 0)}:#{
                elem(line, 1)
@@ -47,11 +47,11 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.ScaffoldingSchema do
            #----------------------
            # User block section (define, fields, constraints, json_mapping rules, etc.)
            #----------------------
-           @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+           @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
            try do
              # we rely on the same providers as used in the Entity type for providing json encoding, restrictions, etc.
              import Noizu.ElixirScaffolding.V3.Meta.DomainObject.ScaffoldingSchema
-             @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+             @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
              unquote(block)
            after
              :ok
@@ -62,17 +62,17 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.ScaffoldingSchema do
 
 
     quote do
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       unquote(s1)
 
       base_prefix = @base_prefix
       database_prefix = @database_prefix
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       use unquote(scaffolding_schema_provider),
           base_prefix: base_prefix,
           database_prefix: database_prefix
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       @before_compile unquote(scaffolding_schema_provider)
       @after_compile unquote(scaffolding_schema_provider)
       @file __ENV__.file

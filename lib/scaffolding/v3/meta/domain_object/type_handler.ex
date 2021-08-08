@@ -1,5 +1,24 @@
 defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.TypeHandler do
 
+  @callback sync(any, any, any) :: any
+  @callback sync(any, any, any, any) :: any
+  @callback sync!(any, any, any) :: any
+  @callback sync!(any, any, any, any) :: any
+
+  @callback strip_inspect(any, any, any) :: any
+
+  @callback pre_create_callback(any, any, any, any) :: any
+  @callback pre_create_callback!(any, any, any, any) :: any
+
+  @callback pre_update_callback(any, any, any, any) :: any
+  @callback pre_update_callback!(any, any, any, any) :: any
+
+  @callback post_delete_callback(any, any, any, any) :: any
+  @callback post_delete_callback!(any, any, any, any) :: any
+
+  @callback cast(any, any, any, any, any, any, any) :: any
+  @callback dump(any, any, any, any, any, any) :: any
+
   #--------------------------------------------
   #
   #--------------------------------------------
@@ -7,7 +26,15 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.TypeHandler do
     quote do
       import Noizu.ElixirCore.Guards
 
+      def sync(existing, update, context, options \\ nil)
+      def sync(existing, nil, _context, _options), do: existing
+      def sync(nil, update, _context, _options), do: update
+      def sync(existing, _update, _context, _options), do: existing
+
+      def sync!(existing, update, context, options \\ nil), do: sync(existing, update, context, options)
+
       def strip_inspect(field, value, _opts), do: {field, value}
+
       def pre_create_callback(_field, entity, _context, _options), do: entity
       def pre_create_callback!(field, entity, context, options), do: pre_create_callback(field, entity, context, options)
       def pre_update_callback(_field, entity, _context, _options), do: entity
@@ -18,6 +45,10 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.TypeHandler do
       def dump(field, record, _type, _layer, _context, _options), do: [{field, record && get_in(record, [Access.key(:field)])}]
 
       defoverridable [
+        sync: 3,
+        sync: 4,
+        sync!: 3,
+        sync!: 4,
         strip_inspect: 3,
         pre_create_callback: 4,
         pre_create_callback!: 4,

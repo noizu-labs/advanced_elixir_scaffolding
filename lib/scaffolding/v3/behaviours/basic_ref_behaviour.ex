@@ -58,7 +58,7 @@ defmodule Noizu.BasicRefBehaviour do
     entity = options[:entity]
     ecto_type = options[:ecto_type] || :integer
     quote do
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       use Ecto.Type
       @ref_entity unquote(entity)
       @ecto_type unquote(ecto_type)
@@ -66,19 +66,19 @@ defmodule Noizu.BasicRefBehaviour do
       #----------------------------
       # type
       #----------------------------
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def type, do: @ecto_type
 
       #----------------------------
       # __entity__
       #----------------------------
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def __entity__, do: @ref_entity
 
       #----------------------------
       # cast
       #----------------------------
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       @doc """
       Casts to Ref.
       """
@@ -87,7 +87,7 @@ defmodule Noizu.BasicRefBehaviour do
       #----------------------------
       # cast!
       #----------------------------
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       @doc """
       Same as `cast/1` but raises `Ecto.CastError` on invalid arguments.
       """
@@ -96,14 +96,14 @@ defmodule Noizu.BasicRefBehaviour do
       #----------------------------
       # dump
       #----------------------------
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       @doc false
       def dump(v), do: Noizu.BasicRefBehaviour.Default.dump(__MODULE__, v)
 
       #----------------------------
       # load
       #----------------------------
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def load(v), do: Noizu.BasicRefBehaviour.Default.load(__MODULE__, v)
     end
   end

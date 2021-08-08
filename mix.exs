@@ -16,7 +16,7 @@ defmodule Noizu.Scaffolding.Mixfile do
       elixirc_paths: elixirc_paths(Mix.env),
       description: "Noizu Scaffolding",
       docs: docs(),
-      xref: [exclude: []]
+      xref: [exclude: [Phoenix.HTML, UUID, XmlBuilder, HtmlSanitizeEx, Ecto.CastError, Redix, ]]
     ]
   end # end project
 
@@ -35,11 +35,11 @@ defmodule Noizu.Scaffolding.Mixfile do
   def application do
     [
       applications: [:logger],
-      extra_applications: [:noizu_core, :amnesia, :plug]
+      extra_applications: [:noizu_core, :amnesia ]
     ]
   end # end application
 
-  defp deps do
+  def deps do
     [
       {:ecto_sql, "~> 3.4"},
       {:amnesia, git: "https://github.com/noizu/amnesia.git", ref: "9266002", optional: true}, # Mnesia Wrapper

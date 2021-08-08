@@ -43,7 +43,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
         update_in(acc, [field], &( Map.merge(&1 || %{}, options)))
       end)
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       @__nzdo__field_permissions_map Enum.reduce(@__nzdo__field_permissions, %{}, fn({field, options}, acc) ->
         options = case options do
                     %{} -> options
@@ -56,13 +56,13 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
       end)
       @__nzdo__persisted_fields Enum.filter(@__nzdo__field_list -- [:initial, :__transient__], &(!@__nzdo__field_attributes_map[&1][:transient]))
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       @__nzdo_persistence Noizu.Scaffolding.V3.Schema.PersistenceSettings.update_schema_fields(@__nzdo_persistence, @__nzdo__field_types_map)
       if @__nzdo__base_open? do
         Module.put_attribute(@__nzdo__base, :__nzdo_persistence, @__nzdo_persistence)
       end
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       @__nzdo__indexes Enum.reduce(
                          List.flatten(@__nzdo__field_indexing || []),
                          @__nzdo__indexes,
@@ -80,14 +80,14 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
       #################################################
       # __indexing__
       #################################################
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def __indexing__(), do: __indexing__(:indexes)
       def __indexing__(:indexes), do: @__nzdo__indexes
 
       #################################################
       # __persistence__
       #################################################
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def __persistence__(), do: __persistence__(:all)
       def __persistence__(:all) do
         [:enum_table, :auto_generate, :universal_identifier, :universal_lookup, :reference_type, :layers, :schemas, :tables, :ecto_entity, :options]
@@ -110,7 +110,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
       #################################################
       # __nmid__
       #################################################
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def __nmid__(), do: __nmid__(:all)
       def __nmid__(:all) do
         %{
@@ -150,7 +150,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
       #################################################
       # __noizu_info__
       #################################################
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def __noizu_info__(), do: put_in(@__nzdo__base.__noizu_info__(), [:type], :entity)
       def __noizu_info__(:type), do: :entity
       def __noizu_info__(:identifier_type), do: @__nzdo__identifier_type
@@ -168,7 +168,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
       #################################################
       # __fields__
       #################################################
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def __fields__() do
         Enum.map([:fields, :persisted, :types, :json, :attributes, :permissions], &({&1,__fields__(&1)}))
       end
@@ -182,14 +182,14 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
       #################################################
       # __enum__
       #################################################
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def __enum__(), do: @__nzdo__base.__enum__()
       def __enum__(property), do: @__nzdo__base.__enum__(property)
 
       #################################################
       # __json__
       #################################################
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def __json__(), do: @__nzdo__base.__json__()
       def __json__(property), do: @__nzdo__base.__json__(property)
 
@@ -236,7 +236,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
                        #---------------------
                        # Insure Single Call
                        #---------------------
-                       @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+                       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
                        if line = Module.get_attribute(__MODULE__, :__nzdo__entity_defined) do
                          raise "#{file_rel_dir(unquote(caller.file))}:#{unquote(caller.line)} attempting to redefine #{__MODULE__}.noizu_entity first defined on #{elem(line, 0)}:#{
                            elem(line, 1)
@@ -245,23 +245,23 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
                        @__nzdo__entity_defined {file_rel_dir(unquote(caller.file)), unquote(caller.line)}
 
                        # Extract Base Fields fields since SimbpleObjects are at the same level as their base.
-                       @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+                       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
                        Noizu.DomainObject.__prepare__base__macro__(unquote(options))
 
                        # Push details to Base, and read in required settings.
-                       @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+                       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
                        Noizu.DomainObject.__prepare__poly__macro__(unquote(options))
 
                        # Load Sphinx Settings from base.
-                       @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+                       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
                        Noizu.DomainObject.__prepare__sphinx__macro__(unquote(options))
 
                        # Load Persistence Settings from base, we need them to control some submodules.
-                       @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+                       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
                        Noizu.DomainObject.__prepare__persistence_settings__macro__(unquote(options))
 
                        # Nmid
-                       @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+                       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
                        Noizu.DomainObject.__prepare__nmid__macro__(unquote(options))
 
                        # Json Settings
@@ -623,7 +623,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity do
 
 
 
-  def __field_attribute_valid__?(:inspect, attr_value), do: true
+  def __field_attribute_valid__?(:inspect, _attr_value), do: true
   def __field_attribute_valid__?(:pii, attr_value) do
 
     cond do

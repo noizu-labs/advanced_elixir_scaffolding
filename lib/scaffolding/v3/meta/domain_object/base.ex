@@ -178,7 +178,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject do
       #--------------------
       # EctoEnum
       #--------------------
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       domain_object = __MODULE__
       has_list = Module.get_attribute(__MODULE__, :__nzdo__enum_type) || false
 
@@ -196,7 +196,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject do
       #--------------------
       # Ref
       #--------------------
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       cond do
         Module.get_attribute(__MODULE__, :__nzdo_enum_ref) ->
           e = @__nzdo__entity
@@ -222,7 +222,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject do
       #--------------------
       # Index
       #--------------------
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       if Module.has_attribute?(__MODULE__, :__nzdo__inline_index) && Module.get_attribute(__MODULE__, :__nzdo__inline_index) do
         e = @__nzdo__entity
         defmodule Index do

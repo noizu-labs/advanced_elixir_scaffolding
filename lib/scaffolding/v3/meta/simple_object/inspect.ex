@@ -6,8 +6,9 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.SimpleObject.Inspect do
     cond do
       opts.limit < 10 -> Inspect.inspect("<#{kind}>", opts)
       :else ->
-        entity.__struct__.strip_pii(entity, opts.custom_options[:pii] || :level_3)
-        |> Map.from_struct()
+        entity
+        |> entity.__struct__.strip_pii(opts.custom_options[:pii] || :level_3)
+        |> entity.__struct__.strip_inspect(opts)
         |> inspect("#{kind}", opts)
     end
   end

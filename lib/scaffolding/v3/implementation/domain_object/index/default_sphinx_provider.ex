@@ -332,34 +332,34 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Index.DefaultSp
 
 
     quote do
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       alias Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Index.DefaultSphinxProvider.Default, as: SphinxProvider
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def extract_field(field, entity, context, options), do: SphinxProvider.extract_field(__MODULE__, field, entity, context, options)
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def fields(context, options), do: SphinxProvider.fields(__MODULE__, context, options)
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def build(type, context, options), do: SphinxProvider.build(__MODULE__, type, context, options)
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def __index_schema_fields__(context, options), do: SphinxProvider.__index_schema_fields__(__MODULE__, context, options)
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def __index_header__(type, context, options), do: SphinxProvider.__index_header__(__MODULE__, type, context, options)
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def __index_record__(type, entity, context, options), do: SphinxProvider.__index_record__(__MODULE__, type, entity, context, options)
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def update_index(entity, context, options), do: SphinxProvider.update_index(__MODULE__, entity, context, options)
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def delete_index(entity, context, options), do: SphinxProvider.delete_index(__MODULE__, entity, context, options)
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       @__nzdo__sref Module.get_attribute(@__nzdo__base, :__nzdo__sref)
       @index_stem unquote(index_stem) || @__nzdo__sref
       @rt_index unquote(rt_index) || :"rt_index__#{@index_stem}"

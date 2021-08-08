@@ -271,15 +271,15 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
 
   defmacro __using__(_options \\ nil) do
     quote do
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       @__nzdo__erp_imp Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultErpProvider.Default
       #-----------------------------------
       #
       #-----------------------------------
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def __sref_prefix__, do: "ref.#{@__nzdo__sref}."
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def valid_identifier(_), do: true
 
       #-----------------------------------
@@ -290,12 +290,12 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
 
       cond do
         is_bitstring(@__nzdo__sref) ->
-          @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+          @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
           def id("ref.#{@__nzdo__sref}" <> _ = ref), do: __MODULE__.id(__MODULE__.ref(ref))
           def id(ref), do: @__nzdo__erp_imp.id(__MODULE__, ref)
           # ref
           #-----------------
-          @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+          @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
           def ref("ref.#{@__nzdo__sref}{" <> id) do
             identifier = case string_to_id(String.slice(id, 0..-2)) do
                            {:ok, v} -> v
@@ -304,7 +304,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
                          end
             identifier && {:ref, __MODULE__, identifier}
           end
-          @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+          @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
           def ref("ref.#{@__nzdo__sref}." <> id) do
             identifier = case string_to_id(id) do
                            {:ok, v} -> v
@@ -316,59 +316,59 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
           def ref(ref), do: @__nzdo__erp_imp.ref(__MODULE__, ref)
           # sref
           #-----------------
-          @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+          @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
           def sref("ref.#{@__nzdo__sref}" <> _ = ref), do: ref
           def sref(ref), do: @__nzdo__erp_imp.sref(__MODULE__, ref)
           # entity
           #-----------------
-          @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+          @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
           def entity("ref.#{@__nzdo__sref}" <> _ = ref), do: __MODULE__.entity(__MODULE__.ref(ref))
           def entity(ref, options \\ nil), do: @__nzdo__erp_imp.entity(__MODULE__, ref, options)
           # entity!
           #-----------------
-          @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+          @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
           def entity!("ref.#{@__nzdo__sref}" <> _ = ref), do: __MODULE__.entity!(__MODULE__.ref(ref))
           def entity!(ref, options \\ nil), do: @__nzdo__erp_imp.entity!(__MODULE__, ref, options)
         :else ->
-          @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+          @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
           def id(ref), do: @__nzdo__erp_imp.id(__MODULE__, ref)
           # ref
           #-----------------
-          @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+          @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
           def ref(ref), do: @__nzdo__erp_imp.ref(__MODULE__, ref)
           # sref
           #-----------------
-          @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+          @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
           def sref(ref), do: @__nzdo__erp_imp.sref(__MODULE__, ref)
           # entity
           #-----------------
-          @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+          @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
           def entity(ref, options \\ nil), do: @__nzdo__erp_imp.entity(__MODULE__, ref, options)
           # entity!
           #-----------------
-          @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+          @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
           def entity!(ref, options \\ nil), do: @__nzdo__erp_imp.entity!(__MODULE__, ref, options)
       end
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       @deprecated "Noizu.ERP.record is no longer used, V3 entities use __to_record__(table, entity, context, options) for casting to different persistence layers"
       def record(_ref, _options \\ nil), do: raise "Deprecated"
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       @deprecated "Noizu.ERP.record! is no longer used, V3 entities use __to_record__(table, entity, context, options) for casting to different persistence layers"
       def record!(_ref, _options \\ nil), do: raise "Deprecated"
 
       #---------------------
       #
       #---------------------
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def sref_section_regex(type), do: @__nzdo__erp_imp.sref_section_regex(__MODULE__, type)
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def id_to_string(type, id), do: @__nzdo__erp_imp.id_to_string(__MODULE__, type, id)
       def id_to_string(id), do: @__nzdo__erp_imp.id_to_string(__MODULE__, @__nzdo__identifier_type, id)
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def string_to_id(id), do: @__nzdo__erp_imp.string_to_id(__MODULE__, @__nzdo__identifier_type, id)
       def string_to_id(type, id), do: @__nzdo__erp_imp.string_to_id(__MODULE__, type, id)
 

@@ -147,7 +147,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.SimpleObject.Struct do
       #-------
       # type lookups
       #--------------
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def vsn(), do: @vsn
       def __base__(), do: @__nzdo__base
       def __object__(), do: __MODULE__
@@ -155,7 +155,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.SimpleObject.Struct do
       #################################################
       # __nmid__
       #################################################
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def __nmid__(), do: __nmid__(:all)
       def __nmid__(:all) do
         %{
@@ -186,7 +186,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.SimpleObject.Struct do
       #################################################
       # __indexing__
       #################################################
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       @__nzdo__indexes Enum.reduce(
                          List.flatten(@__nzdo__field_indexing || []),
                          @__nzdo__indexes,
@@ -207,7 +207,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.SimpleObject.Struct do
       #################################################
       # __persistence__
       #################################################
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       @__nzdo_persistence Noizu.Scaffolding.V3.Schema.PersistenceSettings.update_schema_fields(@__nzdo_persistence, @__nzdo__field_types_map)
       def __persistence__(), do: __persistence__(:all)
       def __persistence__(:all) do
@@ -230,7 +230,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.SimpleObject.Struct do
       #################################################
       # __noizu_info__
       #################################################
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       @__nzdo_associated_types (
                                  Enum.map(@__nzdo_persistence__by_table || %{}, fn ({k, v}) -> {k, v.type} end) ++ Enum.map(
                                    @__nzdo__poly_support || [],
@@ -260,7 +260,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.SimpleObject.Struct do
       end)
       @__nzdo__persisted_fields Enum.filter(@__nzdo__field_list -- [:initial, :__transient__], &(!@__nzdo__field_attributes_map[&1][:transient]))
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def __noizu_info__() do
         Enum.map(
           [
@@ -306,7 +306,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.SimpleObject.Struct do
       #################################################
       # __fields__
       #################################################
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def __fields__() do
         Enum.map([:fields, :persisted, :types, :json, :attributes, :permissions], &({&1,__fields__(&1)}))
       end
@@ -321,7 +321,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.SimpleObject.Struct do
       #################################################
       # __json__
       #################################################
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def __json__(), do: __json__(:all)
       def __json__(:all) do
         Enum.map([:provider, :default, :formats, :white_list, :format_groups, :field_groups], &({&1, __json__(&1)}))
