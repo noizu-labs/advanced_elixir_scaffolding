@@ -70,7 +70,7 @@ defmodule Noizu.Ecto.EnumTypeBehaviour do
     Noizu.Ecto.EnumTypeBehaviour.__enum_type__(options)
   end
 
-  def __enum_type__(options) do
+  def __enum_type__(_options) do
     quote do
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       use Ecto.Type

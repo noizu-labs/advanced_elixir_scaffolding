@@ -55,6 +55,9 @@ defmodule Noizu.Scaffolding.V3.Sphinx.NullableInteger do
       v when is_integer(v) -> {:ok, v}
       true -> {:ok, 1}
       false -> {:ok, 0}
+      v when is_atom(v) -> dump(nil)
+      ref = {:ref, m, _id} -> dump(Noizu.Ecto.Entity.ecto_identifier(ref))
+      %{} -> Noizu.Ecto.Entity.ecto_identifier(v)
     end
   end
 

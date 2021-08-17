@@ -121,7 +121,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
     #------------------------------------------
     def post_get_callback(_m, nil, _context, _options), do: nil
     def post_get_callback(m, %{vsn: vsn, __struct__: s} = entity, context, options) do
-      cond do
+      entity = cond do
         options[:version_change] == :disabled -> entity
         options[:version_change] == false -> entity
         vsn != s.vsn ->
@@ -139,12 +139,20 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
           end
         :else -> entity
       end
+
+      # finalize field with post created modifications (i.e update fields)
+      Enum.reduce(
+        entity.__struct__.__noizu_info__(:field_types), entity,
+        fn ({field, type}, entity) ->
+          type.handler.post_get_callback(field, entity, context, options)
+        end
+      )
     end
     def post_get_callback(_m, entity, _context, _options), do: entity
 
     def post_get_callback!(_m, nil, _context, _options), do: nil
     def post_get_callback!(m, %{vsn: vsn, __struct__: s} = entity, context, options) do
-      cond do
+      entity = cond do
         options[:version_change] == :disabled -> entity
         options[:version_change] == false -> entity
         vsn != s.vsn ->
@@ -162,6 +170,14 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
           end
         :else -> entity
       end
+
+      # finalize field with post created modifications (i.e update fields)
+      Enum.reduce(
+        s.__noizu_info__(:field_types), entity,
+        fn ({field, type}, entity) ->
+          type.handler.post_get_callback!(field, entity, context, options)
+        end
+      )
     end
     def post_get_callback!(_m, entity, _context, _options), do: entity
 
@@ -349,6 +365,15 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
     # Create - post_create_callback
     #------------------------------------------
     def post_create_callback(_m, %{__struct__: s} = entity, context, options) do
+      # finalize field with post created modifications (i.e update fields)
+      entity = Enum.reduce(
+        s.__noizu_info__(:field_types),
+        entity,
+        fn ({field, type}, entity) ->
+          type.handler.post_create_callback(field, entity, context, options)
+        end
+      )
+
       spawn fn -> s.__write_indexes__(entity, context, options[:indexes]) end
       entity
     end
@@ -497,6 +522,15 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
     # Update - post_update_callback
     #------------------------------------------
     def post_update_callback(_m, %{__struct__: s} = entity, context, options) do
+
+      # finalize field with post created modifications (i.e update fields)
+      entity = Enum.reduce(
+        s.__noizu_info__(:field_types), entity,
+        fn ({field, type}, entity) ->
+          type.handler.post_update_callback(field, entity, context, options)
+        end
+      )
+
       spawn fn -> s.__update_indexes__(entity, context, options[:indexes]) end
       entity
     end
@@ -620,6 +654,15 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
       # we attempt to load the entity so we can properly wipe any nested elements
       cond do
         entity = m.__entity__.entity(ref) ->
+
+          # finalize field with post created modifications (i.e update fields)
+          entity = Enum.reduce(
+            entity.__struct__.__noizu_info__(:field_types), entity,
+            fn ({field, type}, entity) ->
+              type.handler.pre_delete_callback(field, entity, context, options)
+            end
+          )
+
           spawn fn -> m.__entity__.__delete_indexes__(entity, context, options[:indexes]) end
           entity
         :else -> ref
@@ -630,6 +673,14 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
       # we attempt to load the entity so we can properly wipe any nested elements
       cond do
         entity = m.__entity__.entity!(ref) ->
+          # finalize field with post created modifications (i.e update fields)
+          entity = Enum.reduce(
+            entity.__struct__.__noizu_info__(:field_types), entity,
+            fn ({field, type}, entity) ->
+              type.handler.pre_delete_callback(field, entity, context, options)
+            end
+          )
+
           spawn fn -> m.__entity__.__delete_indexes__(entity, context, options[:indexes]) end
           entity
         :else -> ref
@@ -639,28 +690,33 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
     #------------------------------------------
     # Delete - post_delete_callback
     #------------------------------------------
-    def post_delete_callback(m, entity, context, options) do
+    def post_delete_callback(_m, %{__struct__: s} = entity, context, options) do
       # Delete nested components
       Enum.reduce(
-        m.__noizu_info__(:field_types),
+        s.__noizu_info__(:field_types),
         entity,
         fn ({field, type}, entity) ->
           type.handler.post_delete_callback(field, entity, context, options)
         end
       )
     end
+    def post_delete_callback(_m, entity, _context, _options) do
+      entity
+    end
 
-    def post_delete_callback!(m, entity, context, options) do
+    def post_delete_callback!(_m, %{__struct__: s} = entity, context, options) do
       # Delete nested components
       Enum.reduce(
-        m.__noizu_info__(:field_types),
+        s.__noizu_info__(:field_types),
         entity,
         fn ({field, type}, entity) ->
           type.handler.post_delete_callback!(field, entity, context, options)
         end
       )
     end
-
+    def post_delete_callback!(_m, entity, _context, _options) do
+      entity
+    end
     #------------------------------------------
     # Delete - layer_delete
     #------------------------------------------
@@ -713,57 +769,57 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
   defmacro __using__(_options \\ nil) do
     # caller = __CALLER__
     quote do
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       alias Noizu.Scaffolding.V3.Schema.PersistenceLayer
       @__nzdo__crud_imp Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCrudProvider.Default
 
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def cache_key(ref, context, options) do
         sref = __MODULE__.__entity__.sref(ref)
         sref && :"e_c:#{sref}"
       end
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def cached(ref, context), do: cached(ref, context, [])
       def cached(ref, context, options), do: cache(ref, context, options)
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def cache(ref, context), do: cache(ref, context, [])
       def cache(ref, context, options), do: @__nzdo__crud_imp.cache(__MODULE__, ref, context, options)
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def delete_cache(ref, context), do: delete_cache(ref, context, [])
       def delete_cache(ref, context, options), do: @__nzdo__crud_imp.delete_cache(__MODULE__, ref, context, options)
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def generate_identifier(), do: @__nzdo__crud_imp.generate_identifier(__MODULE__)
       def generate_identifier!(), do: @__nzdo__crud_imp.generate_identifier!(__MODULE__)
 
       #=====================================================================
       # Get
       #=====================================================================
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def get(ref, context), do: get(ref, context, [])
       def get(ref, context, options), do: @__nzdo__crud_imp.get(__MODULE__, ref, context, options)
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def get!(ref, context), do: get!(ref, context, [])
       def get!(ref, context, options), do: @__nzdo__crud_imp.get!(__MODULE__, ref, context, options)
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def post_get_callback(ref, context, options), do: @__nzdo__crud_imp.post_get_callback(__MODULE__, ref, context, options)
       def post_get_callback!(ref, context, options), do: @__nzdo__crud_imp.post_get_callback!(__MODULE__, ref, context, options)
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def layer_get(%PersistenceLayer{} = layer, ref, context, options), do: @__nzdo__crud_imp.layer_get(__MODULE__, layer, ref, context, options)
       def layer_get!(%PersistenceLayer{} = layer, ref, context, options), do: @__nzdo__crud_imp.layer_get!(__MODULE__, layer, ref, context, options)
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def layer_get_callback(%PersistenceLayer{} = layer, ref, context, options), do: @__nzdo__crud_imp.layer_get_callback(__MODULE__, layer, ref, context, options)
       def layer_get_callback!(%PersistenceLayer{} = layer, ref, context, options), do: @__nzdo__crud_imp.layer_get_callback!(__MODULE__, layer, ref, context, options)
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def layer_pre_get_callback(%PersistenceLayer{} = layer, ref, context, options), do: @__nzdo__crud_imp.layer_pre_get_callback(__MODULE__, layer, ref, context, options)
       def layer_pre_get_callback!(%PersistenceLayer{} = layer, ref, context, options) do
         Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo.__layer_transaction_block__(layer) do
@@ -771,7 +827,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
         end
       end
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def layer_post_get_callback(%PersistenceLayer{} = layer, entity, context, options), do: @__nzdo__crud_imp.layer_post_get_callback(__MODULE__, layer, entity, context, options)
       def layer_post_get_callback!(%PersistenceLayer{} = layer, entity, context, options) do
         Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo.__layer_transaction_block__(layer) do
@@ -782,19 +838,19 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
       #=====================================================================
       # Create
       #=====================================================================
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def create(entity, context), do: create(entity, context, [])
       def create(entity, context, options), do: @__nzdo__crud_imp.create(__MODULE__, entity, context, options)
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def create!(entity, context), do: create!(entity, context, [])
       def create!(entity, context, options), do: @__nzdo__crud_imp.create!(__MODULE__, entity, context, options)
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def pre_create_callback(entity, context, options), do: @__nzdo__crud_imp.pre_create_callback(__MODULE__, entity, context, options)
       def pre_create_callback!(entity, context, options), do: @__nzdo__crud_imp.pre_create_callback!(__MODULE__, entity, context, options)
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def post_create_callback(entity, context, options), do: @__nzdo__crud_imp.post_create_callback(__MODULE__, entity, context, options)
       def post_create_callback!(entity, context, options) do
         Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo.__transaction_block__() do
@@ -802,11 +858,11 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
         end
       end
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def layer_create(%PersistenceLayer{} = layer, entity, context, options), do: @__nzdo__crud_imp.layer_create(__MODULE__, layer, entity, context, options)
       def layer_create!(%PersistenceLayer{} = layer, entity, context, options), do: @__nzdo__crud_imp.layer_create!(__MODULE__, layer, entity, context, options)
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def layer_pre_create_callback(%PersistenceLayer{} = layer, entity, context, options),
           do: @__nzdo__crud_imp.layer_pre_create_callback(__MODULE__, layer, entity, context, options)
       def layer_pre_create_callback!(%PersistenceLayer{} = layer, entity, context, options) do
@@ -815,11 +871,11 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
         end
       end
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def layer_create_callback(%PersistenceLayer{} = layer, entity, context, options), do: @__nzdo__crud_imp.layer_create_callback(__MODULE__, layer, entity, context, options)
       def layer_create_callback!(%PersistenceLayer{} = layer, entity, context, options), do: @__nzdo__crud_imp.layer_create_callback!(__MODULE__, layer, entity, context, options)
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def layer_post_create_callback(%PersistenceLayer{} = layer, entity, context, options),
           do: @__nzdo__crud_imp.layer_post_create_callback(__MODULE__, layer, entity, context, options)
       def layer_post_create_callback!(%PersistenceLayer{} = layer, entity, context, options) do
@@ -832,19 +888,19 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
       #=====================================================================
       # Update
       #=====================================================================
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def update(entity, context), do: update(entity, context, [])
       def update(entity, context, options), do: @__nzdo__crud_imp.update(__MODULE__, entity, context, options)
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def update!(entity, context), do: update!(entity, context, [])
       def update!(entity, context, options), do: @__nzdo__crud_imp.update!(__MODULE__, entity, context, options)
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def pre_update_callback(entity, context, options), do: @__nzdo__crud_imp.pre_update_callback(__MODULE__, entity, context, options)
       def pre_update_callback!(entity, context, options), do: @__nzdo__crud_imp.pre_update_callback!(__MODULE__, entity, context, options)
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def post_update_callback(entity, context, options), do: @__nzdo__crud_imp.post_update_callback(__MODULE__, entity, context, options)
       def post_update_callback!(entity, context, options) do
         Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo.__transaction_block__() do
@@ -852,11 +908,11 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
         end
       end
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def layer_update(%PersistenceLayer{} = layer, entity, context, options), do: @__nzdo__crud_imp.layer_update(__MODULE__, layer, entity, context, options)
       def layer_update!(%PersistenceLayer{} = layer, entity, context, options), do: @__nzdo__crud_imp.layer_update!(__MODULE__, layer, entity, context, options)
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def layer_pre_update_callback(%PersistenceLayer{} = layer, entity, context, options),
           do: @__nzdo__crud_imp.layer_pre_update_callback(__MODULE__, layer, entity, context, options)
       def layer_pre_update_callback!(%PersistenceLayer{} = layer, entity, context, options) do
@@ -865,11 +921,11 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
         end
       end
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def layer_update_callback(%PersistenceLayer{} = layer, entity, context, options), do: @__nzdo__crud_imp.layer_update_callback(__MODULE__, layer, entity, context, options)
       def layer_update_callback!(%PersistenceLayer{} = layer, entity, context, options), do: @__nzdo__crud_imp.layer_update_callback!(__MODULE__, layer, entity, context, options)
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def layer_post_update_callback(%PersistenceLayer{} = layer, entity, context, options),
           do: @__nzdo__crud_imp.layer_post_update_callback(__MODULE__, layer, entity, context, options)
       def layer_post_update_callback!(%PersistenceLayer{} = layer, entity, context, options) do
@@ -882,27 +938,27 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
       #=====================================================================
       # Delete
       #=====================================================================
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def delete(entity, context), do: delete(entity, context, [])
       def delete(entity, context, options), do: @__nzdo__crud_imp.delete(__MODULE__, entity, context, options)
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def delete!(entity, context), do: delete!(entity, context, [])
       def delete!(entity, context, options), do: @__nzdo__crud_imp.delete!(__MODULE__, entity, context, options)
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def pre_delete_callback(ref, context, options), do: @__nzdo__crud_imp.pre_delete_callback(__MODULE__, ref, context, options)
       def pre_delete_callback!(entity, context, options), do: @__nzdo__crud_imp.pre_delete_callback!(__MODULE__, entity, context, options)
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def post_delete_callback(entity, context, options), do: @__nzdo__crud_imp.post_delete_callback(__MODULE__, entity, context, options)
       def post_delete_callback!(entity, context, options), do: @__nzdo__crud_imp.post_delete_callback!(__MODULE__, entity, context, options)
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def layer_delete(%PersistenceLayer{} = layer, entity, context, options), do: @__nzdo__crud_imp.layer_delete(__MODULE__, layer, entity, context, options)
       def layer_delete!(%PersistenceLayer{} = layer, entity, context, options), do: @__nzdo__crud_imp.layer_delete!(__MODULE__, layer, entity, context, options)
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def layer_pre_delete_callback(%PersistenceLayer{} = layer, entity, context, options),
           do: @__nzdo__crud_imp.layer_pre_delete_callback(__MODULE__, layer, entity, context, options)
       def layer_pre_delete_callback!(%PersistenceLayer{} = layer, entity, context, options) do
@@ -911,11 +967,11 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
         end
       end
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def layer_delete_callback(%PersistenceLayer{} = layer, entity, context, options), do: @__nzdo__crud_imp.layer_delete_callback(__MODULE__, layer, entity, context, options)
       def layer_delete_callback!(%PersistenceLayer{} = layer, entity, context, options), do: @__nzdo__crud_imp.layer_delete_callback!(__MODULE__, layer, entity, context, options)
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def layer_post_delete_callback(%PersistenceLayer{} = layer, entity, context, options),
           do: @__nzdo__crud_imp.layer_post_delete_callback(__MODULE__, layer, entity, context, options)
       def layer_post_delete_callback!(%PersistenceLayer{} = layer, entity, context, options) do
@@ -925,7 +981,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
       end
 
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       defoverridable [
         generate_identifier: 0,
         generate_identifier!: 0,

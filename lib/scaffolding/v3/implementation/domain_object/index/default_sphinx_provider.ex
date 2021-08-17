@@ -370,7 +370,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Index.DefaultSp
       @primary_source unquote(primary_source) || :"primary_source__#{@index_stem}"
       @data_dir unquote(source_dir)
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def __index_stem__(), do: @index_stem
       def __rt_index__(), do: @rt_index
       def __delta_index__(), do: @delta_index
@@ -380,11 +380,11 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Index.DefaultSp
       def __primary_source__(), do: @primary_source
       def __data_dir__(), do: @data_dir
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def sql_escape_string(v), do: SphinxProvider.sql_escape_string(v)
       def __config__(context, options), do: SphinxProvider.__config__(__MODULE__, context, options)
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       defoverridable [
         extract_field: 4,
         fields: 2,
