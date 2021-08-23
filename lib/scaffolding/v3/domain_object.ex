@@ -81,6 +81,13 @@ defmodule Noizu.DomainObject do
     Noizu.ElixirScaffolding.V3.Meta.DomainObject.TypeHandler.__noizu_type_handler__(__CALLER__, options)
   end
 
+  #--------------------------------------------
+  # noizu_sphinx_handler
+  #--------------------------------------------
+  defmacro noizu_sphinx_handler(options \\ []) do
+    options = Macro.expand(options, __ENV__)
+    Noizu.ElixirScaffolding.V3.Meta.DomainObject.SphinxHandler.__noizu_sphinx_handler__(__CALLER__, options)
+  end
 
   #--------------------------------------------
   # noizu_entity

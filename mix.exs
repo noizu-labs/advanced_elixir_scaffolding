@@ -16,8 +16,7 @@ defmodule Noizu.Scaffolding.Mixfile do
       elixirc_paths: elixirc_paths(Mix.env),
       description: "Noizu Scaffolding",
       docs: docs(),
-      xref: [exclude: [Phoenix.HTML, UUID, XmlBuilder, HtmlSanitizeEx, Ecto.CastError, Redix, Noizu.FastGlobal.Cluster, Plug.Conn]]
-
+      xref: [exclude: [Phoenix.HTML, UUID, XmlBuilder, HtmlSanitizeEx, Ecto.CastError, Redix, Ecto.Type, Plug.Conn, Poison, Poison.Encoder, Noizu.FastGlobal.Cluster]]
     ]
   end # end project
 

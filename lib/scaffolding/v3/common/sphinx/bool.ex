@@ -4,12 +4,14 @@ defmodule Noizu.Scaffolding.V3.Sphinx.Bool do
   """
   use Ecto.Type
 
+  require Noizu.DomainObject
+  Noizu.DomainObject.noizu_sphinx_handler()
 
   #----------------------------
   # type
   #----------------------------
   @doc false
-  def type, do: :integer
+  def type, do: :bool
 
   #----------------------------
   # cast

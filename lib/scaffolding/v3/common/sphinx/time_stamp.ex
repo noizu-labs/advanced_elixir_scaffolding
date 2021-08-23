@@ -4,6 +4,8 @@ defmodule Noizu.Scaffolding.V3.Sphinx.TimeStamp do
   """
   use Ecto.Type
 
+  require Noizu.DomainObject
+  Noizu.DomainObject.noizu_sphinx_handler()
 
   #----------------------------
   # type

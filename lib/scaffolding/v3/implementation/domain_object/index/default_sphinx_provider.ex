@@ -52,7 +52,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Index.DefaultSp
                           end
                         )
                         |> List.flatten()
-
+                        |> Enum.sort_by(&(elem(&1, 0)))
       Enum.map(
         expanded_fields,
         fn ({field, provider, indexing}) ->
@@ -120,7 +120,10 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Index.DefaultSp
                   )
                |> Enum.filter(&(&1))
 
-      "<sphinx:schema>\n\t" <> Enum.join(fields, "\n\t") <> "\n</sphinx:schema>"
+      cond do
+        options[:raw] -> fields
+        :else -> "<sphinx:schema>\n\t" <> Enum.join(fields, "\n\t") <> "\n</sphinx:schema>"
+      end
     end
 
 
@@ -128,34 +131,44 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Index.DefaultSp
     def __index_header__(mod, :real_time, context, options) do
       index = mod.__rt_index__()
       raw = mod.__index_schema_fields__(context, options)
+      # Groups of multiple fields we can compact into a single blob field. Default :json
       blobs = raw
               |> Enum.filter(fn ({_field, _provider, blob, _encoding, _bits, _indexing, _default}) -> blob end)
               |> Enum.map(fn ({_field, _provider, blob, _encoding, _bits, _indexing, _default}) -> blob end)
-              |> Enum.uniq
+              |> Enum.uniq()
+              |> Enum.sort_by(&(&1))
       base = raw
              |> Enum.filter(fn ({_field, _provider, blob, _encoding, _bits, _indexing, _default}) -> blob == nil end)
              |> Enum.map(fn ({field, _provider, _blob, _encoding, _bits, _indexing, _default}) -> field end)
+             |> Enum.sort_by(&(&1))
 
       fields = Enum.map(base ++ blobs, &(Atom.to_string(&1)))
                |> Enum.join(", ")
 
-      "REPLACE INTO #{index} (#{fields}) VALUES"
+      cond do
+        options[:raw] -> fields
+        :else -> "REPLACE INTO #{index} (#{fields}) VALUES"
+      end
     end
-
-
 
 
     def __index_record__(mod, record_type, entity, context, options) do
       uid = Noizu.Ecto.Entity.universal_identifier(entity)
       settings = mod.__indexing__()[mod]
       raw = mod.__index_schema_fields__(context, options)
-      blobs = raw
-              |> Enum.filter(fn ({_field, _provider, blob, _encoding, _bits, _indexing, _default}) -> blob end)
-              |> Enum.map(fn ({_field, _provider, blob, _encoding, _bits, _indexing, _default}) -> blob end)
-              |> Enum.uniq
-      base = raw
-             |> Enum.filter(fn ({_field, _provider, blob, _encoding, _bits, _indexing, _default}) -> blob == nil end)
-      base = base
+
+      # Obtain Base and ob Fields
+      base_fields = raw
+                    |> Enum.filter(fn ({_field, _provider, blob, _encoding, _bits, _indexing, _default}) -> blob == nil end)
+                    |> Enum.sort_by(&(elem(&1,0)))
+      blob_fields = raw
+                    |> Enum.filter(fn ({_field, _provider, blob, _encoding, _bits, _indexing, _default}) -> blob end)
+                    |> Enum.map(fn (field = {_field, _provider, blob, _encoding, _bits, _indexing, _default}) -> {blob, field} end)
+      blobs = Keyword.keys(blob_fields) |> Enum.uniq |> Enum.sort_by(&(&1))
+
+
+      # Prepare Base Fields
+      base = base_fields
              |> Enum.map(
                   fn ({field, provider, _blob, encoding, _bits, indexing, _default}) ->
                     value = cond do
@@ -166,15 +179,16 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Index.DefaultSp
                   end
                 )
 
+      # Prepare Blobs
       blobs = Enum.map(
         blobs,
         fn (for_blob) ->
-          contents = raw
-                     |> Enum.filter(fn ({_field, _provider, blob, _encoding, _bits, _indexing, _default}) -> blob == for_blob end)
+
+          contents = Keyword.get_values(blob_fields, for_blob)
                      |> Enum.map(
                           fn ({field, provider, _blob, _encoding, _bits, indexing, _default}) ->
                             value = cond do
-                                      provider -> provider.__sphinx_encoded__(field, entity, indexing, settings)
+                                      provider = (provider || indexing[:with]) -> provider.__sphinx_encoded__(field, entity, indexing, settings)
                                       :else -> get_in(entity, [Access.key(indexing[:from] || field)])
                                     end
                             {field, value}
@@ -231,6 +245,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Index.DefaultSp
                               :else -> throw "Invalid encoding for #{mod}.#{f}"
                             end
           cond do
+            options[:debug] -> {f, formatted_value}
             record_type == :real_time -> formatted_value
             :else -> {f, nil, formatted_value}
           end
@@ -238,6 +253,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Index.DefaultSp
       )
 
       cond do
+        options[:debug] -> Map.new([{:identifier, uid}] ++ i_fields)
         record_type == :real_time ->
           [uid] ++ i_fields
         :else ->

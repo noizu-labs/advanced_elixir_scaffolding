@@ -51,10 +51,10 @@ defmodule Noizu.Scaffolding.V3.DateTime do
                 _ -> nil
               end
       value = case value do
-                31337 -> 31336 # work around for nil handling
-                nil -> 31337
+                9999999999 -> 9999999998 # work around for nil handling
+                nil -> 9999999999
                 v when is_integer(v) -> v
-                _ -> 31337
+                _ -> 9999999999
               end
       value
     end
@@ -106,10 +106,10 @@ defmodule Noizu.Scaffolding.V3.DateTime do
                 _ -> nil
               end
       value = case value do
-                31337 -> 31336 # work around for nil handling
-                nil -> 31337
+                9999999999 -> 9999999998 # work around for nil handling
+                nil -> 9999999999
                 v when is_integer(v) -> v
-                _ -> 31337
+                _ -> 9999999999
               end
       value
     end

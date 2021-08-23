@@ -64,6 +64,7 @@ defmodule Noizu.Scaffolding.V3.TimeStamp do
   defmodule PersistenceStrategy do
     require  Noizu.DomainObject
     Noizu.DomainObject.noizu_type_handler()
+    Noizu.DomainObject.noizu_sphinx_handler()
 
     def strip_inspect(field, value, _opts) do
       case value do
@@ -120,6 +121,39 @@ defmodule Noizu.Scaffolding.V3.TimeStamp do
     end
     def dump(field, record, type, layer, context, options), do: super(field, record, type, layer, context, options)
 
+
+
+    #===============================================
+    # Sphinx Handler
+    #===============================================
+    def __sphinx_field__(), do: true
+    def __sphinx_expand_field__(field, indexing, _settings) do
+      indexing = update_in(indexing, [:from], &(&1 || field))
+      [
+        {:"#{field}_created_on", __MODULE__, put_in(indexing, [:sub], :created_on)}, #rather than __MODULE__ here we could use Sphinx providers like Sphinx.NullableInteger
+        {:"#{field}_modified_on", __MODULE__, put_in(indexing, [:sub], :modified_on)},
+        {:"#{field}_deleted_on", __MODULE__, put_in(indexing, [:sub], :deleted_on)},
+      ]
+    end
+    def __sphinx_has_default__(_field, _indexing, _settings), do: true
+    def __sphinx_default__(_field, indexing, _settings) do
+      :none
+    end
+    def __sphinx_encoding__(field, indexing, settings) do
+      cond do
+        indexing[:sub] == :created_on -> :attr_timestamp
+        indexing[:sub] == :modified_on -> :attr_timestamp
+        indexing[:sub] == :deleted_on -> :attr_timestamp
+      end
+    end
+    def __sphinx_encoded__(field, entity, indexing, settings) do
+      value = get_in(entity, [Access.key(indexing[:from])])
+      cond do
+        indexing[:sub] == :created_on -> value && value.created_on && DateTime.to_unix(value.created_on) || 9999999999
+        indexing[:sub] == :modified_on -> value && value.modified_on && DateTime.to_unix(value.modified_on) || 9999999999
+        indexing[:sub] == :deleted_on -> value && value.deleted_on && DateTime.to_unix(value.deleted_on) || 9999999999
+      end
+    end
 
 
 
