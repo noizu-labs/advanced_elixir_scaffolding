@@ -132,7 +132,7 @@ defmodule Noizu.Scaffolding.V3.TimeStamp do
       [
         {:"#{field}_created_on", __MODULE__, put_in(indexing, [:sub], :created_on)}, #rather than __MODULE__ here we could use Sphinx providers like Sphinx.NullableInteger
         {:"#{field}_modified_on", __MODULE__, put_in(indexing, [:sub], :modified_on)},
-        {:"#{field}_deleted_on", __MODULE__, put_in(indexing, [:sub], :deleted_on)},
+        {:"#{field}_deleted", __MODULE__, put_in(indexing, [:sub], :deleted)},
       ]
     end
     def __sphinx_has_default__(_field, _indexing, _settings), do: true
@@ -143,7 +143,7 @@ defmodule Noizu.Scaffolding.V3.TimeStamp do
       cond do
         indexing[:sub] == :created_on -> :attr_timestamp
         indexing[:sub] == :modified_on -> :attr_timestamp
-        indexing[:sub] == :deleted_on -> :attr_timestamp
+        indexing[:sub] == :deleted -> :attr_uint
       end
     end
     def __sphinx_encoded__(field, entity, indexing, settings) do
@@ -151,7 +151,7 @@ defmodule Noizu.Scaffolding.V3.TimeStamp do
       cond do
         indexing[:sub] == :created_on -> value && value.created_on && DateTime.to_unix(value.created_on) || 9999999999
         indexing[:sub] == :modified_on -> value && value.modified_on && DateTime.to_unix(value.modified_on) || 9999999999
-        indexing[:sub] == :deleted_on -> value && value.deleted_on && DateTime.to_unix(value.deleted_on) || 9999999999
+        indexing[:sub] == :deleted -> value && value.deleted_on && 1 || 0
       end
     end
 

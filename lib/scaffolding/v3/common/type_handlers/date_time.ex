@@ -9,7 +9,7 @@ defmodule Noizu.Scaffolding.V3.DateTime do
     @behaviour Noizu.Scaffolding.V3.SphinxFieldBehaviour
     require  Noizu.DomainObject
     Noizu.DomainObject.noizu_type_handler()
-
+    Noizu.DomainObject.noizu_sphinx_handler()
 
     def import(value, type \\ :microsecond)
     def import(value, :microsecond), do: value && DateTime.from_unix!(DateTime.to_unix(value, :microsecond), :microsecond)
@@ -63,6 +63,7 @@ defmodule Noizu.Scaffolding.V3.DateTime do
   defmodule Second.PersistenceStrategy do
     require  Noizu.DomainObject
     Noizu.DomainObject.noizu_type_handler()
+    Noizu.DomainObject.noizu_sphinx_handler()
 
 
     def import(value, type \\ :microsecond)

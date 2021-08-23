@@ -63,22 +63,6 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.TypeHandler do
       def cast(field, _segment, value, _type, _layer, _context, _options), do: {field, value}
       def dump(field, record, _type, _layer, _context, _options), do: [{field, record && get_in(record, [Access.key(:field)])}]
 
-      def __sphinx_field__(), do: true
-      def __sphinx_expand_field__(field, indexing, _settings) do
-        indexing = update_in(indexing, [:from], &(&1 || field))
-        {field, __MODULE__, indexing}
-      end
-      def __sphinx_has_default__(_field, _indexing, _settings), do: false
-      def __sphinx_default__(_field, _indexing, _settings), do: nil
-      def __sphinx_bits__(_field, _indexing, _settings), do: :auto
-      def __sphinx_encoding__(_field, _indexing, _settings), do: :field
-      def __sphinx_encoded__(_field, entity, indexing, _settings) do
-        value = get_in(entity, [Access.key(indexing[:from])])
-                |> Noizu.ERP.entity!()
-        "EMBED: #{__MODULE__}"
-      end
-
-
       defoverridable [
         compare: 2,
         sync: 3,
@@ -102,15 +86,6 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.TypeHandler do
         post_delete_callback!: 4,
         cast: 7,
         dump: 6,
-
-
-        __sphinx_field__: 0,
-        __sphinx_expand_field__: 3,
-        __sphinx_has_default__: 3,
-        __sphinx_default__: 3,
-        __sphinx_bits__: 3,
-        __sphinx_encoding__: 3,
-        __sphinx_encoded__: 4,
       ]
     end
   end

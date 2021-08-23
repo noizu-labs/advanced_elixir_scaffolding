@@ -8,6 +8,7 @@ defmodule Noizu.Scaffolding.V3.UniversalLink do
   defmodule PersistenceStrategy do
     require  Noizu.DomainObject
     Noizu.DomainObject.noizu_type_handler()
+    Noizu.DomainObject.noizu_sphinx_handler()
 
     #--------------------------------------
     #
@@ -55,6 +56,43 @@ defmodule Noizu.Scaffolding.V3.UniversalLink do
       [{field, ref}]
     end
     def dump(field, record, type, layer, context, options), do: super(field, record, type, layer, context, options)
+
+
+
+
+    #===============================================
+    # Sphinx Handler
+    #===============================================
+
+    def __sphinx_field__(), do: true
+    def __sphinx_expand_field__(field, indexing, _settings) do
+      indexing = update_in(indexing, [:from], &(&1 || field))
+      [
+        {:"#{field}_uid", __MODULE__, put_in(indexing, [:sub], :identifier)}, #rather than __MODULE__ here we could use Sphinx providers like Sphinx.NullableInteger
+        {:"#{field}_type", __MODULE__, put_in(indexing, [:sub], :type)},
+      ]
+    end
+    def __sphinx_bits__(_field, _indexing, _settings), do: :auto
+    def __sphinx_encoding__(field, indexing, settings) do
+      cond do
+        indexing[:sub] == :identifier -> :attr_bigint
+        indexing[:sub] == :type -> :attr_uint
+      end
+    end
+    def __sphinx_encoded__(_field, entity, indexing, _settings) do
+      value = get_in(entity, [Access.key(indexing[:from])])
+              |> Noizu.ERP.entity!()
+      cond do
+        !value ->
+          cond do
+            indexing[:sub] == :identifier -> nil
+            indexing[:sub] == :type -> nil
+          end
+        indexing[:sub] == :identifier -> Noizu.Ecto.Entity.universal_identifier(value)
+        indexing[:sub] == :type -> source = value.__struct__.__nmid__(:index)
+      end
+    end
+
 
   end
 end
