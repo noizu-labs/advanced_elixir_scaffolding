@@ -108,6 +108,7 @@ defmodule Noizu.AdvancedScaffolding.Mixfile do
       ],
       nest_modules_by_prefix: [
         Mix.Tasks.Scaffolding,
+        Noizu.AdvancedScaffolding,
         Noizu.AdvancedScaffolding.Database,
         Noizu.AdvancedScaffolding.Sphinx,
         Noizu.AdvancedScaffolding.Schema,
