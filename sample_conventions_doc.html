@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.25.1">
+    <meta name="project" content="Noizu.AdvancedScaffolding v1.0.0">
+
+    <title>Version Control — Noizu.AdvancedScaffolding v1.0.0</title>
+    <link rel="stylesheet" href="dist/elixir-a172fe91e725dcb259e2.css" />
+
+    <script src="dist/sidebar_items-34189fde48.js"></script>
+
+      <script src="docs_config.js"></script>
+
+    <script async src="dist/app-f27ff079945e43879c46.js"></script>
+
+
+  </head>
+  <body data-type="extras">
+    <script>
+
+      try {
+        if (localStorage.getItem('night-mode') === 'true') {
+          document.body.classList.add('night-mode');
+        }
+      } catch (error) { }
+    </script>
+
+<div class="main">
+
+<button class="sidebar-button sidebar-toggle">
+  <span class="icon-menu" title="Collapse/expand sidebar"></span>
+</button>
+
+<section class="sidebar">
+  <form class="sidebar-search" action="search.html">
+    <button type="submit" class="search-button" aria-label="Submit Search">
+      <span class="icon-search" aria-hidden="true" title="Submit search"></span>
+    </button>
+    <button type="button" tabindex="-1" class="search-close-button" aria-label="Cancel Search">
+      <span class="icon-cross" aria-hidden="true" title="Cancel search"></span>
+    </button>
+    <label class="search-label">
+      <input name="q" type="text" class="search-input" placeholder="Search..." aria-label="Input your search terms" autocomplete="off" />
+    </label>
+  </form>
+
+  <div class="autocomplete">
+    <div class="autocomplete-results">
+    </div>
+  </div>
+
+  <div class="sidebar-header">
+    <div class="sidebar-projectDetails">
+      <a href="api-reference.html" class="sidebar-projectName">
+Noizu.AdvancedScaffolding
+      </a>
+      <strong class="sidebar-projectVersion">
+        v1.0.0
+      </strong>
+    </div>
+
+  </div>
+
+  <ul class="sidebar-listNav">
+    <li><a id="extras-list-link" href="#full-list">Pages</a></li>
+
+      <li><a id="modules-list-link" href="#full-list">Modules</a></li>
+
+
+      <li><a id="tasks-list-link" href="#full-list">Mix Tasks</a></li>
+
+  </ul>
+  <div class="gradient"></div>
+  <ul id="full-list" class="sidebar-fullList"></ul>
+</section>
+
+<section class="content">
+  <div class="content-outer">
+    <div id="content" class="content-inner">
+
+<h2 id="amnesia-style-guide" class="section-heading">
+  <a href="#amnesia-style-guide" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Amnesia Style Guide
+</h2>
+<p>The following are the current Noizu conventions and notes for Amnesia databases, repos and entity objects. Feel free to grab this document and modify
+for your own uses to help onboard your fellow developers on how the project works and naming conventions expected by the framework.</p><p>This document has been modified from the (original)[<a href="https://github.com/noizu/ElixirScaffolding/blob/master/markdown/sample_conventions_doc.md]">https://github.com/noizu/ElixirScaffolding/blob/master/markdown/sample_conventions_doc.md]</a></p><h1>Version Control</h1><p>We use a NoizuLabs, Inc. Amnesia friendly schema versioning <a href="https://github.com/noizu/MnesiaVersioning">tool</a>.
+A versioning database <a href="https://hexdocs.pm/noizu_mnesia_versioning/0.1.8/Noizu.MnesiaVersioning.Database.html"><code class="inline">Noizu.MnesiaVersioning.Database</code></a> tracks which change sets have been applied. Change sets themselves (including rollback methods) are defined in <code class="inline">lib/__your_app__/versioning/schema_provider.ex</code> and related files.</p><p>@See <a href="https://github.com/noizu/MnesiaVersioning">Noizu MnesiaVersioning</a> for more details on using this tool.</p><h1>Naming Convention</h1><h2 id="entity-tables" class="section-heading">
+  <a href="#entity-tables" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Entity Tables
+</h2>
+<ul><li>Database Tables should be in singular form and end in the word Table. <code class="inline">UserTable</code> not <code class="inline">User</code> or <code class="inline">Users</code></li></ul><h2 id="nesting" class="section-heading">
+  <a href="#nesting" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Nesting
+</h2>
+<ul><li>Logical name spacing should use a period between levels.  <code class="inline">LogicalParent.LogicalChildTable</code>, e.g. <code class="inline">User.ExtendedInfoTable</code></li></ul><h2 id="join-tables" class="section-heading">
+  <a href="#join-tables" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Join Tables
+</h2>
+<ul><li>One to One Join Tables should be in singular form with a <code class="inline">2</code> to indicate this is a join table <code class="inline">User2PrimaryEmailTable</code> not <code class="inline">UsersPrimaryEmails</code> or <code class="inline">User.PrimaryEmail</code>, etc.</li><li>One to Many Join Tables should be in singular-plural form with a <code class="inline">2</code> to indicate join.  <code class="inline">User2EmailsTable</code> not <code class="inline">UsersEmails</code>, or <code class="inline">UserEmail</code></li><li>Many to Many Join Tables should be in plural-plural form with a <code class="inline">2</code> to indicate join.
+<code class="inline">Users2GroupsTable</code>
+Nested parents can be dropped if no ambiguity will be present, nesting periods should be removed <code class="inline">UserGroup2GroupRolesTable</code> not <code class="inline">User.Group2Group.RolesTable</code></li></ul><h2 id="table-types" class="section-heading">
+  <a href="#table-types" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Table Types
+</h2>
+<p>In general most tables should use :set or :ordered_set table type. The exception would be EAV, and Audit tables where the <code class="inline">:bag</code> type is preferred. The heavily leveraged Noizu ElxirScaffolding framework works best with numeric primary key based :set/:ordered_set tables.</p><p>@see (Noizu ElixirScaffolding Framework)[<a href="https://github.com/noizu/ElixirScaffolding]">https://github.com/noizu/ElixirScaffolding]</a></p><h1>Coding Conventions</h1><h2 id="date-time" class="section-heading">
+  <a href="#date-time" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Date Time
+</h2>
+<p>Date time entries should be stored as the elixir native <a href="https://hexdocs.pm/elixir/DateTime.html"><code class="inline">DateTime</code></a> type when possible. For efficient range searches the underlying DateTime objects may be converted to <code class="inline">Unix Epoch</code> time stamps and or <code class="inline">{year, month, day, hour, minute, second}</code> tuples or a combination of both but should when possible remain as standard DateTime object in any actual entity object.</p><p>E.g.</p><pre><code class="makeup elixir"><span class="w"> </span><span class="p">%</span><span class="c">__YOUR_APP___</span><span class="o">.</span><span class="nc">Foo</span><span class="p" data-group-id="9962531206-1">{</span><span class="w">
+   </span><span class="ss">identifier</span><span class="p">:</span><span class="w"> </span><span class="mi">1234</span><span class="p">,</span><span class="w">
+   </span><span class="ss">created_on</span><span class="p">:</span><span class="w"> </span><span class="n">date_time_object</span><span class="w">
+ </span><span class="p" data-group-id="9962531206-1">}</span><span class="w">
+
+ </span><span class="p">%</span><span class="c">__YOUR_APP___</span><span class="o">.</span><span class="nc">Database.FooTable</span><span class="p" data-group-id="9962531206-2">{</span><span class="w">
+   </span><span class="ss">identifier</span><span class="p">:</span><span class="w"> </span><span class="mi">1234</span><span class="p">,</span><span class="w">
+   </span><span class="ss">created_on</span><span class="p">:</span><span class="w"> </span><span class="n">foo</span><span class="o">.</span><span class="n">created_on</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">DateTime</span><span class="o">.</span><span class="n">to_unix</span><span class="p" data-group-id="9962531206-3">(</span><span class="p" data-group-id="9962531206-3">)</span><span class="p">,</span><span class="w">
+   </span><span class="ss">entity</span><span class="p">:</span><span class="w"> </span><span class="n">foo</span><span class="w">
+ </span><span class="p" data-group-id="9962531206-2">}</span></code></pre><p>All <code class="inline">Unix Epoch</code> should be stored in UTC time. for tuples the actual time_zone should be indicated as the first param <code class="inline">{:utc, year, month, ...}</code></p><h2 id="identifiers" class="section-heading">
+  <a href="#identifiers" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Identifiers
+</h2>
+<p>Identifier fields should be named :identifier not nmid, nmaid, id, appengine_id, etc. and when possible should be numeric to avoid the need to override default noizu elixir scaffolding behaviour.</p><h2 id="entity-references" class="section-heading">
+  <a href="#entity-references" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Entity References
+</h2>
+<p>The Noizu ElixirScaffolding framework relies heavily on what we call <em>Entity References.</em> Entity references are tupples that include an indicator that this tuple is a reference, a module that can obtain an object from it's persistence layer/source and an identifier. A entity reference for a User object for example may look like <code class="inline">{:ref, __YOUR_APP___.User, 1234}</code>, The underlying object may then be obtained using the <code class="inline">Noizu.EntityReferenceProtocol.entity!</code> method.</p><p>E.g. <code class="inline">Noizu.EntityReferenceProtocol.entity!({:ref, __YOUR_APP___.User, 1234}) -&gt; %User{identifier: 1234, ...}</code></p><h3 id="sref" class="section-heading">
+  <a href="#sref" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  SREF
+</h3>
+<p> For passing data to non tuple supporting environments such as javascript and appengine the Noizu.EntityReferenceProtocol provides a sref implementation that converts refs to string format. <code class="inline">{:ref, __YOUR_APP___.User, 1234}</code> in sref format for example would become <code class="inline">&quot;ref.user.1234&quot;</code>. Behind the scenes entities provide their sref prefix <code class="inline">user</code> as a <code class="inline">use</code> argument when extending the <code class="inline">Noizu.Scaffolding.EntityBehaviour</code>.</p><p> e.g.</p><pre><code class="makeup elixir"><span class="w"> </span><span class="kd">defmodule</span><span class="w"> </span><span class="c">__YOUR_APP___</span><span class="o">.</span><span class="nc">User</span><span class="w"> </span><span class="k" data-group-id="2107449101-1">do</span><span class="w">
+    </span><span class="kn">use</span><span class="w"> </span><span class="nc">Noizu.Scaffolding.EntityBehaviour</span><span class="p">,</span><span class="w">
+      </span><span class="ss">mnesia_table</span><span class="p">:</span><span class="w"> </span><span class="c">__YOUR_APP___</span><span class="o">.</span><span class="nc">Database.UserTable</span><span class="p">,</span><span class="w">
+      </span><span class="ss">sref_module</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;user&quot;</span><span class="w">    
+ </span><span class="k" data-group-id="2107449101-1">end</span></code></pre><p> The Noizu.Scaffolding.EntityBehaviour behaviour provides the default sref implementation to convert objects into sref format. However to convert sref strings back into ref, entity or record format the implementer must provide a defimple of the Noizu.EntityReferenceProtocol protocol for the bitstring type. Below is one possible implementation.</p><pre><code class="makeup elixir"><span class="w">  </span><span class="kd">defimpl</span><span class="w"> </span><span class="nc">Noizu.ERP</span><span class="p">,</span><span class="w"> </span><span class="ss">for</span><span class="p">:</span><span class="w"> </span><span class="nc">BitString</span><span class="w"> </span><span class="k" data-group-id="4052948571-1">do</span><span class="w">
+    </span><span class="na">@module_lookup</span><span class="p" data-group-id="4052948571-2">(</span><span class="p" data-group-id="4052948571-3">%{</span><span class="w">
+      </span><span class="c">__YOUR_APP___</span><span class="o">.</span><span class="nc">User</span><span class="o">.</span><span class="n">sref_module</span><span class="p" data-group-id="4052948571-4">(</span><span class="p" data-group-id="4052948571-4">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="c">__YOUR_APP___</span><span class="o">.</span><span class="nc">User</span><span class="w">
+      </span><span class="c">__YOUR_APP___</span><span class="o">.</span><span class="nc">User.Location</span><span class="o">.</span><span class="n">sref_module</span><span class="p" data-group-id="4052948571-5">(</span><span class="p" data-group-id="4052948571-5">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="c">__YOUR_APP___</span><span class="o">.</span><span class="nc">User.Location</span><span class="w">
+    </span><span class="p" data-group-id="4052948571-3">}</span><span class="p" data-group-id="4052948571-2">)</span><span class="w">
+
+    </span><span class="kd">def</span><span class="w"> </span><span class="nf">lookup_module</span><span class="p" data-group-id="4052948571-6">(</span><span class="n">sref_module</span><span class="p" data-group-id="4052948571-6">)</span><span class="w"> </span><span class="k" data-group-id="4052948571-7">do</span><span class="w">
+      </span><span class="nc">Map</span><span class="o">.</span><span class="n">get</span><span class="p" data-group-id="4052948571-8">(</span><span class="na">@module_lookup</span><span class="p">,</span><span class="w"> </span><span class="n">sref_module</span><span class="p">,</span><span class="w"> </span><span class="nc">UnsupportedModule</span><span class="p" data-group-id="4052948571-8">)</span><span class="w">
+    </span><span class="k" data-group-id="4052948571-7">end</span><span class="w">
+
+    </span><span class="c1"># Note - this encoding does not support ref strings that include periods in their module ref string or identifier.</span><span class="w">
+    </span><span class="kd">def</span><span class="w"> </span><span class="nf">ref</span><span class="p" data-group-id="4052948571-9">(</span><span class="n">sref</span><span class="p" data-group-id="4052948571-9">)</span><span class="w"> </span><span class="k" data-group-id="4052948571-10">do</span><span class="w">
+      </span><span class="p" data-group-id="4052948571-11">[</span><span class="s">&quot;ref&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">m_str</span><span class="p">,</span><span class="w"> </span><span class="n">id_str</span><span class="p" data-group-id="4052948571-11">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">String</span><span class="o">.</span><span class="n">split</span><span class="p" data-group-id="4052948571-12">(</span><span class="n">sref</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;.&quot;</span><span class="p" data-group-id="4052948571-12">)</span><span class="w">
+      </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lookup_module</span><span class="p" data-group-id="4052948571-13">(</span><span class="n">m_str</span><span class="p" data-group-id="4052948571-13">)</span><span class="w">
+      </span><span class="n">m</span><span class="o">.</span><span class="n">ref</span><span class="p" data-group-id="4052948571-14">(</span><span class="n">id_str</span><span class="p" data-group-id="4052948571-14">)</span><span class="w">      
+    </span><span class="k" data-group-id="4052948571-10">end</span><span class="w">
+    </span><span class="kd">def</span><span class="w"> </span><span class="nf">sref</span><span class="p" data-group-id="4052948571-15">(</span><span class="n">sref</span><span class="p" data-group-id="4052948571-15">)</span><span class="p">,</span><span class="w"> </span><span class="ss">do</span><span class="p">:</span><span class="w"> </span><span class="n">sref</span><span class="w">
+    </span><span class="kd">def</span><span class="w"> </span><span class="nf">entity</span><span class="p" data-group-id="4052948571-16">(</span><span class="n">sref</span><span class="p">,</span><span class="w"> </span><span class="n">options</span><span class="w"> </span><span class="o">\\</span><span class="w"> </span><span class="no">nil</span><span class="p" data-group-id="4052948571-16">)</span><span class="p">,</span><span class="w"> </span><span class="ss">do</span><span class="p">:</span><span class="w"> </span><span class="nc">Noizu.ERP</span><span class="o">.</span><span class="n">entity</span><span class="p" data-group-id="4052948571-17">(</span><span class="n">ref</span><span class="p" data-group-id="4052948571-18">(</span><span class="n">sref</span><span class="p" data-group-id="4052948571-18">)</span><span class="p">,</span><span class="w"> </span><span class="n">options</span><span class="p" data-group-id="4052948571-17">)</span><span class="w">
+    </span><span class="kd">def</span><span class="w"> </span><span class="nf">entity!</span><span class="p" data-group-id="4052948571-19">(</span><span class="n">sref</span><span class="p">,</span><span class="w"> </span><span class="n">options</span><span class="w"> </span><span class="o">\\</span><span class="w"> </span><span class="no">nil</span><span class="p" data-group-id="4052948571-19">)</span><span class="p">,</span><span class="w"> </span><span class="ss">do</span><span class="p">:</span><span class="w"> </span><span class="nc">Noizu.ERP</span><span class="o">.</span><span class="n">entity!</span><span class="p" data-group-id="4052948571-20">(</span><span class="n">ref</span><span class="p" data-group-id="4052948571-21">(</span><span class="n">sref</span><span class="p" data-group-id="4052948571-21">)</span><span class="p">,</span><span class="w"> </span><span class="n">options</span><span class="p" data-group-id="4052948571-20">)</span><span class="w">
+    </span><span class="kd">def</span><span class="w"> </span><span class="nf">record</span><span class="p" data-group-id="4052948571-22">(</span><span class="n">sref</span><span class="p">,</span><span class="w"> </span><span class="n">options</span><span class="w"> </span><span class="o">\\</span><span class="w"> </span><span class="no">nil</span><span class="p" data-group-id="4052948571-22">)</span><span class="p">,</span><span class="w"> </span><span class="ss">do</span><span class="p">:</span><span class="w"> </span><span class="nc">Noizu.ERP</span><span class="o">.</span><span class="n">record</span><span class="p" data-group-id="4052948571-23">(</span><span class="n">ref</span><span class="p" data-group-id="4052948571-24">(</span><span class="n">sref</span><span class="p" data-group-id="4052948571-24">)</span><span class="p">,</span><span class="w"> </span><span class="n">options</span><span class="p" data-group-id="4052948571-23">)</span><span class="w">
+    </span><span class="kd">def</span><span class="w"> </span><span class="nf">record!</span><span class="p" data-group-id="4052948571-25">(</span><span class="n">sref</span><span class="p">,</span><span class="w"> </span><span class="n">options</span><span class="w"> </span><span class="o">\\</span><span class="w"> </span><span class="no">nil</span><span class="p" data-group-id="4052948571-25">)</span><span class="p">,</span><span class="w"> </span><span class="ss">do</span><span class="p">:</span><span class="w"> </span><span class="nc">Noizu.ERP</span><span class="o">.</span><span class="n">record!</span><span class="p" data-group-id="4052948571-26">(</span><span class="n">ref</span><span class="p" data-group-id="4052948571-27">(</span><span class="n">sref</span><span class="p" data-group-id="4052948571-27">)</span><span class="p">,</span><span class="w"> </span><span class="n">options</span><span class="p" data-group-id="4052948571-26">)</span><span class="w">
+  </span><span class="k" data-group-id="4052948571-1">end</span><span class="w">
+
+  </span><span class="kd">defimpl</span><span class="w"> </span><span class="nc">Noizu.ERP</span><span class="p">,</span><span class="w"> </span><span class="ss">for</span><span class="p">:</span><span class="w"> </span><span class="nc">UnsupportedModule</span><span class="w"> </span><span class="k" data-group-id="4052948571-28">do</span><span class="w">
+    </span><span class="kd">def</span><span class="w"> </span><span class="nf">ref</span><span class="p" data-group-id="4052948571-29">(</span><span class="c">_item</span><span class="p" data-group-id="4052948571-29">)</span><span class="p">,</span><span class="w"> </span><span class="ss">do</span><span class="p">:</span><span class="w"> </span><span class="k">raise</span><span class="w"> </span><span class="s">&quot;UnsupportedModule&quot;</span><span class="w">
+    </span><span class="kd">def</span><span class="w"> </span><span class="nf">sref</span><span class="p" data-group-id="4052948571-30">(</span><span class="c">_item</span><span class="p" data-group-id="4052948571-30">)</span><span class="p">,</span><span class="w"> </span><span class="ss">do</span><span class="p">:</span><span class="w"> </span><span class="k">raise</span><span class="w"> </span><span class="s">&quot;UnsupportedModule&quot;</span><span class="w">
+    </span><span class="kd">def</span><span class="w"> </span><span class="nf">entity</span><span class="p" data-group-id="4052948571-31">(</span><span class="c">_item</span><span class="p">,</span><span class="w"> </span><span class="c">_options</span><span class="w"> </span><span class="o">\\</span><span class="w"> </span><span class="no">nil</span><span class="p" data-group-id="4052948571-31">)</span><span class="p">,</span><span class="w"> </span><span class="ss">do</span><span class="p">:</span><span class="w"> </span><span class="k">raise</span><span class="w"> </span><span class="s">&quot;UnsupportedModule&quot;</span><span class="w">
+    </span><span class="kd">def</span><span class="w"> </span><span class="nf">entity!</span><span class="p" data-group-id="4052948571-32">(</span><span class="c">_item</span><span class="p">,</span><span class="w"> </span><span class="c">_options</span><span class="w"> </span><span class="o">\\</span><span class="w"> </span><span class="no">nil</span><span class="p" data-group-id="4052948571-32">)</span><span class="p">,</span><span class="w"> </span><span class="ss">do</span><span class="p">:</span><span class="w"> </span><span class="k">raise</span><span class="w"> </span><span class="s">&quot;UnsupportedModule&quot;</span><span class="w">
+    </span><span class="kd">def</span><span class="w"> </span><span class="nf">record</span><span class="p" data-group-id="4052948571-33">(</span><span class="c">_item</span><span class="p">,</span><span class="w"> </span><span class="c">_options</span><span class="w"> </span><span class="o">\\</span><span class="w"> </span><span class="no">nil</span><span class="p" data-group-id="4052948571-33">)</span><span class="p">,</span><span class="w"> </span><span class="ss">do</span><span class="p">:</span><span class="w"> </span><span class="k">raise</span><span class="w"> </span><span class="s">&quot;UnsupportedModule&quot;</span><span class="w">
+    </span><span class="kd">def</span><span class="w"> </span><span class="nf">record!</span><span class="p" data-group-id="4052948571-34">(</span><span class="c">_item</span><span class="p">,</span><span class="w"> </span><span class="c">_options</span><span class="w"> </span><span class="o">\\</span><span class="w"> </span><span class="no">nil</span><span class="p" data-group-id="4052948571-34">)</span><span class="p">,</span><span class="w"> </span><span class="ss">do</span><span class="p">:</span><span class="w"> </span><span class="k">raise</span><span class="w"> </span><span class="s">&quot;UnsupportedModule&quot;</span><span class="w">
+  </span><span class="k" data-group-id="4052948571-28">end</span></code></pre><h3 id="the-noizu-entityreferenceprotocol" class="section-heading">
+  <a href="#the-noizu-entityreferenceprotocol" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  The Noizu.EntityReferenceProtocol
+</h3>
+<p>@see (Noizu ElixirScaffolding Framework)[<a href="https://github.com/noizu/ElixirScaffolding]">https://github.com/noizu/ElixirScaffolding]</a> for more details.</p><pre><code class="makeup elixir"><span class="kd">defprotocol</span><span class="w"> </span><span class="nc">Noizu.ERP</span><span class="w"> </span><span class="k" data-group-id="3470011284-1">do</span><span class="w">
+  </span><span class="na">@doc</span><span class="w"> </span><span class="s">&quot;Cast to noizu reference object&quot;</span><span class="w">
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">ref</span><span class="p" data-group-id="3470011284-2">(</span><span class="n">obj</span><span class="p" data-group-id="3470011284-2">)</span><span class="w">
+
+  </span><span class="na">@doc</span><span class="w"> </span><span class="s">&quot;Cast to noizu string reference object&quot;</span><span class="w">
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">sref</span><span class="p" data-group-id="3470011284-3">(</span><span class="n">obj</span><span class="p" data-group-id="3470011284-3">)</span><span class="w">
+
+  </span><span class="na">@doc</span><span class="w"> </span><span class="s">&quot;Convert to persistence object. Options may be passed to coordinate actions like expanding embedded references.&quot;</span><span class="w">
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">record</span><span class="p" data-group-id="3470011284-4">(</span><span class="n">obj</span><span class="p">,</span><span class="w"> </span><span class="n">options</span><span class="w"> </span><span class="o">\\</span><span class="w"> </span><span class="p" data-group-id="3470011284-5">%{</span><span class="p" data-group-id="3470011284-5">}</span><span class="p" data-group-id="3470011284-4">)</span><span class="w">
+
+  </span><span class="na">@doc</span><span class="w"> </span><span class="s">&quot;Convert to persistence object Options may be passed to coordinate actions like expanding embedded references. (With transaction wrapper if required)&quot;</span><span class="w">
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">record!</span><span class="p" data-group-id="3470011284-6">(</span><span class="n">obj</span><span class="p">,</span><span class="w"> </span><span class="n">options</span><span class="w"> </span><span class="o">\\</span><span class="w"> </span><span class="p" data-group-id="3470011284-7">%{</span><span class="p" data-group-id="3470011284-7">}</span><span class="p" data-group-id="3470011284-6">)</span><span class="w">
+
+  </span><span class="na">@doc</span><span class="w"> </span><span class="s">&quot;Convert to scaffolding.struct object. Options may be passed to coordinate actions like expanding embedded references.&quot;</span><span class="w">
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">entity</span><span class="p" data-group-id="3470011284-8">(</span><span class="n">obj</span><span class="p">,</span><span class="w"> </span><span class="n">options</span><span class="w"> </span><span class="o">\\</span><span class="w"> </span><span class="p" data-group-id="3470011284-9">%{</span><span class="p" data-group-id="3470011284-9">}</span><span class="p" data-group-id="3470011284-8">)</span><span class="w">
+
+  </span><span class="na">@doc</span><span class="w"> </span><span class="s">&quot;Convert to scaffolding.struct object Options may be passed to coordinate actions like expanding embedded references. (With transaction wrapper if required)&quot;</span><span class="w">
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">entity!</span><span class="p" data-group-id="3470011284-10">(</span><span class="n">obj</span><span class="p">,</span><span class="w"> </span><span class="n">options</span><span class="w"> </span><span class="o">\\</span><span class="w"> </span><span class="p" data-group-id="3470011284-11">%{</span><span class="p" data-group-id="3470011284-11">}</span><span class="p" data-group-id="3470011284-10">)</span><span class="w">
+</span><span class="k" data-group-id="3470011284-1">end</span><span class="w"> </span><span class="c1"># end defprotocol Noizu.ERP</span></code></pre><h3 id="external-references" class="section-heading">
+  <a href="#external-references" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  External References
+</h3>
+<p>External references (entities owned by remote apis, such as firebase for example) follow slighlty different conventions. And generally will look like
+{:ext_ref, InterfaceForExternalStore, external_identifier} where InterfaceForExternalStore is a module that implements the relevant Noizu.EntityReferenceProtocol methods for communicating with the remote store.</p><h3 id="entity-reference-naming-conventionts" class="section-heading">
+  <a href="#entity-reference-naming-conventionts" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Entity Reference Naming Conventionts
+</h3>
+<p>When entities reference other entities as fields you will generally want to add a <code class="inline">_ref</code> suffix to those fields. If an entity has a foriegn key reference to a user record for example that field could be named <code class="inline">user_ref</code> or simple <code class="inline">owner_ref</code>.</p><p>Standardized naming convention makes the like of boiler plate code maintenance and scaffolding more straight forward.</p><p><code class="inline">@see https://github.com/noizu/elixir_scaffolding for more details.</code></p><h2 id="embedded-structures" class="section-heading">
+  <a href="#embedded-structures" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Embedded Structures
+</h2>
+<p>Generally tables will include nested objects that represent the actual record type. Any fields on the mnesia table itself are generally duplicates of data inside of the nested entity, exposed for indexing. Most tables will simple contain an identifier and entity field with all actual data inside of the entity object.</p><p>The primary Embedded object should be put in a field named  <code class="inline">entity:</code></p><p>Even if a database does not require an embedded object (aka when it is very simple etc.) if should still follow this convention to make future expansion more straight forward and avoid the need for custom boilerplate scaffolding code. If absolutely necessary the deftable entry itself can implement the Noizu.Scaffolding.EntityBehaviour and EntityReferenceProtocol protocol.</p><p>The main exceptions being vary large list like tables such as Audit, EAV or Join tables.</p><p><code class="inline">@see https://github.com/noizu/elixir_scaffolding for more details.</code></p><h2 id="audit-tables-eav-tables" class="section-heading">
+  <a href="#audit-tables-eav-tables" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Audit Tables &amp; EAV Tables
+</h2>
+<p>In a few places we use Audit and EAV tables. Although the tables and structs are different the underlying logic is generic.</p><pre><code class="makeup elixir"><span class="w">
+  </span><span class="c1">#-----------------------------------------------------------------------------</span><span class="w">
+  </span><span class="c1"># General Audit History Table</span><span class="w">
+  </span><span class="c1">#-----------------------------------------------------------------------------</span><span class="w">
+  </span><span class="n">deftable</span><span class="w"> </span><span class="nc">AuditHistoryTable</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="5248759497-1">[</span><span class="ss">:entity</span><span class="p">,</span><span class="w"> </span><span class="ss">:time</span><span class="p">,</span><span class="w"> </span><span class="ss">:editor</span><span class="p">,</span><span class="w"> </span><span class="ss">:reason</span><span class="p">,</span><span class="w"> </span><span class="ss">:event</span><span class="p" data-group-id="5248759497-1">]</span><span class="p">,</span><span class="w"> </span><span class="ss">type</span><span class="p">:</span><span class="w"> </span><span class="ss">:bag</span><span class="p">,</span><span class="w"> </span><span class="ss">index</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="5248759497-2">[</span><span class="p" data-group-id="5248759497-2">]</span><span class="p">,</span><span class="w"> </span><span class="ss">fragmentation</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="5248759497-3">[</span><span class="ss">number</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="ss">copying</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="5248759497-4">%{</span><span class="ss">disk!</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p" data-group-id="5248759497-4">}</span><span class="p" data-group-id="5248759497-3">]</span><span class="w"> </span><span class="k" data-group-id="5248759497-5">do</span><span class="w">
+    </span><span class="na">@type</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="o">::</span><span class="w"> </span><span class="p" data-group-id="5248759497-6">%</span><span class="nc" data-group-id="5248759497-6">AuditHistoryTable</span><span class="p" data-group-id="5248759497-6">{</span><span class="w">
+      </span><span class="ss">entity</span><span class="p">:</span><span class="w"> </span><span class="nc">Types</span><span class="o">.</span><span class="n">entity_reference</span><span class="p">,</span><span class="w">
+      </span><span class="ss">time</span><span class="p">:</span><span class="w"> </span><span class="nc">Types</span><span class="o">.</span><span class="n">unix_epoch</span><span class="p">,</span><span class="w">
+      </span><span class="ss">editor</span><span class="p">:</span><span class="w"> </span><span class="nc">Types</span><span class="o">.</span><span class="n">entity_reference</span><span class="p">,</span><span class="w">
+      </span><span class="ss">reason</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="o">.</span><span class="n">t</span><span class="o">|</span><span class="ss">:nil</span><span class="p">,</span><span class="w">
+      </span><span class="ss">event</span><span class="p">:</span><span class="w"> </span><span class="n">tuple</span><span class="w"> </span><span class="c1"># e.g. {:event_name, {:type_specific_details}}</span><span class="w">
+    </span><span class="p" data-group-id="5248759497-6">}</span><span class="w">
+  </span><span class="k" data-group-id="5248759497-5">end</span><span class="w">
+
+  </span><span class="c1">#-----------------------------------------------------------------------------</span><span class="w">
+  </span><span class="c1"># Sparse Matrix</span><span class="w">
+  </span><span class="c1">#-----------------------------------------------------------------------------</span><span class="w">
+  </span><span class="n">deftable</span><span class="w"> </span><span class="nc">EntityAttributeValueTable</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="5248759497-7">[</span><span class="ss">:entity</span><span class="p">,</span><span class="w"> </span><span class="ss">:attribute</span><span class="p">,</span><span class="w"> </span><span class="ss">:value</span><span class="p" data-group-id="5248759497-7">]</span><span class="p">,</span><span class="w"> </span><span class="ss">type</span><span class="p">:</span><span class="w"> </span><span class="ss">:bag</span><span class="p">,</span><span class="w"> </span><span class="ss">index</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="5248759497-8">[</span><span class="ss">:attribute</span><span class="p" data-group-id="5248759497-8">]</span><span class="p">,</span><span class="w"> </span><span class="ss">fragmentation</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="5248759497-9">[</span><span class="ss">number</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="ss">copying</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="5248759497-10">%{</span><span class="ss">disk!</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p" data-group-id="5248759497-10">}</span><span class="p" data-group-id="5248759497-9">]</span><span class="w"> </span><span class="k" data-group-id="5248759497-11">do</span><span class="w">
+    </span><span class="na">@type</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="o">::</span><span class="w"> </span><span class="p" data-group-id="5248759497-12">%</span><span class="nc" data-group-id="5248759497-12">EntityAttributeValueTable</span><span class="p" data-group-id="5248759497-12">{</span><span class="w">
+        </span><span class="ss">entity</span><span class="p">:</span><span class="w"> </span><span class="nc">Types</span><span class="o">.</span><span class="n">entiy_reference</span><span class="p">,</span><span class="w">
+        </span><span class="ss">attribute</span><span class="p">:</span><span class="w"> </span><span class="n">atom</span><span class="o">|</span><span class="nc">String</span><span class="o">.</span><span class="n">t</span><span class="p">,</span><span class="w">
+        </span><span class="ss">value</span><span class="p">:</span><span class="w"> </span><span class="n">integer</span><span class="o">|</span><span class="n">atom</span><span class="o">|</span><span class="n">float</span><span class="o">|</span><span class="nc">String</span><span class="o">.</span><span class="n">t</span><span class="o">|</span><span class="n">any</span><span class="w">
+    </span><span class="p" data-group-id="5248759497-12">}</span><span class="w">
+  </span><span class="k" data-group-id="5248759497-11">end</span></code></pre><p>We use the :bag table types for audit tables so that we may quickly insert new records, as long as we follow conventions we can easily filter for records for specific entities or users  {:ref, User, identifier} etc.</p><p>Likewise we can get pretty flexible with our EAV tables.
+For example we can put :tags all into a single MapSet</p><pre><code class="makeup elixir"><span class="p" data-group-id="1331359020-1">%</span><span class="nc" data-group-id="1331359020-1">EntityAttributeValueTable</span><span class="p" data-group-id="1331359020-1">{</span><span class="w">
+ </span><span class="ss">entity</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="1331359020-2">{</span><span class="ss">:ref</span><span class="p">,</span><span class="w"> </span><span class="nc">User</span><span class="p">,</span><span class="w"> </span><span class="mi">1234</span><span class="p" data-group-id="1331359020-2">}</span><span class="p">,</span><span class="w">
+ </span><span class="ss">attributes</span><span class="p">:</span><span class="w"> </span><span class="ss">:tags</span><span class="p">,</span><span class="w">
+ </span><span class="ss">value</span><span class="p">:</span><span class="w"> </span><span class="nc">MapSet</span><span class="o">.</span><span class="n">new</span><span class="p" data-group-id="1331359020-3">(</span><span class="p" data-group-id="1331359020-4">[</span><span class="s">&quot;banana&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;apple&quot;</span><span class="p" data-group-id="1331359020-4">]</span><span class="p" data-group-id="1331359020-3">)</span><span class="w">
+</span><span class="p" data-group-id="1331359020-1">}</span></code></pre><p>or in individual entries depending on how we plan on searching for records.</p><pre><code class="makeup elixir"><span class="p" data-group-id="6735503023-1">%</span><span class="nc" data-group-id="6735503023-1">EntityAttributeValueTable</span><span class="p" data-group-id="6735503023-1">{</span><span class="w">
+ </span><span class="ss">entity</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="6735503023-2">{</span><span class="ss">:ref</span><span class="p">,</span><span class="w"> </span><span class="nc">Users</span><span class="p">,</span><span class="w"> </span><span class="mi">1234</span><span class="p" data-group-id="6735503023-2">}</span><span class="p">,</span><span class="w">
+ </span><span class="ss">attributes</span><span class="p">:</span><span class="w"> </span><span class="ss">:tags</span><span class="p">,</span><span class="w">
+ </span><span class="ss">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;banana&quot;</span><span class="w">
+</span><span class="p" data-group-id="6735503023-1">}</span><span class="w">
+</span><span class="p" data-group-id="6735503023-3">%</span><span class="nc" data-group-id="6735503023-3">EntityAttributeValueTable</span><span class="p" data-group-id="6735503023-3">{</span><span class="w">
+ </span><span class="ss">entity</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="6735503023-4">{</span><span class="ss">:ref</span><span class="p">,</span><span class="w"> </span><span class="nc">Users</span><span class="p">,</span><span class="w"> </span><span class="mi">1234</span><span class="p" data-group-id="6735503023-4">}</span><span class="p">,</span><span class="w">
+ </span><span class="ss">attributes</span><span class="p">:</span><span class="w"> </span><span class="ss">:tags</span><span class="p">,</span><span class="w">
+ </span><span class="ss">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;apple&quot;</span><span class="w">
+</span><span class="p" data-group-id="6735503023-3">}</span></code></pre>
+<div class="bottom-actions">
+  <div class="bottom-actions-item">
+
+      <a href="copyright.html" class="bottom-actions-button" rel="prev">
+        <span class="subheader">
+          ← Previous Page
+        </span>
+        <span class="title">
+COPYRIGHT
+        </span>
+      </a>
+
+  </div>
+  <div class="bottom-actions-item">
+
+  </div>
+</div>
+
+      <footer class="footer">
+        <p>
+          <span class="line">
+            Built using
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener">ExDoc</a> (v0.25.1) for the
+            <a href="https://elixir-lang.org" title="Elixir" target="_blank">Elixir programming language</a>.
+          </span>
+          <span class="line">
+            Designed by
+            <a href="https://twitter.com/dignifiedquire" target="_blank" rel="noopener" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+          </span>
+        </p>
+        <p>
+
+            <a href="api-reference.html" title="API reference" class="line footer-button">API Reference</a>
+
+          <button class="line footer-button display-shortcuts-help">
+            Display keyboard shortcuts
+          </button>
+          <button class="line footer-button night-mode-toggle">
+            Toggle night mode
+          </button>
+          <button class="line footer-button display-quick-switch">
+            Go to a HexDocs package
+          </button>
+          <button class="line footer-button tooltips-toggle">
+            <span class="tooltips-option-disable">Disable tooltips</span>
+            <span class="tooltips-option-enable">Enable tooltips</span>
+          </button>
+        </p>
+      </footer>
+    </div>
+  </div>
+</section>
+</div>
+
+
+  </body>
+</html>

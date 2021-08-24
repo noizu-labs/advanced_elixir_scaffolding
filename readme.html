@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.25.1">
+    <meta name="project" content="Noizu.AdvancedScaffolding v1.0.0">
+
+    <title>Noizu.AdvancedScaffolding — Noizu.AdvancedScaffolding v1.0.0</title>
+    <link rel="stylesheet" href="dist/elixir-a172fe91e725dcb259e2.css" />
+
+    <script src="dist/sidebar_items-34189fde48.js"></script>
+
+      <script src="docs_config.js"></script>
+
+    <script async src="dist/app-f27ff079945e43879c46.js"></script>
+
+
+  </head>
+  <body data-type="extras">
+    <script>
+
+      try {
+        if (localStorage.getItem('night-mode') === 'true') {
+          document.body.classList.add('night-mode');
+        }
+      } catch (error) { }
+    </script>
+
+<div class="main">
+
+<button class="sidebar-button sidebar-toggle">
+  <span class="icon-menu" title="Collapse/expand sidebar"></span>
+</button>
+
+<section class="sidebar">
+  <form class="sidebar-search" action="search.html">
+    <button type="submit" class="search-button" aria-label="Submit Search">
+      <span class="icon-search" aria-hidden="true" title="Submit search"></span>
+    </button>
+    <button type="button" tabindex="-1" class="search-close-button" aria-label="Cancel Search">
+      <span class="icon-cross" aria-hidden="true" title="Cancel search"></span>
+    </button>
+    <label class="search-label">
+      <input name="q" type="text" class="search-input" placeholder="Search..." aria-label="Input your search terms" autocomplete="off" />
+    </label>
+  </form>
+
+  <div class="autocomplete">
+    <div class="autocomplete-results">
+    </div>
+  </div>
+
+  <div class="sidebar-header">
+    <div class="sidebar-projectDetails">
+      <a href="api-reference.html" class="sidebar-projectName">
+Noizu.AdvancedScaffolding
+      </a>
+      <strong class="sidebar-projectVersion">
+        v1.0.0
+      </strong>
+    </div>
+
+  </div>
+
+  <ul class="sidebar-listNav">
+    <li><a id="extras-list-link" href="#full-list">Pages</a></li>
+
+      <li><a id="modules-list-link" href="#full-list">Modules</a></li>
+
+
+      <li><a id="tasks-list-link" href="#full-list">Mix Tasks</a></li>
+
+  </ul>
+  <div class="gradient"></div>
+  <ul id="full-list" class="sidebar-fullList"></ul>
+</section>
+
+<section class="content">
+  <div class="content-outer">
+    <div id="content" class="content-inner">
+
+<h1>Noizu.AdvancedScaffolding</h1><p>This library provides some general tools to reduce some boiler plate code around working with objects, performing CRUD, auditing changes, performing basic authorization checks, and working with entity references (foreign keys). It includes various concepts previously applied to some of our private projects including blade of eternity, lacrosse alerts, and solace club.</p><h2 id="additional-documentation" class="section-heading">
+  <a href="#additional-documentation" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Additional Documentation
+</h2>
+<ul><li><a href="http://noizu.github.io/ElixirScaffolding">Api Documentation</a></li></ul><h2 id="refs" class="section-heading">
+  <a href="#refs" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Refs
+</h2>
+<p>Refs provide a universal way for database records to reference other internal or external entities. They take the form of a tuple as follows: {:ref, Entity.Module, identifier} where
+Entity.Module is the type of entity we are referencing and provides a method entity(nmid) that is capable of fetching the entity referenced by the listed identifier.</p><p>This makes it straight forward for a table to reference various other entity types in a generic way. Additionally the Noizu.ERP (Entity Reference Protocol) provides a straight forward
+mechanism for handling references with out knowing in advance if they have been expanded or their exact type.</p><p>The EntityReferenceProtocol (alias Noizu.ERP, as: EntityReferenceProtocol) is defined as follows:</p><pre><code class="makeup elixir"><span class="w">  </span><span class="kd">defprotocol</span><span class="w"> </span><span class="nc">Noizu.ERP</span><span class="w"> </span><span class="k" data-group-id="0807244266-1">do</span><span class="w">
+    </span><span class="na">@doc</span><span class="w"> </span><span class="s">&quot;Cast to noizu reference object&quot;</span><span class="w">
+    </span><span class="kd">def</span><span class="w"> </span><span class="nf">ref</span><span class="p" data-group-id="0807244266-2">(</span><span class="n">obj</span><span class="p" data-group-id="0807244266-2">)</span><span class="w">
+
+    </span><span class="na">@doc</span><span class="w"> </span><span class="s">&quot;Cast to noizu string reference object&quot;</span><span class="w">
+    </span><span class="kd">def</span><span class="w"> </span><span class="nf">sref</span><span class="p" data-group-id="0807244266-3">(</span><span class="n">obj</span><span class="p" data-group-id="0807244266-3">)</span><span class="w">
+
+    </span><span class="na">@doc</span><span class="w"> </span><span class="s">&quot;Convert to persistence object. Options may be passed to coordinate actions like expanding embedded references.&quot;</span><span class="w">
+    </span><span class="kd">def</span><span class="w"> </span><span class="nf">record</span><span class="p" data-group-id="0807244266-4">(</span><span class="n">obj</span><span class="p">,</span><span class="w"> </span><span class="n">options</span><span class="p" data-group-id="0807244266-4">)</span><span class="w">
+
+    </span><span class="na">@doc</span><span class="w"> </span><span class="s">&quot;Convert to persistence object Options may be passed to coordinate actions like expanding embedded references. (With transaction wrapper if required)&quot;</span><span class="w">
+    </span><span class="kd">def</span><span class="w"> </span><span class="nf">record!</span><span class="p" data-group-id="0807244266-5">(</span><span class="n">obj</span><span class="p">,</span><span class="w"> </span><span class="n">options</span><span class="p" data-group-id="0807244266-5">)</span><span class="w">
+
+    </span><span class="na">@doc</span><span class="w"> </span><span class="s">&quot;Convert to scaffolding.struct object. Options may be passed to coordinate actions like expanding embedded references.&quot;</span><span class="w">
+    </span><span class="kd">def</span><span class="w"> </span><span class="nf">entity</span><span class="p" data-group-id="0807244266-6">(</span><span class="n">obj</span><span class="p">,</span><span class="w"> </span><span class="n">options</span><span class="p" data-group-id="0807244266-6">)</span><span class="w">
+
+    </span><span class="na">@doc</span><span class="w"> </span><span class="s">&quot;Convert to scaffolding.struct object Options may be passed to coordinate actions like expanding embedded references. (With transaction wrapper if required)&quot;</span><span class="w">
+    </span><span class="kd">def</span><span class="w"> </span><span class="nf">entity!</span><span class="p" data-group-id="0807244266-7">(</span><span class="n">obj</span><span class="p">,</span><span class="w"> </span><span class="n">options</span><span class="p" data-group-id="0807244266-7">)</span><span class="w">
+  </span><span class="k" data-group-id="0807244266-1">end</span><span class="w"> </span><span class="c1"># end defprotocol Noizu.ERP</span></code></pre><p>Where the methods ref and sref convert any participating objects into {:ref, Module, id} and &quot;ref.module.id&quot; format respectively;  record and record! expand a reference into whatever format is used for db persistence (where options gives us a hook to dynamically adjust how records are converted to, for example, insert linked records if needed); and finally, where entity/2 and entity!/2 will insure our reference is in entity (struct) format.</p><p>It is up to the library user to provide the defimpls needed to handle sref format strings &quot;ref.type.identifier&quot;, along with defimpls for any structs and database classes used.
+Additionally it is up to the library user to ensure that their struct classes implement the Noizu.AdvancedScaffolding.EntityBehaviour and that their structs and persistence records provide defimpls of the EntityReferenceProtocl to allow their conversion into ref, sref, record and entity format.</p><h2 id="auditengine" class="section-heading">
+  <a href="#auditengine" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  AuditEngine
+</h2>
+<p>The Noizu.AdvancedScaffolding.RepoBehaviour will automatically make auditing calls as records are accessed and modified. This makes it very straight forward (provided an AuditEngine is defined) to generate robust audits of who has modified what and when.</p><p>A possible implementation may look like the following mnesia table and defimpl. Note how the mnesia table is setup to allow us to easily search by
+entity, request token, time, or editor.</p><pre><code class="makeup elixir"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">YourProject.AuditEngine</span><span class="w"> </span><span class="k" data-group-id="0775204020-1">do</span><span class="w">
+  </span><span class="na">@behaviour</span><span class="w"> </span><span class="nc">Noizu.AdvancedScaffolding.AudingEngineBehaviour</span><span class="w">
+
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">audit</span><span class="p" data-group-id="0775204020-2">(</span><span class="n">event</span><span class="p">,</span><span class="w"> </span><span class="n">details</span><span class="p">,</span><span class="w"> </span><span class="n">entity</span><span class="p">,</span><span class="w"> </span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="n">note</span><span class="w"> </span><span class="o">\\</span><span class="w"> </span><span class="no">nil</span><span class="p" data-group-id="0775204020-2">)</span><span class="w"> </span><span class="k" data-group-id="0775204020-3">do</span><span class="w">  
+    </span><span class="p" data-group-id="0775204020-4">%</span><span class="nc" data-group-id="0775204020-4">MnesiaDb.AuditHistory</span><span class="p" data-group-id="0775204020-4">{</span><span class="w">
+      </span><span class="ss">entity</span><span class="p">:</span><span class="w"> </span><span class="nc">EntityReferenceProtocol</span><span class="o">.</span><span class="n">ref</span><span class="p" data-group-id="0775204020-5">(</span><span class="n">entity</span><span class="p" data-group-id="0775204020-5">)</span><span class="p">,</span><span class="w">
+      </span><span class="ss">event</span><span class="p">:</span><span class="w"> </span><span class="n">event</span><span class="p">,</span><span class="w">
+      </span><span class="ss">details</span><span class="p">:</span><span class="w"> </span><span class="n">details</span><span class="p">,</span><span class="w">
+      </span><span class="ss">time_stamp</span><span class="p">:</span><span class="w"> </span><span class="nc">DateTime</span><span class="o">.</span><span class="n">utc_now</span><span class="p" data-group-id="0775204020-6">(</span><span class="p" data-group-id="0775204020-6">)</span><span class="p">,</span><span class="w">
+      </span><span class="ss">request_token</span><span class="p">:</span><span class="w"> </span><span class="n">context</span><span class="o">.</span><span class="n">token</span><span class="p">,</span><span class="w">
+      </span><span class="ss">editor</span><span class="p">:</span><span class="w"> </span><span class="nc">EntityReferenceProtocol</span><span class="o">.</span><span class="n">ref</span><span class="p" data-group-id="0775204020-7">(</span><span class="n">context</span><span class="o">.</span><span class="n">caller</span><span class="p" data-group-id="0775204020-7">)</span><span class="p">,</span><span class="w">
+      </span><span class="ss">reason</span><span class="p">:</span><span class="w"> </span><span class="n">context</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span><span class="w">
+      </span><span class="ss">note</span><span class="p">:</span><span class="w"> </span><span class="n">note</span><span class="w">
+    </span><span class="p" data-group-id="0775204020-4">}</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">MnesiaDb.AuditHistory</span><span class="o">.</span><span class="n">write</span><span class="w">
+    </span><span class="ss">:ok</span><span class="w">
+  </span><span class="k" data-group-id="0775204020-3">end</span><span class="w">
+
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">audit!</span><span class="p" data-group-id="0775204020-8">(</span><span class="n">event</span><span class="p">,</span><span class="w"> </span><span class="n">details</span><span class="p">,</span><span class="w"> </span><span class="n">entity</span><span class="p">,</span><span class="w"> </span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="n">note</span><span class="w"> </span><span class="o">\\</span><span class="w"> </span><span class="no">nil</span><span class="p" data-group-id="0775204020-8">)</span><span class="w"> </span><span class="k" data-group-id="0775204020-9">do</span><span class="w">
+    </span><span class="nc">Amnesia.Fragment</span><span class="o">.</span><span class="n">transaction</span><span class="w"> </span><span class="k" data-group-id="0775204020-10">do</span><span class="w">
+      </span><span class="n">audit</span><span class="p" data-group-id="0775204020-11">(</span><span class="n">event</span><span class="p">,</span><span class="w"> </span><span class="n">details</span><span class="p">,</span><span class="w"> </span><span class="n">entity</span><span class="p">,</span><span class="w"> </span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="n">note</span><span class="p" data-group-id="0775204020-11">)</span><span class="w">
+    </span><span class="k" data-group-id="0775204020-10">end</span><span class="w">
+  </span><span class="k" data-group-id="0775204020-9">end</span><span class="w">
+</span><span class="k" data-group-id="0775204020-1">end</span><span class="w">
+
+
+</span><span class="c1">#-----------------------------------------------------------------------------</span><span class="w">
+</span><span class="c1"># @AuditHistory</span><span class="w">
+</span><span class="c1">#-----------------------------------------------------------------------------</span><span class="w">
+</span><span class="n">deftable</span><span class="w"> </span><span class="nc">AuditHistory</span><span class="p">,</span><span class="w">
+  </span><span class="p" data-group-id="0775204020-12">[</span><span class="ss">:entity</span><span class="p">,</span><span class="w"> </span><span class="ss">:event</span><span class="p">,</span><span class="w"> </span><span class="ss">:details</span><span class="p">,</span><span class="w"> </span><span class="ss">:time_stamp</span><span class="p">,</span><span class="w"> </span><span class="ss">:request_token</span><span class="p">,</span><span class="w"> </span><span class="ss">:editor</span><span class="p">,</span><span class="w"> </span><span class="ss">:reason</span><span class="p">,</span><span class="w"> </span><span class="ss">:note</span><span class="p" data-group-id="0775204020-12">]</span><span class="p">,</span><span class="w">
+  </span><span class="ss">type</span><span class="p">:</span><span class="w"> </span><span class="ss">:bag</span><span class="p">,</span><span class="w">
+  </span><span class="ss">index</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="0775204020-13">[</span><span class="ss">:request</span><span class="p">,</span><span class="w"> </span><span class="ss">:time_stamp</span><span class="p">,</span><span class="w"> </span><span class="ss">:editor</span><span class="p" data-group-id="0775204020-13">]</span><span class="p">,</span><span class="w">
+  </span><span class="ss">fragmentation</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="0775204020-14">[</span><span class="ss">number</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="ss">copying</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="0775204020-15">%{</span><span class="ss">disk!</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p" data-group-id="0775204020-15">}</span><span class="p" data-group-id="0775204020-14">]</span><span class="w"> </span><span class="k" data-group-id="0775204020-16">do</span><span class="w">
+  </span><span class="na">@moduledoc</span><span class="w"> </span><span class="s">&quot;&quot;&quot;
+  Audit History - Basic structure for an Audit History Table
+  &quot;&quot;&quot;</span><span class="w">
+  </span><span class="na">@type</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="o">::</span><span class="w"> </span><span class="p" data-group-id="0775204020-17">%</span><span class="nc" data-group-id="0775204020-17">AuditHistory</span><span class="p" data-group-id="0775204020-17">{</span><span class="w">
+    </span><span class="ss">entity</span><span class="p">:</span><span class="w"> </span><span class="nc">Types</span><span class="o">.</span><span class="n">entity_reference</span><span class="p">,</span><span class="w"> </span><span class="c1"># The object being modified.</span><span class="w">
+    </span><span class="ss">event</span><span class="p">:</span><span class="w"> </span><span class="n">atom</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">tuple</span><span class="p">,</span><span class="w"> </span><span class="c1"># the event being audited, such as create table.</span><span class="w">
+    </span><span class="ss">details</span><span class="p">:</span><span class="w"> </span><span class="n">any</span><span class="p">,</span><span class="w"> </span><span class="c1"># additional details about entry</span><span class="w">
+    </span><span class="ss">time_stamp</span><span class="p">:</span><span class="w"> </span><span class="nc">DateTime</span><span class="o">.</span><span class="n">t</span><span class="p">,</span><span class="w"> </span><span class="c1"># utc.now() of audit entry.</span><span class="w">
+    </span><span class="ss">request_token</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="o">.</span><span class="n">t</span><span class="p">,</span><span class="w"> </span><span class="c1"># unique token that may be used to collate all audit logs related to a specific request.</span><span class="w">
+    </span><span class="ss">editor</span><span class="p">:</span><span class="w"> </span><span class="nc">Types</span><span class="o">.</span><span class="n">entity_reference</span><span class="p">,</span><span class="w"> </span><span class="c1"># who made the change.</span><span class="w">
+    </span><span class="ss">reason</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="o">.</span><span class="n">t</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">nil</span><span class="p">,</span><span class="w"> </span><span class="c1"># calling.context reason (if any) provided when a call was made via api.</span><span class="w">
+    </span><span class="ss">note</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="o">.</span><span class="n">t</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">nil</span><span class="p">,</span><span class="w"> </span><span class="c1"># internal note about audit entry. Created when entry was created or added by a moderator later on.</span><span class="w">
+  </span><span class="p" data-group-id="0775204020-17">}</span><span class="w">
+</span><span class="k" data-group-id="0775204020-16">end</span><span class="w"> </span><span class="c1"># end deftable</span></code></pre><h2 id="calling-context" class="section-heading">
+  <a href="#calling-context" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Calling Context
+</h2>
+<p>The Noizu.AdvancedScaffolding.CallingContext structure is used to pass information about API or related requests through out the system so that it is possible to confirm that a given caller is authorized to make changes, log who the caller was, apply global options to the request (such as expanding refs where found), and pass along a request token to allow admins to easily
+collate requests across systems.</p><pre><code class="makeup elixir"><span class="na">@type</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="o">::</span><span class="w"> </span><span class="p" data-group-id="6872595410-1">%</span><span class="nc" data-group-id="6872595410-1">CallingContext</span><span class="p" data-group-id="6872595410-1">{</span><span class="w">
+  </span><span class="ss">caller</span><span class="p">:</span><span class="w"> </span><span class="n">tuple</span><span class="p">,</span><span class="w">
+  </span><span class="ss">token</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="o">.</span><span class="n">t</span><span class="p">,</span><span class="w">
+  </span><span class="ss">reason</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="o">.</span><span class="n">t</span><span class="p">,</span><span class="w">
+  </span><span class="ss">auth</span><span class="p">:</span><span class="w"> </span><span class="nc">Any</span><span class="p">,</span><span class="w">
+  </span><span class="ss">options</span><span class="p">:</span><span class="w"> </span><span class="nc">Map</span><span class="o">.</span><span class="n">t</span><span class="p">,</span><span class="w">
+  </span><span class="ss">vsn</span><span class="p">:</span><span class="w"> </span><span class="n">float</span><span class="w">
+</span><span class="p" data-group-id="6872595410-1">}</span></code></pre><p>It is left to the user to implement the logic needed to populate a CallingContext with these values. A sample implementation is below.</p><pre><code class="makeup elixir"><span class="w">  </span><span class="kn">alias</span><span class="w"> </span><span class="nc">Noizu.AdvancedScaffolding.CallingContext</span><span class="p">,</span><span class="w"> </span><span class="ss">as</span><span class="p">:</span><span class="w"> </span><span class="nc">CallingContext</span><span class="w">
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">default_get_context</span><span class="p" data-group-id="3077253552-1">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="n">params</span><span class="p">,</span><span class="w"> </span><span class="n">opts</span><span class="w"> </span><span class="o">\\</span><span class="w"> </span><span class="p" data-group-id="3077253552-2">%{</span><span class="p" data-group-id="3077253552-2">}</span><span class="p" data-group-id="3077253552-1">)</span><span class="w">
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">default_get_context</span><span class="p" data-group-id="3077253552-3">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="n">params</span><span class="p">,</span><span class="w"> </span><span class="c">_opts</span><span class="p" data-group-id="3077253552-3">)</span><span class="w"> </span><span class="k" data-group-id="3077253552-4">do</span><span class="w">
+    </span><span class="n">token</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">params</span><span class="p" data-group-id="3077253552-5">[</span><span class="s">&quot;request-id&quot;</span><span class="p" data-group-id="3077253552-5">]</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="k">case</span><span class="w"> </span><span class="p" data-group-id="3077253552-6">(</span><span class="n">get_resp_header</span><span class="p" data-group-id="3077253552-7">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;x-request-id&quot;</span><span class="p" data-group-id="3077253552-7">)</span><span class="p" data-group-id="3077253552-6">)</span><span class="w"> </span><span class="k" data-group-id="3077253552-8">do</span><span class="w">
+      </span><span class="p" data-group-id="3077253552-9">[</span><span class="p" data-group-id="3077253552-9">]</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nc">CallingContext</span><span class="o">.</span><span class="n">generate_token</span><span class="p" data-group-id="3077253552-10">(</span><span class="p" data-group-id="3077253552-10">)</span><span class="w">
+      </span><span class="p" data-group-id="3077253552-11">[</span><span class="n">h</span><span class="o">|</span><span class="c">_t</span><span class="p" data-group-id="3077253552-11">]</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">h</span><span class="w">
+    </span><span class="k" data-group-id="3077253552-8">end</span><span class="w">
+    </span><span class="n">reason</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">params</span><span class="p" data-group-id="3077253552-12">[</span><span class="s">&quot;call-reason&quot;</span><span class="p" data-group-id="3077253552-12">]</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="k">case</span><span class="w"> </span><span class="p" data-group-id="3077253552-13">(</span><span class="n">get_req_header</span><span class="p" data-group-id="3077253552-14">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;x-call-reason&quot;</span><span class="p" data-group-id="3077253552-14">)</span><span class="p" data-group-id="3077253552-13">)</span><span class="w"> </span><span class="k" data-group-id="3077253552-15">do</span><span class="w">
+      </span><span class="p" data-group-id="3077253552-16">[</span><span class="p" data-group-id="3077253552-16">]</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="no">nil</span><span class="w">
+      </span><span class="p" data-group-id="3077253552-17">[</span><span class="n">h</span><span class="o">|</span><span class="c">_t</span><span class="p" data-group-id="3077253552-17">]</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">h</span><span class="w">
+    </span><span class="k" data-group-id="3077253552-15">end</span><span class="w">
+
+    </span><span class="n">expand_refs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">nil</span><span class="w"> </span><span class="c1"># TODO - support ability for callers to request specific expansions.</span><span class="w">
+    </span><span class="n">expand_all_refs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">params</span><span class="p" data-group-id="3077253552-18">[</span><span class="s">&quot;expand-all-refs&quot;</span><span class="p" data-group-id="3077253552-18">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;true&quot;</span><span class="w"> </span><span class="k" data-group-id="3077253552-19">do</span><span class="w">
+      </span><span class="no">true</span><span class="w">
+    </span><span class="k" data-group-id="3077253552-19">else</span><span class="w">
+      </span><span class="k">case</span><span class="w"> </span><span class="n">get_req_header</span><span class="p" data-group-id="3077253552-20">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;x-expand-all-refs&quot;</span><span class="p" data-group-id="3077253552-20">)</span><span class="w"> </span><span class="k" data-group-id="3077253552-21">do</span><span class="w">
+        </span><span class="p" data-group-id="3077253552-22">[</span><span class="p" data-group-id="3077253552-22">]</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="no">false</span><span class="w">
+        </span><span class="p" data-group-id="3077253552-23">[</span><span class="n">h</span><span class="o">|</span><span class="c">_t</span><span class="p" data-group-id="3077253552-23">]</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;true&quot;</span><span class="w">
+      </span><span class="k" data-group-id="3077253552-21">end</span><span class="w">
+    </span><span class="k" data-group-id="3077253552-19">end</span><span class="w">
+
+    </span><span class="n">options</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="3077253552-24">%{</span><span class="w">
+      </span><span class="ss">expand_refs</span><span class="p">:</span><span class="w"> </span><span class="n">expand_refs</span><span class="p">,</span><span class="w">
+      </span><span class="ss">expand_all_refs</span><span class="p">:</span><span class="w"> </span><span class="n">expand_all_refs</span><span class="w">
+    </span><span class="p" data-group-id="3077253552-24">}</span><span class="w">
+
+    </span><span class="k">case</span><span class="w"> </span><span class="nc">Guardian.Plug</span><span class="o">.</span><span class="n">current_resource</span><span class="p" data-group-id="3077253552-25">(</span><span class="n">conn</span><span class="p" data-group-id="3077253552-25">)</span><span class="w"> </span><span class="k" data-group-id="3077253552-26">do</span><span class="w">
+      </span><span class="n">auth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="3077253552-27">%{</span><span class="s">&quot;identifier&quot;</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="n">user_identifier</span><span class="p" data-group-id="3077253552-27">}</span><span class="w"> </span><span class="o">-&gt;</span><span class="w">
+        </span><span class="p" data-group-id="3077253552-28">%</span><span class="nc" data-group-id="3077253552-28">CallingContext</span><span class="p" data-group-id="3077253552-28">{</span><span class="w">
+          </span><span class="ss">caller</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="3077253552-29">{</span><span class="ss">:ref</span><span class="p">,</span><span class="w"> </span><span class="n">user_identifier</span><span class="p">,</span><span class="w"> </span><span class="nc">SolaceBackend.Repos.UserRepo</span><span class="p" data-group-id="3077253552-29">}</span><span class="p">,</span><span class="w">
+          </span><span class="ss">token</span><span class="p">:</span><span class="w"> </span><span class="n">token</span><span class="p">,</span><span class="w">
+          </span><span class="ss">reason</span><span class="p">:</span><span class="w"> </span><span class="n">reason</span><span class="p">,</span><span class="w">
+          </span><span class="ss">auth</span><span class="p">:</span><span class="w"> </span><span class="n">auth</span><span class="p">,</span><span class="w">
+          </span><span class="ss">options</span><span class="p">:</span><span class="w"> </span><span class="n">options</span><span class="w">
+        </span><span class="p" data-group-id="3077253552-28">}</span><span class="w">
+      </span><span class="bp">_</span><span class="w"> </span><span class="o">-&gt;</span><span class="w">
+      </span><span class="p" data-group-id="3077253552-30">%</span><span class="nc" data-group-id="3077253552-30">CallingContext</span><span class="p" data-group-id="3077253552-30">{</span><span class="w">
+        </span><span class="ss">caller</span><span class="p">:</span><span class="w"> </span><span class="n">unauthenticated_ref</span><span class="p" data-group-id="3077253552-31">(</span><span class="n">conn</span><span class="p" data-group-id="3077253552-31">)</span><span class="p">,</span><span class="w">
+        </span><span class="ss">token</span><span class="p">:</span><span class="w"> </span><span class="n">token</span><span class="p">,</span><span class="w">
+        </span><span class="ss">reason</span><span class="p">:</span><span class="w"> </span><span class="n">reason</span><span class="p">,</span><span class="w">
+        </span><span class="ss">auth</span><span class="p">:</span><span class="w"> </span><span class="no">nil</span><span class="p">,</span><span class="w">
+        </span><span class="ss">options</span><span class="p">:</span><span class="w"> </span><span class="n">options</span><span class="w">
+      </span><span class="p" data-group-id="3077253552-30">}</span><span class="w">
+    </span><span class="k" data-group-id="3077253552-26">end</span><span class="w">
+  </span><span class="k" data-group-id="3077253552-4">end</span><span class="w"> </span><span class="c1"># end get_context/3</span><span class="w">
+
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">get_ip</span><span class="p" data-group-id="3077253552-32">(</span><span class="n">conn</span><span class="p" data-group-id="3077253552-32">)</span><span class="w"> </span><span class="k" data-group-id="3077253552-33">do</span><span class="w">
+    </span><span class="k">case</span><span class="w"> </span><span class="nc">Plug.Conn</span><span class="o">.</span><span class="n">get_req_header</span><span class="p" data-group-id="3077253552-34">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;x-forwarded-for&quot;</span><span class="p" data-group-id="3077253552-34">)</span><span class="w"> </span><span class="k" data-group-id="3077253552-35">do</span><span class="w">
+      </span><span class="p" data-group-id="3077253552-36">[</span><span class="n">h</span><span class="o">|</span><span class="bp">_</span><span class="p" data-group-id="3077253552-36">]</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">h</span><span class="w">
+      </span><span class="p" data-group-id="3077253552-37">[</span><span class="p" data-group-id="3077253552-37">]</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">conn</span><span class="o">.</span><span class="n">remote_ip</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Tuple</span><span class="o">.</span><span class="n">to_list</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Enum</span><span class="o">.</span><span class="n">join</span><span class="p" data-group-id="3077253552-38">(</span><span class="s">&quot;.&quot;</span><span class="p" data-group-id="3077253552-38">)</span><span class="w">
+      </span><span class="no">nil</span><span class="w"> </span><span class="o">-&gt;</span><span class="w">  </span><span class="n">conn</span><span class="o">.</span><span class="n">remote_ip</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Tuple</span><span class="o">.</span><span class="n">to_list</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Enum</span><span class="o">.</span><span class="n">join</span><span class="p" data-group-id="3077253552-39">(</span><span class="s">&quot;.&quot;</span><span class="p" data-group-id="3077253552-39">)</span><span class="w">
+    </span><span class="k" data-group-id="3077253552-35">end</span><span class="w">
+  </span><span class="k" data-group-id="3077253552-33">end</span><span class="w"> </span><span class="c1"># end get_ip/1</span><span class="w">
+
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">unauthenticated_ref</span><span class="p" data-group-id="3077253552-40">(</span><span class="n">conn</span><span class="p" data-group-id="3077253552-40">)</span><span class="w"> </span><span class="k" data-group-id="3077253552-41">do</span><span class="w">
+   </span><span class="p" data-group-id="3077253552-42">{</span><span class="ss">:ref</span><span class="p">,</span><span class="w"> </span><span class="nc">System.UnauthenticatedUser</span><span class="p">,</span><span class="w"> </span><span class="n">get_ip</span><span class="p" data-group-id="3077253552-43">(</span><span class="n">conn</span><span class="p" data-group-id="3077253552-43">)</span><span class="p" data-group-id="3077253552-42">}</span><span class="w">
+  </span><span class="k" data-group-id="3077253552-41">end</span><span class="w"> </span><span class="c1"># end unauthenticated_ref/1  </span></code></pre><h2 id="noizu-mnesia-identifiers-nmids" class="section-heading">
+  <a href="#noizu-mnesia-identifiers-nmids" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Noizu Mnesia Identifiers (NMIDs)
+</h2>
+<p>Internally we often use what I call NMIDs to allow for the creation of numerical (for look up speed) unique identifiers spread across multiple systems.
+You may use any id generation logic of your choice provided it can implement the Noizu.AdvancedScaffolding.NmidBehaviour</p><p>The logic I use suffixes generated ids with a number that represents the node and, optionally, the component (long lived process) making the request. With the Mnesia backend used to track per node/component the current sequential id.  </p><p>This logic and this library in turn is likely to go through heavy revision as I finalize my BladeOfEternity/NoizuRpg codebase. The current implementation I use is similiar to the following. However a simple <code class="inline">UUID.(:hex)</code> may be used if the user is not concerned with indexing/lookup efficiency. Or even a simple mnesia backed sequencer shared between all nodes.</p><pre><code class="makeup elixir"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">Noizu.AdvancedScaffolding.Nmid</span><span class="w"> </span><span class="k" data-group-id="2648326852-1">do</span><span class="w">
+  </span><span class="na">@behaviour</span><span class="w"> </span><span class="nc">Noizu.AdvancedScaffolding.NmidBehaviour</span><span class="w">
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">generate</span><span class="p" data-group-id="2648326852-2">(</span><span class="n">sed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="2648326852-3">{</span><span class="n">node_id</span><span class="p">,</span><span class="w"> </span><span class="n">process</span><span class="p" data-group-id="2648326852-3">}</span><span class="p">,</span><span class="w"> </span><span class="n">opts</span><span class="w"> </span><span class="o">\\</span><span class="w"> </span><span class="no">nil</span><span class="p" data-group-id="2648326852-2">)</span><span class="w"> </span><span class="k" data-group-id="2648326852-4">do</span><span class="w">
+    </span><span class="nc">MnesiaDB.NmidGenerator</span><span class="o">.</span><span class="n">wait</span><span class="p" data-group-id="2648326852-5">(</span><span class="p" data-group-id="2648326852-5">)</span><span class="w">
+
+    </span><span class="n">current</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">case</span><span class="w"> </span><span class="nc">MnesiaDB.NmidGenerator</span><span class="o">.</span><span class="n">read</span><span class="p" data-group-id="2648326852-6">(</span><span class="n">seq</span><span class="p" data-group-id="2648326852-6">)</span><span class="w"> </span><span class="k" data-group-id="2648326852-7">do</span><span class="w">
+      </span><span class="p" data-group-id="2648326852-8">%</span><span class="nc" data-group-id="2648326852-8">MnesiaDB.NmidGenerator</span><span class="p" data-group-id="2648326852-8">{</span><span class="ss">sequence</span><span class="p">:</span><span class="w"> </span><span class="n">s</span><span class="p" data-group-id="2648326852-8">}</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">s</span><span class="w">
+      </span><span class="ss">:nil</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">0</span><span class="w">
+    </span><span class="k" data-group-id="2648326852-7">end</span><span class="w">
+
+    </span><span class="n">current</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">current</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w">
+    </span><span class="p" data-group-id="2648326852-9">%</span><span class="nc" data-group-id="2648326852-9">MnesiaDB.NmidGenerator</span><span class="p" data-group-id="2648326852-9">{</span><span class="ss">handle</span><span class="p">:</span><span class="w"> </span><span class="n">seq</span><span class="p">,</span><span class="w"> </span><span class="ss">sequence</span><span class="p">:</span><span class="w"> </span><span class="n">current</span><span class="p" data-group-id="2648326852-9">}</span><span class="w">
+      </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">MnesiaDB.NmidGenerator</span><span class="o">.</span><span class="n">write</span><span class="w">
+
+    </span><span class="n">node_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="na">@unique_per_node_numerical_id</span><span class="w">
+    </span><span class="n">component_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="na">@component_lookup_table</span><span class="p" data-group-id="2648326852-10">[</span><span class="n">sequencer</span><span class="p" data-group-id="2648326852-10">]</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="mi">1</span><span class="w">
+
+    </span><span class="c1"># calculate nmid,</span><span class="w">
+    </span><span class="c1"># For example, (current 3, node 2, process 1 would generate 500_302), giving us 99 possible node ids, and 999 possible component ids.</span><span class="w">
+    </span><span class="p" data-group-id="2648326852-11">(</span><span class="p" data-group-id="2648326852-12">(</span><span class="n">node_id</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p" data-group-id="2648326852-13">(</span><span class="n">component_id</span><span class="o">*</span><span class="mi">100</span><span class="p" data-group-id="2648326852-13">)</span><span class="p" data-group-id="2648326852-12">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">current</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100_000</span><span class="p" data-group-id="2648326852-11">)</span><span class="w">
+  </span><span class="k" data-group-id="2648326852-4">end</span><span class="w">
+</span><span class="k" data-group-id="2648326852-1">end</span></code></pre>
+<div class="bottom-actions">
+  <div class="bottom-actions-item">
+
+      <a href="api-reference.html" class="bottom-actions-button" rel="prev">
+        <span class="subheader">
+          ← Previous Page
+        </span>
+        <span class="title">
+API Reference
+        </span>
+      </a>
+
+  </div>
+  <div class="bottom-actions-item">
+
+      <a href="todo.html" class="bottom-actions-button" rel="next">
+        <span class="subheader">
+          Next Page →
+        </span>
+        <span class="title">
+TODO
+        </span>
+      </a>
+
+  </div>
+</div>
+
+      <footer class="footer">
+        <p>
+          <span class="line">
+            Built using
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener">ExDoc</a> (v0.25.1) for the
+            <a href="https://elixir-lang.org" title="Elixir" target="_blank">Elixir programming language</a>.
+          </span>
+          <span class="line">
+            Designed by
+            <a href="https://twitter.com/dignifiedquire" target="_blank" rel="noopener" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+          </span>
+        </p>
+        <p>
+
+            <a href="api-reference.html" title="API reference" class="line footer-button">API Reference</a>
+
+          <button class="line footer-button display-shortcuts-help">
+            Display keyboard shortcuts
+          </button>
+          <button class="line footer-button night-mode-toggle">
+            Toggle night mode
+          </button>
+          <button class="line footer-button display-quick-switch">
+            Go to a HexDocs package
+          </button>
+          <button class="line footer-button tooltips-toggle">
+            <span class="tooltips-option-disable">Disable tooltips</span>
+            <span class="tooltips-option-enable">Enable tooltips</span>
+          </button>
+        </p>
+      </footer>
+    </div>
+  </div>
+</section>
+</div>
+
+
+  </body>
+</html>
