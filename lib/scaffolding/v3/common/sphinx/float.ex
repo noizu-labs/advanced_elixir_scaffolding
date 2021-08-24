@@ -55,6 +55,7 @@ defmodule Noizu.Scaffolding.V3.Sphinx.Float do
       # special case for null encoding
       v when is_integer(v) -> {:ok, v + 0.0}
       v when is_float(v) -> {:ok, v}
+      %Decimal{} -> dump(Decimal.to_float(v))
       _ -> :error
     end
   end

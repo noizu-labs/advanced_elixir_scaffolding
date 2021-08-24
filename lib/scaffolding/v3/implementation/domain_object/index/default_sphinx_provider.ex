@@ -2,6 +2,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Index.DefaultSp
 
   defmodule Default do
 
+    require Logger
     #----------------------------
     # schema_open/1
     #----------------------------
@@ -206,8 +207,6 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Index.DefaultSp
       i_fields = Enum.map(
         core,
         fn ({f, v}) ->
-
-
           formatted_value = cond do
             # Text Field
                               v.encoding == :field ->
@@ -225,22 +224,35 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Index.DefaultSp
                               (v.encoding == :attr_multi || v.encoding == :attr_multi64) ->
                                 cond do
                                   record_type == :real_time -> "(" <> Enum.join(v.value || [], ",") <> ")"
-                                  true -> Enum.join(v.value || [], ",")
+                                  :else -> Enum.join(v.value || [], ",")
                                 end
                               v.encoding == :attr_float ->
                                 case Noizu.Scaffolding.V3.Sphinx.Float.dump(v.value) do
                                   {:ok, v} -> v
+                                  :error ->
+                                    Logger.warn("Sphinx: #{entity && entity.__struct__} unable to cast as #{inspect v.encoding} - #{inspect f} - [#{inspect v.value}]")
+                                    {:ok, v} = Noizu.Scaffolding.V3.Sphinx.Float.dump(nil)
+                                    v
                                 end
                               v.encoding == :attr_bool ->
                                 case Noizu.Scaffolding.V3.Sphinx.Bool.dump(v.value) do
                                   {:ok, true} -> 1
                                   {:ok, false} -> 0
                                   {:ok, v} -> v
+                                  :error ->
+                                    Logger.warn("Sphinx: #{entity && entity.__struct__} unable to cast as #{inspect v.encoding} - #{inspect f} - [#{inspect v.value}]")
+                                    {:ok, v} = Noizu.Scaffolding.V3.Sphinx.Bool.dump(nil)
+                                    v
                                 end
-                              v.encoding == :attr_timestamp -> v.value
+                              v.encoding == :attr_timestamp ->
+                                v.value
                               Enum.member?([:attr_uint, :attr_bigint, :attr_int], v.encoding) ->
                                 case Noizu.Scaffolding.V3.Sphinx.Integer.dump(v.value) do
                                   {:ok, v} -> v
+                                  :error ->
+                                    Logger.warn("Sphinx: #{entity && entity.__struct__} unable to cast as #{inspect v.encoding} - #{inspect f} - [#{inspect v.value}]")
+                                    {:ok, v} = Noizu.Scaffolding.V3.Sphinx.Integer.dump(nil)
+                                    v
                                 end
                               :else -> throw "Invalid encoding for #{mod}.#{f}"
                             end

@@ -294,7 +294,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
     #------------------------------------------
     def pre_create_callback(m, entity, context, options) do
       cond do
-        m.__persistence__(:auto_generate) ->
+        entity.__struct__.__persistence__(:auto_generate) ->
           cond do
             entity.identifier && options[:override_identifier] != true ->
               throw "#{m.__noizu_info__(:entity)} attempted to call create with a preset identifier #{
@@ -314,12 +314,12 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
           end
       end
 
-      # todo unviersal lookup logic
+      # todo universal lookup logic
       entity = update_in(entity, [Access.key(:identifier)], &(&1 || m.generate_identifier()))
 
       # prep/load fields so they are insertable
       Enum.reduce(
-        m.__noizu_info__(:field_types),
+        entity.__struct__.__noizu_info__(:field_types),
         entity,
         fn ({field, type}, entity) ->
           type.handler.pre_create_callback(field, entity, context, options)
@@ -329,7 +329,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
 
     def pre_create_callback!(m, entity, context, options) do
       cond do
-        m.__persistence__(:auto_generate) ->
+        entity.__struct__.__persistence__(:auto_generate) ->
           cond do
             entity.identifier && options[:override_identifier] != true ->
               throw "#{m.__noizu_info__(:entity)} attempted to call create with a preset identifier #{
@@ -353,7 +353,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
 
       # prep/load fields so they are insertable
       Enum.reduce(
-        m.__noizu_info__(:field_types),
+        entity.__struct__.__noizu_info__(:field_types),
         entity,
         fn ({field, type}, entity) ->
           type.handler.pre_create_callback!(field, entity, context, options)
