@@ -3,13 +3,13 @@
 # Copyright (C) 2021 Noizu Labs, Inc. All rights reserved.
 #-------------------------------------------------------------------------------
 
-defmodule Noizu.Scaffolding.V3.DateTime do
+defmodule Noizu.AdvancedScaffolding.DateTime do
 
   defmodule Millisecond.PersistenceStrategy do
-    @behaviour Noizu.Scaffolding.V3.SphinxFieldBehaviour
-    require  Noizu.DomainObject
-    Noizu.DomainObject.noizu_type_handler()
-    Noizu.DomainObject.noizu_sphinx_handler()
+    @behaviour Noizu.AdvancedScaffolding.SphinxFieldBehaviour
+    require  Noizu.AdvancedScaffolding.DomainObject
+    Noizu.AdvancedScaffolding.DomainObject.noizu_type_handler()
+    Noizu.AdvancedScaffolding.DomainObject.noizu_sphinx_handler()
 
     def import(value, type \\ :microsecond)
     def import(value, :microsecond), do: value && DateTime.from_unix!(DateTime.to_unix(value, :microsecond), :microsecond)
@@ -61,9 +61,9 @@ defmodule Noizu.Scaffolding.V3.DateTime do
   end
 
   defmodule Second.PersistenceStrategy do
-    require  Noizu.DomainObject
-    Noizu.DomainObject.noizu_type_handler()
-    Noizu.DomainObject.noizu_sphinx_handler()
+    require  Noizu.AdvancedScaffolding.DomainObject
+    Noizu.AdvancedScaffolding.DomainObject.noizu_type_handler()
+    Noizu.AdvancedScaffolding.DomainObject.noizu_sphinx_handler()
 
 
     def import(value, type \\ :microsecond)

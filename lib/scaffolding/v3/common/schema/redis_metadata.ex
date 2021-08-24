@@ -1,4 +1,4 @@
-defmodule Noizu.Scaffolding.V3.Schema.RedisMetadata do
+defmodule Noizu.AdvancedScaffolding.Schema.RedisMetadata do
   @vsn 1.0
   @type t :: %__MODULE__{
                repo: atom,

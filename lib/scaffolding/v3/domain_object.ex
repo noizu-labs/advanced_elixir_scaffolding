@@ -1,4 +1,4 @@
-defmodule Noizu.DomainObject do
+defmodule Noizu.AdvancedScaffolding.DomainObject do
 
   defmacro __using__(options \\ nil) do
     options = Macro.expand(options, __ENV__)
@@ -7,7 +7,7 @@ defmodule Noizu.DomainObject do
     nmid_index = options[:nmid_index]
     auto_generate = options[:auto_generate]
     caller = __CALLER__
-    internal_provider = options[:internal_provider] || Noizu.ElixirScaffolding.V3.Meta.DomainObject
+    internal_provider = options[:internal_provider] || Noizu.AdvancedScaffolding.Meta.DomainObject
 
     extension_provider = options[:extension_imp] || nil
 
@@ -19,7 +19,7 @@ defmodule Noizu.DomainObject do
                                               end
 
     quote do
-      import Noizu.DomainObject, only: [file_rel_dir: 1]
+      import Noizu.AdvancedScaffolding.DomainObject, only: [file_rel_dir: 1]
       Module.register_attribute(__MODULE__, :index, accumulate: true)
       Module.register_attribute(__MODULE__, :persistence_layer, accumulate: true)
       Module.register_attribute(__MODULE__, :__nzdo__meta, accumulate: false)
@@ -32,7 +32,7 @@ defmodule Noizu.DomainObject do
 
       # Insure only referenced once.
       if line = Module.get_attribute(__MODULE__, :__nzdo__base_definied) do
-        raise "#{file_rel_dir(unquote(caller.file))}:#{unquote(caller.line)} duplicate use Noizu.DomainObject reference. First defined on #{elem(line, 0)}:#{elem(line, 1)}"
+        raise "#{file_rel_dir(unquote(caller.file))}:#{unquote(caller.line)} duplicate use Noizu.AdvancedScaffolding.DomainObject reference. First defined on #{elem(line, 0)}:#{elem(line, 1)}"
       end
       @__nzdo__base_definied {file_rel_dir(unquote(caller.file)), unquote(caller.line)}
 
@@ -62,7 +62,7 @@ defmodule Noizu.DomainObject do
   #--------------------------------------------
   defmacro noizu_table(options \\ []) do
     options = Macro.expand(options, __ENV__)
-    Noizu.ElixirScaffolding.V3.Meta.Table.__noizu_table__(__CALLER__, options)
+    Noizu.AdvancedScaffolding.Meta.Table.__noizu_table__(__CALLER__, options)
   end
 
   #--------------------------------------------
@@ -70,7 +70,7 @@ defmodule Noizu.DomainObject do
   #--------------------------------------------
   defmacro noizu_scaffolding_schema(options \\ [], [do: block]) do
     options = Macro.expand(options, __ENV__)
-    Noizu.ElixirScaffolding.V3.Meta.DomainObject.ScaffoldingSchema.__noizu_scaffolding_schema__(__CALLER__, options, block)
+    Noizu.AdvancedScaffolding.Meta.DomainObject.ScaffoldingSchema.__noizu_scaffolding_schema__(__CALLER__, options, block)
   end
 
   #--------------------------------------------
@@ -78,7 +78,7 @@ defmodule Noizu.DomainObject do
   #--------------------------------------------
   defmacro noizu_type_handler(options \\ []) do
     options = Macro.expand(options, __ENV__)
-    Noizu.ElixirScaffolding.V3.Meta.DomainObject.TypeHandler.__noizu_type_handler__(__CALLER__, options)
+    Noizu.AdvancedScaffolding.Meta.DomainObject.TypeHandler.__noizu_type_handler__(__CALLER__, options)
   end
 
   #--------------------------------------------
@@ -86,7 +86,7 @@ defmodule Noizu.DomainObject do
   #--------------------------------------------
   defmacro noizu_sphinx_handler(options \\ []) do
     options = Macro.expand(options, __ENV__)
-    Noizu.ElixirScaffolding.V3.Meta.DomainObject.SphinxHandler.__noizu_sphinx_handler__(__CALLER__, options)
+    Noizu.AdvancedScaffolding.Meta.DomainObject.SphinxHandler.__noizu_sphinx_handler__(__CALLER__, options)
   end
 
   #--------------------------------------------
@@ -94,7 +94,7 @@ defmodule Noizu.DomainObject do
   #--------------------------------------------
   defmacro noizu_entity(options \\ [], [do: block]) do
     options = Macro.expand(options, __ENV__)
-    Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity.__noizu_entity__(__CALLER__, options, block)
+    Noizu.AdvancedScaffolding.Meta.DomainObject.Entity.__noizu_entity__(__CALLER__, options, block)
   end
 
 
@@ -103,7 +103,7 @@ defmodule Noizu.DomainObject do
   #--------------------------------------------
   defmacro noizu_index(options \\ [], [do: block]) do
     options = Macro.expand(options, __ENV__)
-    Noizu.ElixirScaffolding.V3.Meta.DomainObject.Index.__noizu_index__(__CALLER__, options, block)
+    Noizu.AdvancedScaffolding.Meta.DomainObject.Index.__noizu_index__(__CALLER__, options, block)
   end
 
   #--------------------------------------------
@@ -111,7 +111,7 @@ defmodule Noizu.DomainObject do
   #--------------------------------------------
   defmacro noizu_sphinx(options \\ [], [do: block]) do
     options = Macro.expand(options, __ENV__)
-    Noizu.ElixirScaffolding.V3.Meta.DomainObject.Sphinx.__noizu_sphinx__(__CALLER__, options, block)
+    Noizu.AdvancedScaffolding.Meta.DomainObject.Sphinx.__noizu_sphinx__(__CALLER__, options, block)
   end
 
   #--------------------------------------------
@@ -119,7 +119,7 @@ defmodule Noizu.DomainObject do
   #--------------------------------------------
   defmacro noizu_struct(options \\ [], [do: block]) do
     options = Macro.expand(options, __ENV__)
-    Noizu.ElixirScaffolding.V3.Meta.SimpleObject.Struct.__noizu_struct__(__CALLER__, options, block)
+    Noizu.AdvancedScaffolding.Meta.SimpleObject.Struct.__noizu_struct__(__CALLER__, options, block)
   end
 
   #--------------------------------------------
@@ -127,7 +127,7 @@ defmodule Noizu.DomainObject do
   #--------------------------------------------
   defmacro noizu_repo(options \\ [], [do: block]) do
     options = Macro.expand(options, __ENV__)
-    Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo.__noizu_repo__(__CALLER__, options, block)
+    Noizu.AdvancedScaffolding.Meta.DomainObject.Repo.__noizu_repo__(__CALLER__, options, block)
   end
 
   #--------------------------------------------
@@ -160,12 +160,12 @@ defmodule Noizu.DomainObject do
   #--------------------------------------------
   # expand_indexes
   #--------------------------------------------
-  def expand_indexes(layers, module), do: Noizu.ElixirScaffolding.V3.Meta.DomainObject.Index.expand_indexes(layers, module)
+  def expand_indexes(layers, module), do: Noizu.AdvancedScaffolding.Meta.DomainObject.Index.expand_indexes(layers, module)
 
   #--------------------------------------------
   # expand_persistence_layers
   #--------------------------------------------
-  def expand_persistence_layers(layers, module), do: Noizu.ElixirScaffolding.V3.Meta.Persistence.expand_persistence_layers(layers, module)
+  def expand_persistence_layers(layers, module), do: Noizu.AdvancedScaffolding.Meta.Persistence.expand_persistence_layers(layers, module)
 
 
   #--------------------------------------------
@@ -346,7 +346,7 @@ defmodule Noizu.DomainObject do
       Module.register_attribute(__MODULE__, :__nzdo__struct, accumulate: false)
 
       if @__nzdo__base_open? && !(Module.get_attribute(@__nzdo__base, :__nzdo__base_definied) || Module.get_attribute(@__nzdo__base, :__nzdo__simple_definied))do
-        raise "#{@__nzdo__base} must include use Noizu.SimpleObject/DomainObject call."
+        raise "#{@__nzdo__base} must include use Noizu.AdvancedScaffolding.SimpleObject/DomainObject call."
       end
     end
   end
@@ -357,7 +357,7 @@ defmodule Noizu.DomainObject do
   defmacro __prepare__poly__macro__(options) do
     quote do
       options = unquote(options)
-      noizu_domain_object_schema = options[:noizu_domain_object_schema] || Application.get_env(:noizu_scaffolding, :domain_object_schema)
+      noizu_domain_object_schema = options[:noizu_domain_object_schema] || Application.get_env(:noizu_advanced_scaffolding, :domain_object_schema)
       poly_base = options[:poly_base]
       poly_support = options[:poly_support]
       repo = options[:repo]
@@ -396,9 +396,9 @@ defmodule Noizu.DomainObject do
                               end)
       @__nzdo__poly_support is_list(@__nzdo__poly_support) && List.flatten(@__nzdo__poly_support) || @__nzdo__poly_support
       @__nzdo__poly? ((@__nzdo__poly_base != @__nzdo__base || @__nzdo__poly_support) && true || false)
-      @__nzdo__repo repo || Noizu.DomainObject.extract_attribute(:repo, Module.concat([@__nzdo__poly_base, "Repo"]))
-      @__nzdo__sref sref || Noizu.DomainObject.extract_attribute(:sref, :unsupported)
-      @vsn vsn || Noizu.DomainObject.extract_attribute(:vsn, 1.0)
+      @__nzdo__repo repo || Noizu.AdvancedScaffolding.DomainObject.extract_attribute(:repo, Module.concat([@__nzdo__poly_base, "Repo"]))
+      @__nzdo__sref sref || Noizu.AdvancedScaffolding.DomainObject.extract_attribute(:sref, :unsupported)
+      @vsn vsn || Noizu.AdvancedScaffolding.DomainObject.extract_attribute(:vsn, 1.0)
 
       if @__nzdo__base_open? && !options[:for_repo] do
         Module.put_attribute(@__nzdo__base, :__nzdo__sref, @__nzdo__sref)
@@ -422,9 +422,9 @@ defmodule Noizu.DomainObject do
       #----------------------
       # Load Sphinx Settings from base.
       #----------------------
-      @__nzdo__indexes Noizu.DomainObject.extract_transform_attribute(:index, :indexing, {Noizu.DomainObject, :expand_indexes, [@__nzdo__base]}, [])
+      @__nzdo__indexes Noizu.AdvancedScaffolding.DomainObject.extract_transform_attribute(:index, :indexing, {Noizu.AdvancedScaffolding.DomainObject, :expand_indexes, [@__nzdo__base]}, [])
       @__nzdo__index_list Enum.map(@__nzdo__indexes, fn ({k, _v}) -> k end)
-      @__nzdo__inline_index Noizu.ElixirScaffolding.V3.Meta.DomainObject.Index.domain_object_indexer(@__nzdo__base)
+      @__nzdo__inline_index Noizu.AdvancedScaffolding.Meta.DomainObject.Index.domain_object_indexer(@__nzdo__base)
 
       if (@__nzdo__base_open? && !options[:for_repo]) do
         Module.put_attribute(@__nzdo__base, :__nzdo__indexes, @__nzdo__indexes)
@@ -442,32 +442,32 @@ defmodule Noizu.DomainObject do
     quote do
       options = unquote(options)
 
-      a__nzdo__auto_generate = Noizu.DomainObject.extract_has_persistence_attribute(:auto_generate, nil)
-      a__nzdo__enum_list = unquote(enum_list) || Noizu.DomainObject.extract_has_enum_attribute(:enum_list, :list, false)
-      a__nzdo__enum_default_value  = Noizu.DomainObject.extract_has_enum_attribute(:default_value, :default, :none)
-      a__nzdo__enum_ecto_type = Noizu.DomainObject.extract_has_enum_attribute(:ecto_type, :value_type, :integer)
+      a__nzdo__auto_generate = Noizu.AdvancedScaffolding.DomainObject.extract_has_persistence_attribute(:auto_generate, nil)
+      a__nzdo__enum_list = unquote(enum_list) || Noizu.AdvancedScaffolding.DomainObject.extract_has_enum_attribute(:enum_list, :list, false)
+      a__nzdo__enum_default_value  = Noizu.AdvancedScaffolding.DomainObject.extract_has_enum_attribute(:default_value, :default, :none)
+      a__nzdo__enum_ecto_type = Noizu.AdvancedScaffolding.DomainObject.extract_has_enum_attribute(:ecto_type, :value_type, :integer)
 
       @__nzdo__auto_generate a__nzdo__auto_generate
       @__nzdo__enum_list a__nzdo__enum_list
       @__nzdo__enum_default_value a__nzdo__enum_default_value
       @__nzdo__enum_ecto_type a__nzdo__enum_ecto_type
 
-      case Noizu.DomainObject.extract_has_persistence_attribute(:universal_identifier, :not_set) do
+      case Noizu.AdvancedScaffolding.DomainObject.extract_has_persistence_attribute(:universal_identifier, :not_set) do
         :not_set -> :skip
         v -> Module.put_attribute(__MODULE__, :universal_identifier, v)
       end
 
-      case Noizu.DomainObject.extract_has_persistence_attribute(:generate_reference_type, :reference_type, :not_set) do
+      case Noizu.AdvancedScaffolding.DomainObject.extract_has_persistence_attribute(:generate_reference_type, :reference_type, :not_set) do
         :not_set -> :skip
         v -> Module.put_attribute(__MODULE__, :generate_reference_type, v)
       end
 
-      case Noizu.DomainObject.extract_has_persistence_attribute(:universal_lookup, :not_set) do
+      case Noizu.AdvancedScaffolding.DomainObject.extract_has_persistence_attribute(:universal_lookup, :not_set) do
         :not_set -> :skip
         v -> Module.put_attribute(__MODULE__, :universal_lookup, v)
       end
 
-      a__nzdo_persistence = Noizu.DomainObject.extract_transform_attribute(:persistence_layer, :persistence, {Noizu.DomainObject, :expand_persistence_layers, [__MODULE__]})
+      a__nzdo_persistence = Noizu.AdvancedScaffolding.DomainObject.extract_transform_attribute(:persistence_layer, :persistence, {Noizu.AdvancedScaffolding.DomainObject, :expand_persistence_layers, [__MODULE__]})
       @__nzdo_persistence a__nzdo_persistence
       a__nzdo_persistence__layers = Enum.map(a__nzdo_persistence.layers, fn (layer) -> {layer.schema, layer} end)
                                   |> Map.new()
@@ -482,7 +482,7 @@ defmodule Noizu.DomainObject do
 
 
       if @__nzdo_ecto_entity do
-        @__nzdo__derive Noizu.Ecto.Entity
+        @__nzdo__derive Noizu.AdvancedScaffolding.EctoEntity.Protocol
       end
 
       if (@__nzdo__base_open?) do
@@ -505,12 +505,12 @@ defmodule Noizu.DomainObject do
   # __prepare__nmid__macro__
   #----------------------------------------------------
   defmacro __prepare__nmid__macro__(_) do
-    default_nmid_generator = Application.get_env(:noizu_scaffolding, :default_nmid_generator, Noizu.Scaffolding.V3.NmidGenerator)
+    default_nmid_generator = Application.get_env(:noizu_advanced_scaffolding, :default_nmid_generator, Noizu.AdvancedScaffolding.NmidGenerator)
     quote do
-      @__nzdo__nmid_generator Noizu.DomainObject.extract_has_nmid_attribute(:nmid_generator, :generator, unquote(default_nmid_generator))
-      @__nzdo__nmid_sequencer Noizu.DomainObject.extract_has_nmid_attribute(:nmid_sequencer, :sequencer, __MODULE__)
-      @__nzdo__nmid_index Noizu.DomainObject.extract_has_nmid_attribute(:nmid_index, :index, nil)
-      @__nzdo__nmid_bare Noizu.DomainObject.extract_has_nmid_attribute(:nmid_bare, :bare,  @__nzdo_persistence.options[:enum_table] && true || false)
+      @__nzdo__nmid_generator Noizu.AdvancedScaffolding.DomainObject.extract_has_nmid_attribute(:nmid_generator, :generator, unquote(default_nmid_generator))
+      @__nzdo__nmid_sequencer Noizu.AdvancedScaffolding.DomainObject.extract_has_nmid_attribute(:nmid_sequencer, :sequencer, __MODULE__)
+      @__nzdo__nmid_index Noizu.AdvancedScaffolding.DomainObject.extract_has_nmid_attribute(:nmid_index, :index, nil)
+      @__nzdo__nmid_bare Noizu.AdvancedScaffolding.DomainObject.extract_has_nmid_attribute(:nmid_bare, :bare,  @__nzdo_persistence.options[:enum_table] && true || false)
 
       if (@__nzdo__base_open?) do
         Module.put_attribute(@__nzdo__base, :__nzdo__nmid_generator, @__nzdo__nmid_generator)
@@ -532,15 +532,15 @@ defmodule Noizu.DomainObject do
       json_white_list = options[:json_white_list]
       json_supported_formats = options[:json_supported_formats]
 
-      @__nzdo__json_provider json_provider || Noizu.DomainObject.extract_json_attribute(:json_provider, :provider, Noizu.Scaffolding.V3.Poison.Encoder)
-      @__nzdo__json_format json_format || Noizu.DomainObject.extract_has_json_attribute(:json_format, :default, :default)
-      @__nzdo__json_supported_formats json_supported_formats || Noizu.DomainObject.extract_has_json_attribute(
+      @__nzdo__json_provider json_provider || Noizu.AdvancedScaffolding.DomainObject.extract_json_attribute(:json_provider, :provider, Noizu.AdvancedScaffolding.Poison.Encoder)
+      @__nzdo__json_format json_format || Noizu.AdvancedScaffolding.DomainObject.extract_has_json_attribute(:json_format, :default, :default)
+      @__nzdo__json_supported_formats json_supported_formats || Noizu.AdvancedScaffolding.DomainObject.extract_has_json_attribute(
         :json_supported_formats, :formats,
         [:standard, :admin, :verbose, :compact, :mobile, :verbose_mobile]
       )
       @__nzdo__json_format_groups (
                                     Enum.map(
-                                      Noizu.DomainObject.extract_json_attribute(:json_format_group, :format_groups, []),
+                                      Noizu.AdvancedScaffolding.DomainObject.extract_json_attribute(:json_format_group, :format_groups, []),
                                       fn (group) ->
                                         case group do
                                           {alias, member} when is_atom(member) -> {alias, [members: [member]]}
@@ -554,7 +554,7 @@ defmodule Noizu.DomainObject do
                                     |> Map.new())
       @__nzdo__json_field_groups (
                                    Enum.map(
-                                     Noizu.DomainObject.extract_json_attribute(:json_field_group, :field_groups, []),
+                                     Noizu.AdvancedScaffolding.DomainObject.extract_json_attribute(:json_field_group, :field_groups, []),
                                      fn (group) ->
                                        case group do
                                          {alias, member} when is_atom(member) -> {alias, [members: [member]]}
@@ -568,7 +568,7 @@ defmodule Noizu.DomainObject do
                                    |> Map.new())
       @__nzdo__json_white_list (cond do
                                   json_white_list -> json_white_list
-                                  :else -> Noizu.DomainObject.extract_has_json_attribute(:json_white_list, :white_list, false)
+                                  :else -> Noizu.AdvancedScaffolding.DomainObject.extract_has_json_attribute(:json_white_list, :white_list, false)
                                 end)
 
       __nzdo__json_config = %{

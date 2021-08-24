@@ -1,4 +1,4 @@
-defmodule Noizu.ElixirScaffolding.V3.Meta.Persistence do
+defmodule Noizu.AdvancedScaffolding.Meta.Persistence do
 
 
   #--------------------------------------------
@@ -128,12 +128,12 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.Persistence do
     universal_identifier = cond do
                              Module.has_attribute?(module, :universal_identifier) -> Module.get_attribute(module, :universal_identifier, true)
                              enum_table -> false
-                             :else -> Application.get_env(:noizu_scaffolding, :universal_identifier_default, true)
+                             :else -> Application.get_env(:noizu_advanced_scaffolding, :universal_identifier_default, true)
                            end
     universal_lookup = cond do
                          Module.has_attribute?(module, :universal_lookup) -> Module.get_attribute(module, :universal_lookup, true)
                          enum_table -> false
-                         :else -> Application.get_env(:noizu_scaffolding, :universal_identifier_default, true)
+                         :else -> Application.get_env(:noizu_advanced_scaffolding, :universal_identifier_default, true)
                        end
 
     auto_generate = case Module.get_attribute(module, :__nzdo__auto_generate) do
@@ -163,7 +163,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.Persistence do
     tables = Enum.map(layers || [], &({&1.table, &1}))
              |> Map.new()
 
-    %Noizu.Scaffolding.V3.Schema.PersistenceSettings{
+    %Noizu.AdvancedScaffolding.Schema.PersistenceSettings{
       layers: layers,
       schemas: schemas,
       tables: tables,
@@ -182,7 +182,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.Persistence do
                end
 
     case provider.metadata() do
-      %Noizu.Scaffolding.V3.Schema.RedisMetadata{} ->
+      %Noizu.AdvancedScaffolding.Schema.RedisMetadata{} ->
         expand_layer(provider, {module, :redis}, module, options)
       metadata ->
         path = Module.split(module)
@@ -207,10 +207,10 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.Persistence do
     metadata = provider.metadata()
 
     type = case metadata do
-             %Noizu.Scaffolding.V3.Schema.EctoMetadata{} -> :ecto
-             %Noizu.Scaffolding.V3.Schema.RedisMetadata{} -> :redis
+             %Noizu.AdvancedScaffolding.Schema.EctoMetadata{} -> :ecto
+             %Noizu.AdvancedScaffolding.Schema.RedisMetadata{} -> :redis
              %Amnesia.Metadata{} -> :mnesia
-             %Noizu.Scaffolding.V3.Schema.Metadata{type: type} -> type
+             %Noizu.AdvancedScaffolding.Schema.Metadata{type: type} -> type
            end
 
     id_map = cond do
@@ -292,7 +292,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.Persistence do
                end
 
 
-    %Noizu.Scaffolding.V3.Schema.PersistenceLayer{
+    %Noizu.AdvancedScaffolding.Schema.PersistenceLayer{
       schema: provider,
       type: type,
       table: table,
@@ -315,7 +315,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.Persistence do
 
 
   def default_mnesia_database(module) do
-    case Application.get_env(:noizu_scaffolding, :default_mnesia_database) do
+    case Application.get_env(:noizu_advanced_scaffolding, :default_mnesia_database) do
       nil ->
         path = Module.split(module)
         Module.concat(["#{List.first(path)}" <> "Schema", "Database"])
@@ -324,7 +324,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.Persistence do
   end
 
   def default_ecto_repo(module) do
-    case Application.get_env(:noizu_scaffolding, :default_ecto_database) do
+    case Application.get_env(:noizu_advanced_scaffolding, :default_ecto_database) do
       nil ->
         path = Module.split(module)
         Module.concat(["#{List.first(path)}" <> "Schema", "Repo"])
@@ -333,7 +333,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.Persistence do
   end
 
   def default_redis_repo(module) do
-    case Application.get_env(:noizu_scaffolding, :default_redis_database) do
+    case Application.get_env(:noizu_advanced_scaffolding, :default_redis_database) do
       nil ->
         path = Module.split(module)
         Module.concat(["#{List.first(path)}" <> "Schema", "Redis"])

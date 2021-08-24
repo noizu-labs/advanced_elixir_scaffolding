@@ -3,7 +3,7 @@
 # Copyright (C) 2018 Noizu Labs, Inc. All rights reserved.
 #-------------------------------------------------------------------------------
 
-defmodule Noizu.Scaffolding.Test.Fixture.NmidGenerator do
+defmodule Noizu.AdvancedScaffolding.Test.Fixture.NmidGenerator do
   def generate(_seq, _opts) do
     :os.system_time(:micro_seconds)
   end

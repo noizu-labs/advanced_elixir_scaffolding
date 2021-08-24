@@ -3,18 +3,18 @@
 # Copyright (C) 2021 Noizu Labs, Inc. All rights reserved.
 #-------------------------------------------------------------------------------
 
-defmodule Noizu.Scaffolding.V3.Millisecond.TimeStamp do
-  use Noizu.SimpleObject
+defmodule Noizu.AdvancedScaffolding.Millisecond.TimeStamp do
+  use Noizu.AdvancedScaffolding.SimpleObject
   @vsn 1.0
 
 
-  Noizu.SimpleObject.noizu_struct() do
-    date_time_handler = Application.get_env(:noizu_scaffolding, :usec_data_time_handler, Noizu.Scaffolding.V3.DateTime.Millisecond.PersistenceStrategy)
+  Noizu.AdvancedScaffolding.SimpleObject.noizu_struct() do
+    date_time_handler = Application.get_env(:noizu_advanced_scaffolding, :usec_data_time_handler, Noizu.AdvancedScaffolding.DateTime.Millisecond.PersistenceStrategy)
     public_field :created_on, nil, date_time_handler
     public_field :modified_on, nil, date_time_handler
     public_field :deleted_on, nil, date_time_handler
   end
-  date_time_handler = Application.get_env(:noizu_scaffolding, :usec_data_time_handler, Noizu.Scaffolding.V3.DateTime.Millisecond.PersistenceStrategy)
+  date_time_handler = Application.get_env(:noizu_advanced_scaffolding, :usec_data_time_handler, Noizu.AdvancedScaffolding.DateTime.Millisecond.PersistenceStrategy)
   @date_time_handler date_time_handler
 
   #---------------------------------------------------------------
@@ -49,7 +49,7 @@ defmodule Noizu.Scaffolding.V3.Millisecond.TimeStamp do
 
 
   def compare(a, b, options \\ nil)
-  def compare(a = %__MODULE__{}, b = %__MODULE__{}, _options) do
+  def compare(a = %{__struct__: __MODULE__}, b = %{__struct__: __MODULE__}, _options) do
     cond do
       a.created_on != b.created_on -> :neq
       a.modified_on != b.modified_on -> :neq
@@ -57,17 +57,17 @@ defmodule Noizu.Scaffolding.V3.Millisecond.TimeStamp do
       :else -> :eq
     end
   end
-  def compare(%__MODULE__{}, nil, _options), do: :neq
-  def compare(nil, %__MODULE__{}, _options), do: :neq
+  def compare(%{__struct__: __MODULE__}, nil, _options), do: :neq
+  def compare(nil, %{__struct__: __MODULE__}, _options), do: :neq
   def compare(nil, nil, _options), do: :eq
 
   #===============================================================
-  # Noizu.Scaffolding.V3.MilliSecond.TimeStamp.Type
+  # Noizu.AdvancedScaffolding.MilliSecond.TimeStamp.Type
   #===============================================================
   defmodule PersistenceStrategy do
-    require  Noizu.DomainObject
-    Noizu.DomainObject.noizu_type_handler()
-    Noizu.DomainObject.noizu_sphinx_handler()
+    require  Noizu.AdvancedScaffolding.DomainObject
+    Noizu.AdvancedScaffolding.DomainObject.noizu_type_handler()
+    Noizu.AdvancedScaffolding.DomainObject.noizu_sphinx_handler()
 
     #def strip_inspect(field, value, _opts), do: {field, value && DateTime.to_iso8601(value)}
 
@@ -76,11 +76,11 @@ defmodule Noizu.Scaffolding.V3.Millisecond.TimeStamp do
     #----------------------------------
     def pre_create_callback(field, entity, _context, options) do
       update_in(entity, [Access.key(field)], fn
-        (v = %Noizu.Scaffolding.V3.Millisecond.TimeStamp{}) -> v
-        (v = %DateTime{}) -> %Noizu.Scaffolding.V3.Millisecond.TimeStamp{created_on: v, modified_on: v, deleted_on: nil}
+        (v = %Noizu.AdvancedScaffolding.Millisecond.TimeStamp{}) -> v
+        (v = %DateTime{}) -> %Noizu.AdvancedScaffolding.Millisecond.TimeStamp{created_on: v, modified_on: v, deleted_on: nil}
         (_) ->
           now = options[:current_time] || DateTime.utc_now()
-          %Noizu.Scaffolding.V3.Millisecond.TimeStamp{created_on: now, modified_on: now, deleted_on: nil}
+          %Noizu.AdvancedScaffolding.Millisecond.TimeStamp{created_on: now, modified_on: now, deleted_on: nil}
       end)
     end
     def pre_create_callback!(field, entity, context, options), do: pre_create_callback(field, entity, context, options)
@@ -89,14 +89,14 @@ defmodule Noizu.Scaffolding.V3.Millisecond.TimeStamp do
     # cast
     #----------------------------------
     def cast(:time_stamp, _segment, nil, _type, _layer, _context, _options), do: [{:created_on, nil}, {:modified_on, nil}, {:deleted_on, nil}]
-    def cast(:time_stamp, _segment, v = %Noizu.Scaffolding.V3.Millisecond.TimeStamp{}, _type, %{type: :ecto}, _context, _options) do
+    def cast(:time_stamp, _segment, v = %Noizu.AdvancedScaffolding.Millisecond.TimeStamp{}, _type, %{type: :ecto}, _context, _options) do
       [
         {:created_on, v.created_on && %{v.created_on| microsecond: {0, 6}}},
         {:modified_on, v.modified_on && %{v.modified_on| microsecond: {0, 6}}},
         {:deleted_on, v.deleted_on && %{v.deleted_on| microsecond: {0, 6}}},
       ]
     end
-    def cast(:time_stamp, _segment, v = %Noizu.Scaffolding.V3.Millisecond.TimeStamp{}, _type, %{type: :mnesia}, _context, _options) do
+    def cast(:time_stamp, _segment, v = %Noizu.AdvancedScaffolding.Millisecond.TimeStamp{}, _type, %{type: :mnesia}, _context, _options) do
       [
         {:created_on, v.created_on && DateTime.to_unix(v.created_on, :millisecond)},
         {:modified_on, v.modified_on && DateTime.to_unix(v.modified_on, :millisecond)},
@@ -109,7 +109,7 @@ defmodule Noizu.Scaffolding.V3.Millisecond.TimeStamp do
     #----------------------------------
     def dump(:time_stamp, record, _type, %{type: :ecto}, _context, _options) do
       {:time_stamp,
-        %Noizu.Scaffolding.V3.Millisecond.TimeStamp{
+        %Noizu.AdvancedScaffolding.Millisecond.TimeStamp{
           created_on: record && record.created_on,
           modified_on: record && record.modified_on,
           deleted_on: record && record.deleted_on
@@ -133,17 +133,17 @@ defmodule Noizu.Scaffolding.V3.Millisecond.TimeStamp do
       ]
     end
     def __sphinx_has_default__(_field, _indexing, _settings), do: true
-    def __sphinx_default__(_field, indexing, _settings) do
+    def __sphinx_default__(_field, _indexing, _settings) do
       :none
     end
-    def __sphinx_encoding__(field, indexing, settings) do
+    def __sphinx_encoding__(_field, indexing, _settings) do
       cond do
         indexing[:sub] == :created_on -> :attr_timestamp
         indexing[:sub] == :modified_on -> :attr_timestamp
         indexing[:sub] == :deleted -> :attr_uint
       end
     end
-    def __sphinx_encoded__(field, entity, indexing, settings) do
+    def __sphinx_encoded__(_field, entity, indexing, _settings) do
       value = get_in(entity, [Access.key(indexing[:from])])
       cond do
         indexing[:sub] == :created_on -> value && value.created_on && DateTime.to_unix(value.created_on) || 9999999999

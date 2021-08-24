@@ -1,4 +1,4 @@
-defmodule Noizu.Ecto.EnumTypeBehaviour do
+defmodule Noizu.AdvancedScaffolding.Ecto.EnumTypeBehaviour do
   defmodule Default do
     @doc """
     Casts to Enum.
@@ -67,7 +67,7 @@ defmodule Noizu.Ecto.EnumTypeBehaviour do
 
   defmacro enum_type(options \\ nil) do
     options = Macro.expand(options, __ENV__)
-    Noizu.Ecto.EnumTypeBehaviour.__enum_type__(options)
+    Noizu.AdvancedScaffolding.Ecto.EnumTypeBehaviour.__enum_type__(options)
   end
 
   def __enum_type__(_options) do
@@ -163,24 +163,24 @@ defmodule Noizu.Ecto.EnumTypeBehaviour do
       @doc """
       Casts to Enum.
       """
-      def cast(v), do: Noizu.Ecto.EnumTypeBehaviour.Default.cast(__MODULE__, v)
+      def cast(v), do: Noizu.AdvancedScaffolding.Ecto.EnumTypeBehaviour.Default.cast(__MODULE__, v)
 
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       @doc """
       Same as `cast/1` but raises `Ecto.CastError` on invalid arguments.
       """
-      def cast!(v), do: Noizu.Ecto.EnumTypeBehaviour.Default.cast!(__MODULE__, v)
+      def cast!(v), do: Noizu.AdvancedScaffolding.Ecto.EnumTypeBehaviour.Default.cast!(__MODULE__, v)
 
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-      def dump(v), do: Noizu.Ecto.EnumTypeBehaviour.Default.dump(__MODULE__, v)
+      def dump(v), do: Noizu.AdvancedScaffolding.Ecto.EnumTypeBehaviour.Default.dump(__MODULE__, v)
 
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-      def load(v), do: Noizu.Ecto.EnumTypeBehaviour.Default.load(__MODULE__, v)
+      def load(v), do: Noizu.AdvancedScaffolding.Ecto.EnumTypeBehaviour.Default.load(__MODULE__, v)
     end
   end
 
   defmacro __using__(options \\ nil) do
     options = Macro.expand(options, __ENV__)
-    Noizu.Ecto.EnumTypeBehaviour.__enum_type__(options)
+    Noizu.AdvancedScaffolding.Ecto.EnumTypeBehaviour.__enum_type__(options)
   end
 end

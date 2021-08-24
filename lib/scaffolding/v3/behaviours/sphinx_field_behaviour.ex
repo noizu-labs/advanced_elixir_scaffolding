@@ -1,4 +1,4 @@
-defmodule Noizu.Scaffolding.V3.SphinxFieldBehaviour do
+defmodule Noizu.AdvancedScaffolding.SphinxFieldBehaviour do
   @callback __sphinx_field__() :: true
   @callback __sphinx_expand_field__(field :: atom, indexing :: Map.t, settings :: Map.t) :: any
   @callback __sphinx_has_default__(field :: atom, indexing :: Map.t, settings :: Map.t) :: boolean

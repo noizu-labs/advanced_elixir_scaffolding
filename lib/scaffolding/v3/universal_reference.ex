@@ -3,11 +3,11 @@
 # Copyright (C) 2021  Noizu Labs, Inc. All rights reserved.
 #-------------------------------------------------------------------------------
 
-defmodule Noizu.UniversalReference do
+defmodule Noizu.AdvancedScaffolding.UniversalReference do
   @vsn 1.0
   use Amnesia
 
-  @type t :: %Noizu.UniversalReference{
+  @type t :: %Noizu.AdvancedScaffolding.UniversalReference{
                identifier: integer, # ref or actual universal id.
                ref: nil | tuple | any,
                # ref or actual entity
@@ -24,40 +24,40 @@ defmodule Noizu.UniversalReference do
   def erp_handler(), do: __MODULE__
 
   #=============================================================================
-  # Noizu.Ecto.Entity Methods
+  # Noizu.AdvancedScaffolding.EctoEntity.Protocol Methods
   #=============================================================================
   def mysql_entity?(), do: true
   def ecto_identifier(ref) do
     r = resolve(ref)
-    Noizu.Ecto.Entity.ecto_identifier(r)
+    Noizu.AdvancedScaffolding.EctoEntity.Protocol.ecto_identifier(r)
   end
   def source(ref) do
     r = resolve(ref)
-    Noizu.Ecto.Entity.source(r)
+    Noizu.AdvancedScaffolding.EctoEntity.Protocol.source(r)
   end
 
   #---------------------------
   #
   #---------------------------
   def universal_identifier(%__MODULE__{identifier: v}) when is_integer(v), do: v
-  def universal_identifier(%__MODULE__{} = this) do
+  def universal_identifier(%{__struct__: __MODULE__} = this) do
     cond do
-      v = (this.ref && Noizu.Ecto.Entity.universal_identifier(this.ref)) -> v
-      v = (this.identifier && Noizu.Ecto.Entity.universal_identifier(this.identifier)) -> v
+      v = (this.ref && Noizu.AdvancedScaffolding.EctoEntity.Protocol.universal_identifier(this.ref)) -> v
+      v = (this.identifier && Noizu.AdvancedScaffolding.EctoEntity.Protocol.universal_identifier(this.identifier)) -> v
     end
   end
   def universal_identifier({:ref, __MODULE__, v}) when is_integer(v), do: v
   def universal_identifier({:ref, __MODULE__, ref}) do
-    Noizu.Ecto.Entity.universal_identifier(ref)
+    Noizu.AdvancedScaffolding.EctoEntity.Protocol.universal_identifier(ref)
   end
   def universal_identifier(nil), do: nil
-  def universal_identifier(v), do: Noizu.Ecto.Entity.universal_identifier(v)
+  def universal_identifier(v), do: Noizu.AdvancedScaffolding.EctoEntity.Protocol.universal_identifier(v)
 
   #---------------------------
   #
   #---------------------------
-  def encode(%__MODULE__{} = this), do: this
-  def encode({:ref, Noizu.UniversalReference, id}), do: %__MODULE__{identifier: id}
+  def encode(%{__struct__: __MODULE__} = this), do: this
+  def encode({:ref, Noizu.AdvancedScaffolding.UniversalReference, id}), do: %__MODULE__{identifier: id}
   def encode({:ref, _m, _id} = ref), do: %__MODULE__{identifier: ref, ref: ref}
   def encode("ref.universal." <> id) do
     case Integer.parse(id) do
@@ -93,15 +93,15 @@ defmodule Noizu.UniversalReference do
   #---------------------------
   #
   #---------------------------
-  def resolve(%__MODULE__{} = this) do
+  def resolve(%{__struct__: __MODULE__} = this) do
     cond do
       this.ref -> this.ref
       true -> resolve(this.identifier)
     end
   end
   def resolve(v) when is_integer(v) do
-    case Noizu.Scaffolding.V3.Database.UniversalReverseLookupTable.read!(v) do
-      %Noizu.Scaffolding.V3.Database.UniversalReverseLookupTable{ref: ref} -> ref
+    case Noizu.AdvancedScaffolding.Database.UniversalReverseLookupTable.read!(v) do
+      %Noizu.AdvancedScaffolding.Database.UniversalReverseLookupTable{ref: ref} -> ref
       _ -> nil # TODO fallback to database.
     end
   end
@@ -120,8 +120,8 @@ defmodule Noizu.UniversalReference do
   #
   #---------------------------
   def lookup({:ref, _, _id} = ref) do
-    case Noizu.Scaffolding.V3.Database.UniversalLookupTable.read!(ref) do
-      %Noizu.Scaffolding.V3.Database.UniversalLookupTable{universal_identifier: id} -> {:ref, __MODULE__, id}
+    case Noizu.AdvancedScaffolding.Database.UniversalLookupTable.read!(ref) do
+      %Noizu.AdvancedScaffolding.Database.UniversalLookupTable{universal_identifier: id} -> {:ref, __MODULE__, id}
       _ -> nil
     end
   end
@@ -137,7 +137,7 @@ defmodule Noizu.UniversalReference do
       _ -> nil
     end
   end
-  def id(%__MODULE__{} = this) do
+  def id(%{__struct__: __MODULE__} = this) do
     this.identifier
   end
 
@@ -149,7 +149,7 @@ defmodule Noizu.UniversalReference do
       _ -> nil
     end
   end
-  def ref(%__MODULE__{} = this) do
+  def ref(%{__struct__: __MODULE__} = this) do
     {:ref, __MODULE__, universal_identifier(this)}
   end
 
@@ -162,7 +162,7 @@ defmodule Noizu.UniversalReference do
       _ -> nil
     end
   end
-  def sref(%__MODULE__{} = this) do
+  def sref(%{__struct__: __MODULE__} = this) do
     case universal_identifier(this) do
       v when is_integer(v) -> "ref.universal.#{v}"
       _ -> nil
@@ -171,47 +171,47 @@ defmodule Noizu.UniversalReference do
   def sref(v) do
     case encode(v) do
       nil -> nil
-      u = %__MODULE__{} -> sref(u)
+      u = %{__struct__: __MODULE__} -> sref(u)
     end
   end
 
-  def entity!(%__MODULE__{} = this) do
+  def entity!(%{__struct__: __MODULE__} = this) do
     Noizu.ERP.entity!(resolve(this))
   end
   def entity!(v) do
     case encode(v) do
       nil -> nil
-      u = %__MODULE__{} -> entity!(u)
+      u = %{__struct__: __MODULE__} -> entity!(u)
     end
   end
 
-  def entity(%__MODULE__{} = this) do
+  def entity(%{__struct__: __MODULE__} = this) do
     Noizu.ERP.entity(resolve(this))
   end
   def entity(v) do
     case encode(v) do
       nil -> nil
-      u = %__MODULE__{} -> entity(u)
+      u = %{__struct__: __MODULE__} -> entity(u)
     end
   end
 
-  def record!(%__MODULE__{} = this) do
+  def record!(%{__struct__: __MODULE__} = this) do
     Noizu.ERP.record!(resolve(this))
   end
   def record!(v) do
     case encode(v) do
       nil -> nil
-      u = %__MODULE__{} -> record!(u)
+      u = %{__struct__: __MODULE__} -> record!(u)
     end
   end
 
-  def record(%__MODULE__{} = this) do
+  def record(%{__struct__: __MODULE__} = this) do
     Noizu.ERP.record(resolve(this))
   end
   def record(v) do
     case encode(v) do
       nil -> nil
-      u = %__MODULE__{} -> record(u)
+      u = %{__struct__: __MODULE__} -> record(u)
     end
   end
 

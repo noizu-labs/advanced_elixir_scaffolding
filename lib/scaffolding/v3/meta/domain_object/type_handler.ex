@@ -1,4 +1,4 @@
-defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.TypeHandler do
+defmodule Noizu.AdvancedScaffolding.Meta.DomainObject.TypeHandler do
 
   @callback sync(any, any, any) :: any
   @callback sync(any, any, any, any) :: any

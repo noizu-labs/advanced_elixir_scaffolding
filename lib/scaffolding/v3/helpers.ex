@@ -3,26 +3,26 @@
 # Copyright (C) 2021 Noizu Labs, Inc.
 #-------------------------------------------------------------------------------
 
-defmodule Noizu.Scaffolding.V3.Helpers do
+defmodule Noizu.AdvancedScaffolding.Helpers do
   alias Noizu.ElixirCore.CallingContext
 
-  defdelegate banner_text(header, msg, len \\ 120, pad \\ 0), to: Noizu.Scaffolding.Helpers
-  defdelegate request_pagination(params, default_page, default_results_per_page), to: Noizu.Scaffolding.Helpers
-  defdelegate page(page, query), to: Noizu.Scaffolding.Helpers
-  defdelegate expand_concurrency(options), to: Noizu.Scaffolding.Helpers
-  defdelegate expand_ref?(options), to: Noizu.Scaffolding.Helpers
-  defdelegate expand_ref?(path, depth, options \\ nil), to: Noizu.Scaffolding.Helpers
-  defdelegate json_library(), to: Noizu.Scaffolding.Helpers
-  defdelegate send_resp(conn, default_status, default_content_type, body), to: Noizu.Scaffolding.Helpers
-  defdelegate ensure_resp_content_type(conn, content_type), to: Noizu.Scaffolding.Helpers
-  defdelegate format_to_atom(v, default), to: Noizu.Scaffolding.Helpers
-  defdelegate default_get_context__json_format(conn, params, get_context_provider, options), to: Noizu.Scaffolding.Helpers
-  defdelegate default_get_context__json_formats(conn, params, get_context_provider, options), to: Noizu.Scaffolding.Helpers
-  defdelegate default_get_context__expand_all_refs(conn, params, get_context_provider, options), to: Noizu.Scaffolding.Helpers
-  defdelegate default_get_context__expand_refs(conn, params, get_context_provider, options), to: Noizu.Scaffolding.Helpers
-  defdelegate default_get_context__token_reason_options(conn, params, get_context_provider, opts), to: Noizu.Scaffolding.Helpers
-  defdelegate get_ip(conn), to: Noizu.Scaffolding.Helpers
-  defdelegate force_put(entity, path, value), to: Noizu.Scaffolding.Helpers
+  defdelegate banner_text(header, msg, len \\ 120, pad \\ 0), to: Noizu.AdvancedScaffolding.Helpers
+  defdelegate request_pagination(params, default_page, default_results_per_page), to: Noizu.AdvancedScaffolding.Helpers
+  defdelegate page(page, query), to: Noizu.AdvancedScaffolding.Helpers
+  defdelegate expand_concurrency(options), to: Noizu.AdvancedScaffolding.Helpers
+  defdelegate expand_ref?(options), to: Noizu.AdvancedScaffolding.Helpers
+  defdelegate expand_ref?(path, depth, options \\ nil), to: Noizu.AdvancedScaffolding.Helpers
+  defdelegate json_library(), to: Noizu.AdvancedScaffolding.Helpers
+  defdelegate send_resp(conn, default_status, default_content_type, body), to: Noizu.AdvancedScaffolding.Helpers
+  defdelegate ensure_resp_content_type(conn, content_type), to: Noizu.AdvancedScaffolding.Helpers
+  defdelegate format_to_atom(v, default), to: Noizu.AdvancedScaffolding.Helpers
+  defdelegate default_get_context__json_format(conn, params, get_context_provider, options), to: Noizu.AdvancedScaffolding.Helpers
+  defdelegate default_get_context__json_formats(conn, params, get_context_provider, options), to: Noizu.AdvancedScaffolding.Helpers
+  defdelegate default_get_context__expand_all_refs(conn, params, get_context_provider, options), to: Noizu.AdvancedScaffolding.Helpers
+  defdelegate default_get_context__expand_refs(conn, params, get_context_provider, options), to: Noizu.AdvancedScaffolding.Helpers
+  defdelegate default_get_context__token_reason_options(conn, params, get_context_provider, opts), to: Noizu.AdvancedScaffolding.Helpers
+  defdelegate get_ip(conn), to: Noizu.AdvancedScaffolding.Helpers
+  defdelegate force_put(entity, path, value), to: Noizu.AdvancedScaffolding.Helpers
 
   #-------------------------
   # update_options__json_format
@@ -110,11 +110,11 @@ defmodule Noizu.Scaffolding.V3.Helpers do
     # Preprocess response data.
     response = cond do
                  options[:expand] && options[:restricted] ->
-                   Noizu.V3.RestrictedProtocol.restricted_view(Noizu.V3.EntityProtocol.expand!(response, context, options), context, options[:restrict_options])
+                   Noizu.AdvancedScaffolding.Restricted.Protocol.restricted_view(Noizu.AdvancedScaffolding.Entity.Protocol.expand!(response, context, options), context, options[:restrict_options])
                  options[:expand] ->
-                   Noizu.V3.EntityProtocol.expand!(response, context, options)
+                   Noizu.AdvancedScaffolding.Entity.Protocol.expand!(response, context, options)
                  options[:restricted] ->
-                   Noizu.V3.RestrictedProtocol.restricted_view(response, context, options[:restrict_options])
+                   Noizu.AdvancedScaffolding.Restricted.Protocol.restricted_view(response, context, options[:restrict_options])
                  :else ->
                    response
                end
@@ -143,27 +143,27 @@ defmodule Noizu.Scaffolding.V3.Helpers do
   defmodule CustomHelper do
     defmacro __using__(_ \\ nil) do
       quote do
-        import Noizu.Scaffolding.V3.Helpers
+        import Noizu.AdvancedScaffolding.Helpers
 
-        defdelegate banner_text(header, msg, len \\ 120, pad \\ 0), to: Noizu.Scaffolding.V3.Helpers
-        defdelegate request_pagination(params, default_page, default_results_per_page), to: Noizu.Scaffolding.V3.Helpers
-        defdelegate page(page, query), to: Noizu.Scaffolding.V3.Helpers
-        defdelegate update_options(entity, options), to: Noizu.Scaffolding.V3.Helpers
-        defdelegate update_expand_options(entity, options), to: Noizu.Scaffolding.V3.Helpers
-        defdelegate expand_ref?(options), to: Noizu.Scaffolding.V3.Helpers
-        defdelegate expand_ref?(path, depth, options \\ nil), to: Noizu.Scaffolding.V3.Helpers
-        defdelegate api_response(conn, response, context, options), to: Noizu.Scaffolding.V3.Helpers
-        defdelegate json_library(), to: Noizu.Scaffolding.V3.Helpers
-        defdelegate send_resp(conn, default_status, default_content_type, body), to: Noizu.Scaffolding.V3.Helpers
-        defdelegate ensure_resp_content_type(conn, content_type), to: Noizu.Scaffolding.V3.Helpers
-        defdelegate format_to_atom(v, default), to: Noizu.Scaffolding.V3.Helpers
-        defdelegate default_get_context__json_format(conn, params, get_context_provider, options), to: Noizu.Scaffolding.V3.Helpers
-        defdelegate default_get_context__json_formats(conn, params, get_context_provider, options), to: Noizu.Scaffolding.V3.Helpers
-        defdelegate default_get_context__expand_all_refs(conn, params, get_context_provider, options), to: Noizu.Scaffolding.V3.Helpers
-        defdelegate default_get_context__expand_refs(conn, params, get_context_provider, options), to: Noizu.Scaffolding.V3.Helpers
-        defdelegate default_get_context__token_reason_options(conn, params, get_context_provider, opts), to: Noizu.Scaffolding.V3.Helpers
-        defdelegate get_ip(conn), to: Noizu.Scaffolding.V3.Helpers
-        defdelegate force_put(entity, path, value), to: Noizu.Scaffolding.V3.Helpers
+        defdelegate banner_text(header, msg, len \\ 120, pad \\ 0), to: Noizu.AdvancedScaffolding.Helpers
+        defdelegate request_pagination(params, default_page, default_results_per_page), to: Noizu.AdvancedScaffolding.Helpers
+        defdelegate page(page, query), to: Noizu.AdvancedScaffolding.Helpers
+        defdelegate update_options(entity, options), to: Noizu.AdvancedScaffolding.Helpers
+        defdelegate update_expand_options(entity, options), to: Noizu.AdvancedScaffolding.Helpers
+        defdelegate expand_ref?(options), to: Noizu.AdvancedScaffolding.Helpers
+        defdelegate expand_ref?(path, depth, options \\ nil), to: Noizu.AdvancedScaffolding.Helpers
+        defdelegate api_response(conn, response, context, options), to: Noizu.AdvancedScaffolding.Helpers
+        defdelegate json_library(), to: Noizu.AdvancedScaffolding.Helpers
+        defdelegate send_resp(conn, default_status, default_content_type, body), to: Noizu.AdvancedScaffolding.Helpers
+        defdelegate ensure_resp_content_type(conn, content_type), to: Noizu.AdvancedScaffolding.Helpers
+        defdelegate format_to_atom(v, default), to: Noizu.AdvancedScaffolding.Helpers
+        defdelegate default_get_context__json_format(conn, params, get_context_provider, options), to: Noizu.AdvancedScaffolding.Helpers
+        defdelegate default_get_context__json_formats(conn, params, get_context_provider, options), to: Noizu.AdvancedScaffolding.Helpers
+        defdelegate default_get_context__expand_all_refs(conn, params, get_context_provider, options), to: Noizu.AdvancedScaffolding.Helpers
+        defdelegate default_get_context__expand_refs(conn, params, get_context_provider, options), to: Noizu.AdvancedScaffolding.Helpers
+        defdelegate default_get_context__token_reason_options(conn, params, get_context_provider, opts), to: Noizu.AdvancedScaffolding.Helpers
+        defdelegate get_ip(conn), to: Noizu.AdvancedScaffolding.Helpers
+        defdelegate force_put(entity, path, value), to: Noizu.AdvancedScaffolding.Helpers
 
         defoverridable [
           banner_text: 2,

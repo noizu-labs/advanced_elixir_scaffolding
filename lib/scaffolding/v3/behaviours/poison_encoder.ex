@@ -1,15 +1,15 @@
-defmodule Noizu.Scaffolding.V3.Poison.Encoder do
+defmodule Noizu.AdvancedScaffolding.Poison.Encoder do
   def encode(noizu_entity, options \\ nil) do
-    {json_format, options} = Noizu.Scaffolding.Helpers.update_options(noizu_entity, options)
     context = options[:context]
+    {json_format, options} = Noizu.AdvancedScaffolding.Helpers.update_options(noizu_entity, context, options)
     {entity, options} = cond do
                           options[:__nzdo__restricted?] && options[:__nzdo__expanded?] -> {noizu_entity, options}
                           !options[:__nzdo__restricted?] ->
-                            {Noizu.V3.RestrictedProtocol.restricted_view(noizu_entity, context, options[:restricted_view]), options}
+                            {Noizu.AdvancedScaffolding.Restricted.Protocol.restricted_view(noizu_entity, context, options[:restricted_view]), options}
                           !options[:__nzdo__expanded?] ->
                             {_, options} = pop_in(options, [:__nzdo__restricted?])
                             {_, options} = pop_in(options, [:__nzdo__expanded?])
-                            {Noizu.V3.EntityProtocol.expand!(noizu_entity, context, options), options}
+                            {Noizu.AdvancedScaffolding.Entity.Protocol.expand!(noizu_entity, context, options), options}
                         end
 
     Map.from_struct(entity)
@@ -40,7 +40,7 @@ defmodule Noizu.Scaffolding.V3.Poison.Encoder do
       {expanded, v} = cond do
                         field_settings[:sref] -> {false, Noizu.ERP.sref(value)}
                         options[:__nzdo__expanded?] -> {true, value}
-                        field_settings[:expand] -> {true, Noizu.V3.EntityProtocol.expand!(value, context, options)}
+                        field_settings[:expand] -> {true, Noizu.AdvancedScaffolding.Entity.Protocol.expand!(value, context, options)}
                         :else -> {false, value}
                       end
 
@@ -49,7 +49,7 @@ defmodule Noizu.Scaffolding.V3.Poison.Encoder do
           if (v) do
             v = cond do
                   expanded -> v
-                  :else -> Noizu.V3.EntityProtocol.expand!(value, context, options) # switch back to value not v incase sref was used.
+                  :else -> Noizu.AdvancedScaffolding.Entity.Protocol.expand!(value, context, options) # switch back to value not v incase sref was used.
                 end
 
             Enum.map(
@@ -63,7 +63,7 @@ defmodule Noizu.Scaffolding.V3.Poison.Encoder do
                     v2 = cond do
                            c[:sref] -> Noizu.ERP.sref(v2)
                            # @todo allow explicit override by caller options
-                           c[:expand] -> Noizu.V3.EntityProtocol.expand!(v2, context, options)
+                           c[:expand] -> Noizu.AdvancedScaffolding.Entity.Protocol.expand!(v2, context, options)
                            c[:format] ->
                              case c[:format] do
                                :iso8601 ->

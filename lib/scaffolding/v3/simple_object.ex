@@ -1,4 +1,4 @@
-defmodule Noizu.SimpleObject do
+defmodule Noizu.AdvancedScaffolding.SimpleObject do
 
   defmacro __using__(options \\ nil) do
     nmid_generator = options[:nmid_generator]
@@ -7,8 +7,8 @@ defmodule Noizu.SimpleObject do
     auto_generate = options[:auto_generate]
     caller = __CALLER__
     quote do
-      import Noizu.DomainObject, only: [file_rel_dir: 1]
-      require Noizu.SimpleObject
+      import Noizu.AdvancedScaffolding.DomainObject, only: [file_rel_dir: 1]
+      require Noizu.AdvancedScaffolding.SimpleObject
       Module.register_attribute(__MODULE__, :index, accumulate: true)
       Module.register_attribute(__MODULE__, :persistence_layer, accumulate: true)
       Module.register_attribute(__MODULE__, :__nzdo__meta, accumulate: false)
@@ -18,7 +18,7 @@ defmodule Noizu.SimpleObject do
 
       # Insure only referenced once.
       if line = Module.get_attribute(__MODULE__, :__nzdo__simple_definied) do
-        raise "#{file_rel_dir(unquote(caller.file))}:#{unquote(caller.line)} duplicate use Noizu.SimpleObject reference. First defined on #{elem(line, 0)}:#{elem(line, 1)}"
+        raise "#{file_rel_dir(unquote(caller.file))}:#{unquote(caller.line)} duplicate use Noizu.AdvancedScaffolding.SimpleObject reference. First defined on #{elem(line, 0)}:#{elem(line, 1)}"
       end
       @__nzdo__simple_definied {file_rel_dir(unquote(caller.file)), unquote(caller.line)}
 
@@ -41,7 +41,7 @@ defmodule Noizu.SimpleObject do
   #
   #--------------------------------------------
   defmacro noizu_struct(options \\ [], [do: block]) do
-    Noizu.ElixirScaffolding.V3.Meta.SimpleObject.Struct.__noizu_struct__(__CALLER__, options, block)
+    Noizu.AdvancedScaffolding.Meta.SimpleObject.Struct.__noizu_struct__(__CALLER__, options, block)
   end
 
 end

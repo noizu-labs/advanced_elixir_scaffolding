@@ -1,4 +1,4 @@
-defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultInternalProvider do
+defmodule Noizu.AdvancedScaffolding.Implementation.DomainObject.Repo.DefaultInternalProvider do
 
   defmacro __before_compile__(_env) do
     quote do

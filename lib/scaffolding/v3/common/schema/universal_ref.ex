@@ -1,4 +1,4 @@
-defmodule Noizu.Scaffolding.V3.Schema.UniversalReference do
+defmodule Noizu.AdvancedScaffolding.Schema.UniversalReference do
   @moduledoc """
   Ecto ENUM Custom Type.
   """
@@ -20,7 +20,7 @@ defmodule Noizu.Scaffolding.V3.Schema.UniversalReference do
     cond do
       v == nil -> {:ok, nil}
       v == 0 -> {:ok, nil}
-      u = Noizu.UniversalReference.encode(v) -> {:ok, u}
+      u = Noizu.AdvancedScaffolding.UniversalReference.encode(v) -> {:ok, u}
       :else -> :error
     end
   end
@@ -46,7 +46,7 @@ defmodule Noizu.Scaffolding.V3.Schema.UniversalReference do
     {:ok, v}
   end
   def dump(v) do
-    case Noizu.Ecto.Entity.universal_identifier(v) do
+    case Noizu.AdvancedScaffolding.EctoEntity.Protocol.universal_identifier(v) do
       nil -> {:ok, 0}
       v -> {:ok, v}
     end
@@ -59,7 +59,7 @@ defmodule Noizu.Scaffolding.V3.Schema.UniversalReference do
     cond do
       v == nil -> {:ok, nil}
       v == 0 -> {:ok, nil}
-      u = Noizu.UniversalReference.encode(v) -> {:ok, u}
+      u = Noizu.AdvancedScaffolding.UniversalReference.encode(v) -> {:ok, u}
       :else -> raise ArgumentError, "Unsupported #{__MODULE__} - #{inspect v}"
     end
   end

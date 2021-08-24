@@ -1,4 +1,4 @@
-defmodule Noizu.ElixirScaffolding.V3.Meta.SimpleObject.Inspect do
+defmodule Noizu.AdvancedScaffolding.Meta.SimpleObject.Inspect do
   import Inspect.Algebra
 
   def inspect(entity, opts) do

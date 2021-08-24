@@ -3,41 +3,41 @@
 # Copyright (C) 2021 Noizu Labs, Inc.. All rights reserved.
 #-------------------------------------------------------------------------------
 
-defmodule Noizu.Scaffolding.V3.NmidGenerator do
-  @behaviour Noizu.Scaffolding.NmidBehaviour
+defmodule Noizu.AdvancedScaffolding.NmidGenerator do
+  #@behaviour Noizu.AdvancedScaffolding.NmidBehaviour
   use Amnesia
-  use Noizu.Scaffolding.V3.Database.NmidV3Generator
-  @node_key Application.get_env(:noizu_scaffolding, :node_nmid_index, 0)
+  use Noizu.AdvancedScaffolding.Database.NmidV3Generator
+  @node_key Application.get_env(:noizu_advanced_scaffolding, :node_nmid_index, 0)
 
   #--------------------
   #
   #--------------------
   def set_incr(seq, v) do
-    case :mnesia.dirty_read(Noizu.Scaffolding.V3.Database.NmidV3Generator, seq) do
-      [{Noizu.Scaffolding.V3.Database.NmidV3Generator, _, c}] ->
+    case :mnesia.dirty_read(Noizu.AdvancedScaffolding.Database.NmidV3Generator, seq) do
+      [{Noizu.AdvancedScaffolding.Database.NmidV3Generator, _, c}] ->
         cond do
           c < v ->
-            :mnesia.dirty_write(Noizu.Scaffolding.V3.Database.NmidV3Generator, {Noizu.Scaffolding.V3.Database.NmidV3Generator, seq, v})
+            :mnesia.dirty_write(Noizu.AdvancedScaffolding.Database.NmidV3Generator, {Noizu.AdvancedScaffolding.Database.NmidV3Generator, seq, v})
             :ok
           :else -> :ok
         end
       _else ->
         # to avoid edge case of out of sync increment from table load inbetween calls.
-        :mnesia.dirty_update_counter(Noizu.Scaffolding.V3.Database.NmidV3Generator, seq, v)
+        :mnesia.dirty_update_counter(Noizu.AdvancedScaffolding.Database.NmidV3Generator, seq, v)
     end
   end
 
   #--------------------
   #
   #--------------------
-  def bare(seq), do: :mnesia.dirty_update_counter(Noizu.Scaffolding.V3.Database.NmidV3Generator, seq, 1)
+  def bare(seq), do: :mnesia.dirty_update_counter(Noizu.AdvancedScaffolding.Database.NmidV3Generator, seq, 1)
   def bare!(seq), do: bare(seq)
 
   #--------------------
   #
   #--------------------
   def bare_node(seq) do
-    v = :mnesia.dirty_update_counter(Noizu.Scaffolding.V3.Database.NmidV3Generator, seq, 1)
+    v = :mnesia.dirty_update_counter(Noizu.AdvancedScaffolding.Database.NmidV3Generator, seq, 1)
     v * 1000 + @node_key
   end
   def bare_node!(seq), do: bare_node(seq)
@@ -50,7 +50,7 @@ defmodule Noizu.Scaffolding.V3.NmidGenerator do
       true -> bare(seq)
       :node -> bare_node(seq)
       _ ->
-        current = :mnesia.dirty_update_counter(Noizu.Scaffolding.V3.Database.NmidV3Generator, seq, 1)
+        current = :mnesia.dirty_update_counter(Noizu.AdvancedScaffolding.Database.NmidV3Generator, seq, 1)
         map_id(current, @node_key, seq.__nmid__(:index))
     end
   end

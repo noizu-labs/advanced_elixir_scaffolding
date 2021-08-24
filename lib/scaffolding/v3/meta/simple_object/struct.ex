@@ -1,21 +1,21 @@
-defmodule Noizu.ElixirScaffolding.V3.Meta.SimpleObject.Struct do
+defmodule Noizu.AdvancedScaffolding.Meta.SimpleObject.Struct do
 
   def __noizu_struct__(caller, options, block) do
     options = Macro.expand(options, __ENV__)
-    index_provider = options[:index_imp] || Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Struct.DefaultIndexProvider
-    internal_provider = options[:internal_imp] || Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Struct.DefaultInternalProvider
-    persistence_provider = options[:persistence_imp] || Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Struct.DefaultPersistenceProvider
+    index_provider = options[:index_imp] || Noizu.AdvancedScaffolding.Implementation.DomainObject.Struct.DefaultIndexProvider
+    internal_provider = options[:internal_imp] || Noizu.AdvancedScaffolding.Implementation.DomainObject.Struct.DefaultInternalProvider
+    persistence_provider = options[:persistence_imp] || Noizu.AdvancedScaffolding.Implementation.DomainObject.Struct.DefaultPersistenceProvider
 
 
     inspect_provider = cond do
                          options[:inspect_imp] == false -> false
-                         :else -> options[:inspect_imp] || Noizu.ElixirScaffolding.V3.Meta.DomainObject.Inspect
+                         :else -> options[:inspect_imp] || Noizu.AdvancedScaffolding.Meta.DomainObject.Inspect
                        end
 
     process_config = quote do
-                       import Noizu.DomainObject, only: [file_rel_dir: 1]
-                       require Noizu.DomainObject
-                       require Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity
+                       import Noizu.AdvancedScaffolding.DomainObject, only: [file_rel_dir: 1]
+                       require Noizu.AdvancedScaffolding.DomainObject
+                       require Noizu.AdvancedScaffolding.Meta.DomainObject.Entity
                        import Noizu.ElixirCore.Guards
                        @options unquote(options)
                        #---------------------
@@ -32,44 +32,44 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.SimpleObject.Struct do
                        # Extract Base Fields fields since SimbpleObjects are at the same level as their base.
                        @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
                        @simple_object __MODULE__
-                       Noizu.DomainObject.__prepare__base__macro__(unquote(options))
+                       Noizu.AdvancedScaffolding.DomainObject.__prepare__base__macro__(unquote(options))
 
                        # Push details to Base, and read in required settings.
                        @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-                       Noizu.DomainObject.__prepare__poly__macro__(unquote(options))
+                       Noizu.AdvancedScaffolding.DomainObject.__prepare__poly__macro__(unquote(options))
 
                        # Load Sphinx Settings from base.
                        @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-                       Noizu.DomainObject.__prepare__sphinx__macro__(unquote(options))
+                       Noizu.AdvancedScaffolding.DomainObject.__prepare__sphinx__macro__(unquote(options))
 
                        # Load Persistence Settings from base, we need them to control some submodules.
                        @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-                       Noizu.DomainObject.__prepare__persistence_settings__macro__(unquote(options))
+                       Noizu.AdvancedScaffolding.DomainObject.__prepare__persistence_settings__macro__(unquote(options))
 
                        # Nmid
                        @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-                       Noizu.DomainObject.__prepare__nmid__macro__(unquote(options))
+                       Noizu.AdvancedScaffolding.DomainObject.__prepare__nmid__macro__(unquote(options))
 
                        # Json Settings
                        @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-                       Noizu.DomainObject.__prepare__json_settings__macro__(unquote(options))
+                       Noizu.AdvancedScaffolding.DomainObject.__prepare__json_settings__macro__(unquote(options))
 
                        #----------------------
                        # Derives
                        #----------------------
-                       @__nzdo__derive Noizu.V3.EntityProtocol
-                       @__nzdo__derive Noizu.V3.RestrictedProtocol
+                       @__nzdo__derive Noizu.AdvancedScaffolding.Entity.Protocol
+                       @__nzdo__derive Noizu.AdvancedScaffolding.Restricted.Protocol
 
                        # Prep attributes for loading individual fields.
                        @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-                       Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity.__register__field_attributes__macro__(unquote(options))
+                       Noizu.AdvancedScaffolding.Meta.DomainObject.Entity.__register__field_attributes__macro__(unquote(options))
 
                        #----------------------
                        # User block section (define, fields, constraints, json_mapping rules, etc.)
                        #----------------------
                        try do
                          # we rely on the same providers as used in the Entity type for providing json encoding, restrictions, etc.
-                         import Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity
+                         import Noizu.AdvancedScaffolding.Meta.DomainObject.Entity
                          @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
                          unquote(block)
                        after
@@ -77,7 +77,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.SimpleObject.Struct do
                        end
 
                        @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-                       Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity.__post_struct_definition_macro__(unquote(options))
+                       Noizu.AdvancedScaffolding.Meta.DomainObject.Entity.__post_struct_definition_macro__(unquote(options))
 
 
                      end
@@ -127,7 +127,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.SimpleObject.Struct do
 
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       @before_compile unquote(internal_provider)
-      @before_compile Noizu.ElixirScaffolding.V3.Meta.SimpleObject.Struct
+      @before_compile Noizu.AdvancedScaffolding.Meta.SimpleObject.Struct
       #@after_compile unquote(internal_provider)
     end
   end
@@ -208,7 +208,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.SimpleObject.Struct do
       # __persistence__
       #################################################
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-      @__nzdo_persistence Noizu.Scaffolding.V3.Schema.PersistenceSettings.update_schema_fields(@__nzdo_persistence, @__nzdo__field_types_map)
+      @__nzdo_persistence Noizu.AdvancedScaffolding.Schema.PersistenceSettings.update_schema_fields(@__nzdo_persistence, @__nzdo__field_types_map)
       def __persistence__(), do: __persistence__(:all)
       def __persistence__(:all) do
         [:enum_table, :auto_generate, :universal_identifier, :universal_lookup, :reference_type, :layers, :schemas, :tables, :ecto_entity, :options]

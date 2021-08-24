@@ -1,11 +1,11 @@
-defmodule Noizu.Scaffolding.V3.Sphinx.Bool do
+defmodule Noizu.AdvancedScaffolding.Sphinx.Bool do
   @moduledoc """
   Ecto ENUM Custom Type.
   """
   use Ecto.Type
 
-  require Noizu.DomainObject
-  Noizu.DomainObject.noizu_sphinx_handler()
+  require Noizu.AdvancedScaffolding.DomainObject
+  Noizu.AdvancedScaffolding.DomainObject.noizu_sphinx_handler()
 
   #----------------------------
   # type

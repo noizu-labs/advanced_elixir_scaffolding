@@ -3,14 +3,16 @@
 # Copyright (C) 2018 Noizu Labs, Inc. All rights reserved.
 #-------------------------------------------------------------------------------
 
-defmodule Noizu.Scaffolding.V3.RepoTest do
+defmodule Noizu.AdvancedScaffolding.RepoTest do
   use ExUnit.Case
   use Amnesia
-  use NoizuSchema.Database.Scaffolding.Test.Fixture.V3.Foo.Table
-  alias Noizu.Scaffolding.Test.Fixture.V3.Foo.Entity
-  alias Noizu.Scaffolding.Test.Fixture.V3.Foo.Repo
-  alias NoizuSchema.Database.Scaffolding.Test.Fixture.V3.Foo.Table
+  use NoizuSchema.Database.AdvancedScaffolding.Test.Fixture.V3.Foo.Table
+  alias Noizu.AdvancedScaffolding.Test.Fixture.V3.Foo.Entity
+  alias Noizu.AdvancedScaffolding.Test.Fixture.V3.Foo.Repo
+  alias NoizuSchema.Database.AdvancedScaffolding.Test.Fixture.V3.Foo.Table
   alias Noizu.ElixirCore.CallingContext
+
+  Code.ensure_loaded?(Noizu.AdvancedScaffolding.Test.Fixture.V3.DomainObject.Schema)
 
   setup do
     Table.clear
@@ -18,9 +20,9 @@ defmodule Noizu.Scaffolding.V3.RepoTest do
 
   @tag :v3
   test "Modules" do
-    assert Repo.__entity__() == Noizu.Scaffolding.Test.Fixture.V3.Foo.Entity
-    assert Repo.__repo__() == Noizu.Scaffolding.Test.Fixture.V3.Foo.Repo
-    assert Repo.__base__() == Noizu.Scaffolding.Test.Fixture.V3.Foo
+    assert Repo.__entity__() == Noizu.AdvancedScaffolding.Test.Fixture.V3.Foo.Entity
+    assert Repo.__repo__() == Noizu.AdvancedScaffolding.Test.Fixture.V3.Foo.Repo
+    assert Repo.__base__() == Noizu.AdvancedScaffolding.Test.Fixture.V3.Foo
   end
 
   @tag :v3
@@ -93,7 +95,7 @@ defmodule Noizu.Scaffolding.V3.RepoTest do
   test "Noizu.ERP.entity!(ref)" do
     context = CallingContext.system()
     entity = %Entity{content: :hello} |> Repo.create!(context)
-    IO.inspect NoizuSchema.Database.Scaffolding.Test.Fixture.V3.Foo.Table.keys!
+    IO.inspect NoizuSchema.Database.AdvancedScaffolding.Test.Fixture.V3.Foo.Table.keys!
     ref = Entity.ref(entity.identifier) |> IO.inspect
     unboxed_entity = Noizu.ERP.entity!(ref)
     assert unboxed_entity == entity
@@ -182,8 +184,8 @@ defmodule Noizu.Scaffolding.V3.RepoTest do
   test "Repo.list!" do
     context = CallingContext.system()
     entity = %Entity{content: :hello} |> Repo.create!(context)
-    entity_two = %Entity{entity| identifier: entity.identifier + 1} |> Repo.create!(context, [override_identifier: true])
-    entity_three = %Entity{entity| identifier: entity.identifier + 2} |> Repo.create!(context, [override_identifier: true])
+    _entity_two = %Entity{entity| identifier: entity.identifier + 1} |> Repo.create!(context, [override_identifier: true])
+    _entity_three = %Entity{entity| identifier: entity.identifier + 2} |> Repo.create!(context, [override_identifier: true])
 
     _r = Amnesia.Fragment.transaction do
            Table.where true == true

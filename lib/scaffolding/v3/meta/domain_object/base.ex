@@ -1,4 +1,4 @@
-defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject do
+defmodule Noizu.AdvancedScaffolding.Meta.DomainObject do
 
   defmacro __before_compile__(_) do
     quote do
@@ -184,8 +184,8 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject do
 
       if has_list do
         defmodule Ecto.EnumType do
-          require Noizu.Ecto.EnumTypeBehaviour
-          Noizu.Ecto.EnumTypeBehaviour.enum_type()
+          require Noizu.AdvancedScaffolding.Ecto.EnumTypeBehaviour
+          Noizu.AdvancedScaffolding.Ecto.EnumTypeBehaviour.enum_type()
         end
 
         def atoms(), do: @__nzdo__enum_type.atom_to_enum()
@@ -202,19 +202,19 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject do
           e = @__nzdo__entity
           b = __MODULE__
           defmodule Ecto.EnumReference do
-            use Noizu.EnumRefBehaviour, entity: e, base: b
+            use Noizu.AdvancedScaffolding.EnumRefBehaviour, entity: e, base: b
           end
 
         Module.get_attribute(__MODULE__, :__nzdo_universal_ref) ->
           e = @__nzdo__entity
           defmodule Ecto.UniversalReference do
-            use Noizu.UniversalRefBehaviour, entity: e
+            use Noizu.AdvancedScaffolding.UniversalRefBehaviour, entity: e
           end
 
         Module.get_attribute(__MODULE__, :__nzdo_basic_ref) ->
           e = @__nzdo__entity
           defmodule Ecto.Reference do
-            use Noizu.BasicRefBehaviour, entity: e
+            use Noizu.AdvancedScaffolding.BasicRefBehaviour, entity: e
           end
         :else -> :ok
       end
@@ -226,8 +226,8 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject do
       if Module.has_attribute?(__MODULE__, :__nzdo__inline_index) && Module.get_attribute(__MODULE__, :__nzdo__inline_index) do
         e = @__nzdo__entity
         defmodule Index do
-          require Noizu.DomainObject
-          Noizu.DomainObject.noizu_index(entity: e, inline: true) do
+          require Noizu.AdvancedScaffolding.DomainObject
+          Noizu.AdvancedScaffolding.DomainObject.noizu_index(entity: e, inline: true) do
 
           end
         end

@@ -1,7 +1,7 @@
-defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Struct.DefaultPersistenceProvider do
+defmodule Noizu.AdvancedScaffolding.Implementation.DomainObject.Struct.DefaultPersistenceProvider do
 
   defmodule Default do
-    alias Noizu.Scaffolding.V3.Schema.PersistenceLayer
+    alias Noizu.AdvancedScaffolding.Schema.PersistenceLayer
     #-----------------------------------
     #
     #-----------------------------------
@@ -69,8 +69,8 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Struct.DefaultP
   defmacro __using__(_options \\ nil) do
     quote do
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-      alias Noizu.Scaffolding.V3.Schema.PersistenceLayer
-      @__nzdo__persistence_imp Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Struct.DefaultPersistenceProvider.Default
+      alias Noizu.AdvancedScaffolding.Schema.PersistenceLayer
+      @__nzdo__persistence_imp Noizu.AdvancedScaffolding.Implementation.DomainObject.Struct.DefaultPersistenceProvider.Default
 
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def __as_record__(%PersistenceLayer{} = layer, identifier, entity, context, options \\ nil),

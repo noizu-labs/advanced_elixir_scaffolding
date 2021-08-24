@@ -1,7 +1,7 @@
-defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultPersistenceProvider do
+defmodule Noizu.AdvancedScaffolding.Implementation.DomainObject.Entity.DefaultPersistenceProvider do
 
   defmodule Default do
-    alias Noizu.Scaffolding.V3.Schema.PersistenceLayer
+    alias Noizu.AdvancedScaffolding.Schema.PersistenceLayer
 
     #-----------------------------------
     # __as_record__
@@ -75,7 +75,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultP
         domain_object.__fields__(:persisted),
         fn (field) ->
           cond do
-            field == :identifier -> {:identifier, Noizu.Ecto.Entity.ecto_identifier(entity)}
+            field == :identifier -> {:identifier, Noizu.AdvancedScaffolding.EctoEntity.Protocol.ecto_identifier(entity)}
             entry = layer.schema_fields[field] ->
               type = field_types[entry[:source]]
               source = case entry[:selector] do
@@ -132,12 +132,12 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultP
     def ecto_identifier(_, %{identifier: id}) when is_integer(id), do: id
     def ecto_identifier(m, ref) do
       ref = m.ref(ref)
-      case Noizu.Scaffolding.V3.Database.EctoIdentifierLookupTable.read!(ref) do
-        %Noizu.Scaffolding.V3.Database.EctoIdentifierLookupTable{ecto_identifier: id} -> id
+      case Noizu.AdvancedScaffolding.Database.EctoIdentifierLookupTable.read!(ref) do
+        %Noizu.AdvancedScaffolding.Database.EctoIdentifierLookupTable{ecto_identifier: id} -> id
         _ ->
           case m.entity(ref) do
             %{ecto_identifier: id} ->
-              Noizu.Scaffolding.V3.Database.EctoIdentifierLookupTable.write!(%Noizu.Scaffolding.V3.Database.EctoIdentifierLookupTable{identifier: ref, ecto_identifier: id})
+              Noizu.AdvancedScaffolding.Database.EctoIdentifierLookupTable.write!(%Noizu.AdvancedScaffolding.Database.EctoIdentifierLookupTable{identifier: ref, ecto_identifier: id})
               id
             _ -> nil
           end
@@ -149,8 +149,8 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultP
     #-----------------------------------
     def universal_identifier_lookup(m, ref) do
       ref = m.ref(ref)
-      case Noizu.Scaffolding.V3.Database.UniversalLookupTable.read!(ref) do
-        %Noizu.Scaffolding.V3.Database.UniversalLookupTable{universal_identifier: id} -> id
+      case Noizu.AdvancedScaffolding.Database.UniversalLookupTable.read!(ref) do
+        %Noizu.AdvancedScaffolding.Database.UniversalLookupTable{universal_identifier: id} -> id
       end
     end
 
@@ -160,8 +160,8 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultP
   defmacro __using__(_options \\ nil) do
     quote do
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-      alias Noizu.Scaffolding.V3.Schema.PersistenceLayer
-      @__nzdo__persistence_imp Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultPersistenceProvider.Default
+      alias Noizu.AdvancedScaffolding.Schema.PersistenceLayer
+      @__nzdo__persistence_imp Noizu.AdvancedScaffolding.Implementation.DomainObject.Entity.DefaultPersistenceProvider.Default
 
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def __as_record__(%PersistenceLayer{} = layer, entity, context, options \\ nil), do: @__nzdo__persistence_imp.__as_record__(__MODULE__, layer, entity, context, options)

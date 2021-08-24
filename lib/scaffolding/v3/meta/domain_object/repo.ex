@@ -3,13 +3,13 @@
 # Copyright (C) 2021 Noizu Labs, Inc. All rights reserved.
 #-------------------------------------------------------------------------------
 
-defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo do
-  #alias Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo, as: RepoMeta
+defmodule Noizu.AdvancedScaffolding.Meta.DomainObject.Repo do
+  #alias Noizu.AdvancedScaffolding.Meta.DomainObject.Repo, as: RepoMeta
 
   @type entity :: Map.t
   @type ref :: {:ref, atom, any}
   @type sref :: String.t
-  @type layer :: Noizu.Scaffolding.V3.Schema.PersistenceLayer.t
+  @type layer :: Noizu.AdvancedScaffolding.Schema.PersistenceLayer.t
   @type entity_reference :: ref | sref | entity | nil
   @type opts :: Keyword.t | Map.t | nil
 
@@ -83,8 +83,8 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo do
   #
   #--------------------------------------------
   def __noizu_repo__(caller, options, block) do
-    crud_provider = options[:erp_imp] || Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCrudProvider
-    internal_provider = options[:internal_imp] || Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultInternalProvider
+    crud_provider = options[:erp_imp] || Noizu.AdvancedScaffolding.Implementation.DomainObject.Repo.DefaultCrudProvider
+    internal_provider = options[:internal_imp] || Noizu.AdvancedScaffolding.Implementation.DomainObject.Repo.DefaultInternalProvider
     extension_provider = options[:extension_imp] || nil
     has_extension = extension_provider && true || false
     options = put_in(options || [], [:for_repo], true)
@@ -103,12 +103,12 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo do
                        poly_support = unquote(options[:poly_support])
                        @options unquote(options)
 
-                       import Noizu.DomainObject, only: [file_rel_dir: 1]
+                       import Noizu.AdvancedScaffolding.DomainObject, only: [file_rel_dir: 1]
                        require Amnesia
                        require Logger
                        require Amnesia.Helper
                        require Amnesia.Fragment
-                       require Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo
+                       require Noizu.AdvancedScaffolding.Meta.DomainObject.Repo
                        import Noizu.ElixirCore.Guards
                        #---------------------
                        # Insure Single Call
@@ -122,11 +122,11 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo do
 
                        # Extract Base Fields fields since SimbpleObjects are at the same level as their base.
                        @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-                       Noizu.DomainObject.__prepare__base__macro__(unquote(options))
+                       Noizu.AdvancedScaffolding.DomainObject.__prepare__base__macro__(unquote(options))
 
                        # Push details to Base, and read in required settings.
                        @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-                       Noizu.DomainObject.__prepare__poly__macro__(unquote(options))
+                       Noizu.AdvancedScaffolding.DomainObject.__prepare__poly__macro__(unquote(options))
 
 
                        #---------------------
@@ -152,31 +152,31 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo do
                        #----------------------
                        # Derives
                        #----------------------
-                       @__nzdo__derive Noizu.V3.EntityProtocol
-                       @__nzdo__derive Noizu.V3.RestrictedProtocol
+                       @__nzdo__derive Noizu.AdvancedScaffolding.Entity.Protocol
+                       @__nzdo__derive Noizu.AdvancedScaffolding.Restricted.Protocol
 
 
-                       @__nzdo__allowed_refs (case (poly_support || Noizu.DomainObject.extract_attribute(:poly_support, nil)) do
+                       @__nzdo__allowed_refs (case (poly_support || Noizu.AdvancedScaffolding.DomainObject.extract_attribute(:poly_support, nil)) do
                                                 v  when is_list(v) -> Enum.uniq(v ++ [@__nzdo__entity])
                                                 _ -> [@__nzdo__entity]
                                               end)
 
                        # Json Settings
                        @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-                       Noizu.DomainObject.__prepare__json_settings__macro__(unquote(options))
+                       Noizu.AdvancedScaffolding.DomainObject.__prepare__json_settings__macro__(unquote(options))
 
                        # Prep attributes for loading individual fields.
-                       require Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity
+                       require Noizu.AdvancedScaffolding.Meta.DomainObject.Entity
                        @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-                       Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity.__register__field_attributes__macro__(unquote(options))
+                       Noizu.AdvancedScaffolding.Meta.DomainObject.Entity.__register__field_attributes__macro__(unquote(options))
 
                        #----------------------
                        # User block section (define, fields, constraints, json_mapping rules, etc.)
                        #----------------------
                        try do
-                         import Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo
-                         import Noizu.ElixirScaffolding.V3.Meta.DomainObject.Entity
-                         @implement Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo
+                         import Noizu.AdvancedScaffolding.Meta.DomainObject.Repo
+                         import Noizu.AdvancedScaffolding.Meta.DomainObject.Entity
+                         @implement Noizu.AdvancedScaffolding.Meta.DomainObject.Repo
                          unquote(extension_block_a)
 
 
@@ -211,7 +211,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo do
 
       # Post User Logic Hook and checks.
       @before_compile unquote(internal_provider)
-      @before_compile Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo
+      @before_compile Noizu.AdvancedScaffolding.Meta.DomainObject.Repo
       @after_compile unquote(internal_provider)
       unquote(extension_block_d)
       @file __ENV__.file
@@ -312,7 +312,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo do
   end
 
   defmacro __layer_transaction_block__(layer, options \\ [], [do: block]) do
-    Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo.__layer_transaction_block__d(__CALLER__, layer, options, block)
+    Noizu.AdvancedScaffolding.Meta.DomainObject.Repo.__layer_transaction_block__d(__CALLER__, layer, options, block)
   end
 
   def __layer_transaction_block__d(_caller, layer, _options, block) do

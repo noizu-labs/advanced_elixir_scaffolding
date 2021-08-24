@@ -3,16 +3,16 @@
 # Copyright (C) 2021 JetzyApp. All rights reserved.
 #-------------------------------------------------------------------------------
 
-defmodule Noizu.Scaffolding.Test.Fixture.V3.Foo.Type do
-  use Noizu.DomainObject
+defmodule Noizu.AdvancedScaffolding.Test.Fixture.V3.Foo.Type do
+  use Noizu.AdvancedScaffolding.DomainObject
   @vsn 1.0
   @sref "foo-v3-type"
   @persistence_layer {NoizuSchema.Database, cascade_block?: true}
   defmodule Entity do
     @enum_list [
-      {NoizuSchema.Database.Scaffolding.Test.Fixture.V3.Foo.Table , 0},
+      {NoizuSchema.Database.AdvancedScaffolding.Test.Fixture.V3.Foo.Table , 0},
     ]
-    Noizu.DomainObject.noizu_entity(noizu_domain_object_schema: Noizu.Scaffolding.Test.Fixture.V3.DomainObject.Schema) do
+    Noizu.AdvancedScaffolding.DomainObject.noizu_entity(noizu_domain_object_schema: Noizu.AdvancedScaffolding.Test.Fixture.V3.DomainObject.Schema) do
       identifier :integer
       public_field :content
       public_field :second
@@ -20,7 +20,7 @@ defmodule Noizu.Scaffolding.Test.Fixture.V3.Foo.Type do
   end
 
   defmodule Repo do
-    Noizu.DomainObject.noizu_repo(noizu_domain_object_schema: Noizu.Scaffolding.Test.Fixture.V3.DomainObject.Schema) do
+    Noizu.AdvancedScaffolding.DomainObject.noizu_repo(noizu_domain_object_schema: Noizu.AdvancedScaffolding.Test.Fixture.V3.DomainObject.Schema) do
     end
   end
 

@@ -1,11 +1,11 @@
-defmodule Noizu.Scaffolding.V3.Sphinx.TimeStamp do
+defmodule Noizu.AdvancedScaffolding.Sphinx.TimeStamp do
   @moduledoc """
   Ecto ENUM Custom Type.
   """
   use Ecto.Type
 
-  require Noizu.DomainObject
-  Noizu.DomainObject.noizu_sphinx_handler()
+  require Noizu.AdvancedScaffolding.DomainObject
+  Noizu.AdvancedScaffolding.DomainObject.noizu_sphinx_handler()
 
   #----------------------------
   # type

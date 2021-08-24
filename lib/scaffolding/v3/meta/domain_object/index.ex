@@ -1,4 +1,4 @@
-defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Index do
+defmodule Noizu.AdvancedScaffolding.Meta.DomainObject.Index do
 
 
   #--------------------------------------------
@@ -6,14 +6,14 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Index do
   #--------------------------------------------
   def __noizu_index__(caller, options, block) do
     indexer = case options[:engine] do
-                nil -> Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Index.DefaultSphinxProvider
-                :sphinx -> Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Index.DefaultSphinxProvider
+                nil -> Noizu.AdvancedScaffolding.Implementation.DomainObject.Index.DefaultSphinxProvider
+                :sphinx -> Noizu.AdvancedScaffolding.Implementation.DomainObject.Index.DefaultSphinxProvider
                 v when is_atom(v) -> v
               end
 
     process_config = quote do
                        @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-                       import Noizu.DomainObject, only: [file_rel_dir: 1]
+                       import Noizu.AdvancedScaffolding.DomainObject, only: [file_rel_dir: 1]
                        import Noizu.ElixirCore.Guards
                        #---------------------
                        # Insure Single Call
@@ -34,7 +34,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Index do
                                      |> Enum.slice(0..-2)
                                      |> Module.concat()
                        if !Module.get_attribute(@__nzdo__base, :__nzdo__base_definied) do
-                         raise "#{@__nzdo__base} must include use Noizu.DomainObject call."
+                         raise "#{@__nzdo__base} must include use Noizu.AdvancedScaffolding.DomainObject call."
                        end
 
                        #----------------------
@@ -42,7 +42,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Index do
                        #----------------------
                        @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
                        try do
-                         import Noizu.ElixirScaffolding.V3.Meta.DomainObject.Index
+                         import Noizu.AdvancedScaffolding.Meta.DomainObject.Index
                          unquote(block)
                        after
                          :ok
@@ -58,7 +58,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.Index do
       # Post User Logic Hook and checks.
       #@before_compile unquote(internal_provider)
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-      @before_compile Noizu.ElixirScaffolding.V3.Meta.DomainObject.Index
+      @before_compile Noizu.AdvancedScaffolding.Meta.DomainObject.Index
       #@after_compile unquote(internal_provider)
       @file __ENV__.file
     end

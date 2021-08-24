@@ -1,4 +1,4 @@
-defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultErpProvider do
+defmodule Noizu.AdvancedScaffolding.Implementation.DomainObject.Entity.DefaultErpProvider do
 
   defmodule Default do
 
@@ -289,7 +289,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
   defmacro __using__(_options \\ nil) do
     quote do
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-      @__nzdo__erp_imp Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultErpProvider.Default
+      @__nzdo__erp_imp Noizu.AdvancedScaffolding.Implementation.DomainObject.Entity.DefaultErpProvider.Default
       #-----------------------------------
       #
       #-----------------------------------

@@ -1,4 +1,4 @@
-# Noizu Scaffolding
+# Noizu.AdvancedScaffolding
 
 This library provides some general tools to reduce some boiler plate code around working with objects, performing CRUD, auditing changes, performing basic authorization checks, and working with entity references (foreign keys). It includes various concepts previously applied to some of our private projects including blade of eternity, lacrosse alerts, and solace club.
 
@@ -39,18 +39,18 @@ The EntityReferenceProtocol (alias Noizu.ERP, as: EntityReferenceProtocol) is de
 Where the methods ref and sref convert any participating objects into {:ref, Module, id} and "ref.module.id" format respectively;  record and record! expand a reference into whatever format is used for db persistence (where options gives us a hook to dynamically adjust how records are converted to, for example, insert linked records if needed); and finally, where entity/2 and entity!/2 will insure our reference is in entity (struct) format.
 
 It is up to the library user to provide the defimpls needed to handle sref format strings "ref.type.identifier", along with defimpls for any structs and database classes used.
-Additionally it is up to the library user to ensure that their struct classes implement the Noizu.Scaffolding.EntityBehaviour and that their structs and persistence records provide defimpls of the EntityReferenceProtocl to allow their conversion into ref, sref, record and entity format.
+Additionally it is up to the library user to ensure that their struct classes implement the Noizu.AdvancedScaffolding.EntityBehaviour and that their structs and persistence records provide defimpls of the EntityReferenceProtocl to allow their conversion into ref, sref, record and entity format.
 
 ## AuditEngine
 
-The Noizu.Scaffolding.RepoBehaviour will automatically make auditing calls as records are accessed and modified. This makes it very straight forward (provided an AuditEngine is defined) to generate robust audits of who has modified what and when.
+The Noizu.AdvancedScaffolding.RepoBehaviour will automatically make auditing calls as records are accessed and modified. This makes it very straight forward (provided an AuditEngine is defined) to generate robust audits of who has modified what and when.
 
 A possible implementation may look like the following mnesia table and defimpl. Note how the mnesia table is setup to allow us to easily search by
 entity, request token, time, or editor.
 
 ```
 defmodule YourProject.AuditEngine do
-  @behaviour Noizu.Scaffolding.AudingEngineBehaviour
+  @behaviour Noizu.AdvancedScaffolding.AudingEngineBehaviour
 
   def audit(event, details, entity, context, note \\ nil) do  
     %MnesiaDb.AuditHistory{
@@ -100,7 +100,7 @@ end # end deftable
 
 ## Calling Context
 
-The Noizu.Scaffolding.CallingContext structure is used to pass information about API or related requests through out the system so that it is possible to confirm that a given caller is authorized to make changes, log who the caller was, apply global options to the request (such as expanding refs where found), and pass along a request token to allow admins to easily
+The Noizu.AdvancedScaffolding.CallingContext structure is used to pass information about API or related requests through out the system so that it is possible to confirm that a given caller is authorized to make changes, log who the caller was, apply global options to the request (such as expanding refs where found), and pass along a request token to allow admins to easily
 collate requests across systems.
 
 ```
@@ -117,7 +117,7 @@ collate requests across systems.
 It is left to the user to implement the logic needed to populate a CallingContext with these values. A sample implementation is below.
 
 ```
-  alias Noizu.Scaffolding.CallingContext, as: CallingContext
+  alias Noizu.AdvancedScaffolding.CallingContext, as: CallingContext
   def default_get_context(conn, params, opts \\ %{})
   def default_get_context(conn, params, _opts) do
     token = params["request-id"] || case (get_resp_header(conn, "x-request-id")) do
@@ -179,15 +179,15 @@ It is left to the user to implement the logic needed to populate a CallingContex
 
 ## Noizu Mnesia Identifiers (NMIDs)
 Internally we often use what I call NMIDs to allow for the creation of numerical (for look up speed) unique identifiers spread across multiple systems.
-You may use any id generation logic of your choice provided it can implement the Noizu.Scaffolding.NmidBehaviour
+You may use any id generation logic of your choice provided it can implement the Noizu.AdvancedScaffolding.NmidBehaviour
 
 The logic I use suffixes generated ids with a number that represents the node and, optionally, the component (long lived process) making the request. With the Mnesia backend used to track per node/component the current sequential id.  
 
 This logic and this library in turn is likely to go through heavy revision as I finalize my BladeOfEternity/NoizuRpg codebase. The current implementation I use is similiar to the following. However a simple `UUID.(:hex)` may be used if the user is not concerned with indexing/lookup efficiency. Or even a simple mnesia backed sequencer shared between all nodes.
 
 ```
-defmodule Noizu.Scaffolding.Nmid do
-  @behaviour Noizu.Scaffolding.NmidBehaviour
+defmodule Noizu.AdvancedScaffolding.Nmid do
+  @behaviour Noizu.AdvancedScaffolding.NmidBehaviour
   def generate(sed = {node_id, process}, opts \\ nil) do
     MnesiaDB.NmidGenerator.wait()
 

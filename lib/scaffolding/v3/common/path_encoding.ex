@@ -3,7 +3,7 @@
 # Copyright (C) 2021 Noizu Labs, Inc. All rights reserved.
 #-------------------------------------------------------------------------------
 
-defmodule Noizu.Scaffolding.V3.PathEncoding do
+defmodule Noizu.AdvancedScaffolding.PathEncoding do
   @vsn 1.0
   @type t :: %__MODULE__{
                path: list,
@@ -29,12 +29,12 @@ defmodule Noizu.Scaffolding.V3.PathEncoding do
   }
 
   def parent_path(nil), do: nil
-  def parent_path(%__MODULE__{} = this) do
+  def parent_path(%{__struct__: __MODULE__} = this) do
     new(Enum.slice(this.path, 0..-2))
   end
 
   def path_string(nil), do: nil
-  def path_string(%__MODULE__{} = this) do
+  def path_string(%{__struct__: __MODULE__} = this) do
     Enum.join(this.path, ".")
   end
 

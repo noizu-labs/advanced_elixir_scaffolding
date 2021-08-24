@@ -1,10 +1,10 @@
-defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Struct.DefaultIndexProvider do
+defmodule Noizu.AdvancedScaffolding.Implementation.DomainObject.Struct.DefaultIndexProvider do
 
   defmacro __using__(_options \\ nil) do
     quote do
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       # We forward down tot he entity profider's implementations
-      @__nzdo__index_imp Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultIndexProvider.Default
+      @__nzdo__index_imp Noizu.AdvancedScaffolding.Implementation.DomainObject.Entity.DefaultIndexProvider.Default
 
 
       #------------------------------

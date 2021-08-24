@@ -1,4 +1,4 @@
-defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.ScaffoldingSchema do
+defmodule Noizu.AdvancedScaffolding.Meta.DomainObject.ScaffoldingSchema do
 
 
 
@@ -8,12 +8,12 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.ScaffoldingSchema do
   def __noizu_scaffolding_schema__(caller, options, block) do
     base_prefix = options[:base_prefix] || :auto
     database_prefix = options[:database_prefix] || :auto
-    scaffolding_schema_provider = options[:scaffolding_schema_imp] || Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Scaffolding.DefaultScaffoldingSchemaProvider
+    scaffolding_schema_provider = options[:scaffolding_schema_imp] || Noizu.AdvancedScaffolding.Implementation.DomainObject.Scaffolding.DefaultScaffoldingSchemaProvider
     app = options[:app] || throw "You must pass noizu_scaffolding_schema(app: :your_app)"
     s1 = quote do
-           import Noizu.DomainObject, only: [file_rel_dir: 1]
-           require Noizu.DomainObject
-           require Noizu.ElixirScaffolding.V3.Meta.DomainObject.ScaffoldingSchema
+           import Noizu.AdvancedScaffolding.DomainObject, only: [file_rel_dir: 1]
+           require Noizu.AdvancedScaffolding.DomainObject
+           require Noizu.AdvancedScaffolding.Meta.DomainObject.ScaffoldingSchema
            import Noizu.ElixirCore.Guards
            @options unquote(options)
            @app unquote(app)
@@ -24,7 +24,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.ScaffoldingSchema do
            @database_prefix (case unquote(database_prefix) do
                             :auto ->
                               __MODULE__
-                              |> Noizu.ElixirScaffolding.V3.Meta.Persistence.default_ecto_repo()
+                              |> Noizu.AdvancedScaffolding.Meta.Persistence.default_ecto_repo()
                               |> Module.split()
                               |> Enum.slice(0..-2)
                               |> Module.concat()
@@ -50,7 +50,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.ScaffoldingSchema do
            @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
            try do
              # we rely on the same providers as used in the Entity type for providing json encoding, restrictions, etc.
-             import Noizu.ElixirScaffolding.V3.Meta.DomainObject.ScaffoldingSchema
+             import Noizu.AdvancedScaffolding.Meta.DomainObject.ScaffoldingSchema
              @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
              unquote(block)
            after

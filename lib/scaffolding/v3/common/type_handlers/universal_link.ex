@@ -3,12 +3,12 @@
 # Copyright (C) 2021 Noizu Labs, Inc. All rights reserved.
 #-------------------------------------------------------------------------------
 
-defmodule Noizu.Scaffolding.V3.UniversalLink do
+defmodule Noizu.AdvancedScaffolding.UniversalLink do
 
   defmodule PersistenceStrategy do
-    require  Noizu.DomainObject
-    Noizu.DomainObject.noizu_type_handler()
-    Noizu.DomainObject.noizu_sphinx_handler()
+    require  Noizu.AdvancedScaffolding.DomainObject
+    Noizu.AdvancedScaffolding.DomainObject.noizu_type_handler()
+    Noizu.AdvancedScaffolding.DomainObject.noizu_sphinx_handler()
 
     #--------------------------------------
     #
@@ -73,7 +73,7 @@ defmodule Noizu.Scaffolding.V3.UniversalLink do
       ]
     end
     def __sphinx_bits__(_field, _indexing, _settings), do: :auto
-    def __sphinx_encoding__(field, indexing, settings) do
+    def __sphinx_encoding__(_field, indexing, _settings) do
       cond do
         indexing[:sub] == :identifier -> :attr_bigint
         indexing[:sub] == :type -> :attr_uint
@@ -88,8 +88,8 @@ defmodule Noizu.Scaffolding.V3.UniversalLink do
             indexing[:sub] == :identifier -> nil
             indexing[:sub] == :type -> nil
           end
-        indexing[:sub] == :identifier -> Noizu.Ecto.Entity.universal_identifier(value)
-        indexing[:sub] == :type -> source = value.__struct__.__nmid__(:index)
+        indexing[:sub] == :identifier -> Noizu.AdvancedScaffolding.EctoEntity.Protocol.universal_identifier(value)
+        indexing[:sub] == :type -> value.__struct__.__nmid__(:index)
       end
     end
 

@@ -1,4 +1,4 @@
-defmodule Noizu.EnumRefBehaviour do
+defmodule Noizu.AdvancedScaffolding.EnumRefBehaviour do
 
   defmodule Default do
 
@@ -33,7 +33,7 @@ defmodule Noizu.EnumRefBehaviour do
     def dump(_m, v) do
       cond do
         v == nil -> {:ok, 0}
-        v = Noizu.Ecto.Entity.ecto_identifier(v) -> {:ok, v}
+        v = Noizu.AdvancedScaffolding.EctoEntity.Protocol.ecto_identifier(v) -> {:ok, v}
         :else -> {:ok, 0}
       end
     end
@@ -121,7 +121,7 @@ defmodule Noizu.EnumRefBehaviour do
       @doc """
       Casts to Ref.
       """
-      def cast(v), do: Noizu.EnumRefBehaviour.Default.cast(__MODULE__, v)
+      def cast(v), do: Noizu.AdvancedScaffolding.EnumRefBehaviour.Default.cast(__MODULE__, v)
 
       #----------------------------
       # cast!
@@ -130,20 +130,20 @@ defmodule Noizu.EnumRefBehaviour do
       @doc """
       Same as `cast/1` but raises `Ecto.CastError` on invalid arguments.
       """
-      def cast!(v), do: Noizu.EnumRefBehaviour.Default.cast!(__MODULE__, v)
+      def cast!(v), do: Noizu.AdvancedScaffolding.EnumRefBehaviour.Default.cast!(__MODULE__, v)
 
       #----------------------------
       # dump
       #----------------------------
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       @doc false
-      def dump(v), do: Noizu.EnumRefBehaviour.Default.dump(__MODULE__, v)
+      def dump(v), do: Noizu.AdvancedScaffolding.EnumRefBehaviour.Default.dump(__MODULE__, v)
 
       #----------------------------
       # load
       #----------------------------
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-      def load(v), do: Noizu.EnumRefBehaviour.Default.load(__MODULE__, v)
+      def load(v), do: Noizu.AdvancedScaffolding.EnumRefBehaviour.Default.load(__MODULE__, v)
     end
   end
 

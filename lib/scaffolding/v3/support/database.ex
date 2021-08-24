@@ -5,7 +5,7 @@
 
 use Amnesia
 
-defdatabase Noizu.Scaffolding.V3.Database do
+defdatabase Noizu.AdvancedScaffolding.Database do
 
   #-----------------------------------------------------------------------------
   # Ref Resolution Lookup Table

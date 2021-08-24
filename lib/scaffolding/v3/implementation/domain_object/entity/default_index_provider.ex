@@ -1,9 +1,9 @@
-defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultIndexProvider do
+defmodule Noizu.AdvancedScaffolding.Implementation.DomainObject.Entity.DefaultIndexProvider do
 
   defmodule Default do
     alias Giza.SphinxQL
     require Logger
-    def __write_index__(domain_object, entity, index, settings, context, options) do
+    def __write_index__(domain_object, entity, index, settings, context, _options) do
       cond do
         settings[:options][:type] == :real_time ->
           # @todo tweak header, return raw fields or only field lists not the replace statement.
@@ -17,7 +17,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultI
           IO.puts "TODO - #{domain_object} - Perform record keeping so entity's can be reindexed/delta-indexed. etc."
       end
     end
-    def __update_index__(domain_object, entity, index, settings, context, options) do
+    def __update_index__(_domain_object, entity, index, settings, context, _options) do
       cond do
         settings[:options][:type] == :real_time ->
           replace = index.__index_header__(:real_time, context, [])
@@ -40,7 +40,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultI
 
   defmacro __using__(_options \\ nil) do
     quote do
-      @__nzdo__index_imp Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultIndexProvider.Default
+      @__nzdo__index_imp Noizu.AdvancedScaffolding.Implementation.DomainObject.Entity.DefaultIndexProvider.Default
 
 
       #------------------------------

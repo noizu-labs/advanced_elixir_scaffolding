@@ -1,4 +1,4 @@
-defmodule Noizu.Scaffolding.V3.Schema.PersistenceLayer do
+defmodule Noizu.AdvancedScaffolding.Schema.PersistenceLayer do
   @vsn 1.0
   @type t :: %__MODULE__{
                schema: atom,

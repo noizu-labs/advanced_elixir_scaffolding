@@ -1,9 +1,9 @@
-defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCrudProvider do
+defmodule Noizu.AdvancedScaffolding.Implementation.DomainObject.Repo.DefaultCrudProvider do
 
   defmodule Default do
     use Amnesia
-    alias Noizu.Scaffolding.V3.Schema.PersistenceLayer
-    require  Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo
+    alias Noizu.AdvancedScaffolding.Schema.PersistenceLayer
+    require  Noizu.AdvancedScaffolding.Meta.DomainObject.Repo
     require Amnesia.Fragment
 
     #------------------------------------------
@@ -234,7 +234,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
     # Get - layer_pre_get_callback
     #------------------------------------------
     def layer_pre_get_callback(m, %PersistenceLayer{type: :mnesia}, ref, _context, _options), do: m.__entity__().id(ref)
-    def layer_pre_get_callback(_m, %PersistenceLayer{type: :ecto}, ref, _context, _options), do: Noizu.Ecto.Entity.ecto_identifier(ref)
+    def layer_pre_get_callback(_m, %PersistenceLayer{type: :ecto}, ref, _context, _options), do: Noizu.AdvancedScaffolding.EctoEntity.Protocol.ecto_identifier(ref)
     def layer_pre_get_callback(_m, _layer, ref, _context, _options), do: ref
 
     #------------------------------------------
@@ -787,8 +787,8 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
     # caller = __CALLER__
     quote do
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-      alias Noizu.Scaffolding.V3.Schema.PersistenceLayer
-      @__nzdo__crud_imp Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCrudProvider.Default
+      alias Noizu.AdvancedScaffolding.Schema.PersistenceLayer
+      @__nzdo__crud_imp Noizu.AdvancedScaffolding.Implementation.DomainObject.Repo.DefaultCrudProvider.Default
 
 
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
@@ -839,7 +839,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def layer_pre_get_callback(%PersistenceLayer{} = layer, ref, context, options), do: @__nzdo__crud_imp.layer_pre_get_callback(__MODULE__, layer, ref, context, options)
       def layer_pre_get_callback!(%PersistenceLayer{} = layer, ref, context, options) do
-        Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo.__layer_transaction_block__(layer) do
+        Noizu.AdvancedScaffolding.Meta.DomainObject.Repo.__layer_transaction_block__(layer) do
           layer_pre_get_callback(layer, ref, context, options)
         end
       end
@@ -847,7 +847,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def layer_post_get_callback(%PersistenceLayer{} = layer, entity, context, options), do: @__nzdo__crud_imp.layer_post_get_callback(__MODULE__, layer, entity, context, options)
       def layer_post_get_callback!(%PersistenceLayer{} = layer, entity, context, options) do
-        Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo.__layer_transaction_block__(layer) do
+        Noizu.AdvancedScaffolding.Meta.DomainObject.Repo.__layer_transaction_block__(layer) do
           layer_post_get_callback(layer, entity, context, options)
         end
       end
@@ -870,7 +870,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def post_create_callback(entity, context, options), do: @__nzdo__crud_imp.post_create_callback(__MODULE__, entity, context, options)
       def post_create_callback!(entity, context, options) do
-        Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo.__transaction_block__() do
+        Noizu.AdvancedScaffolding.Meta.DomainObject.Repo.__transaction_block__() do
           post_create_callback(entity, context, options)
         end
       end
@@ -883,7 +883,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
       def layer_pre_create_callback(%PersistenceLayer{} = layer, entity, context, options),
           do: @__nzdo__crud_imp.layer_pre_create_callback(__MODULE__, layer, entity, context, options)
       def layer_pre_create_callback!(%PersistenceLayer{} = layer, entity, context, options) do
-        Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo.__layer_transaction_block__(layer) do
+        Noizu.AdvancedScaffolding.Meta.DomainObject.Repo.__layer_transaction_block__(layer) do
           layer_pre_create_callback(layer, entity, context, options)
         end
       end
@@ -896,7 +896,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
       def layer_post_create_callback(%PersistenceLayer{} = layer, entity, context, options),
           do: @__nzdo__crud_imp.layer_post_create_callback(__MODULE__, layer, entity, context, options)
       def layer_post_create_callback!(%PersistenceLayer{} = layer, entity, context, options) do
-        Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo.__layer_transaction_block__(layer) do
+        Noizu.AdvancedScaffolding.Meta.DomainObject.Repo.__layer_transaction_block__(layer) do
           layer_post_create_callback(layer, entity, context, options)
         end
       end
@@ -920,7 +920,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def post_update_callback(entity, context, options), do: @__nzdo__crud_imp.post_update_callback(__MODULE__, entity, context, options)
       def post_update_callback!(entity, context, options) do
-        Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo.__transaction_block__() do
+        Noizu.AdvancedScaffolding.Meta.DomainObject.Repo.__transaction_block__() do
           post_update_callback(entity, context, options)
         end
       end
@@ -933,7 +933,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
       def layer_pre_update_callback(%PersistenceLayer{} = layer, entity, context, options),
           do: @__nzdo__crud_imp.layer_pre_update_callback(__MODULE__, layer, entity, context, options)
       def layer_pre_update_callback!(%PersistenceLayer{} = layer, entity, context, options) do
-        Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo.__layer_transaction_block__(layer) do
+        Noizu.AdvancedScaffolding.Meta.DomainObject.Repo.__layer_transaction_block__(layer) do
           layer_pre_update_callback(layer, entity, context, options)
         end
       end
@@ -946,7 +946,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
       def layer_post_update_callback(%PersistenceLayer{} = layer, entity, context, options),
           do: @__nzdo__crud_imp.layer_post_update_callback(__MODULE__, layer, entity, context, options)
       def layer_post_update_callback!(%PersistenceLayer{} = layer, entity, context, options) do
-        Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo.__layer_transaction_block__(layer) do
+        Noizu.AdvancedScaffolding.Meta.DomainObject.Repo.__layer_transaction_block__(layer) do
           layer_post_update_callback(layer, entity, context, options)
         end
       end
@@ -979,7 +979,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
       def layer_pre_delete_callback(%PersistenceLayer{} = layer, entity, context, options),
           do: @__nzdo__crud_imp.layer_pre_delete_callback(__MODULE__, layer, entity, context, options)
       def layer_pre_delete_callback!(%PersistenceLayer{} = layer, entity, context, options) do
-        Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo.__layer_transaction_block__(layer) do
+        Noizu.AdvancedScaffolding.Meta.DomainObject.Repo.__layer_transaction_block__(layer) do
           layer_pre_delete_callback(layer, entity, context, options)
         end
       end
@@ -992,7 +992,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
       def layer_post_delete_callback(%PersistenceLayer{} = layer, entity, context, options),
           do: @__nzdo__crud_imp.layer_post_delete_callback(__MODULE__, layer, entity, context, options)
       def layer_post_delete_callback!(%PersistenceLayer{} = layer, entity, context, options) do
-        Noizu.ElixirScaffolding.V3.Meta.DomainObject.Repo.__layer_transaction_block__(layer) do
+        Noizu.AdvancedScaffolding.Meta.DomainObject.Repo.__layer_transaction_block__(layer) do
           layer_post_delete_callback(layer, entity, context, options)
         end
       end

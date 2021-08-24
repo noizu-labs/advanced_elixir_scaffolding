@@ -8,20 +8,15 @@
 
 
 # Danger Will Robinson.
-use  Noizu.Database.Scaffolding.Test.Fixture.FooTable
-use  Noizu.Database.Scaffolding.Test.Fixture.FooV2Table
-alias Noizu.Database.Scaffolding.Test.Fixture.FooTable
-alias Noizu.Database.Scaffolding.Test.Fixture.FooV2Table
-alias NoizuSchema.Database.Scaffolding.Test.Fixture.V3.Foo.Table, as: FooV3Table
-alias NoizuSchema.Database.Scaffolding.Test.Fixture.V3.Foo.Type.Table, as: FooV3TypeTable
-alias Noizu.Scaffolding.V3.Database.NmidV3Generator
+alias NoizuSchema.Database.AdvancedScaffolding.Test.Fixture.V3.Foo.Table, as: FooV3Table
+alias NoizuSchema.Database.AdvancedScaffolding.Test.Fixture.V3.Foo.Type.Table, as: FooV3TypeTable
+alias Noizu.AdvancedScaffolding.Database.NmidV3Generator
 
-Amnesia.stop
-Amnesia.Schema.destroy
+#Amnesia.stop
+#Amnesia.Schema.destroy
 Amnesia.Schema.create()
 Amnesia.start
-if !Amnesia.Table.exists?(FooTable), do: FooTable.create(memory: [node()])
-if !Amnesia.Table.exists?(FooV2Table), do: FooV2Table.create(memory: [node()])
+
 if !Amnesia.Table.exists?(FooV3Table), do: FooV3Table.create(memory: [node()])
 if !Amnesia.Table.exists?(FooV3TypeTable), do: FooV3TypeTable.create(memory: [node()])
 if !Amnesia.Table.exists?(NmidV3Generator), do: NmidV3Generator.create(memory: [node()])

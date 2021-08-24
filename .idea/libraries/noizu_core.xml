@@ -1,0 +1,22 @@
+<component name="libraryTable">
+  <library name="noizu_core" type="mix">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/_build/dev/lib/noizu_core/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/test/lib/noizu_core/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/dev/lib/noizu_core/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/test/lib/noizu_core/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/dev/lib/noizu_core/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/dev/lib/noizu_core/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/dev/lib/noizu_core/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/test/lib/noizu_core/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/dev/lib/noizu_core/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/test/lib/noizu_core/ebin" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/deps/noizu_core/lib" />
+      <root url="file://$PROJECT_DIR$/deps/noizu_core/lib" />
+      <root url="file://$PROJECT_DIR$/deps/noizu_core/lib" />
+    </SOURCES>
+  </library>
+</component>

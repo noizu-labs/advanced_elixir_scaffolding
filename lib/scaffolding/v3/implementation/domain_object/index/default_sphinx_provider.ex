@@ -1,4 +1,4 @@
-defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Index.DefaultSphinxProvider do
+defmodule Noizu.AdvancedScaffolding.Implementation.DomainObject.Index.DefaultSphinxProvider do
 
   defmodule Default do
 
@@ -154,7 +154,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Index.DefaultSp
 
 
     def __index_record__(mod, record_type, entity, context, options) do
-      uid = Noizu.Ecto.Entity.universal_identifier(entity)
+      uid = Noizu.AdvancedScaffolding.EctoEntity.Protocol.universal_identifier(entity)
       settings = mod.__indexing__()[mod]
       raw = mod.__index_schema_fields__(context, options)
 
@@ -227,31 +227,31 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Index.DefaultSp
                                   :else -> Enum.join(v.value || [], ",")
                                 end
                               v.encoding == :attr_float ->
-                                case Noizu.Scaffolding.V3.Sphinx.Float.dump(v.value) do
+                                case Noizu.AdvancedScaffolding.Sphinx.Float.dump(v.value) do
                                   {:ok, v} -> v
                                   :error ->
                                     Logger.warn("Sphinx: #{entity && entity.__struct__} unable to cast as #{inspect v.encoding} - #{inspect f} - [#{inspect v.value}]")
-                                    {:ok, v} = Noizu.Scaffolding.V3.Sphinx.Float.dump(nil)
+                                    {:ok, v} = Noizu.AdvancedScaffolding.Sphinx.Float.dump(nil)
                                     v
                                 end
                               v.encoding == :attr_bool ->
-                                case Noizu.Scaffolding.V3.Sphinx.Bool.dump(v.value) do
+                                case Noizu.AdvancedScaffolding.Sphinx.Bool.dump(v.value) do
                                   {:ok, true} -> 1
                                   {:ok, false} -> 0
                                   {:ok, v} -> v
                                   :error ->
                                     Logger.warn("Sphinx: #{entity && entity.__struct__} unable to cast as #{inspect v.encoding} - #{inspect f} - [#{inspect v.value}]")
-                                    {:ok, v} = Noizu.Scaffolding.V3.Sphinx.Bool.dump(nil)
+                                    {:ok, v} = Noizu.AdvancedScaffolding.Sphinx.Bool.dump(nil)
                                     v
                                 end
                               v.encoding == :attr_timestamp ->
                                 v.value
                               Enum.member?([:attr_uint, :attr_bigint, :attr_int], v.encoding) ->
-                                case Noizu.Scaffolding.V3.Sphinx.Integer.dump(v.value) do
+                                case Noizu.AdvancedScaffolding.Sphinx.Integer.dump(v.value) do
                                   {:ok, v} -> v
                                   :error ->
                                     Logger.warn("Sphinx: #{entity && entity.__struct__} unable to cast as #{inspect v.encoding} - #{inspect f} - [#{inspect v.value}]")
-                                    {:ok, v} = Noizu.Scaffolding.V3.Sphinx.Integer.dump(nil)
+                                    {:ok, v} = Noizu.AdvancedScaffolding.Sphinx.Integer.dump(nil)
                                     v
                                 end
                               :else -> throw "Invalid encoding for #{mod}.#{f}"
@@ -348,7 +348,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Index.DefaultSp
   defmacro __using__(options) do
     options = Macro.expand(options, __ENV__)
     index_stem = options[:index_stem]
-    source_dir = options[:source_dir] || Application.get_env(:noizu_scaffolding, :sphinx_data_dir, "/sphinx/data")
+    source_dir = options[:source_dir] || Application.get_env(:noizu_advanced_scaffolding, :sphinx_data_dir, "/sphinx/data")
 
     rt_index = options[:rt_index]
     delta_index = options[:delta_index]
@@ -361,7 +361,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Index.DefaultSp
 
     quote do
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-      alias Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Index.DefaultSphinxProvider.Default, as: SphinxProvider
+      alias Noizu.AdvancedScaffolding.Implementation.DomainObject.Index.DefaultSphinxProvider.Default, as: SphinxProvider
 
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def extract_field(field, entity, context, options), do: SphinxProvider.extract_field(__MODULE__, field, entity, context, options)

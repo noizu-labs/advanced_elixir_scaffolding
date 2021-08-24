@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="ae58bc41-455c-447f-90eb-f1325731ba9b" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/amnesia.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/benchee.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/benchee_json.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/benchfella.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/cmark.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/connection.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/cowboy.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/db_connection.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/decimal.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/earmark.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/ecto.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/ecto_sql.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/ex_doc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/excoveralls.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/exjsx.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/exquisite.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/fastglobal.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/hackney.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/hoedown.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/inch_ex.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/jason.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/jazz.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/jiffy.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/json.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/markdown.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/mime.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/myxql.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/noizu_core.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/noizu_mnesia_versioning.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/plug.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/poison.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/postgrex.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/redix.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/tds.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/telemetry.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/uuid.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/runConfigurations.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/update_dependency_graph.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/confix.exs" beforeDir="false" afterPath="$PROJECT_DIR$/config/config.exs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/behaviours/audit_engine/default.ex" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/behaviours/audit_engine_behaviour.ex" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/behaviours/entity_behaviour.ex" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/behaviours/entity_behaviour_default.ex" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/behaviours/nmid_behaviour.ex" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/behaviours/query/entity_ref_filter_behaviour.ex" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/behaviours/query_behaviour.ex" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/behaviours/query_strategy/default.ex" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/behaviours/query_strategy/redis.ex" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/behaviours/repo_behaviour.ex" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/behaviours/repo_behaviour/amnesia_provider.ex" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/behaviours/repo_behaviour/amnesia_provider_default.ex" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/behaviours/repo_behaviour/redis_provider.ex" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/behaviours/repo_behaviour/redis_provider_default.ex" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/protocols/permission_protocol.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/protocols/permission_protocol.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/structs/unsupported_module.ex" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v2/behaviours/entity_behaviour.ex" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v2/behaviours/entity_behaviour_default.ex" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v2/behaviours/entity_behaviour_poly_support.ex" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v2/behaviours/repo_behaviour.ex" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v2/behaviours/repo_behaviour/amnesia_provider.ex" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v2/erp_resolver.ex" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v2/helpers.ex" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v2/protocols/entity_protocol.ex" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v2/protocols/restricted_protocol.ex" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/behaviours/basic_ref_behaviour.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/behaviours/basic_ref_behaviour.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/behaviours/ecto_enum_type_behaviour.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/behaviours/ecto_enum_type_behaviour.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/behaviours/enum_ref_behaviour.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/behaviours/enum_ref_behaviour.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/behaviours/nmid_generator.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/behaviours/nmid_generator.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/behaviours/poison_encoder.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/behaviours/poison_encoder.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/behaviours/sphinx_field_behaviour.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/behaviours/sphinx_field_behaviour.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/behaviours/universal_ref_behaviour.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/behaviours/universal_ref_behaviour.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/common/path_encoding.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/common/path_encoding.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/common/schema/ecto_metadata.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/common/schema/ecto_metadata.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/common/schema/metadata.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/common/schema/metadata.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/common/schema/persistence_layer.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/common/schema/persistence_layer.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/common/schema/persistence_settings.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/common/schema/persistence_settings.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/common/schema/redis_metadata.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/common/schema/redis_metadata.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/common/schema/universal_ref.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/common/schema/universal_ref.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/common/sphinx/bool.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/common/sphinx/bool.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/common/sphinx/float.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/common/sphinx/float.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/common/sphinx/integer.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/common/sphinx/integer.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/common/sphinx/nullable_integer.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/common/sphinx/nullable_integer.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/common/sphinx/time_stamp.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/common/sphinx/time_stamp.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/common/type_handlers/date_time.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/common/type_handlers/date_time.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/common/type_handlers/millisecond.time_stamp.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/common/type_handlers/millisecond.time_stamp.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/common/type_handlers/time_stamp.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/common/type_handlers/time_stamp.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/common/type_handlers/universal_link.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/common/type_handlers/universal_link.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/domain_object.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/domain_object.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/helpers.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/helpers.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/implementation/domain_object/entity/default_erp_provider.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/implementation/domain_object/entity/default_erp_provider.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/implementation/domain_object/entity/default_index_provider.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/implementation/domain_object/entity/default_index_provider.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/implementation/domain_object/entity/default_internal_provider.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/implementation/domain_object/entity/default_internal_provider.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/implementation/domain_object/entity/default_persistence_provider.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/implementation/domain_object/entity/default_persistence_provider.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/implementation/domain_object/index/default_sphinx_provider.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/implementation/domain_object/index/default_sphinx_provider.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/implementation/domain_object/repo/default_crud_provider.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/implementation/domain_object/repo/default_crud_provider.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/implementation/domain_object/repo/default_internal_provider.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/implementation/domain_object/repo/default_internal_provider.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/implementation/domain_object/scaffolding/default_scaffolding_schema_provider.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/implementation/domain_object/scaffolding/default_scaffolding_schema_provider.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/implementation/domain_object/struct/default_index_provider.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/implementation/domain_object/struct/default_index_provider.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/implementation/domain_object/struct/default_internal_provider.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/implementation/domain_object/struct/default_internal_provider.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/implementation/domain_object/struct/default_persistence_provider.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/implementation/domain_object/struct/default_persistence_provider.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/meta/domain_object/base.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/meta/domain_object/base.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/meta/domain_object/entity.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/meta/domain_object/entity.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/meta/domain_object/index.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/meta/domain_object/index.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/meta/domain_object/inspect.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/meta/domain_object/inspect.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/meta/domain_object/persistence.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/meta/domain_object/persistence.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/meta/domain_object/repo.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/meta/domain_object/repo.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/meta/domain_object/scaffolding_schema.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/meta/domain_object/scaffolding_schema.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/meta/domain_object/sphinx.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/meta/domain_object/sphinx.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/meta/domain_object/sphinx_handler.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/meta/domain_object/sphinx_handler.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/meta/domain_object/type_handler.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/meta/domain_object/type_handler.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/meta/simple_object/inspect.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/meta/simple_object/inspect.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/meta/simple_object/struct.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/meta/simple_object/struct.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/meta/table/base.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/meta/table/base.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/protocols/ecto_entity.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/protocols/ecto_entity.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/protocols/entity_protocol.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/protocols/entity_protocol.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/protocols/erp.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/protocols/erp.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/protocols/restricted_protocol.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/protocols/restricted_protocol.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/simple_object.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/simple_object.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/support/database.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/support/database.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/support/schema_provider.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/support/schema_provider.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/support/topology_provider.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/support/topology_provider.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/v3/universal_reference.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/v3/universal_reference.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mix.exs" beforeDir="false" afterPath="$PROJECT_DIR$/mix.exs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mix.lock" beforeDir="false" afterPath="$PROJECT_DIR$/mix.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/fixtures/entity.ex" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/fixtures/nmid_behaviour.ex" beforeDir="false" afterPath="$PROJECT_DIR$/test/fixtures/nmid_behaviour.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/fixtures/repo.ex" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/fixtures/table.ex" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/fixtures/v2/entity.ex" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/fixtures/v2/erp.ex" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/fixtures/v2/repo.ex" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/fixtures/v3/database.ex" beforeDir="false" afterPath="$PROJECT_DIR$/test/fixtures/v3/database.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/fixtures/v3/domain_object.schema.ex" beforeDir="false" afterPath="$PROJECT_DIR$/test/fixtures/v3/domain_object.schema.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/fixtures/v3/foo.ex" beforeDir="false" afterPath="$PROJECT_DIR$/test/fixtures/v3/foo.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/fixtures/v3/foo.type.ex" beforeDir="false" afterPath="$PROJECT_DIR$/test/fixtures/v3/foo.type.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/scaffolding/repo_test.exs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/scaffolding/repo_v2_test.exs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/scaffolding/v3/repo_test.exs" beforeDir="false" afterPath="$PROJECT_DIR$/test/scaffolding/v3/repo_test.exs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/scaffolding_test.exs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/test_helper.exs" beforeDir="false" afterPath="$PROJECT_DIR$/test/test_helper.exs" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CompilerWorkspaceConfiguration">
+    <option name="CLEAR_OUTPUT_DIRECTORY" value="false" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
+  <component name="ProjectId" id="1xBcLLuBkVfLNHcrue4zNz2IvtG" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/lib/scaffolding/v3/protocols" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/lib/scaffolding/v3/protocols" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Elixir Mix ExUnit.Run Unit Tests">
+    <configuration name="Mix ExUnit test/scaffolding/v3/repo_test.exs:93" type="MixExUnitRunConfigurationType" factoryName="Elixir Mix ExUnit" temporary="true">
+      <module name="noizu_scaffolding" />
+      <mix-test>
+        <argument>test/scaffolding/v3/repo_test.exs:93</argument>
+      </mix-test>
+      <working-directory url="file://$PROJECT_DIR$" />
+      <module name="noizu_scaffolding" />
+      <module-filters inherit-application-module-filters="true" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Run Unit Tests" type="MixExUnitRunConfigurationType" factoryName="Elixir Mix ExUnit">
+      <module name="noizu_scaffolding" />
+      <mix-test>
+        <argument>--only</argument>
+        <argument>v3</argument>
+      </mix-test>
+      <module name="noizu_scaffolding" />
+      <module-filters inherit-application-module-filters="true" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Build" type="MixRunConfigurationType" factoryName="Elixir Mix">
+      <module name="noizu_scaffolding" />
+      <mix>
+        <argument>compile</argument>
+      </mix>
+      <module name="noizu_scaffolding" />
+      <module-filters inherit-application-module-filters="true" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Elixir Mix.Build" />
+      <item itemvalue="Elixir Mix ExUnit.Run Unit Tests" />
+      <item itemvalue="Elixir Mix ExUnit.Mix ExUnit test/scaffolding/v3/repo_test.exs:93" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Elixir Mix ExUnit.Mix ExUnit test/scaffolding/v3/repo_test.exs:93" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="ae58bc41-455c-447f-90eb-f1325731ba9b" name="Changes" comment="" />
+      <created>1629831866367</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1629831866367</updated>
+      <workItem from="1629831867307" duration="7032000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

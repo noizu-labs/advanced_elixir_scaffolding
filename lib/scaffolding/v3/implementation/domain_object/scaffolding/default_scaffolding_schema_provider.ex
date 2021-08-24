@@ -1,4 +1,4 @@
-defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Scaffolding.DefaultScaffoldingSchemaProvider do
+defmodule Noizu.AdvancedScaffolding.Implementation.DomainObject.Scaffolding.DefaultScaffoldingSchemaProvider do
 
   defmodule Default do
 
@@ -49,7 +49,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Scaffolding.Def
   defmacro __using__(_options \\ nil) do
     quote do
       # We forward down tot he entity profider's implementations
-      @__nzdo__internal_imp Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Scaffolding.DefaultScaffoldingSchemaProvider.Default
+      @__nzdo__internal_imp Noizu.AdvancedScaffolding.Implementation.DomainObject.Scaffolding.DefaultScaffoldingSchemaProvider.Default
       @valid_table_types MapSet.new(Module.get_attribute(__MODULE__, :valid_table_types) || [:table, :entity_table, :enum_table])
 
       @cache_keys Map.merge(@cache_keys || %{}, %{
@@ -66,7 +66,7 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Scaffolding.Def
       @all_properties Map.keys(@cache_keys)
 
 
-      Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Scaffolding.DefaultScaffoldingSchemaProvider.Default
+      Noizu.AdvancedScaffolding.Implementation.DomainObject.Scaffolding.DefaultScaffoldingSchemaProvider.Default
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def module_children(scope), do: @__nzdo__internal_imp.module_children(@app, scope)
 
@@ -151,15 +151,15 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Scaffolding.Def
         cond do
           Regex.match?(~r/^ref\.([^.]*)\.(.*)$/, sref) ->
             [_p, m_str, id_str| _] = Regex.run(~r/^ref\.([^.]*)\.(.*)$/, sref)
-            m = sref_map()[m_str] || Noizu.Scaffolding.UnsupportedModule
+            m = sref_map()[m_str] || Noizu.AdvancedScaffolding.UnsupportedModule
             m.ref(id_str)
           Regex.match?(~r/^ref\.([^.\[\{]*)\[(.*)\]$/, sref) ->
             [_p, m_str, id_str| _] = Regex.run(~r/^ref\.([^.\[\{]*)\[(.*)\]$/, sref)
-            m = sref_map()[m_str] || Noizu.Scaffolding.UnsupportedModule
+            m = sref_map()[m_str] || Noizu.AdvancedScaffolding.UnsupportedModule
             m.ref(id_str)
           Regex.match?(~r/^ref\.([^.\[\{]*)\{(.*)\}$/, sref) ->
             [_p, m_str, id_str| _] = Regex.run(~r/^ref\.([^.\[\{]*)\{(.*)\}$/, sref)
-            m = sref_map()[m_str] || Noizu.Scaffolding.UnsupportedModule
+            m = sref_map()[m_str] || Noizu.AdvancedScaffolding.UnsupportedModule
             m.ref(id_str)
           :else -> nil
         end

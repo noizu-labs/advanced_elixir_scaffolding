@@ -1,0 +1,22 @@
+<component name="libraryTable">
+  <library name="amnesia" type="mix">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/_build/dev/lib/amnesia/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/test/lib/amnesia/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/dev/lib/amnesia/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/test/lib/amnesia/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/dev/lib/amnesia/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/dev/lib/amnesia/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/dev/lib/amnesia/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/test/lib/amnesia/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/dev/lib/amnesia/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/test/lib/amnesia/ebin" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/deps/amnesia/lib" />
+      <root url="file://$PROJECT_DIR$/deps/amnesia/lib" />
+      <root url="file://$PROJECT_DIR$/deps/amnesia/lib" />
+    </SOURCES>
+  </library>
+</component>

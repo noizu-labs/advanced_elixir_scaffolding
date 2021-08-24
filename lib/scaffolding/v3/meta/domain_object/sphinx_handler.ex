@@ -1,4 +1,4 @@
-defmodule Noizu.ElixirScaffolding.V3.Meta.DomainObject.SphinxHandler do
+defmodule Noizu.AdvancedScaffolding.Meta.DomainObject.SphinxHandler do
 
   @type sphinx_encoding :: :field | :attr_uint | :attr_int | :attr_bigint | :attr_bool | :attr_multi | :attr_multi64 | :attr_timestamp | :attr_float | atom
   @callback __sphinx_field__() :: boolean

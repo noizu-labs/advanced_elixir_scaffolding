@@ -3,7 +3,7 @@
 # Copyright (C) 2021 Noizu Labs, Inc. All rights reserved.
 #-------------------------------------------------------------------------------
 
-defmodule Noizu.Scaffolding.V3.Support.TopologyProvider do
+defmodule Noizu.AdvancedScaffolding.Support.TopologyProvider do
   @behaviour Noizu.MnesiaVersioning.TopologyBehaviour
 
   def mnesia_nodes() do
@@ -11,6 +11,6 @@ defmodule Noizu.Scaffolding.V3.Support.TopologyProvider do
   end
 
   def database() do
-    [Noizu.Scaffolding.V3.Database]
+    [Noizu.AdvancedScaffolding.Database]
   end
 end

@@ -1,4 +1,4 @@
-defmodule Noizu.Scaffolding.V3.Schema.EctoMetadata do
+defmodule Noizu.AdvancedScaffolding.Schema.EctoMetadata do
   @vsn 1.0
   @type t :: %__MODULE__{
                database: atom,

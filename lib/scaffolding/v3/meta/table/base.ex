@@ -1,4 +1,4 @@
-defmodule Noizu.ElixirScaffolding.V3.Meta.Table do
+defmodule Noizu.AdvancedScaffolding.Meta.Table do
   defmodule Default do
 
     #----------------------
@@ -40,8 +40,8 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.Table do
   #
   #--------------------------------------------
   def __noizu_table__(_caller, options) do
-    provider = options[:provider] || Noizu.ElixirScaffolding.V3.Meta.Table.Default
-    noizu_domain_object_schema = options[:noizu_domain_object_schema] || Application.get_env(:noizu_scaffolding, :domain_object_schema)
+    provider = options[:provider] || Noizu.AdvancedScaffolding.Meta.Table.Default
+    noizu_domain_object_schema = options[:noizu_domain_object_schema] || Application.get_env(:noizu_advanced_scaffolding, :domain_object_schema)
     nmid_source = options[:nmid_source] || :nmid_indexes
     app_name = options[:app_name] || :auto
     ecto_table = options[:ecto_table]
@@ -62,7 +62,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.Table do
     quote do
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       import Ecto.Changeset
-      require Noizu.DomainObject
+      require Noizu.AdvancedScaffolding.DomainObject
       @__nzdo__table_provider unquote(provider)
       @__nzdo__ecto_table unquote(ecto_table)
       @enable_nmid  !unquote(disable_nmid)
@@ -80,7 +80,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.Table do
 
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       if @enable_nmid do
-        @__nzdo__nmid_generator unquote(nmid_generator) || (Module.get_attribute(__MODULE__, :nmid_generator) || Noizu.Scaffolding.V3.NmidGenerator)
+        @__nzdo__nmid_generator unquote(nmid_generator) || (Module.get_attribute(__MODULE__, :nmid_generator) || Noizu.AdvancedScaffolding.NmidGenerator)
         @__nzdo__nmid_sequencer unquote(nmid_sequencer) || (Module.get_attribute(__MODULE__, :nmid_sequencer) || __MODULE__)
         @__nzdo__nmid_bare (cond do
                               unquote(nmid_bare) != nil -> unquote(nmid_bare)
@@ -221,7 +221,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.Table do
         #  __persistence__
         #----------------------
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-        @__nzdo_persistence Noizu.DomainObject.expand_persistence_layers(Module.get_attribute(__MODULE__, :persistence_layers, [@__nzdo__table_repo]), __MODULE__)
+        @__nzdo_persistence Noizu.AdvancedScaffolding.DomainObject.expand_persistence_layers(Module.get_attribute(__MODULE__, :persistence_layers, [@__nzdo__table_repo]), __MODULE__)
         def __persistence__(), do: __persistence__(:all)
         def __persistence__(:all) do
           [:enum_table, :auto_generate, :universal_identifier, :universal_lookup, :reference_type, :layers, :schemas, :tables, :ecto_entity, :options]
@@ -243,7 +243,7 @@ defmodule Noizu.ElixirScaffolding.V3.Meta.Table do
 
         if @enable_nmid do
           @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-          @__nzdo__noizu_domain_object_schema unquote(noizu_domain_object_schema) || throw "No-Entity Nmid enabled table require that noizu_domain_object_schema option or :noizu_scaffolding, :domain_object_schema value be provided"
+          @__nzdo__noizu_domain_object_schema unquote(noizu_domain_object_schema) || throw "No-Entity Nmid enabled table require that noizu_domain_object_schema option or :noizu_advanced_scaffolding, :domain_object_schema value be provided"
           @nmid_source unquote(nmid_source)
 
           def __nmid__(), do: __nmid__(:all)

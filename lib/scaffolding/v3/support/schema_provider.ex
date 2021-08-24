@@ -3,7 +3,7 @@
 # Copyright (C) 2021 Noizu Labs, Inc. All rights reserved.
 #-------------------------------------------------------------------------------
 
-defmodule Noizu.Scaffolding.V3.Support.SchemaProvider do
+defmodule Noizu.AdvancedScaffolding.Support.SchemaProvider do
   use Amnesia
   @behaviour Noizu.MnesiaVersioning.SchemaBehaviour
 
@@ -15,7 +15,7 @@ defmodule Noizu.Scaffolding.V3.Support.SchemaProvider do
   # ChangeSets
   #-----------------------------------------------------------------------------
   def change_sets do
-    Noizu.Scaffolding.V3.Support.Schema.Core.change_sets()
+    Noizu.AdvancedScaffolding.Support.Schema.Core.change_sets()
   end
 
 end # End Mix.Task.Migrate

@@ -1,7 +1,7 @@
-defmodule Noizu.Scaffolding.V3.Schema.PersistenceSettings do
+defmodule Noizu.AdvancedScaffolding.Schema.PersistenceSettings do
   @vsn 1.0
   @type t :: %__MODULE__{
-               layers: [Noizu.Scaffolding.V3.Schema.PersistenceLayer.t],
+               layers: [Noizu.AdvancedScaffolding.Schema.PersistenceLayer.t],
                schemas: Map.t,
                tables: Map.t,
                ecto_entity: true | nil,
@@ -39,7 +39,7 @@ defmodule Noizu.Scaffolding.V3.Schema.PersistenceSettings do
     |> Map.new()
   end
 
-  def update_schema_fields(%__MODULE__{} = this, field_type_map) do
+  def update_schema_fields(%{__struct__: __MODULE__} = this, field_type_map) do
     layers = Enum.map(
       this.layers,
       fn (layer) ->

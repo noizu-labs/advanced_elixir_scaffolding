@@ -1,7 +1,7 @@
 #=============================================
 #
 #=============================================
-defprotocol Noizu.Ecto.Entity do
+defprotocol Noizu.AdvancedScaffolding.EctoEntity.Protocol do
   @fallback_to_any true
   def universal_reference?(ref)
   def supported?(ref)
@@ -14,11 +14,11 @@ end
 #=============================================
 #
 #=============================================
-defimpl Noizu.Ecto.Entity, for: Any do
+defimpl Noizu.AdvancedScaffolding.EctoEntity.Protocol, for: Any do
 
   defmacro __deriving__(module, _struct, _options) do
     quote do
-      defimpl Noizu.Ecto.Entity, for: unquote(module) do
+      defimpl Noizu.AdvancedScaffolding.EctoEntity.Protocol, for: unquote(module) do
         def universal_reference?(_), do: false
         def supported?(_), do: true
         def ecto_identifier(m), do: unquote(module).ecto_identifier(m)
@@ -41,21 +41,21 @@ end
 #=============================================
 #
 #=============================================
-defimpl Noizu.Ecto.Entity, for: BitString do
+defimpl Noizu.AdvancedScaffolding.EctoEntity.Protocol, for: BitString do
   def universal_reference?("ref.universal." <> _), do: true
   def universal_reference?(_), do: false
-  def supported?(sref), do: Noizu.Ecto.Entity.supported?(Noizu.ERP.ref(sref))
-  def ecto_identifier(sref), do: Noizu.Ecto.Entity.ecto_identifier(Noizu.ERP.ref(sref))
-  def universal_identifier(sref), do: Noizu.Ecto.Entity.universal_identifier(Noizu.ERP.ref(sref))
-  def ref(sref), do: Noizu.Ecto.Entity.ref(Noizu.ERP.ref(sref))
-  def source(sref), do: Noizu.Ecto.Entity.source(Noizu.ERP.ref(sref))
+  def supported?(sref), do: Noizu.AdvancedScaffolding.EctoEntity.Protocol.supported?(Noizu.ERP.ref(sref))
+  def ecto_identifier(sref), do: Noizu.AdvancedScaffolding.EctoEntity.Protocol.ecto_identifier(Noizu.ERP.ref(sref))
+  def universal_identifier(sref), do: Noizu.AdvancedScaffolding.EctoEntity.Protocol.universal_identifier(Noizu.ERP.ref(sref))
+  def ref(sref), do: Noizu.AdvancedScaffolding.EctoEntity.Protocol.ref(Noizu.ERP.ref(sref))
+  def source(sref), do: Noizu.AdvancedScaffolding.EctoEntity.Protocol.source(Noizu.ERP.ref(sref))
 end
 
 #=============================================
 #
 #=============================================
-defimpl Noizu.Ecto.Entity, for: Tuple do
-  def universal_reference?({:ref, Noizu.UniversalReference, _}), do: true
+defimpl Noizu.AdvancedScaffolding.EctoEntity.Protocol, for: Tuple do
+  def universal_reference?({:ref, Noizu.AdvancedScaffolding.UniversalReference, _}), do: true
   def universal_reference?(_), do: false
 
   #-----------------------------
@@ -94,21 +94,21 @@ defimpl Noizu.Ecto.Entity, for: Tuple do
   #
   #-----------------------------
   def universal_identifier({:ecto_identifier, _module, _} = ref) do
-    r = Noizu.Ecto.Entity.ref(ref)
+    r = Noizu.AdvancedScaffolding.EctoEntity.Protocol.ref(ref)
     r != ref && universal_identifier(r)
   end
-  def universal_identifier({:ref, Noizu.UniversalReference, _} = ref) do
-    Noizu.UniversalReference.universal_identifier(ref)
+  def universal_identifier({:ref, Noizu.AdvancedScaffolding.UniversalReference, _} = ref) do
+    Noizu.AdvancedScaffolding.UniversalReference.universal_identifier(ref)
   end
   def universal_identifier({:ref, module, _} = ref) do
     if supported?(ref) do
-      case Noizu.Scaffolding.V3.Database.UniversalLookupTable.read!(ref) do
-        %Noizu.Scaffolding.V3.Database.UniversalLookupTable{universal_identifier: universal_identifier} -> universal_identifier
+      case Noizu.AdvancedScaffolding.Database.UniversalLookupTable.read!(ref) do
+        %Noizu.AdvancedScaffolding.Database.UniversalLookupTable{universal_identifier: universal_identifier} -> universal_identifier
         _ ->
           case module.universal_identifier(ref) do
             v when is_integer(v) ->
-              %Noizu.Scaffolding.V3.Database.UniversalLookupTable{identifier: ref, universal_identifier: v}
-              |> Noizu.Scaffolding.V3.Database.UniversalLookupTable.write!
+              %Noizu.AdvancedScaffolding.Database.UniversalLookupTable{identifier: ref, universal_identifier: v}
+              |> Noizu.AdvancedScaffolding.Database.UniversalLookupTable.write!
               v
             _ ->
               nil
@@ -130,8 +130,8 @@ defimpl Noizu.Ecto.Entity, for: Tuple do
       nil
     end
   end
-  def ref({:ref, Noizu.UniversalReference, _} = ref) do
-    Noizu.ERP.ref(Noizu.UniversalReference.resolve(ref))
+  def ref({:ref, Noizu.AdvancedScaffolding.UniversalReference, _} = ref) do
+    Noizu.ERP.ref(Noizu.AdvancedScaffolding.UniversalReference.resolve(ref))
   end
   def ref({:ref, _m, _id} = ref), do: ref
   def ref(_), do: nil
@@ -155,19 +155,19 @@ end
 #=============================================
 #
 #=============================================
-defimpl Noizu.Ecto.Entity, for: [Noizu.UniversalReference] do
+defimpl Noizu.AdvancedScaffolding.EctoEntity.Protocol, for: [Noizu.AdvancedScaffolding.UniversalReference] do
   def universal_reference?(_), do: true
   def supported?(_), do: true
-  def ecto_identifier(entity), do: Noizu.UniversalReference.ecto_identifier(entity)
-  def universal_identifier(entity), do: Noizu.UniversalReference.universal_identifier(entity)
-  def ref(m), do: Noizu.ERP.ref(Noizu.UniversalReference.resolve(m))
-  def source(m), do: Noizu.UniversalReference.source(m)
+  def ecto_identifier(entity), do: Noizu.AdvancedScaffolding.UniversalReference.ecto_identifier(entity)
+  def universal_identifier(entity), do: Noizu.AdvancedScaffolding.UniversalReference.universal_identifier(entity)
+  def ref(m), do: Noizu.ERP.ref(Noizu.AdvancedScaffolding.UniversalReference.resolve(m))
+  def source(m), do: Noizu.AdvancedScaffolding.UniversalReference.source(m)
 end
 
 #=============================================
 #
 #=============================================
-defimpl Noizu.Ecto.Entity, for: [Map] do
+defimpl Noizu.AdvancedScaffolding.EctoEntity.Protocol, for: [Map] do
   def universal_reference?(_), do: false
   def supported?(%{__struct__: module}) do
     try do

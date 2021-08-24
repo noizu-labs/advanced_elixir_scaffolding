@@ -3,8 +3,6 @@
 # Copyright (C) 2021 Noizu Labs, Inc. All rights reserved.
 #-------------------------------------------------------------------------------
 
-
-
 defimpl Noizu.ERP, for: Any do
 
   def id(ref) do
@@ -116,7 +114,6 @@ defimpl Noizu.ERP, for: Any do
   end
 
 end # end defimpl EntityReferenceProtocol, for: Map
-
 
 defimpl Noizu.ERP, for: Map do
   def id(_), do: nil
