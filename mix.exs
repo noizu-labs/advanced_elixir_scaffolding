@@ -61,7 +61,66 @@ defmodule Noizu.AdvancedScaffolding.Mixfile do
   def docs do
     [
       source_url_pattern: "https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/%{path}#L%{line}",
-      extras: ["README.md", "TODO.md", "markdown/sample_conventions_doc.md"]
+      extras: ["README.md", "TODO.md", "markdown/sample_conventions_doc.md"],
+      groups_for_modules: [
+        "Behaviours": [
+          Noizu.AdvancedScaffolding.DomainObject,
+          Noizu.AdvancedScaffolding.SimpleObject,
+
+          Noizu.AdvancedScaffolding.BasicRefBehaviour,
+          Noizu.AdvancedScaffolding.Ecto.EnumTypeBehaviour,
+          Noizu.AdvancedScaffolding.EnumRefBehaviour,
+          Noizu.AdvancedScaffolding.SphinxFieldBehaviour,
+          Noizu.AdvancedScaffolding.UniversalRefBehaviour,
+        ],
+        "Internals": [
+          Noizu.AdvancedScaffolding.Implementation,
+          Noizu.AdvancedScaffolding.Meta,
+        ],
+        "Type Handlers": [
+          Noizu.AdvancedScaffolding.DateTime,
+          Noizu.AdvancedScaffolding.Millisecond.TimeStamp,
+          Noizu.AdvancedScaffolding.TimeStamp,
+          Noizu.AdvancedScaffolding.UniversalLink,
+
+        ],
+        "Protocols": [
+          Noizu.AdvancedScaffolding.EctoEntity.Protocol,
+          Noizu.AdvancedScaffolding.Entity.Protocol,
+          Noizu.ERP,
+          Noizu.AdvancedScaffolding.Permission.Protocol,
+          Noizu.AdvancedScaffolding.Restricted.Protocol,
+        ],
+        "Schema": [
+          Noizu.AdvancedScaffolding.Database,
+          Noizu.AdvancedScaffolding.Support.TopologyProvider,
+          Noizu.AdvancedScaffolding.Support.SchemaProvider,
+          Noizu.AdvancedScaffolding.Support.Schema
+        ],
+      "Tasks": [
+          Mix.Tasks.Scaffolding
+        ]
+      ],
+      group_modules_by_nesting: [
+        Mix.Tasks.Scaffolding,
+        Noizu.AdvancedScaffolding.Database,
+        Noizu.AdvancedScaffolding.Sphinx,
+        Noizu.AdvancedScaffolding.Schema,
+        Noizu.AdvancedScaffolding.Restricted,
+        Noizu.AdvancedScaffolding.Meta,
+        Noizu.AdvancedScaffolding.Meta.Table,
+        Noizu.AdvancedScaffolding.Meta.DomainObject,
+        Noizu.AdvancedScaffolding.Meta.SimpleObject,
+        Noizu.AdvancedScaffolding.Implementation,
+        Noizu.AdvancedScaffolding.Support.Schema,
+        Noizu.AdvancedScaffolding.Implementation,
+        Noizu.AdvancedScaffolding.Implementation.DomainObject.Entity,
+        Noizu.AdvancedScaffolding.Implementation.DomainObject.Index,
+        Noizu.AdvancedScaffolding.Implementation.DomainObject.Repo,
+        Noizu.AdvancedScaffolding.Implementation.DomainObject.Scaffolding,
+        Noizu.AdvancedScaffolding.Implementation.DomainObject.Struct,
+
+      ]
     ]
   end # end docs
 
