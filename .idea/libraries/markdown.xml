@@ -7,9 +7,20 @@
       <root url="file://$PROJECT_DIR$/_build/test/lib/markdown/ebin" />
       <root url="file://$PROJECT_DIR$/_build/dev/lib/markdown/ebin" />
       <root url="file://$PROJECT_DIR$/_build/test/lib/markdown/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/dev/lib/markdown/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/dev/lib/markdown/ebin" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
+      <root url="file://$PROJECT_DIR$/deps/markdown/lib" />
+      <root url="file://$PROJECT_DIR$/deps/markdown/src" />
+      <root url="file://$PROJECT_DIR$/deps/markdown/priv" />
+      <root url="file://$PROJECT_DIR$/deps/markdown/lib" />
+      <root url="file://$PROJECT_DIR$/deps/markdown/src" />
+      <root url="file://$PROJECT_DIR$/deps/markdown/priv" />
+      <root url="file://$PROJECT_DIR$/deps/markdown/lib" />
+      <root url="file://$PROJECT_DIR$/deps/markdown/src" />
+      <root url="file://$PROJECT_DIR$/deps/markdown/priv" />
       <root url="file://$PROJECT_DIR$/deps/markdown/lib" />
       <root url="file://$PROJECT_DIR$/deps/markdown/src" />
       <root url="file://$PROJECT_DIR$/deps/markdown/priv" />

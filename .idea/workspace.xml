@@ -2,10 +2,30 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ae58bc41-455c-447f-90eb-f1325731ba9b" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/amnesia.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/amnesia.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/connection.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/connection.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/db_connection.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/db_connection.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/decimal.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/decimal.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/earmark.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/earmark.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/ecto.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/ecto.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/ecto_sql.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/ecto_sql.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/ex_doc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/ex_doc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/exquisite.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/exquisite.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/fastglobal.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/fastglobal.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/hoedown.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/hoedown.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/markdown.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/markdown.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/mime.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/mime.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/noizu_core.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/noizu_core.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/noizu_mnesia_versioning.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/noizu_mnesia_versioning.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/plug.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/plug.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/poison.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/poison.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/redix.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/redix.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/telemetry.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/telemetry.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/uuid.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/uuid.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc" beforeDir="false" afterPath="$PROJECT_DIR$/doc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TODO.md" beforeDir="false" afterPath="$PROJECT_DIR$/TODO.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/config.exs" beforeDir="false" afterPath="$PROJECT_DIR$/config/config.exs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mix.exs" beforeDir="false" afterPath="$PROJECT_DIR$/mix.exs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/update-docs" beforeDir="false" afterPath="$PROJECT_DIR$/update-docs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -94,7 +114,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1629831866367</updated>
-      <workItem from="1629831867307" duration="12334000" />
+      <workItem from="1629831867307" duration="14135000" />
     </task>
     <servers />
   </component>

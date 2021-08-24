@@ -6,14 +6,17 @@
 defmodule Noizu.AdvancedScaffolding.Mixfile do
   use Mix.Project
 
+  @version "1.0.0"
+  @source_url "https://github.com/noizu-labs/advanced_elixir_scaffolding"
+
   def project do
     [
       app: :noizu_advanced_scaffolding,
-      version: "1.0.0",
+      version: @version,
       elixir: "~> 1.10",
       deps: deps(),
       elixirc_paths: elixirc_paths(Mix.env),
-
+      source_url: @source_url,
       name: "Noizu.AdvancedScaffolding",
       description: "Version 3 of our Elixir Scaffolding framework",
       package: package(),
@@ -30,7 +33,7 @@ defmodule Noizu.AdvancedScaffolding.Mixfile do
     [
       maintainers: ["noizu"],
       copyright: ["Noizu Labs, Inc. 2021"],
-      links: %{"GitHub" => "https://github.com/noizu-labs/advanced_elixir_scaffolding"}
+      links: %{"GitHub" => @source_url}
     ]
   end # end package
 
@@ -46,7 +49,7 @@ defmodule Noizu.AdvancedScaffolding.Mixfile do
       {:ecto_sql, "~> 3.4"},
       {:amnesia, git: "https://github.com/noizu/amnesia.git", ref: "9266002", optional: true}, # Mnesia Wrapper
       {:uuid, "~> 1.1" },
-      {:ex_doc, "~> 0.24", only: [:test, :dev], optional: true}, # Documentation Provider
+      {:ex_doc, "~> 0.25.1", only: [:test, :dev], optional: true}, # Documentation Provider
       {:markdown, github: "devinus/markdown", optional: true}, # Markdown processor for ex_doc
       {:noizu_core, github: "noizu/ElixirCore", tag: "1.0.10"},
       {:noizu_mnesia_versioning, github: "noizu/MnesiaVersioning", tag: "0.1.9", override: true},
@@ -58,10 +61,12 @@ defmodule Noizu.AdvancedScaffolding.Mixfile do
     ]
   end # end deps
 
-  def docs do
+  defp docs do
     [
       source_url_pattern: "https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/%{path}#L%{line}",
-      extras: ["README.md", "TODO.md", "markdown/sample_conventions_doc.md"],
+      extras: ["README.md", "TODO.md", "COPYRIGHT", "markdown/sample_conventions_doc.md"],
+      source_ref: "v#{@version}",
+      source_url: @source_url,
       groups_for_modules: [
         "Behaviours": [
           Noizu.AdvancedScaffolding.DomainObject,
@@ -101,7 +106,7 @@ defmodule Noizu.AdvancedScaffolding.Mixfile do
           Mix.Tasks.Scaffolding
         ]
       ],
-      group_modules_by_nesting: [
+      nest_modules_by_prefix: [
         Mix.Tasks.Scaffolding,
         Noizu.AdvancedScaffolding.Database,
         Noizu.AdvancedScaffolding.Sphinx,

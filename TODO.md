@@ -1,3 +1,16 @@
+TODO
+======================
+- [ ] Fill in @doc/@modocs
+- [ ] Improve Compile Times/Reduce compile deps. (See below excerpt)
+- [ ] Tweak naming conventions/organization.]
+- [ ] Updated Readme.MD/fine tune generated documentation.
+
+
+
+
+
+
+# Excerpt
 Compile Time Enhancements: 
 
 ------------------------

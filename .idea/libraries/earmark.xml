@@ -20,6 +20,8 @@
       <root url="file://$PROJECT_DIR$/deps/earmark/src" />
       <root url="file://$PROJECT_DIR$/deps/earmark/lib" />
       <root url="file://$PROJECT_DIR$/deps/earmark/src" />
+      <root url="file://$PROJECT_DIR$/deps/earmark/lib" />
+      <root url="file://$PROJECT_DIR$/deps/earmark/src" />
     </SOURCES>
   </library>
 </component>

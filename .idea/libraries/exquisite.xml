@@ -11,9 +11,12 @@
       <root url="file://$PROJECT_DIR$/_build/test/lib/exquisite/ebin" />
       <root url="file://$PROJECT_DIR$/_build/dev/lib/exquisite/ebin" />
       <root url="file://$PROJECT_DIR$/_build/test/lib/exquisite/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/dev/lib/exquisite/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/dev/lib/exquisite/ebin" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
+      <root url="file://$PROJECT_DIR$/deps/exquisite/lib" />
       <root url="file://$PROJECT_DIR$/deps/exquisite/lib" />
       <root url="file://$PROJECT_DIR$/deps/exquisite/lib" />
       <root url="file://$PROJECT_DIR$/deps/exquisite/lib" />

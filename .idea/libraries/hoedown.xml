@@ -5,6 +5,9 @@
     <SOURCES>
       <root url="file://$PROJECT_DIR$/deps/hoedown/src" />
       <root url="file://$PROJECT_DIR$/deps/hoedown/src" />
+      <root url="file://$PROJECT_DIR$/deps/hoedown/src" />
+      <root url="file://$PROJECT_DIR$/deps/hoedown/src" />
+      <root url="file://$PROJECT_DIR$/deps/hoedown/src" />
     </SOURCES>
   </library>
 </component>
