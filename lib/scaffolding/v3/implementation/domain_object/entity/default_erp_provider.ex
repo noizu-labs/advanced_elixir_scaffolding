@@ -266,6 +266,23 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
       end
     end
 
+
+    #-----------------
+    # has_permission
+    #-------------------
+    def has_permission?(_m, _ref, _permission, %{auth: auth}, _options) do
+      auth[:permissions][:admin] || auth[:permissions][:system] || false
+    end
+    def has_permission?(_m, _ref, _permission, _context, _options), do: false
+
+    #-----------------
+    # has_permission!
+    #-------------------
+    def has_permission!(_m, _ref, _permission, %{auth: auth}, _options) do
+      auth[:permissions][:admin] || auth[:permissions][:system] || false
+    end
+    def has_permission!(_m, _ref, _permission, _context, _options), do: false
+
   end
 
 
@@ -372,6 +389,15 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
       def string_to_id(id), do: @__nzdo__erp_imp.string_to_id(__MODULE__, @__nzdo__identifier_type, id)
       def string_to_id(type, id), do: @__nzdo__erp_imp.string_to_id(__MODULE__, type, id)
 
+      #---------------------
+      #
+      #---------------------
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+      def has_permission?(ref, permission, context, options \\ []), do: @__nzdo__erp_imp.has_permission?(__MODULE__, ref, permission, context, options)
+
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+      def has_permission!(ref, permission, context, options \\ []), do: @__nzdo__erp_imp.has_permission!(__MODULE__, ref, permission, context, options)
+
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       defoverridable [
         __sref_prefix__: 0,
@@ -393,6 +419,11 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Entity.DefaultE
         id_to_string: 2,
         string_to_id: 1,
         string_to_id: 2,
+
+        has_permission?: 3,
+        has_permission?: 4,
+        has_permission!: 3,
+        has_permission!: 4,
       ]
     end
   end

@@ -764,6 +764,23 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
     #------------------------------------------
     def layer_post_delete_callback(_m, %PersistenceLayer{} = _layer, entity, _context, _options), do: entity
 
+
+
+    #-----------------
+    # has_permission
+    #-------------------
+    def has_permission?(_m, _repo, _permission, %{auth: auth}, _options) do
+      auth[:permissions][:admin] || auth[:permissions][:system] || false
+    end
+    def has_permission?(_m, _repo, _permission, _context, _options), do: false
+
+    #-----------------
+    # has_permission!
+    #-------------------
+    def has_permission!(_m, _repo, _permission, %{auth: auth}, _options) do
+      auth[:permissions][:admin] || auth[:permissions][:system] || false
+    end
+    def has_permission!(_m, _repo, _permission, _context, _options), do: false
   end
 
   defmacro __using__(_options \\ nil) do
@@ -980,7 +997,18 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
         end
       end
 
+      #---------------------
+      #
+      #---------------------
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+      def has_permission?(ref, permission, context, options \\ []), do: @__nzdo__crud_imp.has_permission?(__MODULE__, ref, permission, context, options)
 
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+      def has_permission!(ref, permission, context, options \\ []), do: @__nzdo__crud_imp.has_permission!(__MODULE__, ref, permission, context, options)
+
+      #---------------------
+      #
+      #---------------------
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       defoverridable [
         generate_identifier: 0,
@@ -1057,6 +1085,13 @@ defmodule Noizu.ElixirScaffolding.V3.Implementation.DomainObject.Repo.DefaultCru
         layer_delete_callback!: 4,
         layer_post_delete_callback: 4,
         layer_post_delete_callback!: 4,
+
+
+
+        has_permission?: 3,
+        has_permission?: 4,
+        has_permission!: 3,
+        has_permission!: 4,
       ]
     end
   end
