@@ -15,7 +15,7 @@ defmodule Noizu.AdvancedScaffolding.Mixfile do
       elixirc_paths: elixirc_paths(Mix.env),
 
       name: "Noizu.AdvancedScaffolding",
-      description: "Noizu.AdvancedScaffolding",
+      description: "Version 3 of our Elixir Scaffolding framework",
       package: package(),
       docs: docs(),
       xref: [exclude: [Phoenix.HTML, UUID, XmlBuilder, HtmlSanitizeEx, Ecto.CastError, Redix, Ecto.Type, Plug.Conn, Poison, Poison.Encoder, Noizu.FastGlobal.Cluster, Giza.SphinxQL]]
@@ -30,7 +30,6 @@ defmodule Noizu.AdvancedScaffolding.Mixfile do
     [
       maintainers: ["noizu"],
       copyright: ["Noizu Labs, Inc. 2021"],
-      license: ["GPL"],
       links: %{"GitHub" => "https://github.com/noizu-labs/advanced_elixir_scaffolding"}
     ]
   end # end package
@@ -62,7 +61,7 @@ defmodule Noizu.AdvancedScaffolding.Mixfile do
   def docs do
     [
       source_url_pattern: "https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/%{path}#L%{line}",
-      extras: ["README.md", "markdown/sample_conventions_doc.md"]
+      extras: ["README.md", "TODO.md", "markdown/sample_conventions_doc.md"]
     ]
   end # end docs
 

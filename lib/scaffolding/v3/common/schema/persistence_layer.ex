@@ -16,7 +16,7 @@ defmodule Noizu.AdvancedScaffolding.Schema.PersistenceLayer do
                cascade_update?: boolean,
                cascade_block?: boolean,
 
-               schema_fields: Map.t,
+               schema_fields: map(),
                options: list,
                vsn: float
              }

@@ -2,11 +2,11 @@ defmodule Noizu.AdvancedScaffolding.Schema.PersistenceSettings do
   @vsn 1.0
   @type t :: %__MODULE__{
                layers: [Noizu.AdvancedScaffolding.Schema.PersistenceLayer.t],
-               schemas: Map.t,
-               tables: Map.t,
+               schemas: map(),
+               tables: map(),
                ecto_entity: true | nil,
-               mnesia_backend: nil | Map.t,
-               options: nil | Map.t | Keyword.t,
+               mnesia_backend: nil | map(),
+               options: nil | map() | Keyword.t,
                vsn: float
              }
 

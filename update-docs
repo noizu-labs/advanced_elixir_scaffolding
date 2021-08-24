@@ -1,0 +1,5 @@
+#!/bin/bash
+mix scaffolding.version >> /dev/null
+version=`mix scaffolding.version`
+ex_doc "Noizu.AdvancedScaffolding" $version _build/dev/lib/noizu_advanced_scaffolding/ebin/ -m "Noizu.AdvancedScaffolding.DomainObject" -u "https://github.com/noizu-labs/advanced_elixir_scaffolding" -l ./noizu-labs.png
+

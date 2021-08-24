@@ -6,12 +6,12 @@
 defmodule Noizu.AdvancedScaffolding.Meta.DomainObject.Repo do
   #alias Noizu.AdvancedScaffolding.Meta.DomainObject.Repo, as: RepoMeta
 
-  @type entity :: Map.t
+  @type entity :: map()
   @type ref :: {:ref, atom, any}
-  @type sref :: String.t
+  @type sref :: String.t()
   @type layer :: Noizu.AdvancedScaffolding.Schema.PersistenceLayer.t
   @type entity_reference :: ref | sref | entity | nil
-  @type opts :: Keyword.t | Map.t | nil
+  @type opts :: Keyword.t() | map() | nil
 
   @callback cache(ref :: entity_reference, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
   @callback delete_cache(ref :: entity_reference, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
