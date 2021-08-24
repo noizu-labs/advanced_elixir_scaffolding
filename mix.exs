@@ -35,7 +35,7 @@ defmodule Noizu.Scaffolding.Mixfile do
   def application do
     [
       applications: [:logger],
-      extra_applications: [:fastglobal, :noizu_core, :poison, :amnesia, :noizu_mnesia_versioning]
+      extra_applications: [:fastglobal, :noizu_core, :poison, :amnesia, :noizu_mnesia_versioning, :decimal]
     ]
   end # end application
 
@@ -51,7 +51,8 @@ defmodule Noizu.Scaffolding.Mixfile do
       {:redix, github: "whatyouhide/redix", tag: "v0.7.0", optional: true},
       {:poison, "~> 3.1.0", optional: true},
       {:plug, "~> 1.0", optional: true},
-      {:fastglobal, "~> 1.0"}
+      {:fastglobal, "~> 1.0"},
+      {:decimal, "~> 1.9.0"},
     ]
   end # end deps
 
