@@ -1,11 +1,11 @@
-defmodule Noizu.AdvancedScaffolding.Sphinx.TimeStamp do
+defmodule Noizu.AdvancedScaffolding.Sphinx.Type.TimeStamp do
   @moduledoc """
-  Ecto ENUM Custom Type.
+  Encode/Decode Timestamp value for Sphinx Database.
   """
   use Ecto.Type
 
-  require Noizu.AdvancedScaffolding.DomainObject
-  Noizu.AdvancedScaffolding.DomainObject.noizu_sphinx_handler()
+  require Noizu.DomainObject
+  Noizu.DomainObject.noizu_sphinx_handler()
 
   #----------------------------
   # type
@@ -50,9 +50,6 @@ defmodule Noizu.AdvancedScaffolding.Sphinx.TimeStamp do
   def dump(v) do
     case v do
       nil -> {:ok, 31337}
-      # special case for null encoding.
-      31337 -> {:ok, 31336}
-      v when is_integer(v) -> {:ok, v}
       %DateTime{} ->
         # Recurse in case time stamp happens to be sentinel value.
         dump(DateTime.to_unix(v))

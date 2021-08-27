@@ -13,9 +13,14 @@
       <root url="file://$PROJECT_DIR$/_build/test/lib/fastglobal/ebin" />
       <root url="file://$PROJECT_DIR$/_build/dev/lib/fastglobal/ebin" />
       <root url="file://$PROJECT_DIR$/_build/dev/lib/fastglobal/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/dev/lib/fastglobal/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/test/lib/fastglobal/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/dev/lib/fastglobal/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/test/lib/fastglobal/ebin" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
+      <root url="file://$PROJECT_DIR$/deps/fastglobal/lib" />
       <root url="file://$PROJECT_DIR$/deps/fastglobal/lib" />
       <root url="file://$PROJECT_DIR$/deps/fastglobal/lib" />
       <root url="file://$PROJECT_DIR$/deps/fastglobal/lib" />

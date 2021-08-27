@@ -3,13 +3,12 @@
 # Copyright (C) 2021 Noizu Labs, Inc. All rights reserved.
 #-------------------------------------------------------------------------------
 
-defmodule Noizu.AdvancedScaffolding.DateTime do
+defmodule Noizu.DomainObject.DateTime do
 
-  defmodule Millisecond.PersistenceStrategy do
-    @behaviour Noizu.AdvancedScaffolding.SphinxFieldBehaviour
-    require  Noizu.AdvancedScaffolding.DomainObject
-    Noizu.AdvancedScaffolding.DomainObject.noizu_type_handler()
-    Noizu.AdvancedScaffolding.DomainObject.noizu_sphinx_handler()
+  defmodule Millisecond.TypeHandler do
+    require  Noizu.DomainObject
+    Noizu.DomainObject.noizu_type_handler()
+    Noizu.DomainObject.noizu_sphinx_handler()
 
     def import(value, type \\ :microsecond)
     def import(value, :microsecond), do: value && DateTime.from_unix!(DateTime.to_unix(value, :microsecond), :microsecond)
@@ -60,10 +59,10 @@ defmodule Noizu.AdvancedScaffolding.DateTime do
     end
   end
 
-  defmodule Second.PersistenceStrategy do
-    require  Noizu.AdvancedScaffolding.DomainObject
-    Noizu.AdvancedScaffolding.DomainObject.noizu_type_handler()
-    Noizu.AdvancedScaffolding.DomainObject.noizu_sphinx_handler()
+  defmodule Second.TypeHandler do
+    require  Noizu.DomainObject
+    Noizu.DomainObject.noizu_type_handler()
+    Noizu.DomainObject.noizu_sphinx_handler()
 
 
     def import(value, type \\ :microsecond)
@@ -88,7 +87,7 @@ defmodule Noizu.AdvancedScaffolding.DateTime do
 
 
 
-    #def strip_inspect(field, value, _opts), do: {field, value && DateTime.to_iso8601(value)}
+    #def __strip_inspect__(field, value, _opts), do: {field, value && DateTime.to_iso8601(value)}
 
     def __sphinx_field__(), do: true
     def __sphinx_expand_field__(field, indexing, _settings), do: {field, __MODULE__, indexing}

@@ -2,7 +2,36 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ae58bc41-455c-447f-90eb-f1325731ba9b" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/doc" beforeDir="false" afterPath="$PROJECT_DIR$/doc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/common/sphinx/nullable_integer.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/common/sphinx/nullable_integer.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/common/type_handlers/universal_link.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/common/type_handlers/universal_link.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/common/universal_reference/universal_reference.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/common/universal_reference/universal_reference.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/common/universal_reference/universal_reference.type.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/common/universal_reference/universal_reference.type.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/helpers.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/helpers.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/behaviours/domain_object/domain_object.base.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/domain_object/domain_object.base.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/behaviours/domain_object/domain_object.entity.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/domain_object/domain_object.entity.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/behaviours/domain_object/domain_object.index.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/domain_object/domain_object.index.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/behaviours/domain_object/domain_object.repo.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/domain_object/domain_object.repo.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/behaviours/domain_object/domain_object.table.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/domain_object/domain_object.table.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/behaviours/domain_object/entity/field.macros.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/domain_object/entity/field.macros.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/behaviours/domain_object/ref/basic_reference.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/domain_object/ref/basic_reference.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/behaviours/domain_object/ref/enum_reference.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/domain_object/ref/enum_reference.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/behaviours/domain_object/ref/reference.behaviour.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/domain_object/ref/reference.behaviour.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/behaviours/domain_object/ref/universal_reference.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/domain_object/ref/universal_reference.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/behaviours/enum/enum_type.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/enum/enum_type.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/behaviours/simple_object/simple_object.base.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/simple_object/simple_object.base.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/domain_object.inspect.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/domain_object/domain_object.inspect.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/helpers.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/helpers.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/core/base.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/core/base.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/core/entity.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/core/entity.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/persistence/entity.implementation.default.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/persistence/entity.implementation.default.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/persistence/repo.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/persistence/repo.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/persistence/repo.implementation.default.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/persistence/repo.implementation.default.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/poison_encoder.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/poison_encoder.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/protocols/ecto_entity.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/protocols/ecto_entity.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/protocols/entity_protocol.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/protocols/entity_protocol.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/protocols/permission_protocol.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/protocols/permission_protocol.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/protocols/restricted_protocol.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/protocols/restricted_protocol.ex" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mix.exs" beforeDir="false" afterPath="$PROJECT_DIR$/mix.exs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -12,6 +41,13 @@
   </component>
   <component name="CompilerWorkspaceConfiguration">
     <option name="CLEAR_OUTPUT_DIRECTORY" value="false" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="package-info" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -33,14 +69,25 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/lib/scaffolding/v3/protocols" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/lib/scaffolding/internal/implementation/core" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/lib/scaffolding/v3/protocols" />
+      <recent name="$PROJECT_DIR$/lib/scaffolding/internal/implementation/core" />
+      <recent name="$PROJECT_DIR$/lib/scaffolding/internal/implementation/json" />
+      <recent name="$PROJECT_DIR$/lib/scaffolding/internal/implementation/inspect" />
+      <recent name="$PROJECT_DIR$/lib/scaffolding/internal/implementation/index" />
+      <recent name="$PROJECT_DIR$/lib/scaffolding/internal/implementation" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/lib/scaffolding/internal/domain_object" />
+      <recent name="$PROJECT_DIR$/lib/scaffolding/internal/implementation/persistence" />
+      <recent name="$PROJECT_DIR$/lib/scaffolding/internal" />
+      <recent name="$PROJECT_DIR$/lib/scaffolding/internal/behaviours/domain_object/entity" />
+      <recent name="$PROJECT_DIR$/lib/scaffolding/internal/behaviours/domain_object" />
     </key>
   </component>
   <component name="RunManager" selected="Elixir Mix ExUnit.Run Unit Tests">
@@ -93,6 +140,7 @@
       <option name="presentableId" value="Default" />
       <updated>1629831866367</updated>
       <workItem from="1629831867307" duration="14135000" />
+      <workItem from="1630090888409" duration="7900000" />
     </task>
     <servers />
   </component>

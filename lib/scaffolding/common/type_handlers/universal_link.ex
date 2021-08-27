@@ -3,12 +3,12 @@
 # Copyright (C) 2021 Noizu Labs, Inc. All rights reserved.
 #-------------------------------------------------------------------------------
 
-defmodule Noizu.AdvancedScaffolding.UniversalLink do
+defmodule Noizu.DomainObject.UniversalLink do
 
-  defmodule PersistenceStrategy do
-    require  Noizu.AdvancedScaffolding.DomainObject
-    Noizu.AdvancedScaffolding.DomainObject.noizu_type_handler()
-    Noizu.AdvancedScaffolding.DomainObject.noizu_sphinx_handler()
+  defmodule TypeHandler do
+    require  Noizu.DomainObject
+    Noizu.DomainObject.noizu_type_handler()
+    Noizu.DomainObject.noizu_sphinx_handler()
 
     #--------------------------------------
     #
@@ -88,7 +88,7 @@ defmodule Noizu.AdvancedScaffolding.UniversalLink do
             indexing[:sub] == :identifier -> nil
             indexing[:sub] == :type -> nil
           end
-        indexing[:sub] == :identifier -> Noizu.AdvancedScaffolding.EctoEntity.Protocol.universal_identifier(value)
+        indexing[:sub] == :identifier -> Noizu.EctoEntity.Protocol.universal_identifier(value)
         indexing[:sub] == :type -> value.__struct__.__nmid__(:index)
       end
     end

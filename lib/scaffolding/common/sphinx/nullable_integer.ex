@@ -1,11 +1,11 @@
-defmodule Noizu.AdvancedScaffolding.Sphinx.NullableInteger do
+defmodule Noizu.AdvancedScaffolding.Sphinx.Type.NullableInteger do
   @moduledoc """
-  Ecto ENUM Custom Type.
+  Encode/Decode Nullable Integer value for Sphinx Database.
   """
   use Ecto.Type
 
-  require Noizu.AdvancedScaffolding.DomainObject
-  Noizu.AdvancedScaffolding.DomainObject.noizu_sphinx_handler()
+  require Noizu.DomainObject
+  Noizu.DomainObject.noizu_sphinx_handler()
 
   #----------------------------
   # type
@@ -58,8 +58,8 @@ defmodule Noizu.AdvancedScaffolding.Sphinx.NullableInteger do
       true -> {:ok, 1}
       false -> {:ok, 0}
       v when is_atom(v) -> dump(nil)
-      ref = {:ref, _, _id} -> dump(Noizu.AdvancedScaffolding.EctoEntity.Protocol.ecto_identifier(ref))
-      %{} -> Noizu.AdvancedScaffolding.EctoEntity.Protocol.ecto_identifier(v)
+      ref = {:ref, _, _id} -> dump(Noizu.EctoEntity.Protocol.ecto_identifier(ref))
+      %{} -> Noizu.EctoEntity.Protocol.ecto_identifier(v)
     end
   end
 

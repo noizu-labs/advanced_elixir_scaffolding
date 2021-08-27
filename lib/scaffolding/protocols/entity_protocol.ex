@@ -1,9 +1,9 @@
-defprotocol Noizu.AdvancedScaffolding.Entity.Protocol do
+defprotocol Noizu.Entity.Protocol do
   @fallback_to_any true
   def expand!(entity, context, options \\ nil)
 end
 
-defimpl Noizu.AdvancedScaffolding.Entity.Protocol, for: Any do
+defimpl Noizu.Entity.Protocol, for: Any do
   defmacro __deriving__(module, struct, options) do
     deriving(module, struct, options)
   end
@@ -11,9 +11,9 @@ defimpl Noizu.AdvancedScaffolding.Entity.Protocol, for: Any do
   def deriving(module, _struct, options) do
     only = options[:only]
     except = options[:except]
-    provider = options[:provider] || Noizu.AdvancedScaffolding.Entity.Protocol.Derive.NoizuStruct
+    provider = options[:provider] || Noizu.Entity.Protocol.Derive.NoizuStruct
     quote do
-      defimpl Noizu.AdvancedScaffolding.Entity.Protocol, for: unquote(module) do
+      defimpl Noizu.Entity.Protocol, for: unquote(module) do
         def expand!(entity, context, options) do
           deriving = [only: unquote(only), except: unquote(except)]
           unquote(provider).expand!(entity, context, put_in(options || [], [:deriving], deriving))
@@ -25,7 +25,7 @@ defimpl Noizu.AdvancedScaffolding.Entity.Protocol, for: Any do
   def expand!(entity, _context, _options), do: entity
 end
 
-defimpl Noizu.AdvancedScaffolding.Entity.Protocol, for: List do
+defimpl Noizu.Entity.Protocol, for: List do
   def expand!(entity, context, options \\ nil) do
     {max_concurrency, options} = cond do
                                    options[:sync] -> {1, options}
@@ -37,7 +37,7 @@ defimpl Noizu.AdvancedScaffolding.Entity.Protocol, for: List do
       |> Enum.map(
            fn (v) ->
              cond do
-               is_map(v) || is_list(v) || is_tuple(v) -> Noizu.AdvancedScaffolding.Entity.Protocol.expand!(v, context, options)
+               is_map(v) || is_list(v) || is_tuple(v) -> Noizu.Entity.Protocol.expand!(v, context, options)
                :else -> v
              end
            end
@@ -49,7 +49,7 @@ defimpl Noizu.AdvancedScaffolding.Entity.Protocol, for: List do
       |> Task.async_stream(
            fn (v) ->
              cond do
-               is_map(v) || is_list(v) || is_tuple(v) -> Noizu.AdvancedScaffolding.Entity.Protocol.expand!(v, context, options)
+               is_map(v) || is_list(v) || is_tuple(v) -> Noizu.Entity.Protocol.expand!(v, context, options)
                :else -> v
              end
            end,
@@ -62,19 +62,19 @@ defimpl Noizu.AdvancedScaffolding.Entity.Protocol, for: List do
   end
 end
 
-defimpl Noizu.AdvancedScaffolding.Entity.Protocol, for: Tuple do
+defimpl Noizu.Entity.Protocol, for: Tuple do
   def expand!(ref, context, options \\ nil)
   def expand!({:ext_ref, m, _} = ref, _context, options) when is_atom(m) do
     cond do
-      Noizu.AdvancedScaffolding.Helpers.expand_ref?(Noizu.AdvancedScaffolding.Helpers.update_expand_options(m, options)) ->
-        Noizu.AdvancedScaffolding.Entity.Protocol.expand!(m.entity!(ref, options))
+      Noizu.AdvancedScaffolding.Helpers.expand_ref?(Noizu.AdvancedScaffolding.Helpers.__update_expand_options__(m, options)) ->
+        Noizu.Entity.Protocol.expand!(m.entity!(ref, options))
       :else -> ref
     end
   end
   def expand!({:ref, m, _} = ref, _context, options) when is_atom(m) do
     cond do
-      Noizu.AdvancedScaffolding.Helpers.expand_ref?(Noizu.AdvancedScaffolding.Helpers.update_expand_options(m, options)) ->
-        Noizu.AdvancedScaffolding.Entity.Protocol.expand!(m.entity!(ref, options))
+      Noizu.AdvancedScaffolding.Helpers.expand_ref?(Noizu.AdvancedScaffolding.Helpers.__update_expand_options__(m, options)) ->
+        Noizu.Entity.Protocol.expand!(m.entity!(ref, options))
       :else -> ref
     end
   end
@@ -83,10 +83,10 @@ defimpl Noizu.AdvancedScaffolding.Entity.Protocol, for: Tuple do
   end
 end
 
-defimpl Noizu.AdvancedScaffolding.Entity.Protocol, for: Map do
+defimpl Noizu.Entity.Protocol, for: Map do
   def expand!(entity, context, options \\ %{})
 
-  def expand!(%{__struct__: _m} = entity, context, %{structs: true} = options), do: Noizu.AdvancedScaffolding.Entity.Protocol.Derive.NoizuStruct.expand!(entity, context, options)
+  def expand!(%{__struct__: _m} = entity, context, %{structs: true} = options), do: Noizu.Entity.Protocol.Derive.NoizuStruct.expand!(entity, context, options)
   def expand!(%{__struct__: _m} = entity, _context, _options), do: entity
   def expand!(%{} = entity, context, %{maps: true} = options) do
     {max_concurrency, options} = cond do
@@ -99,7 +99,7 @@ defimpl Noizu.AdvancedScaffolding.Entity.Protocol, for: Map do
       |> Enum.map(
            fn ({k, v}) ->
              cond do
-               is_map(v) || is_list(v) || is_tuple(v) -> {k, Noizu.AdvancedScaffolding.Entity.Protocol.expand!(v, context, options)}
+               is_map(v) || is_list(v) || is_tuple(v) -> {k, Noizu.Entity.Protocol.expand!(v, context, options)}
                :else -> {k, v}
              end
            end
@@ -113,7 +113,7 @@ defimpl Noizu.AdvancedScaffolding.Entity.Protocol, for: Map do
       |> Task.async_stream(
            fn ({k, v}) ->
              cond do
-               is_map(v) || is_list(v) || is_tuple(v) -> {k, Noizu.AdvancedScaffolding.Entity.Protocol.expand!(v, context, options)}
+               is_map(v) || is_list(v) || is_tuple(v) -> {k, Noizu.Entity.Protocol.expand!(v, context, options)}
                :else -> {k, v}
              end
            end,
@@ -130,7 +130,7 @@ defimpl Noizu.AdvancedScaffolding.Entity.Protocol, for: Map do
   end
 end
 
-defmodule Noizu.AdvancedScaffolding.Entity.Protocol.Derive.NoizuStruct do
+defmodule Noizu.Entity.Protocol.Derive.NoizuStruct do
 
   def expand_field?(field, mod, json_format, deriving) do
     cond do
@@ -143,14 +143,14 @@ defmodule Noizu.AdvancedScaffolding.Entity.Protocol.Derive.NoizuStruct do
 
   def expand!(entity, context, options) do
     {deriving, options} = pop_in(options, [:deriving])
-    {json_format, options} = Noizu.AdvancedScaffolding.Helpers.update_options(entity, context, options)
+    {json_format, options} = Noizu.AdvancedScaffolding.Helpers.__update_options__(entity, context, options)
     v = Enum.map(
       Map.from_struct(entity),
       fn ({k, v}) ->
         v = cond do
-              is_map(v) && expand_field?(k, entity.__struct__, json_format, deriving) -> Noizu.AdvancedScaffolding.Entity.Protocol.expand!(v, context, options)
-              is_list(v) && expand_field?(k, entity.__struct__, json_format, deriving) -> Noizu.AdvancedScaffolding.Entity.Protocol.expand!(v, context, options)
-              is_tuple(v) && expand_field?(k, entity.__struct__, json_format, deriving) -> Noizu.AdvancedScaffolding.Entity.Protocol.expand!(v, context, options)
+              is_map(v) && expand_field?(k, entity.__struct__, json_format, deriving) -> Noizu.Entity.Protocol.expand!(v, context, options)
+              is_list(v) && expand_field?(k, entity.__struct__, json_format, deriving) -> Noizu.Entity.Protocol.expand!(v, context, options)
+              is_tuple(v) && expand_field?(k, entity.__struct__, json_format, deriving) -> Noizu.Entity.Protocol.expand!(v, context, options)
               :else -> v
             end
         {k, v}

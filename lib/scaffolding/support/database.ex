@@ -10,29 +10,29 @@ defdatabase Noizu.AdvancedScaffolding.Database do
   #-----------------------------------------------------------------------------
   # Ref Resolution Lookup Table
   #-----------------------------------------------------------------------------
-  deftable UniversalReverseLookupTable, [:identifier, :ref], type: :set, index: [] do
-    @type t :: %UniversalReverseLookupTable{
+  deftable UniversalReverseLookup.Table, [:identifier, :ref], type: :set, index: [] do
+    @type t :: %UniversalReverseLookup.Table{
                  identifier: Types.integer,
                  ref: atom,
                }
   end
 
-  deftable UniversalLookupTable, [:identifier, :universal_identifier], type: :set, index: [] do
-    @type t :: %UniversalLookupTable{
+  deftable UniversalLookup.Table, [:identifier, :universal_identifier], type: :set, index: [] do
+    @type t :: %UniversalLookup.Table{
                  identifier: tuple,
                  universal_identifier: atom,
                }
   end
 
-  deftable EctoIdentifierLookupTable, [:identifier, :ecto_identifier], type: :set, index: [] do
-    @type t :: %EctoIdentifierLookupTable{
+  deftable EctoIdentifierLookup.Table, [:identifier, :ecto_identifier], type: :set, index: [] do
+    @type t :: %EctoIdentifierLookup.Table{
                  identifier: tuple,
                  ecto_identifier: atom,
                }
   end
 
-  deftable NmidV3Generator, [:key, :incr], type: :ordered_set, index: [] do
-    @type t :: %NmidV3Generator{key: integer, incr: integer}
+  deftable NmidV3Generator.Table, [:key, :incr], type: :ordered_set, index: [] do
+    @type t :: %NmidV3Generator.Table{key: integer, incr: integer}
   end
 
 end

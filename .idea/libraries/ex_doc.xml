@@ -13,6 +13,10 @@
       <root url="file://$PROJECT_DIR$/_build/test/lib/ex_doc/ebin" />
       <root url="file://$PROJECT_DIR$/_build/dev/lib/ex_doc/ebin" />
       <root url="file://$PROJECT_DIR$/_build/dev/lib/ex_doc/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/dev/lib/ex_doc/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/test/lib/ex_doc/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/dev/lib/ex_doc/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/test/lib/ex_doc/ebin" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
@@ -20,6 +24,7 @@
       <root url="file://$PROJECT_DIR$/deps/ex_doc/priv" />
       <root url="file://$PROJECT_DIR$/deps/ex_doc/lib" />
       <root url="file://$PROJECT_DIR$/deps/ex_doc/priv" />
+      <root url="file://$PROJECT_DIR$/deps/ex_doc/lib" />
       <root url="file://$PROJECT_DIR$/deps/ex_doc/lib" />
       <root url="file://$PROJECT_DIR$/deps/ex_doc/lib" />
       <root url="file://$PROJECT_DIR$/deps/ex_doc/lib" />

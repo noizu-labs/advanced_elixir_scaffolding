@@ -10,7 +10,7 @@
 # Danger Will Robinson.
 alias NoizuSchema.Database.AdvancedScaffolding.Test.Fixture.V3.Foo.Table, as: FooV3Table
 alias NoizuSchema.Database.AdvancedScaffolding.Test.Fixture.V3.Foo.Type.Table, as: FooV3TypeTable
-alias Noizu.AdvancedScaffolding.Database.NmidV3Generator
+alias Noizu.AdvancedScaffolding.Database.NmidV3Generator.Table, as: NmidV3Generator
 
 #Amnesia.stop
 #Amnesia.Schema.destroy

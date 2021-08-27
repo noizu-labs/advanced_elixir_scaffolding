@@ -1,11 +1,11 @@
-defmodule Noizu.AdvancedScaffolding.Sphinx.Float do
+defmodule Noizu.AdvancedScaffolding.Sphinx.Type.Float do
   @moduledoc """
-  Ecto ENUM Custom Type.
+  Encode/Decode Float value for Sphinx Database.
   """
   use Ecto.Type
 
-  require Noizu.AdvancedScaffolding.DomainObject
-  Noizu.AdvancedScaffolding.DomainObject.noizu_sphinx_handler()
+  require Noizu.DomainObject
+  Noizu.DomainObject.noizu_sphinx_handler()
 
   #----------------------------
   # type

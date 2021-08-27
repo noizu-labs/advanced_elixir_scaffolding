@@ -13,9 +13,14 @@
       <root url="file://$PROJECT_DIR$/_build/test/lib/redix/ebin" />
       <root url="file://$PROJECT_DIR$/_build/dev/lib/redix/ebin" />
       <root url="file://$PROJECT_DIR$/_build/dev/lib/redix/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/dev/lib/redix/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/test/lib/redix/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/dev/lib/redix/ebin" />
+      <root url="file://$PROJECT_DIR$/_build/test/lib/redix/ebin" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
+      <root url="file://$PROJECT_DIR$/deps/redix/lib" />
       <root url="file://$PROJECT_DIR$/deps/redix/lib" />
       <root url="file://$PROJECT_DIR$/deps/redix/lib" />
       <root url="file://$PROJECT_DIR$/deps/redix/lib" />

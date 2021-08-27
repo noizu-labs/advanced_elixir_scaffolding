@@ -6,7 +6,7 @@
 defmodule Noizu.AdvancedScaffolding.Mixfile do
   use Mix.Project
 
-  @version "1.0.0"
+  @version "1.0.1"
   @source_url "https://github.com/noizu-labs/advanced_elixir_scaffolding"
 
   def project do
@@ -69,32 +69,32 @@ defmodule Noizu.AdvancedScaffolding.Mixfile do
       source_url: @source_url,
       groups_for_modules: [
         "Behaviours": [
-          Noizu.AdvancedScaffolding.DomainObject,
-          Noizu.AdvancedScaffolding.SimpleObject,
+          Noizu.DomainObject,
+          Noizu.SimpleObject,
 
-          Noizu.AdvancedScaffolding.BasicRefBehaviour,
-          Noizu.AdvancedScaffolding.Ecto.EnumTypeBehaviour,
-          Noizu.AdvancedScaffolding.EnumRefBehaviour,
+          Noizu.AdvancedScaffolding.Internal.Ecto.Reference.Basic,
+          Noizu.AdvancedScaffolding.Internal.Ecto.EnumType,
+          Noizu.AdvancedScaffolding.Internal.Ecto.Reference.Enum,
           Noizu.AdvancedScaffolding.SphinxFieldBehaviour,
-          Noizu.AdvancedScaffolding.UniversalRefBehaviour,
+          Noizu.AdvancedScaffolding.Internal.Ecto.Reference.Universal,
         ],
         "Internals": [
           Noizu.AdvancedScaffolding.Implementation,
           Noizu.AdvancedScaffolding.Meta,
         ],
         "Type Handlers": [
-          Noizu.AdvancedScaffolding.DateTime,
-          Noizu.AdvancedScaffolding.Millisecond.TimeStamp,
-          Noizu.AdvancedScaffolding.TimeStamp,
-          Noizu.AdvancedScaffolding.UniversalLink,
+          Noizu.DomainObject.DateTime,
+          Noizu.DomainObject.TimeStamp.Millisecond,
+          Noizu.DomainObject.TimeStamp.Second,
+          Noizu.DomainObject.UniversalLink,
 
         ],
         "Protocols": [
-          Noizu.AdvancedScaffolding.EctoEntity.Protocol,
-          Noizu.AdvancedScaffolding.Entity.Protocol,
+          Noizu.EctoEntity.Protocol,
+          Noizu.Entity.Protocol,
           Noizu.ERP,
-          Noizu.AdvancedScaffolding.Permission.Protocol,
-          Noizu.AdvancedScaffolding.Restricted.Protocol,
+          Noizu.Permission.Protocol,
+          Noizu.RestrictedAccess.Protocol,
         ],
         "Schema": [
           Noizu.AdvancedScaffolding.Database,
@@ -114,7 +114,7 @@ defmodule Noizu.AdvancedScaffolding.Mixfile do
         Noizu.AdvancedScaffolding.Schema,
         Noizu.AdvancedScaffolding.Restricted,
         Noizu.AdvancedScaffolding.Meta,
-        Noizu.AdvancedScaffolding.Meta.Table,
+        Noizu.AdvancedScaffolding.Internal.DomainObject.Table,
         Noizu.AdvancedScaffolding.Meta.DomainObject,
         Noizu.AdvancedScaffolding.Meta.SimpleObject,
         Noizu.AdvancedScaffolding.Implementation,
