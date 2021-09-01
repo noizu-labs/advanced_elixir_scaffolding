@@ -3,7 +3,7 @@
 This library provides some general tools to reduce some boiler plate code around working with objects, performing CRUD, auditing changes, performing basic authorization checks, and working with entity references (foreign keys). It includes various concepts previously applied to some of our private projects including blade of eternity, lacrosse alerts, and solace club.
 
 ## Additional Documentation
-* [Api Documentation](http://noizu.github.io/ElixirScaffolding)
+* [Api Documentation](http://noizu-labs.github.io/advanced_elixir_scaffolding)
 
 ## Refs
 Refs provide a universal way for database records to reference other internal or external entities. They take the form of a tuple as follows: {:ref, Entity.Module, identifier} where

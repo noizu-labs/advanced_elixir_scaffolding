@@ -2,26 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ae58bc41-455c-447f-90eb-f1325731ba9b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/docs/xref/overview.dot" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/xref/overview.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/xref/overview.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TODO.md" beforeDir="false" afterPath="$PROJECT_DIR$/TODO.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/common/schema/peristence/persistence_settings.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/common/schema/peristence/persistence_settings.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/common/type_handlers/time_stamp.second.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/common/type_handlers/time_stamp.second.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/common/universal_reference/universal_reference.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/common/universal_reference/universal_reference.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/helpers.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/helpers.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/domain_object/ref/universal_reference.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/domain_object/ref/universal_reference.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/persistence/entity.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/persistence/entity.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/persistence/entity.implementation.default.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/persistence/entity.implementation.default.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/persistence/repo.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/persistence/repo.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/persistence/repo.implementation.default.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/persistence/repo.implementation.default.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/simple_object/simple_object.base.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/simple_object/simple_object.base.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/protocols/ecto_entity.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/protocols/ecto_entity.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mix.exs" beforeDir="false" afterPath="$PROJECT_DIR$/mix.exs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/fixtures/v3/foo.type.ex" beforeDir="false" afterPath="$PROJECT_DIR$/test/fixtures/v3/foo.type.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/update_dependency_graph.sh" beforeDir="false" afterPath="$PROJECT_DIR$/update_dependency_graph.sh" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
