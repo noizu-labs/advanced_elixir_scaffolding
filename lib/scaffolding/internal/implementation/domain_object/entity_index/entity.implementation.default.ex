@@ -1,4 +1,4 @@
-defmodule Noizu.AdvancedScaffolding.Internal.Index.Entity.Implementation.Default do
+defmodule Noizu.AdvancedScaffolding.Internal.EntityIndex.Entity.Implementation.Default do
   @moduledoc """
   Default Implementation.
   """

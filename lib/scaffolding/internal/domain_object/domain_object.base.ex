@@ -8,7 +8,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Base do
 
     core_configuration = Noizu.AdvancedScaffolding.Internal.Core.Base.Behaviour.__configure__(options)
     persistence_configuration = Noizu.AdvancedScaffolding.Internal.Persistence.Base.Behaviour.__configure__(options)
-    index_configuration = Noizu.AdvancedScaffolding.Internal.Index.Base.Behaviour.__configure__(options)
+    index_configuration = Noizu.AdvancedScaffolding.Internal.EntityIndex.Base.Behaviour.__configure__(options)
     json_configuration = Noizu.AdvancedScaffolding.Internal.Json.Base.Behaviour.__configure__(options)
 
 
@@ -44,8 +44,8 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Base do
       @before_compile Noizu.AdvancedScaffolding.Internal.Persistence.Base.Behaviour
       @after_compile Noizu.AdvancedScaffolding.Internal.Persistence.Base.Behaviour
 
-      @before_compile Noizu.AdvancedScaffolding.Internal.Index.Base.Behaviour
-      @after_compile Noizu.AdvancedScaffolding.Internal.Index.Base.Behaviour
+      @before_compile Noizu.AdvancedScaffolding.Internal.EntityIndex.Base.Behaviour
+      @after_compile Noizu.AdvancedScaffolding.Internal.EntityIndex.Base.Behaviour
 
       @before_compile Noizu.AdvancedScaffolding.Internal.Json.Base.Behaviour
       @after_compile Noizu.AdvancedScaffolding.Internal.Json.Base.Behaviour

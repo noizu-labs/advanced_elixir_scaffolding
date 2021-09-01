@@ -150,9 +150,9 @@ defmodule Noizu.AdvancedScaffolding.Internal.Helpers do
       #----------------------
       # Load Sphinx Settings from base.
       #----------------------
-      @__nzdo__indexes Noizu.AdvancedScaffolding.Internal.Helpers.extract_transform_attribute(:index, :indexing, {Noizu.AdvancedScaffolding.Internal.DomainObject.Index, :expand_indexes, [@__nzdo__base]}, [])
+      @__nzdo__indexes Noizu.AdvancedScaffolding.Internal.Helpers.extract_transform_attribute(:index, :indexing, {Noizu.AdvancedScaffolding.Internal.Index.Implementation.Default, :__expand_indexes__, [@__nzdo__base]}, [])
       @__nzdo__index_list Enum.map(@__nzdo__indexes, fn ({k, _v}) -> k end)
-      @__nzdo__inline_index Noizu.AdvancedScaffolding.Internal.DomainObject.Index.domain_object_indexer(@__nzdo__base)
+      @__nzdo__inline_index Noizu.AdvancedScaffolding.Internal.Index.Implementation.Default.__domain_object_indexer__(@__nzdo__base)
 
       if (@__nzdo__base_open? && !options[:for_repo]) do
         Module.put_attribute(@__nzdo__base, :__nzdo__indexes, @__nzdo__indexes)

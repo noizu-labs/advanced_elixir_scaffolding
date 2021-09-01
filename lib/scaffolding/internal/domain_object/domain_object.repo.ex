@@ -25,8 +25,8 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Repo do
     persistence_configuration = Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Behaviour.__configure__(options)
     persistence_implementation = Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Behaviour.__implement__(options)
 
-    index_configuration = Noizu.AdvancedScaffolding.Internal.Index.Repo.Behaviour.__configure__(options)
-    index_implementation = Noizu.AdvancedScaffolding.Internal.Index.Repo.Behaviour.__implement__(options)
+    index_configuration = Noizu.AdvancedScaffolding.Internal.EntityIndex.Repo.Behaviour.__configure__(options)
+    index_implementation = Noizu.AdvancedScaffolding.Internal.EntityIndex.Repo.Behaviour.__implement__(options)
 
     json_configuration = Noizu.AdvancedScaffolding.Internal.Json.Repo.Behaviour.__configure__(options)
     json_implementation = Noizu.AdvancedScaffolding.Internal.Json.Repo.Behaviour.__implement__(options)
@@ -110,8 +110,8 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Repo do
       @before_compile Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Behaviour
       @after_compile Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Behaviour
 
-      @before_compile Noizu.AdvancedScaffolding.Internal.Index.Repo.Behaviour
-      @after_compile Noizu.AdvancedScaffolding.Internal.Index.Repo.Behaviour
+      @before_compile Noizu.AdvancedScaffolding.Internal.EntityIndex.Repo.Behaviour
+      @after_compile Noizu.AdvancedScaffolding.Internal.EntityIndex.Repo.Behaviour
 
       @before_compile Noizu.AdvancedScaffolding.Internal.Json.Repo.Behaviour
       @after_compile Noizu.AdvancedScaffolding.Internal.Json.Repo.Behaviour

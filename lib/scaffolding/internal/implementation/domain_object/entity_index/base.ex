@@ -1,4 +1,4 @@
-defmodule Noizu.AdvancedScaffolding.Internal.Index.Base do
+defmodule Noizu.AdvancedScaffolding.Internal.EntityIndex.Base do
   @moduledoc """
   Base Indexing Functionality
   """
@@ -21,7 +21,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Index.Base do
       nzdo__entity = Module.get_attribute(env.module, :__nzdo__entity)
 
       quote do
-        @behaviour Noizu.AdvancedScaffolding.Internal.Index.Base.Behaviour
+        @behaviour Noizu.AdvancedScaffolding.Internal.EntityIndex.Base.Behaviour
         #################################################
         # __indexing__
         #################################################
@@ -35,9 +35,11 @@ defmodule Noizu.AdvancedScaffolding.Internal.Index.Base do
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
         if Module.has_attribute?(__MODULE__, :__nzdo__inline_index) && Module.get_attribute(__MODULE__, :__nzdo__inline_index) do
           defmodule Index do
+            @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
             require unquote(nzdo__index_implementation)
-            unquote(nzdo__index_implementation).noizu_index(entity: unquote(nzdo__entity), inline: true) do
 
+            @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+            unquote(nzdo__index_implementation).noizu_index(entity: unquote(nzdo__entity), inline: true) do
             end
           end
         end

@@ -27,8 +27,8 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Entity do
     persistence_configuration = Noizu.AdvancedScaffolding.Internal.Persistence.Entity.Behaviour.__configure__(options)
     persistence_implementation = Noizu.AdvancedScaffolding.Internal.Persistence.Entity.Behaviour.__implement__(options)
 
-    index_configuration = Noizu.AdvancedScaffolding.Internal.Index.Entity.Behaviour.__configure__(options)
-    index_implementation = Noizu.AdvancedScaffolding.Internal.Index.Entity.Behaviour.__implement__(options)
+    index_configuration = Noizu.AdvancedScaffolding.Internal.EntityIndex.Entity.Behaviour.__configure__(options)
+    index_implementation = Noizu.AdvancedScaffolding.Internal.EntityIndex.Entity.Behaviour.__implement__(options)
 
     json_configuration = Noizu.AdvancedScaffolding.Internal.Json.Entity.Behaviour.__configure__(options)
     json_implementation = Noizu.AdvancedScaffolding.Internal.Json.Entity.Behaviour.__implement__(options)
@@ -38,6 +38,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Entity do
 
 
     process_config = quote do
+                       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
                        require Noizu.DomainObject
                        require Noizu.AdvancedScaffolding.Internal.DomainObject.Entity
                        require Noizu.AdvancedScaffolding.Internal.DomainObject.Entity.Field.Macros
@@ -53,10 +54,15 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Entity do
                        #--------------------
                        # Extract configuration details from provided options/set attributes/base attributes/config methods.
                        #--------------------
+                       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
                        unquote(core_configuration)
+                       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
                        unquote(persistence_configuration)
+                       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
                        unquote(index_configuration)
+                       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
                        unquote(json_configuration)
+                       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
                        unquote(inspect_configuration)
 
 
@@ -68,6 +74,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Entity do
                        Noizu.AdvancedScaffolding.Internal.DomainObject.Entity.Field.Macros.__register__field_attributes__macro__(unquote(options))
 
                        try do
+                         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
                          # we rely on the same providers as used in the Entity type for providing json encoding, restrictions, etc.
                          import Noizu.AdvancedScaffolding.Internal.DomainObject.Entity.Field.Macros, only: [
                            identifier: 0, identifier: 1, identifier: 2,
@@ -78,7 +85,9 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Entity do
                            internal_field: 1, internal_field: 2, internal_field: 3, internal_fields: 1, internal_fields: 2,
                            transient_field: 1, transient_field: 2, transient_field: 3, transient_fields: 1, transient_fields: 2,
                          ]
+                         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
                          unquote(extension_block_a)
+                         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
                          unquote(block)
                        after
                          :ok
@@ -95,26 +104,37 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Entity do
     quote do
       @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
       unquote(process_config)
+
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       unquote(generate)
 
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       unquote(core_implementation)
+
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       unquote(persistence_implementation)
+
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       unquote(index_implementation)
+
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       unquote(json_implementation)
+
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       unquote(inspect_implementation)
 
-      @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       unquote(extension_block_c)
 
       @before_compile Noizu.AdvancedScaffolding.Internal.Core.Entity.Behaviour
       @before_compile Noizu.AdvancedScaffolding.Internal.Persistence.Entity.Behaviour
-      @before_compile Noizu.AdvancedScaffolding.Internal.Index.Entity.Behaviour
+      @before_compile Noizu.AdvancedScaffolding.Internal.EntityIndex.Entity.Behaviour
       @before_compile Noizu.AdvancedScaffolding.Internal.Json.Entity.Behaviour
       @before_compile Noizu.AdvancedScaffolding.Internal.Inspect.Entity.Behaviour
 
       @after_compile Noizu.AdvancedScaffolding.Internal.Core.Entity.Behaviour
       @after_compile Noizu.AdvancedScaffolding.Internal.Persistence.Entity.Behaviour
-      @after_compile Noizu.AdvancedScaffolding.Internal.Index.Entity.Behaviour
+      @after_compile Noizu.AdvancedScaffolding.Internal.EntityIndex.Entity.Behaviour
       @after_compile Noizu.AdvancedScaffolding.Internal.Json.Entity.Behaviour
       @after_compile Noizu.AdvancedScaffolding.Internal.Inspect.Entity.Behaviour
 

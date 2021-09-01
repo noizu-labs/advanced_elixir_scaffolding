@@ -23,5 +23,7 @@ defmodule Noizu.AdvancedScaffolding.Types do
 
   @type noizu_info_setting :: :all | :type | :identifier_type | :meta | :enum | :noizu_info_setting__erp | :noizu_info_setting__json | :noizu_info_setting__field | :noizu_info_setting__permissions | :noizu_info_setting__persistence | :noizu_info_setting__indexing
 
+  @type index_noizu_info_settings :: :all |:type | :schema_open | :schema_close | :index_stem | :rt_index | :delta_index | :primary_index |:rt_source | :delta_source | :primary_source |:data_dir
+
 
 end

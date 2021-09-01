@@ -1,4 +1,4 @@
-defmodule Noizu.AdvancedScaffolding.Internal.Index.Entity do
+defmodule Noizu.AdvancedScaffolding.Internal.EntityIndex.Entity do
   @moduledoc """
   Search Indexing DomainObject Functionality
   """
@@ -31,11 +31,11 @@ defmodule Noizu.AdvancedScaffolding.Internal.Index.Entity do
     end
 
     def __implement__(options) do
-      entity_index_implementation = options[:core_implementation] || Noizu.AdvancedScaffolding.Internal.Index.Entity.Implementation.Default
+      entity_index_implementation = options[:core_implementation] || Noizu.AdvancedScaffolding.Internal.EntityIndex.Entity.Implementation.Default
 
       quote do
 
-        @behaviour Noizu.AdvancedScaffolding.Internal.Index.Entity.Behaviour
+        @behaviour Noizu.AdvancedScaffolding.Internal.EntityIndex.Entity.Behaviour
 
         alias Noizu.AdvancedScaffolding.Schema.PersistenceLayer
         @__nzdo__entity_index_implementation unquote(entity_index_implementation)

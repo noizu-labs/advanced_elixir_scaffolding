@@ -1,4 +1,4 @@
-defmodule Noizu.AdvancedScaffolding.Internal.Index.Repo do
+defmodule Noizu.AdvancedScaffolding.Internal.EntityIndex.Repo do
   @moduledoc """
   Index DomainObject Functionality
   """
@@ -12,7 +12,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Index.Repo do
 
     def __configure__(_options) do
       quote do
-        @behaviour Noizu.AdvancedScaffolding.Internal.Index.Repo.Behaviour
+        @behaviour Noizu.AdvancedScaffolding.Internal.EntityIndex.Repo.Behaviour
       end
     end
 
