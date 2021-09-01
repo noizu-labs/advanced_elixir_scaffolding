@@ -17,7 +17,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Entity.Implementation.D
     layer = domain_object.__persistence__(:table)[table]
     layer && domain_object.__as_record__(layer, ref, context, options)
   end
-  def __as_record__(domain_object, layer = %PersistenceLayer{}, ref, context, options) do
+  def __as_record__(domain_object, layer = %{__struct__: PersistenceLayer}, ref, context, options) do
     cond do
       entity = domain_object.entity(ref, options) -> __as_record_type__(domain_object, layer, entity, context, options)
       :else -> nil
@@ -31,7 +31,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Entity.Implementation.D
     layer = domain_object.__persistence__(:table)[table]
     layer && domain_object.__as_record__!(layer, ref, context, options)
   end
-  def __as_record__!(domain_object, layer = %PersistenceLayer{}, ref, context, options) do
+  def __as_record__!(domain_object, layer = %{__struct__: PersistenceLayer}, ref, context, options) do
     cond do
       entity = domain_object.entity(ref, options) -> __as_record_type__(domain_object, layer, entity, context, options)
       :else -> nil
@@ -41,7 +41,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Entity.Implementation.D
   #-----------------------------------
   # __as_record_type__
   #-----------------------------------
-  def __as_record_type__(domain_object, layer = %PersistenceLayer{type: :mnesia, table: table}, entity, context, options) do
+  def __as_record_type__(domain_object, layer = %{__struct__: PersistenceLayer, type: :mnesia, table: table}, entity, context, options) do
     context = Noizu.ElixirCore.CallingContext.system(context)
     field_types = domain_object.__noizu_info__(:field_types)
     fields = Map.keys(table.__struct__([])) -- [:__struct__, :__transient__, :initial]
@@ -140,11 +140,11 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Entity.Implementation.D
   def ecto_identifier(m, ref) do
     ref = m.ref(ref)
     case Noizu.AdvancedScaffolding.Database.EctoIdentifierLookup.Table.read!(ref) do
-      %Noizu.AdvancedScaffolding.Database.EctoIdentifierLookup.Table{ecto_identifier: id} -> id
+      %{__struct__: Noizu.AdvancedScaffolding.Database.EctoIdentifierLookup.Table, ecto_identifier: id} -> id
       _ ->
         case m.entity(ref) do
           %{ecto_identifier: id} ->
-            Noizu.AdvancedScaffolding.Database.EctoIdentifierLookup.Table.write!(%Noizu.AdvancedScaffolding.Database.EctoIdentifierLookup.Table{identifier: ref, ecto_identifier: id})
+            Noizu.AdvancedScaffolding.Database.EctoIdentifierLookup.Table.write!(%{__struct__: Noizu.AdvancedScaffolding.Database.EctoIdentifierLookup.Table, identifier: ref, ecto_identifier: id})
             id
           _ -> nil
         end
@@ -157,7 +157,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Entity.Implementation.D
   def universal_identifier_lookup(m, ref) do
     ref = m.ref(ref)
     case Noizu.AdvancedScaffolding.Database.UniversalLookup.Table.read!(ref) do
-      %Noizu.AdvancedScaffolding.Database.UniversalLookup.Table{universal_identifier: id} -> id
+      %{__struct__: Noizu.AdvancedScaffolding.Database.UniversalLookup.Table, universal_identifier: id} -> id
     end
   end
 

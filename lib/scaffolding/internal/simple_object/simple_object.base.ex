@@ -34,21 +34,21 @@ defmodule Noizu.AdvancedScaffolding.Internal.SimpleObject.Base do
     #-----------------------------------
     #
     #-----------------------------------
-    def __as_record__(domain_object, %PersistenceLayer{} = layer, identifier, entity, context, options) do
+    def __as_record__(domain_object, %{__struct__: PersistenceLayer} = layer, identifier, entity, context, options) do
       domain_object.__as_record_type__(layer, identifier, entity, context, options)
     end
 
     #-----------------------------------
     #
     #-----------------------------------
-    def __as_record__!(domain_object, %PersistenceLayer{} = layer, identifier, entity, context, options) do
+    def __as_record__!(domain_object, %{__struct__: PersistenceLayer} = layer, identifier, entity, context, options) do
       domain_object.__as_record_type__!(layer, identifier, entity, context, options)
     end
 
     #-----------------------------------
     #
     #-----------------------------------
-    def __as_record_type__(domain_object, %PersistenceLayer{type: :ecto} = layer, identifier, entity, context, options) do
+    def __as_record_type__(domain_object, %{__struct__: PersistenceLayer, type: :ecto} = layer, identifier, entity, context, options) do
       context = Noizu.ElixirCore.CallingContext.system(context)
       field_types = domain_object.__noizu_info__(:field_types)
       Enum.map(
@@ -80,18 +80,18 @@ defmodule Noizu.AdvancedScaffolding.Internal.SimpleObject.Base do
       |> layer.table.__struct__()
     end
 
-    def __as_record_type__(_domain_object, %PersistenceLayer{} = _layer, _identifier, _entity, _context, _options), do: nil
+    def __as_record_type__(_domain_object, %{__struct__: PersistenceLayer} = _layer, _identifier, _entity, _context, _options), do: nil
 
     def __as_record_type__!(domain_object, layer, identifier, entity, context, options), do: domain_object.__as_record_type__(layer, identifier, entity, context, options)
 
     #-----------------------------------
     #
     #-----------------------------------
-    def __from_record__(_m, %PersistenceLayer{} = _layer, %{entity: temp}, _context, _options), do: temp
-    def __from_record__(_m, %PersistenceLayer{} = _layer, _ref, _context, _options), do: nil
+    def __from_record__(_m, %{__struct__: PersistenceLayer} = _layer, %{entity: temp}, _context, _options), do: temp
+    def __from_record__(_m, %{__struct__: PersistenceLayer} = _layer, _ref, _context, _options), do: nil
 
-    def __from_record__!(_m, %PersistenceLayer{} = _layer, %{entity: temp}, _context, _options), do: temp
-    def __from_record__!(_m, %PersistenceLayer{} = _layer, _ref, _context, _options), do: nil
+    def __from_record__!(_m, %{__struct__: PersistenceLayer} = _layer, %{entity: temp}, _context, _options), do: temp
+    def __from_record__!(_m, %{__struct__: PersistenceLayer} = _layer, _ref, _context, _options), do: nil
   end
 
 
@@ -217,20 +217,20 @@ defmodule Noizu.AdvancedScaffolding.Internal.SimpleObject.Base do
       @__nzdo__index_imp Noizu.AdvancedScaffolding.Internal.DomainObject.Entity.Default
 
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-      def __as_record__(%PersistenceLayer{} = layer, identifier, entity, context, options \\ nil),
+      def __as_record__(%{__struct__: PersistenceLayer} = layer, identifier, entity, context, options \\ nil),
           do: @__nzdo__persistence_imp.__as_record__(__MODULE__, layer, identifier, entity, context, options)
-      def __as_record__!(%PersistenceLayer{} = layer, identifier, entity, context, options \\ nil),
+      def __as_record__!(%{__struct__: PersistenceLayer} = layer, identifier, entity, context, options \\ nil),
           do: @__nzdo__persistence_imp.__as_record__!(__MODULE__, layer, identifier, entity, context, options)
 
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-      def __as_record_type__(%PersistenceLayer{} = layer, identifier, entity, context, options \\ nil),
+      def __as_record_type__(%{__struct__: PersistenceLayer} = layer, identifier, entity, context, options \\ nil),
           do: @__nzdo__persistence_imp.__as_record_type__(__MODULE__, layer, identifier, entity, context, options)
-      def __as_record_type__!(%PersistenceLayer{} = layer, identifier, entity, context, options \\ nil),
+      def __as_record_type__!(%{__struct__: PersistenceLayer} = layer, identifier, entity, context, options \\ nil),
           do: @__nzdo__persistence_imp.__as_record_type__!(__MODULE__, layer, identifier, entity, context, options)
 
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-      def __from_record__(%PersistenceLayer{} = layer, record, context, options \\ nil), do: @__nzdo__persistence_imp.__from_record__(__MODULE__, layer, record, context, options)
-      def __from_record__!(%PersistenceLayer{} = layer, record, context, options \\ nil), do: @__nzdo__persistence_imp.__from_record__!(__MODULE__, layer, record, context, options)
+      def __from_record__(%{__struct__: PersistenceLayer} = layer, record, context, options \\ nil), do: @__nzdo__persistence_imp.__from_record__(__MODULE__, layer, record, context, options)
+      def __from_record__!(%{__struct__: PersistenceLayer} = layer, record, context, options \\ nil), do: @__nzdo__persistence_imp.__from_record__!(__MODULE__, layer, record, context, options)
 
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def ecto_entity?(), do: false

@@ -67,7 +67,7 @@ defmodule Noizu.DomainObject.TimeStamp.Second do
 
     def __strip_inspect__(field, value, _opts) do
       case value do
-        %Noizu.DomainObject.TimeStamp.Second{} -> {field, {value.created_on, value.modified_on, value.deleted_on}}
+        %{__struct__: Noizu.DomainObject.TimeStamp.Second} -> {field, {value.created_on, value.modified_on, value.deleted_on}}
         %DateTime{} -> {field, {value, value, nil}}
         _ -> {field, :auto}
       end

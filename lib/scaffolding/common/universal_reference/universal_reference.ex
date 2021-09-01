@@ -43,7 +43,7 @@ defmodule Noizu.DomainObject.UniversalReference do
   #---------------------------
   #
   #---------------------------
-  def universal_identifier(%__MODULE__{identifier: v}) when is_integer(v), do: v
+  def universal_identifier(%{__struct__: __MODULE__, identifier: v}) when is_integer(v), do: v
   def universal_identifier(%{__struct__: __MODULE__} = this) do
     cond do
       v = (this.ref && Noizu.EctoEntity.Protocol.universal_identifier(this.ref)) -> v

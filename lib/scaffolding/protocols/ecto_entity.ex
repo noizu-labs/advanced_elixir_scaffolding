@@ -103,7 +103,7 @@ defimpl Noizu.EctoEntity.Protocol, for: Tuple do
   def universal_identifier({:ref, module, _} = ref) do
     if supported?(ref) do
       case Noizu.AdvancedScaffolding.Database.UniversalLookup.Table.read!(ref) do
-        %Noizu.AdvancedScaffolding.Database.UniversalLookup.Table{universal_identifier: universal_identifier} -> universal_identifier
+        %{__struct__: Noizu.AdvancedScaffolding.Database.UniversalLookup.Table, universal_identifier: universal_identifier} -> universal_identifier
         _ ->
           case module.universal_identifier(ref) do
             v when is_integer(v) ->

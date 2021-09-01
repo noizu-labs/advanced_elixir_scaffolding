@@ -183,7 +183,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
   #------------------------------------------
   # Get - layer_get
   #------------------------------------------
-  def layer_get(m, layer = %PersistenceLayer{}, ref, context, options) do
+  def layer_get(m, layer = %{__struct__: PersistenceLayer}, ref, context, options) do
     identifier = m.layer_pre_get_callback(layer, ref, context, options)
     cond do
       identifier == nil -> nil
@@ -192,7 +192,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
     end
   end
 
-  def layer_get!(m, layer = %PersistenceLayer{}, ref, context, options) do
+  def layer_get!(m, layer = %{__struct__: PersistenceLayer}, ref, context, options) do
     identifier = m.layer_pre_get_callback!(layer, ref, context, options)
     cond do
       identifier == nil -> nil
@@ -204,12 +204,12 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
   #------------------------------------------
   # Get - layer_get_callback
   #------------------------------------------
-  def layer_get_callback(m, %PersistenceLayer{type: :mnesia} = layer, ref, context, options) do
+  def layer_get_callback(m, %{__struct__: PersistenceLayer, type: :mnesia} = layer, ref, context, options) do
     record = layer.table.read(ref)
     record && m.__entity__().__from_record__(layer, record, context, options)
   end
 
-  def layer_get_callback(m, %PersistenceLayer{type: :ecto} = layer, ref, context, options) do
+  def layer_get_callback(m, %{__struct__: PersistenceLayer, type: :ecto} = layer, ref, context, options) do
     record = layer.schema.get(layer.table, ref)
     record && m.__entity__().__from_record__(layer, record, context, options)
   end
@@ -217,7 +217,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
   def layer_get_callback(_m, _layer, _ref, _context, _options), do: nil
 
 
-  def layer_get_callback!(m, %PersistenceLayer{type: :mnesia} = layer, ref, context, options) do
+  def layer_get_callback!(m, %{__struct__: PersistenceLayer, type: :mnesia} = layer, ref, context, options) do
     record = layer.table.read!(ref)
     record && m.__entity__().__from_record__!(layer, record, context, options)
   end
@@ -232,8 +232,8 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
   #------------------------------------------
   # Get - layer_pre_get_callback
   #------------------------------------------
-  def layer_pre_get_callback(m, %PersistenceLayer{type: :mnesia}, ref, _context, _options), do: m.__entity__().id(ref)
-  def layer_pre_get_callback(_m, %PersistenceLayer{type: :ecto}, ref, _context, _options), do: Noizu.EctoEntity.Protocol.ecto_identifier(ref)
+  def layer_pre_get_callback(m, %{__struct__: PersistenceLayer, type: :mnesia}, ref, _context, _options), do: m.__entity__().id(ref)
+  def layer_pre_get_callback(_m, %{__struct__: PersistenceLayer, type: :ecto}, ref, _context, _options), do: Noizu.EctoEntity.Protocol.ecto_identifier(ref)
   def layer_pre_get_callback(_m, _layer, ref, _context, _options), do: ref
 
   #------------------------------------------
@@ -383,12 +383,12 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
   #------------------------------------------
   # Create - layer_create
   #------------------------------------------
-  def layer_create(m, %PersistenceLayer{} = layer, entity, context, options) do
+  def layer_create(m, %{__struct__: PersistenceLayer} = layer, entity, context, options) do
     entity = m.layer_pre_create_callback(layer, entity, context, options)
     entity = m.layer_create_callback(layer, entity, context, options)
     m.layer_post_create_callback(layer, entity, context, options)
   end
-  def layer_create!(m, %PersistenceLayer{} = layer, entity, context, options) do
+  def layer_create!(m, %{__struct__: PersistenceLayer} = layer, entity, context, options) do
     entity = m.layer_pre_create_callback!(layer, entity, context, options)
     entity = m.layer_create_callback!(layer, entity, context, options)
     m.layer_post_create_callback!(layer, entity, context, options)
@@ -397,12 +397,12 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
   #------------------------------------------
   # Create - layer_pre_create_callback
   #------------------------------------------
-  def layer_pre_create_callback(_m, _layer = %PersistenceLayer{}, entity, _context, _options), do: entity
+  def layer_pre_create_callback(_m, _layer = %{__struct__: PersistenceLayer}, entity, _context, _options), do: entity
 
   #------------------------------------------
   #
   #------------------------------------------
-  def layer_create_loop(list, %PersistenceLayer{schema: schema} = layer, context, options) do
+  def layer_create_loop(list, %{__struct__: PersistenceLayer, schema: schema} = layer, context, options) do
     case list do
       records when is_list(records) -> Enum.map(records, &(layer_create_loop(&1, layer, context, options)))
       record = %{__struct__: _} ->
@@ -411,7 +411,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
     end
   end
 
-  def layer_create_loop!(list, %PersistenceLayer{schema: schema} = layer, context, options) do
+  def layer_create_loop!(list, %{__struct__: PersistenceLayer, schema: schema} = layer, context, options) do
     case list do
       records when is_list(records) -> Enum.map(records, &(layer_create_loop!(&1, layer, context, options)))
       record = %{__struct__: _} ->
@@ -423,13 +423,13 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
   #------------------------------------------
   # Create - layer_create_callback
   #------------------------------------------
-  def layer_create_callback(m, %PersistenceLayer{} = layer, entity, context, options) do
+  def layer_create_callback(m, %{__struct__: PersistenceLayer} = layer, entity, context, options) do
     m.__entity__().__as_record__(layer, entity, context, options)
     |> layer_create_loop(layer, context, options)
     entity
   end
 
-  def layer_create_callback!(m, %PersistenceLayer{} = layer, entity, context, options) do
+  def layer_create_callback!(m, %{__struct__: PersistenceLayer} = layer, entity, context, options) do
     m.__entity__().__as_record__!(layer, entity, context, options)
     |> layer_create_loop!(layer, context, options)
     entity
@@ -438,7 +438,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
   #------------------------------------------
   # Create - layer_post_create_callback
   #------------------------------------------
-  def layer_post_create_callback(_m, %PersistenceLayer{} = _layer, entity, _context, _options), do: entity
+  def layer_post_create_callback(_m, %{__struct__: PersistenceLayer} = _layer, entity, _context, _options), do: entity
 
   #=====================================================================
   # Update
@@ -540,12 +540,12 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
   #------------------------------------------
   # Update - layer_update
   #------------------------------------------
-  def layer_update(m, %PersistenceLayer{} = layer, entity, context, options) do
+  def layer_update(m, %{__struct__: PersistenceLayer} = layer, entity, context, options) do
     entity = m.layer_pre_update_callback(layer, entity, context, options)
     entity = m.layer_update_callback(layer, entity, context, options)
     m.layer_post_update_callback(layer, entity, context, options)
   end
-  def layer_update!(m, %PersistenceLayer{} = layer, entity, context, options) do
+  def layer_update!(m, %{__struct__: PersistenceLayer} = layer, entity, context, options) do
     entity = m.layer_pre_update_callback!(layer, entity, context, options)
     entity = m.layer_update_callback!(layer, entity, context, options)
     m.layer_post_update_callback!(layer, entity, context, options)
@@ -554,12 +554,12 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
   #------------------------------------------
   # Update - layer_pre_update_callback
   #------------------------------------------
-  def layer_pre_update_callback(_m, %PersistenceLayer{} = _layer, entity, _context, _options), do: entity
+  def layer_pre_update_callback(_m, %{__struct__: PersistenceLayer} = _layer, entity, _context, _options), do: entity
 
   #------------------------------------------
   #
   #------------------------------------------
-  def layer_update_loop(list, %PersistenceLayer{schema: schema} = layer, context, options) do
+  def layer_update_loop(list, %{__struct__: PersistenceLayer, schema: schema} = layer, context, options) do
     case list do
       records when is_list(records) -> Enum.map(records, &(layer_update_loop(&1, layer, context, options)))
       record = %{__struct__: _} -> schema.update_handler(record, context, options)
@@ -567,7 +567,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
     end
   end
 
-  def layer_update_loop!(list, %PersistenceLayer{schema: schema} = layer, context, options) do
+  def layer_update_loop!(list, %{__struct__: PersistenceLayer, schema: schema} = layer, context, options) do
     case list do
       records when is_list(records) -> Enum.map(records, &(layer_update_loop!(&1, layer, context, options)))
       record = %{__struct__: _} -> schema.update_handler!(record, context, options)
@@ -578,19 +578,19 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
   #------------------------------------------
   # Update - layer_update_callback
   #------------------------------------------
-  def layer_update_callback(m, %PersistenceLayer{type: type} = layer, entity, context, options) when type == :mnesia or type == :ecto do
+  def layer_update_callback(m, %{__struct__: PersistenceLayer, type: type} = layer, entity, context, options) when type == :mnesia or type == :ecto do
     m.__entity__().__as_record__(layer, entity, context, options)
     |> layer_update_loop(layer, context, options)
     entity
   end
-  def layer_update_callback(_m, %PersistenceLayer{} = _layer, entity, _context, _options), do: entity
+  def layer_update_callback(_m, %{__struct__: PersistenceLayer} = _layer, entity, _context, _options), do: entity
 
-  def layer_update_callback!(m, %PersistenceLayer{type: type} = layer, entity, context, options) when type == :mnesia or type == :ecto do
+  def layer_update_callback!(m, %{__struct__: PersistenceLayer, type: type} = layer, entity, context, options) when type == :mnesia or type == :ecto do
     m.__entity__().__as_record__!(layer, entity, context, options)
     |> layer_update_loop!(layer, context, options)
     entity
   end
-  def layer_update_callback!(_m, %PersistenceLayer{} = _layer, entity, _context, _options), do: entity
+  def layer_update_callback!(_m, %{__struct__: PersistenceLayer} = _layer, entity, _context, _options), do: entity
 
   #------------------------------------------
   # Update - layer_post_update_callback
@@ -719,12 +719,12 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
   #------------------------------------------
   # Delete - layer_delete
   #------------------------------------------
-  def layer_delete(m, %PersistenceLayer{} = layer, entity, context, options) do
+  def layer_delete(m, %{__struct__: PersistenceLayer} = layer, entity, context, options) do
     entity = m.layer_pre_delete_callback(layer, entity, context, options)
     entity = m.layer_delete_callback(layer, entity, context, options)
     m.layer_post_delete_callback(layer, entity, context, options)
   end
-  def layer_delete!(m, %PersistenceLayer{} = layer, entity, context, options) do
+  def layer_delete!(m, %{__struct__: PersistenceLayer} = layer, entity, context, options) do
     entity = m.layer_pre_delete_callback!(layer, entity, context, options)
     entity = m.layer_delete_callback!(layer, entity, context, options)
     m.layer_post_delete_callback!(layer, entity, context, options)
@@ -733,22 +733,22 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
   #------------------------------------------
   # Delete - layer_pre_delete_callback
   #------------------------------------------
-  def layer_pre_delete_callback(_m, %PersistenceLayer{} = _layer, entity, _context, _options), do: entity
+  def layer_pre_delete_callback(_m, %{__struct__: PersistenceLayer} = _layer, entity, _context, _options), do: entity
 
   #------------------------------------------
   # Delete - layer_delete_callback
   #------------------------------------------
-  def layer_delete_callback(_m, %PersistenceLayer{type: :mnesia} = layer, entity, _context, _options) do
+  def layer_delete_callback(_m, %{__struct__: PersistenceLayer, type: :mnesia} = layer, entity, _context, _options) do
     layer.table.delete(entity.identifier)
     entity
   end
-  def layer_delete_callback(_m, %PersistenceLayer{type: :ecto} = layer, entity, _context, _options) do
+  def layer_delete_callback(_m, %{__struct__: PersistenceLayer, type: :ecto} = layer, entity, _context, _options) do
     layer.schema.delete(layer.table, entity.identifier)
     entity
   end
   def layer_delete_callback(_m, _layer, entity, _context, _options), do: entity
 
-  def layer_delete_callback!(_m, %PersistenceLayer{type: :mnesia} = layer, entity, _context, _options) do
+  def layer_delete_callback!(_m, %{__struct__: PersistenceLayer, type: :mnesia} = layer, entity, _context, _options) do
     layer.table.delete!(entity.identifier)
     entity
   end
@@ -756,12 +756,12 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
     layer.schema.delete(layer.table, entity.identifier)
     entity
   end
-  def layer_delete_callback!(_m, %PersistenceLayer{} = _layer, entity, _context, _options), do: entity
+  def layer_delete_callback!(_m, %{__struct__: PersistenceLayer} = _layer, entity, _context, _options), do: entity
 
   #------------------------------------------
   # Delete - layer_post_delete_callback
   #------------------------------------------
-  def layer_post_delete_callback(_m, %PersistenceLayer{} = _layer, entity, _context, _options), do: entity
+  def layer_post_delete_callback(_m, %{__struct__: PersistenceLayer} = _layer, entity, _context, _options), do: entity
 
 
 

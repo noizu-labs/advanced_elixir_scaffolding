@@ -259,7 +259,7 @@ defmodule Noizu.AdvancedScaffolding.Schema.PersistenceSettings do
                end
 
     case provider.metadata() do
-      %Noizu.AdvancedScaffolding.Schema.Metadata.Redis{} ->
+      %{__struct__: Noizu.AdvancedScaffolding.Schema.Metadata.Redis} ->
         __expand_layer__(provider, {module, :redis}, module, options)
       metadata ->
         path = Module.split(module)
@@ -284,10 +284,10 @@ defmodule Noizu.AdvancedScaffolding.Schema.PersistenceSettings do
     metadata = provider.metadata()
 
     type = case metadata do
-             %Noizu.AdvancedScaffolding.Schema.Metadata.Ecto{} -> :ecto
-             %Noizu.AdvancedScaffolding.Schema.Metadata.Redis{} -> :redis
+             %{__struct__: Noizu.AdvancedScaffolding.Schema.Metadata.Ecto} -> :ecto
+             %{__struct__: Noizu.AdvancedScaffolding.Schema.Metadata.Redis} -> :redis
              %Amnesia.Metadata{} -> :mnesia
-             %Noizu.AdvancedScaffolding.Schema.Metadata.Other{type: type} -> type
+             %{__struct__: Noizu.AdvancedScaffolding.Schema.Metadata.Other, type: type} -> type
            end
 
     id_map = cond do

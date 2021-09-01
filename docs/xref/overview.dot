@@ -1,0 +1,296 @@
+digraph "xref graph" {
+  "lib/scaffolding/behaviours/schema_info.ex"
+  "lib/scaffolding/behaviours/schema_info.ex" -> "lib/scaffolding/common/unsupported_module.ex"
+  "lib/scaffolding/behaviours/search_index_handler.ex"
+  "lib/scaffolding/behaviours/type_handler.ex"
+  "lib/scaffolding/common/nmid_generator.ex"
+  "lib/scaffolding/common/nmid_generator.ex" -> "lib/scaffolding/support/database.ex" [label="(compile)"]
+  "lib/scaffolding/common/schema/metadata/ecto_metadata.ex"
+  "lib/scaffolding/common/schema/metadata/metadata.ex"
+  "lib/scaffolding/common/schema/metadata/redis_metadata.ex"
+  "lib/scaffolding/common/schema/peristence/persistence_layer.ex"
+  "lib/scaffolding/common/schema/peristence/persistence_settings.ex"
+  "lib/scaffolding/common/schema/peristence/persistence_settings.ex" -> "lib/scaffolding/common/schema/metadata/ecto_metadata.ex"
+  "lib/scaffolding/common/schema/peristence/persistence_settings.ex" -> "lib/scaffolding/common/schema/metadata/metadata.ex"
+  "lib/scaffolding/common/schema/peristence/persistence_settings.ex" -> "lib/scaffolding/common/schema/metadata/redis_metadata.ex"
+  "lib/scaffolding/common/schema/peristence/persistence_settings.ex" -> "lib/scaffolding/common/schema/peristence/persistence_layer.ex" [label="(export)"]
+  "lib/scaffolding/common/sphinx/bool.ex"
+  "lib/scaffolding/common/sphinx/bool.ex" -> "lib/scaffolding/behaviours/search_index_handler.ex" [label="(compile)"]
+  "lib/scaffolding/common/sphinx/bool.ex" -> "lib/scaffolding/domain_object.ex" [label="(compile)"]
+  "lib/scaffolding/domain_object.ex" -> "lib/scaffolding/behaviours/schema_info.ex"
+  "lib/scaffolding/domain_object.ex" -> "lib/scaffolding/behaviours/search_index_handler.ex"
+  "lib/scaffolding/domain_object.ex" -> "lib/scaffolding/behaviours/type_handler.ex"
+  "lib/scaffolding/domain_object.ex" -> "lib/scaffolding/internal/domain_object/domain_object.entity.ex"
+  "lib/scaffolding/internal/domain_object/domain_object.entity.ex" -> "lib/scaffolding/internal/implementation/domain_object/core/entity.ex"
+  "lib/scaffolding/internal/implementation/domain_object/core/entity.ex" -> "lib/scaffolding/internal/implementation/domain_object/core/entity.implementation.default.ex"
+  "lib/scaffolding/internal/domain_object/domain_object.entity.ex" -> "lib/scaffolding/internal/implementation/domain_object/entity_index/entity.ex"
+  "lib/scaffolding/internal/implementation/domain_object/entity_index/entity.ex" -> "lib/scaffolding/internal/implementation/domain_object/entity_index/entity.implementation.default.ex"
+  "lib/scaffolding/internal/domain_object/domain_object.entity.ex" -> "lib/scaffolding/internal/implementation/domain_object/inspect/entity.ex"
+  "lib/scaffolding/internal/implementation/domain_object/inspect/entity.ex" -> "lib/scaffolding/internal/domain_object/domain_object.inspect.ex"
+  "lib/scaffolding/internal/implementation/domain_object/inspect/entity.ex" -> "lib/scaffolding/internal/implementation/domain_object/inspect/entity.implementation.default.ex"
+  "lib/scaffolding/internal/domain_object/domain_object.entity.ex" -> "lib/scaffolding/internal/implementation/domain_object/json/entity.ex"
+  "lib/scaffolding/internal/implementation/domain_object/json/entity.ex" -> "lib/scaffolding/internal/implementation/domain_object/json/entity.implementation.default.ex"
+  "lib/scaffolding/internal/domain_object/domain_object.entity.ex" -> "lib/scaffolding/internal/implementation/domain_object/persistence/entity.ex"
+  "lib/scaffolding/internal/implementation/domain_object/persistence/entity.ex" -> "lib/scaffolding/internal/implementation/domain_object/persistence/entity.implementation.default.ex"
+  "lib/scaffolding/internal/implementation/domain_object/persistence/entity.implementation.default.ex" -> "lib/scaffolding/common/schema/peristence/persistence_layer.ex"
+  "lib/scaffolding/internal/implementation/domain_object/persistence/entity.implementation.default.ex" -> "lib/scaffolding/protocols/ecto_entity.ex"
+  "lib/scaffolding/protocols/ecto_entity.ex" -> "lib/scaffolding/common/universal_reference/universal_reference.ex" [label="(compile)"]
+  "lib/scaffolding/common/universal_reference/universal_reference.ex" -> "lib/scaffolding/protocols/ecto_entity.ex"
+  "lib/scaffolding/common/universal_reference/universal_reference.ex" -> "lib/scaffolding/support/database.ex" [label="(compile)"]
+  "lib/scaffolding/protocols/ecto_entity.ex" -> "lib/scaffolding/support/database.ex" [label="(export)"]
+  "lib/scaffolding/internal/implementation/domain_object/persistence/entity.implementation.default.ex" -> "lib/scaffolding/support/database.ex"
+  "lib/scaffolding/domain_object.ex" -> "lib/scaffolding/internal/domain_object/domain_object.index.ex"
+  "lib/scaffolding/internal/domain_object/domain_object.index.ex" -> "lib/scaffolding/internal/implementation/domain_object/index/index.ex"
+  "lib/scaffolding/internal/implementation/domain_object/index/index.ex" -> "lib/scaffolding/internal/implementation/domain_object/index/index.implementation.default.ex"
+  "lib/scaffolding/internal/implementation/domain_object/index/index.implementation.default.ex" -> "lib/scaffolding/common/sphinx/bool.ex"
+  "lib/scaffolding/internal/implementation/domain_object/index/index.implementation.default.ex" -> "lib/scaffolding/common/sphinx/float.ex"
+  "lib/scaffolding/common/sphinx/float.ex" -> "lib/scaffolding/behaviours/search_index_handler.ex" [label="(compile)"]
+  "lib/scaffolding/common/sphinx/float.ex" -> "lib/scaffolding/domain_object.ex" [label="(compile)"]
+  "lib/scaffolding/internal/implementation/domain_object/index/index.implementation.default.ex" -> "lib/scaffolding/common/sphinx/integer.ex"
+  "lib/scaffolding/common/sphinx/integer.ex" -> "lib/scaffolding/behaviours/search_index_handler.ex" [label="(compile)"]
+  "lib/scaffolding/common/sphinx/integer.ex" -> "lib/scaffolding/domain_object.ex" [label="(compile)"]
+  "lib/scaffolding/internal/implementation/domain_object/index/index.implementation.default.ex" -> "lib/scaffolding/protocols/ecto_entity.ex"
+  "lib/scaffolding/domain_object.ex" -> "lib/scaffolding/internal/domain_object/domain_object.repo.ex"
+  "lib/scaffolding/internal/domain_object/domain_object.repo.ex" -> "lib/scaffolding/internal/implementation/domain_object/core/repo.ex"
+  "lib/scaffolding/internal/domain_object/domain_object.repo.ex" -> "lib/scaffolding/internal/implementation/domain_object/entity_index/repo.ex"
+  "lib/scaffolding/internal/domain_object/domain_object.repo.ex" -> "lib/scaffolding/internal/implementation/domain_object/json/repo.ex"
+  "lib/scaffolding/internal/domain_object/domain_object.repo.ex" -> "lib/scaffolding/internal/implementation/domain_object/persistence/repo.ex"
+  "lib/scaffolding/domain_object.ex" -> "lib/scaffolding/internal/domain_object/domain_object.table.ex"
+  "lib/scaffolding/common/sphinx/float.ex"
+  "lib/scaffolding/common/sphinx/integer.ex"
+  "lib/scaffolding/common/sphinx/nullable_integer.ex"
+  "lib/scaffolding/common/sphinx/nullable_integer.ex" -> "lib/scaffolding/behaviours/search_index_handler.ex" [label="(compile)"]
+  "lib/scaffolding/common/sphinx/nullable_integer.ex" -> "lib/scaffolding/domain_object.ex" [label="(compile)"]
+  "lib/scaffolding/common/sphinx/nullable_integer.ex" -> "lib/scaffolding/protocols/ecto_entity.ex"
+  "lib/scaffolding/common/sphinx/time_stamp.ex"
+  "lib/scaffolding/common/sphinx/time_stamp.ex" -> "lib/scaffolding/behaviours/search_index_handler.ex" [label="(compile)"]
+  "lib/scaffolding/common/sphinx/time_stamp.ex" -> "lib/scaffolding/domain_object.ex" [label="(compile)"]
+  "lib/scaffolding/common/type_handlers/date_time.ex"
+  "lib/scaffolding/common/type_handlers/date_time.ex" -> "lib/scaffolding/behaviours/search_index_handler.ex" [label="(compile)"]
+  "lib/scaffolding/common/type_handlers/date_time.ex" -> "lib/scaffolding/behaviours/type_handler.ex" [label="(compile)"]
+  "lib/scaffolding/common/type_handlers/date_time.ex" -> "lib/scaffolding/domain_object.ex" [label="(compile)"]
+  "lib/scaffolding/common/type_handlers/path_encoding.ex"
+  "lib/scaffolding/common/type_handlers/path_encoding.ex" -> "lib/scaffolding/behaviours/search_index_handler.ex" [label="(compile)"]
+  "lib/scaffolding/common/type_handlers/path_encoding.ex" -> "lib/scaffolding/behaviours/type_handler.ex" [label="(compile)"]
+  "lib/scaffolding/common/type_handlers/path_encoding.ex" -> "lib/scaffolding/domain_object.ex" [label="(compile)"]
+  "lib/scaffolding/common/type_handlers/time_stamp.millisecond.ex"
+  "lib/scaffolding/common/type_handlers/time_stamp.millisecond.ex" -> "lib/scaffolding/behaviours/search_index_handler.ex" [label="(compile)"]
+  "lib/scaffolding/common/type_handlers/time_stamp.millisecond.ex" -> "lib/scaffolding/behaviours/type_handler.ex" [label="(compile)"]
+  "lib/scaffolding/common/type_handlers/time_stamp.millisecond.ex" -> "lib/scaffolding/common/schema/peristence/persistence_layer.ex"
+  "lib/scaffolding/common/type_handlers/time_stamp.millisecond.ex" -> "lib/scaffolding/common/schema/peristence/persistence_settings.ex" [label="(compile)"]
+  "lib/scaffolding/common/type_handlers/time_stamp.millisecond.ex" -> "lib/scaffolding/common/type_handlers/date_time.ex" [label="(compile)"]
+  "lib/scaffolding/common/type_handlers/time_stamp.millisecond.ex" -> "lib/scaffolding/domain_object.ex" [label="(compile)"]
+  "lib/scaffolding/common/type_handlers/time_stamp.millisecond.ex" -> "lib/scaffolding/internal/domain_object/domain_object.entity.ex" [label="(export)"]
+  "lib/scaffolding/common/type_handlers/time_stamp.millisecond.ex" -> "lib/scaffolding/internal/domain_object/domain_object.inspect.ex"
+  "lib/scaffolding/common/type_handlers/time_stamp.millisecond.ex" -> "lib/scaffolding/internal/domain_object/entity/field.macros.ex" [label="(compile)"]
+  "lib/scaffolding/common/type_handlers/time_stamp.millisecond.ex" -> "lib/scaffolding/internal/helpers.ex" [label="(compile)"]
+  "lib/scaffolding/internal/helpers.ex" -> "lib/scaffolding/common/nmid_generator.ex"
+  "lib/scaffolding/common/type_handlers/time_stamp.millisecond.ex" -> "lib/scaffolding/internal/implementation/domain_object/core/entity.implementation.default.ex" [label="(compile)"]
+  "lib/scaffolding/common/type_handlers/time_stamp.millisecond.ex" -> "lib/scaffolding/internal/implementation/domain_object/index/index.implementation.default.ex" [label="(compile)"]
+  "lib/scaffolding/common/type_handlers/time_stamp.millisecond.ex" -> "lib/scaffolding/internal/implementation/domain_object/inspect/entity.implementation.default.ex"
+  "lib/scaffolding/common/type_handlers/time_stamp.millisecond.ex" -> "lib/scaffolding/internal/implementation/domain_object/json/entity.implementation.default.ex"
+  "lib/scaffolding/common/type_handlers/time_stamp.millisecond.ex" -> "lib/scaffolding/internal/poison_encoder.ex" [label="(compile)"]
+  "lib/scaffolding/internal/poison_encoder.ex" -> "lib/scaffolding/helpers.ex"
+  "lib/scaffolding/helpers.ex" -> "lib/scaffolding/protocols/entity_protocol.ex"
+  "lib/scaffolding/protocols/entity_protocol.ex" -> "lib/scaffolding/helpers.ex"
+  "lib/scaffolding/helpers.ex" -> "lib/scaffolding/protocols/restricted_protocol.ex"
+  "lib/scaffolding/protocols/restricted_protocol.ex" -> "lib/scaffolding/helpers.ex"
+  "lib/scaffolding/internal/poison_encoder.ex" -> "lib/scaffolding/protocols/entity_protocol.ex"
+  "lib/scaffolding/internal/poison_encoder.ex" -> "lib/scaffolding/protocols/restricted_protocol.ex"
+  "lib/scaffolding/common/type_handlers/time_stamp.millisecond.ex" -> "lib/scaffolding/internal/simple_object/simple_object.base.ex" [label="(compile)"]
+  "lib/scaffolding/internal/simple_object/simple_object.base.ex" -> "lib/scaffolding/common/schema/peristence/persistence_layer.ex"
+  "lib/scaffolding/internal/simple_object/simple_object.base.ex" -> "lib/scaffolding/internal/domain_object/domain_object.inspect.ex"
+  "lib/scaffolding/common/type_handlers/time_stamp.millisecond.ex" -> "lib/scaffolding/protocols/ecto_entity.ex" [label="(compile)"]
+  "lib/scaffolding/common/type_handlers/time_stamp.millisecond.ex" -> "lib/scaffolding/protocols/entity_protocol.ex" [label="(compile)"]
+  "lib/scaffolding/common/type_handlers/time_stamp.millisecond.ex" -> "lib/scaffolding/protocols/restricted_protocol.ex" [label="(compile)"]
+  "lib/scaffolding/common/type_handlers/time_stamp.millisecond.ex" -> "lib/scaffolding/simple_object.ex" [label="(compile)"]
+  "lib/scaffolding/simple_object.ex" -> "lib/scaffolding/internal/simple_object/simple_object.base.ex"
+  "lib/scaffolding/common/type_handlers/time_stamp.second.ex"
+  "lib/scaffolding/common/type_handlers/time_stamp.second.ex" -> "lib/scaffolding/behaviours/search_index_handler.ex" [label="(compile)"]
+  "lib/scaffolding/common/type_handlers/time_stamp.second.ex" -> "lib/scaffolding/behaviours/type_handler.ex" [label="(compile)"]
+  "lib/scaffolding/common/type_handlers/time_stamp.second.ex" -> "lib/scaffolding/common/schema/peristence/persistence_layer.ex"
+  "lib/scaffolding/common/type_handlers/time_stamp.second.ex" -> "lib/scaffolding/common/schema/peristence/persistence_settings.ex" [label="(compile)"]
+  "lib/scaffolding/common/type_handlers/time_stamp.second.ex" -> "lib/scaffolding/common/type_handlers/date_time.ex" [label="(compile)"]
+  "lib/scaffolding/common/type_handlers/time_stamp.second.ex" -> "lib/scaffolding/domain_object.ex" [label="(compile)"]
+  "lib/scaffolding/common/type_handlers/time_stamp.second.ex" -> "lib/scaffolding/internal/domain_object/domain_object.entity.ex" [label="(export)"]
+  "lib/scaffolding/common/type_handlers/time_stamp.second.ex" -> "lib/scaffolding/internal/domain_object/domain_object.inspect.ex"
+  "lib/scaffolding/common/type_handlers/time_stamp.second.ex" -> "lib/scaffolding/internal/domain_object/entity/field.macros.ex" [label="(compile)"]
+  "lib/scaffolding/common/type_handlers/time_stamp.second.ex" -> "lib/scaffolding/internal/helpers.ex" [label="(compile)"]
+  "lib/scaffolding/common/type_handlers/time_stamp.second.ex" -> "lib/scaffolding/internal/implementation/domain_object/core/entity.implementation.default.ex" [label="(compile)"]
+  "lib/scaffolding/common/type_handlers/time_stamp.second.ex" -> "lib/scaffolding/internal/implementation/domain_object/index/index.implementation.default.ex" [label="(compile)"]
+  "lib/scaffolding/common/type_handlers/time_stamp.second.ex" -> "lib/scaffolding/internal/implementation/domain_object/inspect/entity.implementation.default.ex"
+  "lib/scaffolding/common/type_handlers/time_stamp.second.ex" -> "lib/scaffolding/internal/implementation/domain_object/json/entity.implementation.default.ex"
+  "lib/scaffolding/common/type_handlers/time_stamp.second.ex" -> "lib/scaffolding/internal/poison_encoder.ex" [label="(compile)"]
+  "lib/scaffolding/common/type_handlers/time_stamp.second.ex" -> "lib/scaffolding/internal/simple_object/simple_object.base.ex" [label="(compile)"]
+  "lib/scaffolding/common/type_handlers/time_stamp.second.ex" -> "lib/scaffolding/protocols/ecto_entity.ex" [label="(compile)"]
+  "lib/scaffolding/common/type_handlers/time_stamp.second.ex" -> "lib/scaffolding/protocols/entity_protocol.ex" [label="(compile)"]
+  "lib/scaffolding/common/type_handlers/time_stamp.second.ex" -> "lib/scaffolding/protocols/restricted_protocol.ex" [label="(compile)"]
+  "lib/scaffolding/common/type_handlers/time_stamp.second.ex" -> "lib/scaffolding/simple_object.ex" [label="(compile)"]
+  "lib/scaffolding/common/type_handlers/universal_link.ex"
+  "lib/scaffolding/common/type_handlers/universal_link.ex" -> "lib/scaffolding/behaviours/search_index_handler.ex" [label="(compile)"]
+  "lib/scaffolding/common/type_handlers/universal_link.ex" -> "lib/scaffolding/behaviours/type_handler.ex" [label="(compile)"]
+  "lib/scaffolding/common/type_handlers/universal_link.ex" -> "lib/scaffolding/domain_object.ex" [label="(compile)"]
+  "lib/scaffolding/common/type_handlers/universal_link.ex" -> "lib/scaffolding/protocols/ecto_entity.ex"
+  "lib/scaffolding/common/types.ex"
+  "lib/scaffolding/common/universal_reference/universal_reference.ex"
+  "lib/scaffolding/common/universal_reference/universal_reference.type.ex"
+  "lib/scaffolding/common/universal_reference/universal_reference.type.ex" -> "lib/scaffolding/common/universal_reference/universal_reference.ex"
+  "lib/scaffolding/common/universal_reference/universal_reference.type.ex" -> "lib/scaffolding/protocols/ecto_entity.ex"
+  "lib/scaffolding/common/unsupported_module.ex"
+  "lib/scaffolding/domain_object.ex"
+  "lib/scaffolding/helpers.ex"
+  "lib/scaffolding/internal/domain_object/domain_object.base.ex"
+  "lib/scaffolding/internal/domain_object/domain_object.base.ex" -> "lib/scaffolding/internal/implementation/domain_object/core/base.ex"
+  "lib/scaffolding/internal/domain_object/domain_object.base.ex" -> "lib/scaffolding/internal/implementation/domain_object/entity_index/base.ex"
+  "lib/scaffolding/internal/implementation/domain_object/entity_index/base.ex" -> "lib/scaffolding/internal/domain_object/domain_object.index.ex"
+  "lib/scaffolding/internal/domain_object/domain_object.base.ex" -> "lib/scaffolding/internal/implementation/domain_object/json/base.ex"
+  "lib/scaffolding/internal/domain_object/domain_object.base.ex" -> "lib/scaffolding/internal/implementation/domain_object/persistence/base.ex"
+  "lib/scaffolding/internal/domain_object/domain_object.entity.ex"
+  "lib/scaffolding/internal/domain_object/domain_object.index.ex"
+  "lib/scaffolding/internal/domain_object/domain_object.inspect.ex"
+  "lib/scaffolding/internal/domain_object/domain_object.repo.ex"
+  "lib/scaffolding/internal/domain_object/domain_object.table.ex"
+  "lib/scaffolding/internal/domain_object/entity/field.macros.ex"
+  "lib/scaffolding/internal/domain_object/ref/basic_reference.ex"
+  "lib/scaffolding/internal/domain_object/ref/basic_reference.ex" -> "lib/scaffolding/protocols/ecto_entity.ex"
+  "lib/scaffolding/internal/domain_object/ref/enum_reference.ex"
+  "lib/scaffolding/internal/domain_object/ref/enum_reference.ex" -> "lib/scaffolding/protocols/ecto_entity.ex"
+  "lib/scaffolding/internal/domain_object/ref/reference.behaviour.ex"
+  "lib/scaffolding/internal/domain_object/ref/universal_reference.ex"
+  "lib/scaffolding/internal/domain_object/ref/universal_reference.ex" -> "lib/scaffolding/common/universal_reference/universal_reference.ex"
+  "lib/scaffolding/internal/domain_object/ref/universal_reference.ex" -> "lib/scaffolding/protocols/ecto_entity.ex"
+  "lib/scaffolding/internal/enum/enum_type.ex"
+  "lib/scaffolding/internal/helpers.ex"
+  "lib/scaffolding/internal/implementation/domain_object/core/base.ex"
+  "lib/scaffolding/internal/implementation/domain_object/core/entity.ex"
+  "lib/scaffolding/internal/implementation/domain_object/core/entity.implementation.default.ex"
+  "lib/scaffolding/internal/implementation/domain_object/core/repo.ex"
+  "lib/scaffolding/internal/implementation/domain_object/core/repo.implementation.default.ex"
+  "lib/scaffolding/internal/implementation/domain_object/entity_index/base.ex"
+  "lib/scaffolding/internal/implementation/domain_object/entity_index/entity.ex"
+  "lib/scaffolding/internal/implementation/domain_object/entity_index/entity.implementation.default.ex"
+  "lib/scaffolding/internal/implementation/domain_object/entity_index/repo.ex"
+  "lib/scaffolding/internal/implementation/domain_object/index/index.ex"
+  "lib/scaffolding/internal/implementation/domain_object/index/index.implementation.default.ex"
+  "lib/scaffolding/internal/implementation/domain_object/inspect/entity.ex"
+  "lib/scaffolding/internal/implementation/domain_object/inspect/entity.implementation.default.ex"
+  "lib/scaffolding/internal/implementation/domain_object/inspect/repo.ex"
+  "lib/scaffolding/internal/implementation/domain_object/json/base.ex"
+  "lib/scaffolding/internal/implementation/domain_object/json/entity.ex"
+  "lib/scaffolding/internal/implementation/domain_object/json/entity.implementation.default.ex"
+  "lib/scaffolding/internal/implementation/domain_object/json/repo.ex"
+  "lib/scaffolding/internal/implementation/domain_object/persistence/base.ex"
+  "lib/scaffolding/internal/implementation/domain_object/persistence/entity.ex"
+  "lib/scaffolding/internal/implementation/domain_object/persistence/entity.implementation.default.ex"
+  "lib/scaffolding/internal/implementation/domain_object/persistence/repo.ex"
+  "lib/scaffolding/internal/implementation/domain_object/persistence/repo.implementation.default.ex"
+  "lib/scaffolding/internal/implementation/domain_object/persistence/repo.implementation.default.ex" -> "lib/scaffolding/common/schema/peristence/persistence_layer.ex"
+  "lib/scaffolding/internal/implementation/domain_object/persistence/repo.implementation.default.ex" -> "lib/scaffolding/protocols/ecto_entity.ex"
+  "lib/scaffolding/internal/poison_encoder.ex"
+  "lib/scaffolding/internal/simple_object/simple_object.base.ex"
+  "lib/scaffolding/protocols/ecto_entity.ex"
+  "lib/scaffolding/protocols/entity_protocol.ex"
+  "lib/scaffolding/protocols/erp.ex"
+  "lib/scaffolding/protocols/permission_protocol.ex"
+  "lib/scaffolding/protocols/restricted_protocol.ex"
+  "lib/scaffolding/simple_object.ex"
+  "lib/scaffolding/support/database.ex"
+  "lib/scaffolding/support/schema/core.ex"
+  "lib/scaffolding/support/schema/core.ex" -> "lib/scaffolding/support/database.ex" [label="(compile)"]
+  "lib/scaffolding/support/schema_provider.ex"
+  "lib/scaffolding/support/schema_provider.ex" -> "lib/scaffolding/support/schema/core.ex"
+  "lib/scaffolding/support/topology_provider.ex"
+  "lib/scaffolding/support/topology_provider.ex" -> "lib/scaffolding/support/database.ex"
+  "test/fixtures/nmid_behaviour.ex"
+  "test/fixtures/v3/database.ex"
+  "test/fixtures/v3/database.ex" -> "test/fixtures/v3/foo.ex"
+  "test/fixtures/v3/foo.ex" -> "lib/scaffolding/common/schema/peristence/persistence_layer.ex"
+  "test/fixtures/v3/foo.ex" -> "lib/scaffolding/common/schema/peristence/persistence_settings.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.ex" -> "lib/scaffolding/domain_object.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.ex" -> "lib/scaffolding/internal/domain_object/domain_object.base.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.ex" -> "lib/scaffolding/internal/domain_object/domain_object.entity.ex" [label="(export)"]
+  "test/fixtures/v3/foo.ex" -> "lib/scaffolding/internal/domain_object/domain_object.index.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.ex" -> "lib/scaffolding/internal/domain_object/domain_object.inspect.ex"
+  "test/fixtures/v3/foo.ex" -> "lib/scaffolding/internal/domain_object/domain_object.repo.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.ex" -> "lib/scaffolding/internal/domain_object/entity/field.macros.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.ex" -> "lib/scaffolding/internal/helpers.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.ex" -> "lib/scaffolding/internal/implementation/domain_object/core/base.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.ex" -> "lib/scaffolding/internal/implementation/domain_object/core/entity.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.ex" -> "lib/scaffolding/internal/implementation/domain_object/core/entity.implementation.default.ex"
+  "test/fixtures/v3/foo.ex" -> "lib/scaffolding/internal/implementation/domain_object/core/repo.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.ex" -> "lib/scaffolding/internal/implementation/domain_object/core/repo.implementation.default.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.ex" -> "lib/scaffolding/internal/implementation/domain_object/entity_index/base.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.ex" -> "lib/scaffolding/internal/implementation/domain_object/entity_index/entity.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.ex" -> "lib/scaffolding/internal/implementation/domain_object/entity_index/entity.implementation.default.ex"
+  "test/fixtures/v3/foo.ex" -> "lib/scaffolding/internal/implementation/domain_object/entity_index/repo.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.ex" -> "lib/scaffolding/internal/implementation/domain_object/index/index.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.ex" -> "lib/scaffolding/internal/implementation/domain_object/index/index.implementation.default.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.ex" -> "lib/scaffolding/internal/implementation/domain_object/inspect/entity.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.ex" -> "lib/scaffolding/internal/implementation/domain_object/inspect/entity.implementation.default.ex"
+  "test/fixtures/v3/foo.ex" -> "lib/scaffolding/internal/implementation/domain_object/json/base.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.ex" -> "lib/scaffolding/internal/implementation/domain_object/json/entity.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.ex" -> "lib/scaffolding/internal/implementation/domain_object/json/entity.implementation.default.ex"
+  "test/fixtures/v3/foo.ex" -> "lib/scaffolding/internal/implementation/domain_object/json/repo.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.ex" -> "lib/scaffolding/internal/implementation/domain_object/persistence/base.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.ex" -> "lib/scaffolding/internal/implementation/domain_object/persistence/entity.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.ex" -> "lib/scaffolding/internal/implementation/domain_object/persistence/entity.implementation.default.ex"
+  "test/fixtures/v3/foo.ex" -> "lib/scaffolding/internal/implementation/domain_object/persistence/repo.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.ex" -> "lib/scaffolding/internal/implementation/domain_object/persistence/repo.implementation.default.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.ex" -> "lib/scaffolding/internal/poison_encoder.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.ex" -> "lib/scaffolding/protocols/ecto_entity.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.ex" -> "lib/scaffolding/protocols/entity_protocol.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.ex" -> "lib/scaffolding/protocols/erp.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.ex" -> "lib/scaffolding/protocols/restricted_protocol.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.ex" -> "test/fixtures/v3/database.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.ex" -> "test/fixtures/v3/domain_object.schema.ex" [label="(compile)"]
+  "test/fixtures/v3/domain_object.schema.ex" -> "lib/scaffolding/behaviours/schema_info.ex" [label="(compile)"]
+  "test/fixtures/v3/domain_object.schema.ex" -> "lib/scaffolding/common/schema/peristence/persistence_settings.ex" [label="(compile)"]
+  "test/fixtures/v3/domain_object.schema.ex" -> "lib/scaffolding/domain_object.ex" [label="(compile)"]
+  "test/fixtures/v3/domain_object.schema.ex" -> "lib/scaffolding/internal/helpers.ex" [label="(compile)"]
+  "test/fixtures/v3/domain_object.schema.ex" -> "lib/scaffolding/support/database.ex" [label="(compile)"]
+  "test/fixtures/v3/domain_object.schema.ex" -> "test/fixtures/v3/foo.ex"
+  "test/fixtures/v3/database.ex" -> "test/fixtures/v3/foo.type.ex"
+  "test/fixtures/v3/foo.type.ex" -> "lib/scaffolding/common/schema/peristence/persistence_layer.ex"
+  "test/fixtures/v3/foo.type.ex" -> "lib/scaffolding/common/schema/peristence/persistence_settings.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.type.ex" -> "lib/scaffolding/domain_object.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.type.ex" -> "lib/scaffolding/internal/domain_object/domain_object.base.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.type.ex" -> "lib/scaffolding/internal/domain_object/domain_object.entity.ex" [label="(export)"]
+  "test/fixtures/v3/foo.type.ex" -> "lib/scaffolding/internal/domain_object/domain_object.index.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.type.ex" -> "lib/scaffolding/internal/domain_object/domain_object.inspect.ex"
+  "test/fixtures/v3/foo.type.ex" -> "lib/scaffolding/internal/domain_object/domain_object.repo.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.type.ex" -> "lib/scaffolding/internal/domain_object/entity/field.macros.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.type.ex" -> "lib/scaffolding/internal/enum/enum_type.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.type.ex" -> "lib/scaffolding/internal/helpers.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.type.ex" -> "lib/scaffolding/internal/implementation/domain_object/core/base.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.type.ex" -> "lib/scaffolding/internal/implementation/domain_object/core/entity.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.type.ex" -> "lib/scaffolding/internal/implementation/domain_object/core/entity.implementation.default.ex"
+  "test/fixtures/v3/foo.type.ex" -> "lib/scaffolding/internal/implementation/domain_object/core/repo.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.type.ex" -> "lib/scaffolding/internal/implementation/domain_object/core/repo.implementation.default.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.type.ex" -> "lib/scaffolding/internal/implementation/domain_object/entity_index/base.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.type.ex" -> "lib/scaffolding/internal/implementation/domain_object/entity_index/entity.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.type.ex" -> "lib/scaffolding/internal/implementation/domain_object/entity_index/entity.implementation.default.ex"
+  "test/fixtures/v3/foo.type.ex" -> "lib/scaffolding/internal/implementation/domain_object/entity_index/repo.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.type.ex" -> "lib/scaffolding/internal/implementation/domain_object/index/index.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.type.ex" -> "lib/scaffolding/internal/implementation/domain_object/index/index.implementation.default.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.type.ex" -> "lib/scaffolding/internal/implementation/domain_object/inspect/entity.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.type.ex" -> "lib/scaffolding/internal/implementation/domain_object/inspect/entity.implementation.default.ex"
+  "test/fixtures/v3/foo.type.ex" -> "lib/scaffolding/internal/implementation/domain_object/json/base.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.type.ex" -> "lib/scaffolding/internal/implementation/domain_object/json/entity.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.type.ex" -> "lib/scaffolding/internal/implementation/domain_object/json/entity.implementation.default.ex"
+  "test/fixtures/v3/foo.type.ex" -> "lib/scaffolding/internal/implementation/domain_object/json/repo.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.type.ex" -> "lib/scaffolding/internal/implementation/domain_object/persistence/base.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.type.ex" -> "lib/scaffolding/internal/implementation/domain_object/persistence/entity.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.type.ex" -> "lib/scaffolding/internal/implementation/domain_object/persistence/entity.implementation.default.ex"
+  "test/fixtures/v3/foo.type.ex" -> "lib/scaffolding/internal/implementation/domain_object/persistence/repo.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.type.ex" -> "lib/scaffolding/internal/implementation/domain_object/persistence/repo.implementation.default.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.type.ex" -> "lib/scaffolding/internal/poison_encoder.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.type.ex" -> "lib/scaffolding/protocols/ecto_entity.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.type.ex" -> "lib/scaffolding/protocols/entity_protocol.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.type.ex" -> "lib/scaffolding/protocols/erp.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.type.ex" -> "lib/scaffolding/protocols/restricted_protocol.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.type.ex" -> "test/fixtures/v3/database.ex" [label="(compile)"]
+  "test/fixtures/v3/foo.type.ex" -> "test/fixtures/v3/domain_object.schema.ex" [label="(compile)"]
+  "test/fixtures/v3/domain_object.schema.ex"
+  "test/fixtures/v3/foo.ex"
+  "test/fixtures/v3/foo.type.ex"
+}

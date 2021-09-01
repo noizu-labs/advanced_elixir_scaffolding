@@ -14,7 +14,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Ecto.Reference.Universal do
         {:ref, ^e, _id} -> {:ok, v}
         {:ref, Noizu.DomainObject.UniversalReference, _id} -> {:ok, v}
         %{__struct__: ^e} -> {:ok, v}
-        %Noizu.DomainObject.UniversalReference{} -> {:ok, v}
+        %{__struct__: Noizu.DomainObject.UniversalReference} -> {:ok, v}
         v when is_integer(v) ->
           ref = e.ref({:ecto_identifier, e, v})
           ref && {:ok, ref} || :error
@@ -47,7 +47,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Ecto.Reference.Universal do
         {:ref, ^e, _id} -> {:ok, v}
         {:ref, Noizu.DomainObject.UniversalReference, _id} -> {:ok, v}
         %{__struct__: ^e} -> {:ok, v}
-        %Noizu.DomainObject.UniversalReference{} -> {:ok, v}
+        %{__struct__: Noizu.DomainObject.UniversalReference} -> {:ok, v}
         v when is_integer(v) ->
           ref = e.ref({:ecto_identifier, e, v})
           ref && {:ok, ref} || raise ArgumentError, "Unsupported #{m} - #{inspect v}"

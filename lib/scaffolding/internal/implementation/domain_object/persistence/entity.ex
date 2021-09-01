@@ -52,12 +52,12 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Entity do
         # Persistence
         #=======================================
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-        def __as_record__(%PersistenceLayer{} = layer, entity, context, options \\ nil), do: @nzdo__persistence_implementation.__as_record__(__MODULE__, layer, entity, context, options)
-        def __as_record__!(%PersistenceLayer{} = layer, entity, context, options \\ nil), do: @nzdo__persistence_implementation.__as_record__!(__MODULE__, layer, entity, context, options)
+        def __as_record__(%{__struct__: PersistenceLayer} = layer, entity, context, options \\ nil), do: @nzdo__persistence_implementation.__as_record__(__MODULE__, layer, entity, context, options)
+        def __as_record__!(%{__struct__: PersistenceLayer} = layer, entity, context, options \\ nil), do: @nzdo__persistence_implementation.__as_record__!(__MODULE__, layer, entity, context, options)
 
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-        def __from_record__(%PersistenceLayer{} = layer, record, context, options \\ nil), do: @nzdo__persistence_implementation.__from_record__(__MODULE__, layer, record, context, options)
-        def __from_record__!(%PersistenceLayer{} = layer, record, context, options \\ nil), do: @nzdo__persistence_implementation.__from_record__!(__MODULE__, layer, record, context, options)
+        def __from_record__(%{__struct__: PersistenceLayer} = layer, record, context, options \\ nil), do: @nzdo__persistence_implementation.__from_record__(__MODULE__, layer, record, context, options)
+        def __from_record__!(%{__struct__: PersistenceLayer} = layer, record, context, options \\ nil), do: @nzdo__persistence_implementation.__from_record__!(__MODULE__, layer, record, context, options)
 
 
         if (@__nzdo_persistence.ecto_entity) do

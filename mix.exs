@@ -71,23 +71,15 @@ defmodule Noizu.AdvancedScaffolding.Mixfile do
         "Behaviours": [
           Noizu.DomainObject,
           Noizu.SimpleObject,
-
-          Noizu.AdvancedScaffolding.Internal.Ecto.Reference.Basic,
-          Noizu.AdvancedScaffolding.Internal.Ecto.EnumType,
-          Noizu.AdvancedScaffolding.Internal.Ecto.Reference.Enum,
-          Noizu.AdvancedScaffolding.SphinxFieldBehaviour,
-          Noizu.AdvancedScaffolding.Internal.Ecto.Reference.Universal,
         ],
         "Internals": [
-          Noizu.AdvancedScaffolding.Implementation,
-          Noizu.AdvancedScaffolding.Meta,
+          Noizu.AdvancedScaffolding.Internal
         ],
         "Type Handlers": [
           Noizu.DomainObject.DateTime,
           Noizu.DomainObject.TimeStamp.Millisecond,
           Noizu.DomainObject.TimeStamp.Second,
           Noizu.DomainObject.UniversalLink,
-
         ],
         "Protocols": [
           Noizu.EctoEntity.Protocol,
@@ -108,24 +100,21 @@ defmodule Noizu.AdvancedScaffolding.Mixfile do
       ],
       nest_modules_by_prefix: [
         Mix.Tasks.Scaffolding,
+        Noizu.DomainObject,
+        Noizu.SimpleObject,
         Noizu.AdvancedScaffolding,
         Noizu.AdvancedScaffolding.Database,
         Noizu.AdvancedScaffolding.Sphinx,
         Noizu.AdvancedScaffolding.Schema,
-        Noizu.AdvancedScaffolding.Restricted,
-        Noizu.AdvancedScaffolding.Meta,
-        Noizu.AdvancedScaffolding.Internal.DomainObject.Table,
-        Noizu.AdvancedScaffolding.Meta.DomainObject,
-        Noizu.AdvancedScaffolding.Meta.SimpleObject,
-        Noizu.AdvancedScaffolding.Implementation,
-        Noizu.AdvancedScaffolding.Support.Schema,
-        Noizu.AdvancedScaffolding.Implementation,
-        Noizu.AdvancedScaffolding.Implementation.DomainObject.Entity,
-        Noizu.AdvancedScaffolding.Implementation.DomainObject.Index,
-        Noizu.AdvancedScaffolding.Implementation.DomainObject.Repo,
-        Noizu.AdvancedScaffolding.Implementation.DomainObject.Scaffolding,
-        Noizu.AdvancedScaffolding.Implementation.DomainObject.Struct,
-
+        Noizu.AdvancedScaffolding.Internal,
+        Noizu.AdvancedScaffolding.Internal.Core,
+        Noizu.AdvancedScaffolding.Internal.EntityIndex,
+        Noizu.AdvancedScaffolding.Internal.Index,
+        Noizu.AdvancedScaffolding.Internal.Inspect,
+        Noizu.AdvancedScaffolding.Internal.Json,
+        Noizu.AdvancedScaffolding.Internal.Persistence,
+        Noizu.AdvancedScaffolding.Internal.SimpleObject,
+        Noizu.AdvancedScaffolding.Support,
       ]
     ]
   end # end docs

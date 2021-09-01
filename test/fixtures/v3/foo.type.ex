@@ -6,7 +6,7 @@
 defmodule Noizu.AdvancedScaffolding.Test.Fixture.V3.Foo.Type do
   use Noizu.DomainObject
   @vsn 1.0
-  @sref "foo-v3-type"
+  @sref "foo-v3-types"
   @persistence_layer {NoizuSchema.Database, cascade_block?: true}
   defmodule Entity do
     @enum_list [

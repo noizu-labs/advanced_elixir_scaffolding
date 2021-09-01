@@ -184,24 +184,24 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo do
         def post_get_callback!(ref, context, options), do: @__nzdo__repo_default.post_get_callback!(__MODULE__, ref, context, options)
 
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-        def layer_get(%PersistenceLayer{} = layer, ref, context, options), do: @__nzdo__repo_default.layer_get(__MODULE__, layer, ref, context, options)
-        def layer_get!(%PersistenceLayer{} = layer, ref, context, options), do: @__nzdo__repo_default.layer_get!(__MODULE__, layer, ref, context, options)
+        def layer_get(%{__struct__: PersistenceLayer} = layer, ref, context, options), do: @__nzdo__repo_default.layer_get(__MODULE__, layer, ref, context, options)
+        def layer_get!(%{__struct__: PersistenceLayer} = layer, ref, context, options), do: @__nzdo__repo_default.layer_get!(__MODULE__, layer, ref, context, options)
 
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-        def layer_get_callback(%PersistenceLayer{} = layer, ref, context, options), do: @__nzdo__repo_default.layer_get_callback(__MODULE__, layer, ref, context, options)
-        def layer_get_callback!(%PersistenceLayer{} = layer, ref, context, options), do: @__nzdo__repo_default.layer_get_callback!(__MODULE__, layer, ref, context, options)
+        def layer_get_callback(%{__struct__: PersistenceLayer} = layer, ref, context, options), do: @__nzdo__repo_default.layer_get_callback(__MODULE__, layer, ref, context, options)
+        def layer_get_callback!(%{__struct__: PersistenceLayer} = layer, ref, context, options), do: @__nzdo__repo_default.layer_get_callback!(__MODULE__, layer, ref, context, options)
 
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-        def layer_pre_get_callback(%PersistenceLayer{} = layer, ref, context, options), do: @__nzdo__repo_default.layer_pre_get_callback(__MODULE__, layer, ref, context, options)
-        def layer_pre_get_callback!(%PersistenceLayer{} = layer, ref, context, options) do
+        def layer_pre_get_callback(%{__struct__: PersistenceLayer} = layer, ref, context, options), do: @__nzdo__repo_default.layer_pre_get_callback(__MODULE__, layer, ref, context, options)
+        def layer_pre_get_callback!(%{__struct__: PersistenceLayer} = layer, ref, context, options) do
           Noizu.AdvancedScaffolding.Internal.DomainObject.Repo.__layer_transaction_block__(layer) do
             layer_pre_get_callback(layer, ref, context, options)
           end
         end
 
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-        def layer_post_get_callback(%PersistenceLayer{} = layer, entity, context, options), do: @__nzdo__repo_default.layer_post_get_callback(__MODULE__, layer, entity, context, options)
-        def layer_post_get_callback!(%PersistenceLayer{} = layer, entity, context, options) do
+        def layer_post_get_callback(%{__struct__: PersistenceLayer} = layer, entity, context, options), do: @__nzdo__repo_default.layer_post_get_callback(__MODULE__, layer, entity, context, options)
+        def layer_post_get_callback!(%{__struct__: PersistenceLayer} = layer, entity, context, options) do
           Noizu.AdvancedScaffolding.Internal.DomainObject.Repo.__layer_transaction_block__(layer) do
             layer_post_get_callback(layer, entity, context, options)
           end
@@ -231,26 +231,26 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo do
         end
 
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-        def layer_create(%PersistenceLayer{} = layer, entity, context, options), do: @__nzdo__repo_default.layer_create(__MODULE__, layer, entity, context, options)
-        def layer_create!(%PersistenceLayer{} = layer, entity, context, options), do: @__nzdo__repo_default.layer_create!(__MODULE__, layer, entity, context, options)
+        def layer_create(%{__struct__: PersistenceLayer} = layer, entity, context, options), do: @__nzdo__repo_default.layer_create(__MODULE__, layer, entity, context, options)
+        def layer_create!(%{__struct__: PersistenceLayer} = layer, entity, context, options), do: @__nzdo__repo_default.layer_create!(__MODULE__, layer, entity, context, options)
 
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-        def layer_pre_create_callback(%PersistenceLayer{} = layer, entity, context, options),
+        def layer_pre_create_callback(%{__struct__: PersistenceLayer} = layer, entity, context, options),
             do: @__nzdo__repo_default.layer_pre_create_callback(__MODULE__, layer, entity, context, options)
-        def layer_pre_create_callback!(%PersistenceLayer{} = layer, entity, context, options) do
+        def layer_pre_create_callback!(%{__struct__: PersistenceLayer} = layer, entity, context, options) do
           Noizu.AdvancedScaffolding.Internal.DomainObject.Repo.__layer_transaction_block__(layer) do
             layer_pre_create_callback(layer, entity, context, options)
           end
         end
 
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-        def layer_create_callback(%PersistenceLayer{} = layer, entity, context, options), do: @__nzdo__repo_default.layer_create_callback(__MODULE__, layer, entity, context, options)
-        def layer_create_callback!(%PersistenceLayer{} = layer, entity, context, options), do: @__nzdo__repo_default.layer_create_callback!(__MODULE__, layer, entity, context, options)
+        def layer_create_callback(%{__struct__: PersistenceLayer} = layer, entity, context, options), do: @__nzdo__repo_default.layer_create_callback(__MODULE__, layer, entity, context, options)
+        def layer_create_callback!(%{__struct__: PersistenceLayer} = layer, entity, context, options), do: @__nzdo__repo_default.layer_create_callback!(__MODULE__, layer, entity, context, options)
 
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-        def layer_post_create_callback(%PersistenceLayer{} = layer, entity, context, options),
+        def layer_post_create_callback(%{__struct__: PersistenceLayer} = layer, entity, context, options),
             do: @__nzdo__repo_default.layer_post_create_callback(__MODULE__, layer, entity, context, options)
-        def layer_post_create_callback!(%PersistenceLayer{} = layer, entity, context, options) do
+        def layer_post_create_callback!(%{__struct__: PersistenceLayer} = layer, entity, context, options) do
           Noizu.AdvancedScaffolding.Internal.DomainObject.Repo.__layer_transaction_block__(layer) do
             layer_post_create_callback(layer, entity, context, options)
           end
@@ -281,26 +281,26 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo do
         end
 
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-        def layer_update(%PersistenceLayer{} = layer, entity, context, options), do: @__nzdo__repo_default.layer_update(__MODULE__, layer, entity, context, options)
-        def layer_update!(%PersistenceLayer{} = layer, entity, context, options), do: @__nzdo__repo_default.layer_update!(__MODULE__, layer, entity, context, options)
+        def layer_update(%{__struct__: PersistenceLayer} = layer, entity, context, options), do: @__nzdo__repo_default.layer_update(__MODULE__, layer, entity, context, options)
+        def layer_update!(%{__struct__: PersistenceLayer} = layer, entity, context, options), do: @__nzdo__repo_default.layer_update!(__MODULE__, layer, entity, context, options)
 
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-        def layer_pre_update_callback(%PersistenceLayer{} = layer, entity, context, options),
+        def layer_pre_update_callback(%{__struct__: PersistenceLayer} = layer, entity, context, options),
             do: @__nzdo__repo_default.layer_pre_update_callback(__MODULE__, layer, entity, context, options)
-        def layer_pre_update_callback!(%PersistenceLayer{} = layer, entity, context, options) do
+        def layer_pre_update_callback!(%{__struct__: PersistenceLayer} = layer, entity, context, options) do
           Noizu.AdvancedScaffolding.Internal.DomainObject.Repo.__layer_transaction_block__(layer) do
             layer_pre_update_callback(layer, entity, context, options)
           end
         end
 
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-        def layer_update_callback(%PersistenceLayer{} = layer, entity, context, options), do: @__nzdo__repo_default.layer_update_callback(__MODULE__, layer, entity, context, options)
-        def layer_update_callback!(%PersistenceLayer{} = layer, entity, context, options), do: @__nzdo__repo_default.layer_update_callback!(__MODULE__, layer, entity, context, options)
+        def layer_update_callback(%{__struct__: PersistenceLayer} = layer, entity, context, options), do: @__nzdo__repo_default.layer_update_callback(__MODULE__, layer, entity, context, options)
+        def layer_update_callback!(%{__struct__: PersistenceLayer} = layer, entity, context, options), do: @__nzdo__repo_default.layer_update_callback!(__MODULE__, layer, entity, context, options)
 
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-        def layer_post_update_callback(%PersistenceLayer{} = layer, entity, context, options),
+        def layer_post_update_callback(%{__struct__: PersistenceLayer} = layer, entity, context, options),
             do: @__nzdo__repo_default.layer_post_update_callback(__MODULE__, layer, entity, context, options)
-        def layer_post_update_callback!(%PersistenceLayer{} = layer, entity, context, options) do
+        def layer_post_update_callback!(%{__struct__: PersistenceLayer} = layer, entity, context, options) do
           Noizu.AdvancedScaffolding.Internal.DomainObject.Repo.__layer_transaction_block__(layer) do
             layer_post_update_callback(layer, entity, context, options)
           end
@@ -327,26 +327,26 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo do
         def post_delete_callback!(entity, context, options), do: @__nzdo__repo_default.post_delete_callback!(__MODULE__, entity, context, options)
 
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-        def layer_delete(%PersistenceLayer{} = layer, entity, context, options), do: @__nzdo__repo_default.layer_delete(__MODULE__, layer, entity, context, options)
-        def layer_delete!(%PersistenceLayer{} = layer, entity, context, options), do: @__nzdo__repo_default.layer_delete!(__MODULE__, layer, entity, context, options)
+        def layer_delete(%{__struct__: PersistenceLayer} = layer, entity, context, options), do: @__nzdo__repo_default.layer_delete(__MODULE__, layer, entity, context, options)
+        def layer_delete!(%{__struct__: PersistenceLayer} = layer, entity, context, options), do: @__nzdo__repo_default.layer_delete!(__MODULE__, layer, entity, context, options)
 
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-        def layer_pre_delete_callback(%PersistenceLayer{} = layer, entity, context, options),
+        def layer_pre_delete_callback(%{__struct__: PersistenceLayer} = layer, entity, context, options),
             do: @__nzdo__repo_default.layer_pre_delete_callback(__MODULE__, layer, entity, context, options)
-        def layer_pre_delete_callback!(%PersistenceLayer{} = layer, entity, context, options) do
+        def layer_pre_delete_callback!(%{__struct__: PersistenceLayer} = layer, entity, context, options) do
           Noizu.AdvancedScaffolding.Internal.DomainObject.Repo.__layer_transaction_block__(layer) do
             layer_pre_delete_callback(layer, entity, context, options)
           end
         end
 
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-        def layer_delete_callback(%PersistenceLayer{} = layer, entity, context, options), do: @__nzdo__repo_default.layer_delete_callback(__MODULE__, layer, entity, context, options)
-        def layer_delete_callback!(%PersistenceLayer{} = layer, entity, context, options), do: @__nzdo__repo_default.layer_delete_callback!(__MODULE__, layer, entity, context, options)
+        def layer_delete_callback(%{__struct__: PersistenceLayer} = layer, entity, context, options), do: @__nzdo__repo_default.layer_delete_callback(__MODULE__, layer, entity, context, options)
+        def layer_delete_callback!(%{__struct__: PersistenceLayer} = layer, entity, context, options), do: @__nzdo__repo_default.layer_delete_callback!(__MODULE__, layer, entity, context, options)
 
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-        def layer_post_delete_callback(%PersistenceLayer{} = layer, entity, context, options),
+        def layer_post_delete_callback(%{__struct__: PersistenceLayer} = layer, entity, context, options),
             do: @__nzdo__repo_default.layer_post_delete_callback(__MODULE__, layer, entity, context, options)
-        def layer_post_delete_callback!(%PersistenceLayer{} = layer, entity, context, options) do
+        def layer_post_delete_callback!(%{__struct__: PersistenceLayer} = layer, entity, context, options) do
           Noizu.AdvancedScaffolding.Internal.DomainObject.Repo.__layer_transaction_block__(layer) do
             layer_post_delete_callback(layer, entity, context, options)
           end
