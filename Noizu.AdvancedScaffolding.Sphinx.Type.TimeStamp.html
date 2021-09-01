@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.25.1">
+    <meta name="project" content="Noizu.AdvancedScaffolding v1.0.1">
+
+    <title>Noizu.AdvancedScaffolding.Sphinx.Type.TimeStamp — Noizu.AdvancedScaffolding v1.0.1</title>
+    <link rel="stylesheet" href="dist/elixir-a172fe91e725dcb259e2.css" />
+
+    <script src="dist/sidebar_items-06ef32eb59.js"></script>
+
+      <script src="docs_config.js"></script>
+
+    <script async src="dist/app-f27ff079945e43879c46.js"></script>
+
+
+  </head>
+  <body data-type="modules">
+    <script>
+
+      try {
+        if (localStorage.getItem('night-mode') === 'true') {
+          document.body.classList.add('night-mode');
+        }
+      } catch (error) { }
+    </script>
+
+<div class="main">
+
+<button class="sidebar-button sidebar-toggle">
+  <span class="icon-menu" title="Collapse/expand sidebar"></span>
+</button>
+
+<section class="sidebar">
+  <form class="sidebar-search" action="search.html">
+    <button type="submit" class="search-button" aria-label="Submit Search">
+      <span class="icon-search" aria-hidden="true" title="Submit search"></span>
+    </button>
+    <button type="button" tabindex="-1" class="search-close-button" aria-label="Cancel Search">
+      <span class="icon-cross" aria-hidden="true" title="Cancel search"></span>
+    </button>
+    <label class="search-label">
+      <input name="q" type="text" class="search-input" placeholder="Search..." aria-label="Input your search terms" autocomplete="off" />
+    </label>
+  </form>
+
+  <div class="autocomplete">
+    <div class="autocomplete-results">
+    </div>
+  </div>
+
+  <div class="sidebar-header">
+    <div class="sidebar-projectDetails">
+      <a href="api-reference.html" class="sidebar-projectName">
+Noizu.AdvancedScaffolding
+      </a>
+      <strong class="sidebar-projectVersion">
+        v1.0.1
+      </strong>
+    </div>
+
+  </div>
+
+  <ul class="sidebar-listNav">
+    <li><a id="extras-list-link" href="#full-list">Pages</a></li>
+
+      <li><a id="modules-list-link" href="#full-list">Modules</a></li>
+
+
+  </ul>
+  <div class="gradient"></div>
+  <ul id="full-list" class="sidebar-fullList"></ul>
+</section>
+
+<section class="content">
+  <div class="content-outer">
+    <div id="content" class="content-inner">
+
+      <h1>
+Noizu.AdvancedScaffolding.Sphinx.Type.TimeStamp <small class="app-vsn">(Noizu.AdvancedScaffolding v1.0.1)</small>
+
+          <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/sphinx/time_stamp.ex#L1" title="View Source" class="view-source" rel="help">
+            <span class="icon-code" aria-hidden="true"></span>
+            <span class="sr-only">View Source</span>
+          </a>
+
+      </h1>
+
+
+        <section id="moduledoc">
+<p>Encode/Decode Timestamp value for Sphinx Database.</p>
+        </section>
+
+
+        <section id="summary" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#summary">
+              <span class="icon-link" aria-hidden="true"></span>
+              <span class="sr-only">Link to this section</span>
+            </a>
+            Summary
+          </h1>
+
+  <div class="summary-functions summary">
+    <h2>
+      <a href="#functions">Functions</a>
+    </h2>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#__sphinx_bits__/3">__sphinx_bits__(field, indexing, settings)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>Integer bitwidth for (Sub)field.
+If we break a DomainObject.Entity field into multiple sub fields for sphinx we may inspect the per subfield <code class="inline">indexing</code> attribute here.
+For example if a field expands to subfields in our <strong>sphinx_expand_field</strong> method we may inject a :sub attribute in that method specifying the name of each specific subfield.
+<code class="inline">[{:&quot;#{field}_my_sub_field&quot;, @handler, put_in(indexing, [:sub], :my_sub_field)}]</code></p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#__sphinx_default__/3">__sphinx_default__(field, indexing, settings)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>Default value for (Sub)field.
+If we break a DomainObject.Entity field into multiple sub fields for sphinx we may inspect the per subfield <code class="inline">indexing</code> attribute here.
+For example if a field expands to subfields in our <strong>sphinx_expand_field</strong> method we may inject a :sub attribute in that method specifying the name of each specific subfield.
+<code class="inline">[{:&quot;#{field}_my_sub_field&quot;, @handler, put_in(indexing, [:sub], :my_sub_field)}]</code></p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#__sphinx_encoded__/4">__sphinx_encoded__(field, entity, indexing, settings)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>Cast (sub)field to format understood by sphinx. E.g. convert Enum atoms to their numeric value. Replace refs/entities with their universal numeric id
+If we break a DomainObject.Entity field into multiple sub fields for sphinx we may inspect the per subfield <code class="inline">indexing</code> attribute here.
+For example if a field expands to subfields in our <strong>sphinx_expand_field</strong> method we may inject a :sub attribute in that method specifying the name of each specific subfield.
+<code class="inline">[{:&quot;#{field}_my_sub_field&quot;, @handler, put_in(indexing, [:sub], :my_sub_field)}]</code></p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#__sphinx_encoding__/3">__sphinx_encoding__(field, indexing, settings)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>(Sub)field sphinx field type: :attr<em>bigint, :attr<em>uint, :attr_multi64, etc.
+If we break a DomainObject.Entity field into multiple sub fields for sphinx we may inspect the per subfield <code class="inline">indexing</code> attribute here.
+For example if a field expands to subfields in our __sphinx_expand_field</em></em> method we may inject a :sub attribute in that method specifying the name of each specific subfield.
+<code class="inline">[{:&quot;#{field}_my_sub_field&quot;, @handler, put_in(indexing, [:sub], :my_sub_field)}]</code></p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#__sphinx_expand_field__/3">__sphinx_expand_field__(field, indexing, settings)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>Expand field from DomainObject.Entity into the list of index fields needed by sphinx.
+E.g. best_friend_name: %{first: f, last: l} could map to [best_friend_name_first, best_friend_name_last, best_friend_name_full]
+to allow searching our index for best friend by first name, last name or full name.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#__sphinx_field__/0">__sphinx_field__()</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>is this module a sphinx_field handler?</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#__sphinx_has_default__/3">__sphinx_has_default__(field, indexing, settings)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>Does this (sub)field have a default value?.
+If we break a DomainObject.Entity field into multiple sub fields for sphinx we may inspect the per subfield <code class="inline">indexing</code> attribute here.
+For example if a field expands to subfields in our <strong>sphinx_expand_field</strong> method we may inject a :sub attribute in that method specifying the name of each specific subfield.
+<code class="inline">[{:&quot;#{field}_my_sub_field&quot;, @handler, put_in(indexing, [:sub], :my_sub_field)}]</code></p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#cast/1">cast(v)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>Casts to Ref.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#cast!/1">cast!(value)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>Same as <a href="#cast/1"><code class="inline">cast/1</code></a> but raises <a href="https://hexdocs.pm/ecto/3.6.2/Ecto.CastError.html"><code class="inline">Ecto.CastError</code></a> on invalid arguments.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#embed_as/1">embed_as(_)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/ecto/3.6.2/Ecto.Type.html#c:embed_as/1"><code class="inline">Ecto.Type.embed_as/1</code></a>.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#equal?/2">equal?(term1, term2)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/ecto/3.6.2/Ecto.Type.html#c:equal?/2"><code class="inline">Ecto.Type.equal?/2</code></a>.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#load/1">load(v)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/ecto/3.6.2/Ecto.Type.html#c:load/1"><code class="inline">Ecto.Type.load/1</code></a>.</p></div>
+
+</div>
+
+  </div>
+
+        </section>
+
+
+        <section id="functions" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#functions">
+              <span class="icon-link" aria-hidden="true"></span>
+              <span class="sr-only">Link to this section</span>
+            </a>
+Functions
+          </h1>
+          <div class="functions-list">
+<section class="detail" id="__sphinx_bits__/3">
+
+  <div class="detail-header">
+    <a href="#__sphinx_bits__/3" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">__sphinx_bits__(field, indexing, settings)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/sphinx/time_stamp.ex#L8" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Integer bitwidth for (Sub)field.
+If we break a DomainObject.Entity field into multiple sub fields for sphinx we may inspect the per subfield <code class="inline">indexing</code> attribute here.
+For example if a field expands to subfields in our <strong>sphinx_expand_field</strong> method we may inject a :sub attribute in that method specifying the name of each specific subfield.
+<code class="inline">[{:&quot;#{field}_my_sub_field&quot;, @handler, put_in(indexing, [:sub], :my_sub_field)}]</code></p>
+  </section>
+</section>
+<section class="detail" id="__sphinx_default__/3">
+
+  <div class="detail-header">
+    <a href="#__sphinx_default__/3" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">__sphinx_default__(field, indexing, settings)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/sphinx/time_stamp.ex#L8" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Default value for (Sub)field.
+If we break a DomainObject.Entity field into multiple sub fields for sphinx we may inspect the per subfield <code class="inline">indexing</code> attribute here.
+For example if a field expands to subfields in our <strong>sphinx_expand_field</strong> method we may inject a :sub attribute in that method specifying the name of each specific subfield.
+<code class="inline">[{:&quot;#{field}_my_sub_field&quot;, @handler, put_in(indexing, [:sub], :my_sub_field)}]</code></p>
+  </section>
+</section>
+<section class="detail" id="__sphinx_encoded__/4">
+
+  <div class="detail-header">
+    <a href="#__sphinx_encoded__/4" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">__sphinx_encoded__(field, entity, indexing, settings)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/sphinx/time_stamp.ex#L8" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Cast (sub)field to format understood by sphinx. E.g. convert Enum atoms to their numeric value. Replace refs/entities with their universal numeric id
+If we break a DomainObject.Entity field into multiple sub fields for sphinx we may inspect the per subfield <code class="inline">indexing</code> attribute here.
+For example if a field expands to subfields in our <strong>sphinx_expand_field</strong> method we may inject a :sub attribute in that method specifying the name of each specific subfield.
+<code class="inline">[{:&quot;#{field}_my_sub_field&quot;, @handler, put_in(indexing, [:sub], :my_sub_field)}]</code></p>
+  </section>
+</section>
+<section class="detail" id="__sphinx_encoding__/3">
+
+  <div class="detail-header">
+    <a href="#__sphinx_encoding__/3" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">__sphinx_encoding__(field, indexing, settings)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/sphinx/time_stamp.ex#L8" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>(Sub)field sphinx field type: :attr<em>bigint, :attr<em>uint, :attr_multi64, etc.
+If we break a DomainObject.Entity field into multiple sub fields for sphinx we may inspect the per subfield <code class="inline">indexing</code> attribute here.
+For example if a field expands to subfields in our __sphinx_expand_field</em></em> method we may inject a :sub attribute in that method specifying the name of each specific subfield.
+<code class="inline">[{:&quot;#{field}_my_sub_field&quot;, @handler, put_in(indexing, [:sub], :my_sub_field)}]</code></p>
+  </section>
+</section>
+<section class="detail" id="__sphinx_expand_field__/3">
+
+  <div class="detail-header">
+    <a href="#__sphinx_expand_field__/3" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">__sphinx_expand_field__(field, indexing, settings)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/sphinx/time_stamp.ex#L8" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Expand field from DomainObject.Entity into the list of index fields needed by sphinx.
+E.g. best_friend_name: %{first: f, last: l} could map to [best_friend_name_first, best_friend_name_last, best_friend_name_full]
+to allow searching our index for best friend by first name, last name or full name.</p>
+  </section>
+</section>
+<section class="detail" id="__sphinx_field__/0">
+
+  <div class="detail-header">
+    <a href="#__sphinx_field__/0" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">__sphinx_field__()</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/sphinx/time_stamp.ex#L8" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>is this module a sphinx_field handler?</p>
+  </section>
+</section>
+<section class="detail" id="__sphinx_has_default__/3">
+
+  <div class="detail-header">
+    <a href="#__sphinx_has_default__/3" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">__sphinx_has_default__(field, indexing, settings)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/sphinx/time_stamp.ex#L8" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Does this (sub)field have a default value?.
+If we break a DomainObject.Entity field into multiple sub fields for sphinx we may inspect the per subfield <code class="inline">indexing</code> attribute here.
+For example if a field expands to subfields in our <strong>sphinx_expand_field</strong> method we may inject a :sub attribute in that method specifying the name of each specific subfield.
+<code class="inline">[{:&quot;#{field}_my_sub_field&quot;, @handler, put_in(indexing, [:sub], :my_sub_field)}]</code></p>
+  </section>
+</section>
+<section class="detail" id="cast/1">
+
+  <div class="detail-header">
+    <a href="#cast/1" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">cast(v)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/sphinx/time_stamp.ex#L22" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Casts to Ref.</p>
+  </section>
+</section>
+<section class="detail" id="cast!/1">
+
+  <div class="detail-header">
+    <a href="#cast!/1" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">cast!(value)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/sphinx/time_stamp.ex#L39" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Same as <a href="#cast/1"><code class="inline">cast/1</code></a> but raises <a href="https://hexdocs.pm/ecto/3.6.2/Ecto.CastError.html"><code class="inline">Ecto.CastError</code></a> on invalid arguments.</p>
+  </section>
+</section>
+<section class="detail" id="embed_as/1">
+
+  <div class="detail-header">
+    <a href="#embed_as/1" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">embed_as(_)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/sphinx/time_stamp.ex#L5" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Callback implementation for <a href="https://hexdocs.pm/ecto/3.6.2/Ecto.Type.html#c:embed_as/1"><code class="inline">Ecto.Type.embed_as/1</code></a>.</p>
+  </section>
+</section>
+<section class="detail" id="equal?/2">
+
+  <div class="detail-header">
+    <a href="#equal?/2" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">equal?(term1, term2)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/sphinx/time_stamp.ex#L5" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Callback implementation for <a href="https://hexdocs.pm/ecto/3.6.2/Ecto.Type.html#c:equal?/2"><code class="inline">Ecto.Type.equal?/2</code></a>.</p>
+  </section>
+</section>
+<section class="detail" id="load/1">
+
+  <div class="detail-header">
+    <a href="#load/1" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">load(v)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/sphinx/time_stamp.ex#L62" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Callback implementation for <a href="https://hexdocs.pm/ecto/3.6.2/Ecto.Type.html#c:load/1"><code class="inline">Ecto.Type.load/1</code></a>.</p>
+  </section>
+</section>
+
+          </div>
+        </section>
+
+      <footer class="footer">
+        <p>
+          <span class="line">
+            Built using
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener">ExDoc</a> (v0.25.1) for the
+            <a href="https://elixir-lang.org" title="Elixir" target="_blank">Elixir programming language</a>.
+          </span>
+          <span class="line">
+            Designed by
+            <a href="https://twitter.com/dignifiedquire" target="_blank" rel="noopener" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+          </span>
+        </p>
+        <p>
+
+            <a href="api-reference.html" title="API reference" class="line footer-button">API Reference</a>
+
+          <button class="line footer-button display-shortcuts-help">
+            Display keyboard shortcuts
+          </button>
+          <button class="line footer-button night-mode-toggle">
+            Toggle night mode
+          </button>
+          <button class="line footer-button display-quick-switch">
+            Go to a HexDocs package
+          </button>
+          <button class="line footer-button tooltips-toggle">
+            <span class="tooltips-option-disable">Disable tooltips</span>
+            <span class="tooltips-option-enable">Enable tooltips</span>
+          </button>
+        </p>
+      </footer>
+    </div>
+  </div>
+</section>
+</div>
+
+
+  </body>
+</html>

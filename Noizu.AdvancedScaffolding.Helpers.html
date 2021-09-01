@@ -5,12 +5,12 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.25.1">
-    <meta name="project" content="Noizu.AdvancedScaffolding v1.0.0">
+    <meta name="project" content="Noizu.AdvancedScaffolding v1.0.1">
 
-    <title>Noizu.AdvancedScaffolding.Helpers — Noizu.AdvancedScaffolding v1.0.0</title>
+    <title>Noizu.AdvancedScaffolding.Helpers — Noizu.AdvancedScaffolding v1.0.1</title>
     <link rel="stylesheet" href="dist/elixir-a172fe91e725dcb259e2.css" />
 
-    <script src="dist/sidebar_items-2325a70380.js"></script>
+    <script src="dist/sidebar_items-06ef32eb59.js"></script>
 
       <script src="docs_config.js"></script>
 
@@ -58,7 +58,7 @@
 Noizu.AdvancedScaffolding
       </a>
       <strong class="sidebar-projectVersion">
-        v1.0.0
+        v1.0.1
       </strong>
     </div>
 
@@ -70,8 +70,6 @@ Noizu.AdvancedScaffolding
       <li><a id="modules-list-link" href="#full-list">Modules</a></li>
 
 
-      <li><a id="tasks-list-link" href="#full-list">Mix Tasks</a></li>
-
   </ul>
   <div class="gradient"></div>
   <ul id="full-list" class="sidebar-fullList"></ul>
@@ -82,9 +80,9 @@ Noizu.AdvancedScaffolding
     <div id="content" class="content-inner">
 
       <h1>
-Noizu.AdvancedScaffolding.Helpers <small class="app-vsn">(Noizu.AdvancedScaffolding v1.0.0)</small>
+Noizu.AdvancedScaffolding.Helpers <small class="app-vsn">(Noizu.AdvancedScaffolding v1.0.1)</small>
 
-          <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/v3/helpers.ex#L6" title="View Source" class="view-source" rel="help">
+          <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/helpers.ex#L6" title="View Source" class="view-source" rel="help">
             <span class="icon-code" aria-hidden="true"></span>
             <span class="sr-only">View Source</span>
           </a>
@@ -108,167 +106,37 @@ Noizu.AdvancedScaffolding.Helpers <small class="app-vsn">(Noizu.AdvancedScaffold
     </h2>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#api_response/4">api_response(conn, response, context, options \\ [])</a>
+    <a href="#__default_get_context__expand_refs__/4">__default_get_context__expand_refs__(conn, params, get_context_provider, options)</a>
 
   </div>
+
+    <div class="summary-synopsis"><p>   Prepares a list of paths to expand keyed to a root, plus options depth.
+   Example  expand-refs=<em>.posts.entity-image.image,</em>.user:5
+   Internally paths are converted to regex strings + max depth constraints and compared to input in json methods.
+   Regex.match?(~&quot;^image.entity-image.user.*$&quot;, path)</p></div>
 
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#banner_text/4">banner_text(header, msg, len \\ 120, pad \\ 0)</a>
+    <a href="#__ensure_resp_content_type__/2">__ensure_resp_content_type__(conn, content_type)</a>
 
   </div>
 
-    <div class="summary-synopsis"><p>See <a href="#banner_text/4"><code class="inline">Noizu.AdvancedScaffolding.Helpers.banner_text/4</code></a>.</p></div>
+    <div class="summary-synopsis"><p>Set content-type if not set.</p></div>
 
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#default_get_context__expand_all_refs/4">default_get_context__expand_all_refs(conn, params, get_context_provider, options)</a>
+    <a href="#__send_resp__/4">__send_resp__(conn, default_status, default_content_type, body)</a>
 
   </div>
 
-    <div class="summary-synopsis"><p>See <a href="#default_get_context__expand_all_refs/4"><code class="inline">Noizu.AdvancedScaffolding.Helpers.default_get_context__expand_all_refs/4</code></a>.</p></div>
+    <div class="summary-synopsis"><p>Send API Response.</p></div>
 
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#default_get_context__expand_refs/4">default_get_context__expand_refs(conn, params, get_context_provider, options)</a>
-
-  </div>
-
-    <div class="summary-synopsis"><p>See <a href="#default_get_context__expand_refs/4"><code class="inline">Noizu.AdvancedScaffolding.Helpers.default_get_context__expand_refs/4</code></a>.</p></div>
-
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#default_get_context__json_format/4">default_get_context__json_format(conn, params, get_context_provider, options)</a>
-
-  </div>
-
-    <div class="summary-synopsis"><p>See <a href="#default_get_context__json_format/4"><code class="inline">Noizu.AdvancedScaffolding.Helpers.default_get_context__json_format/4</code></a>.</p></div>
-
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#default_get_context__json_formats/4">default_get_context__json_formats(conn, params, get_context_provider, options)</a>
-
-  </div>
-
-    <div class="summary-synopsis"><p>See <a href="#default_get_context__json_formats/4"><code class="inline">Noizu.AdvancedScaffolding.Helpers.default_get_context__json_formats/4</code></a>.</p></div>
-
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#default_get_context__token_reason_options/4">default_get_context__token_reason_options(conn, params, get_context_provider, opts)</a>
-
-  </div>
-
-    <div class="summary-synopsis"><p>See <a href="#default_get_context__token_reason_options/4"><code class="inline">Noizu.AdvancedScaffolding.Helpers.default_get_context__token_reason_options/4</code></a>.</p></div>
-
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#ensure_resp_content_type/2">ensure_resp_content_type(conn, content_type)</a>
-
-  </div>
-
-    <div class="summary-synopsis"><p>See <a href="#ensure_resp_content_type/2"><code class="inline">Noizu.AdvancedScaffolding.Helpers.ensure_resp_content_type/2</code></a>.</p></div>
-
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#expand_concurrency/1">expand_concurrency(options)</a>
-
-  </div>
-
-    <div class="summary-synopsis"><p>See <a href="#expand_concurrency/1"><code class="inline">Noizu.AdvancedScaffolding.Helpers.expand_concurrency/1</code></a>.</p></div>
-
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#expand_ref?/1">expand_ref?(options)</a>
-
-  </div>
-
-    <div class="summary-synopsis"><p>See <a href="#expand_ref?/1"><code class="inline">Noizu.AdvancedScaffolding.Helpers.expand_ref?/1</code></a>.</p></div>
-
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#expand_ref?/3">expand_ref?(path, depth, options \\ nil)</a>
-
-  </div>
-
-    <div class="summary-synopsis"><p>See <a href="#expand_ref?/3"><code class="inline">Noizu.AdvancedScaffolding.Helpers.expand_ref?/3</code></a>.</p></div>
-
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#force_put/3">force_put(entity, path, value)</a>
-
-  </div>
-
-    <div class="summary-synopsis"><p>See <a href="#force_put/3"><code class="inline">Noizu.AdvancedScaffolding.Helpers.force_put/3</code></a>.</p></div>
-
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#format_to_atom/2">format_to_atom(v, default)</a>
-
-  </div>
-
-    <div class="summary-synopsis"><p>See <a href="#format_to_atom/2"><code class="inline">Noizu.AdvancedScaffolding.Helpers.format_to_atom/2</code></a>.</p></div>
-
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#get_ip/1">get_ip(conn)</a>
-
-  </div>
-
-    <div class="summary-synopsis"><p>See <a href="#get_ip/1"><code class="inline">Noizu.AdvancedScaffolding.Helpers.get_ip/1</code></a>.</p></div>
-
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#json_library/0">json_library()</a>
-
-  </div>
-
-    <div class="summary-synopsis"><p>See <a href="#json_library/0"><code class="inline">Noizu.AdvancedScaffolding.Helpers.json_library/0</code></a>.</p></div>
-
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#page/2">page(page, query)</a>
-
-  </div>
-
-    <div class="summary-synopsis"><p>See <a href="#page/2"><code class="inline">Noizu.AdvancedScaffolding.Helpers.page/2</code></a>.</p></div>
-
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#request_pagination/3">request_pagination(params, default_page, default_results_per_page)</a>
-
-  </div>
-
-    <div class="summary-synopsis"><p>See <a href="#request_pagination/3"><code class="inline">Noizu.AdvancedScaffolding.Helpers.request_pagination/3</code></a>.</p></div>
-
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#send_resp/4">send_resp(conn, default_status, default_content_type, body)</a>
-
-  </div>
-
-    <div class="summary-synopsis"><p>See <a href="#send_resp/4"><code class="inline">Noizu.AdvancedScaffolding.Helpers.send_resp/4</code></a>.</p></div>
-
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#update_expand_options/2">update_expand_options(entity, options)</a>
+    <a href="#__update_expand_options__/2">__update_expand_options__(entity, options)</a>
 
   </div>
 
@@ -277,7 +145,7 @@ Noizu.AdvancedScaffolding.Helpers <small class="app-vsn">(Noizu.AdvancedScaffold
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#update_options/3">update_options(entity, context, options)</a>
+    <a href="#__update_options__/2">__update_options__(entity, options)</a>
 
   </div>
 
@@ -286,11 +154,109 @@ Noizu.AdvancedScaffolding.Helpers <small class="app-vsn">(Noizu.AdvancedScaffold
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#update_options__json_format/2">update_options__json_format(entity, options)</a>
+    <a href="#__update_options__/3">__update_options__(entity, context, options)</a>
 
   </div>
 
     <div class="summary-synopsis"><p>  Update Poison Format/Expansion options.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#__update_options__json_format__/2">__update_options__json_format__(entity, options)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>  Update Poison Format/Expansion options.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#api_response/4">api_response(conn, response, context, options \\ [])</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p> Prepare and return api response. Expand refs, strip pii, apply specific json formatting etc. to result set before returning,</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#banner_text/4">banner_text(header, msg, len \\ 120, pad \\ 0)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>Prepare banner string output.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#expand_concurrency/1">expand_concurrency(options)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>  Extract concurrency settings from options</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#expand_ref?/1">expand_ref?(options)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>  Should entity be expanded for poison/entity expand.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#expand_ref?/3">expand_ref?(path, depth, options \\ nil)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#force_put/3">force_put(entity, p, v)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>  injects maps in path if not already populated.
+  @example <code class="inline">force_put(%{}, [:a, :b, :c], 1) %{a: %{b: %{c: 1}}}</code></p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#format_to_atom/2">format_to_atom(v, default)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>Convert string json format specifier to atom if exists or default.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#get_ip/1">get_ip(conn)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>get caller's IP address.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#json_library/0">json_library()</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>Return Json Provider.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#page/2">page(page, query)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>Return query page (e.g. run next(query) until reaching desired page.</p></div>
 
 </div>
 
@@ -308,6 +274,163 @@ Noizu.AdvancedScaffolding.Helpers <small class="app-vsn">(Noizu.AdvancedScaffold
 Functions
           </h1>
           <div class="functions-list">
+<section class="detail" id="__default_get_context__expand_refs__/4">
+
+  <div class="detail-header">
+    <a href="#__default_get_context__expand_refs__/4" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">__default_get_context__expand_refs__(conn, params, get_context_provider, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/helpers.ex#L228" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>   Prepares a list of paths to expand keyed to a root, plus options depth.
+   Example  expand-refs=<em>.posts.entity-image.image,</em>.user:5
+   Internally paths are converted to regex strings + max depth constraints and compared to input in json methods.
+   Regex.match?(~&quot;^image.entity-image.user.*$&quot;, path)</p>
+  </section>
+</section>
+<section class="detail" id="__ensure_resp_content_type__/2">
+
+  <div class="detail-header">
+    <a href="#__ensure_resp_content_type__/2" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">__ensure_resp_content_type__(conn, content_type)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/helpers.ex#L141" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Set content-type if not set.</p>
+  </section>
+</section>
+<section class="detail" id="__send_resp__/4">
+
+  <div class="detail-header">
+    <a href="#__send_resp__/4" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">__send_resp__(conn, default_status, default_content_type, body)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/helpers.ex#L129" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Send API Response.</p>
+  </section>
+</section>
+<section class="detail" id="__update_expand_options__/2">
+
+  <div class="detail-header">
+    <a href="#__update_expand_options__/2" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">__update_expand_options__(entity, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/helpers.ex#L484" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>  Update Entity.expand! option depth and path.</p>
+  </section>
+</section>
+<section class="detail" id="__update_options__/2">
+
+  <div class="detail-header">
+    <a href="#__update_options__/2" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">__update_options__(entity, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/helpers.ex#L446" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>  Update Poison Format/Expansion options.</p>
+  </section>
+</section>
+<section class="detail" id="__update_options__/3">
+
+  <div class="detail-header">
+    <a href="#__update_options__/3" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">__update_options__(entity, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/helpers.ex#L464" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>  Update Poison Format/Expansion options.</p>
+  </section>
+</section>
+<section class="detail" id="__update_options__json_format__/2">
+
+  <div class="detail-header">
+    <a href="#__update_options__json_format__/2" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">__update_options__json_format__(entity, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/helpers.ex#L515" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>  Update Poison Format/Expansion options.</p>
+  </section>
+</section>
 <section class="detail" id="api_response/4">
 
     <span id="api_response/3"></span>
@@ -319,7 +442,7 @@ Functions
     </a>
     <h1 class="signature">api_response(conn, response, context, options \\ [])</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/v3/helpers.ex#L99" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/helpers.ex#L395" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -329,7 +452,7 @@ Functions
 
   <section class="docstring">
 
-
+<p> Prepare and return api response. Expand refs, strip pii, apply specific json formatting etc. to result set before returning,</p>
   </section>
 </section>
 <section class="detail" id="banner_text/4">
@@ -345,7 +468,7 @@ Functions
     </a>
     <h1 class="signature">banner_text(header, msg, len \\ 120, pad \\ 0)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/v3/helpers.ex#L9" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/helpers.ex#L16" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -355,139 +478,7 @@ Functions
 
   <section class="docstring">
 
-<p>See <a href="#banner_text/4"><code class="inline">Noizu.AdvancedScaffolding.Helpers.banner_text/4</code></a>.</p>
-  </section>
-</section>
-<section class="detail" id="default_get_context__expand_all_refs/4">
-
-  <div class="detail-header">
-    <a href="#default_get_context__expand_all_refs/4" class="detail-link" title="Link to this function">
-      <span class="icon-link" aria-hidden="true"></span>
-      <span class="sr-only">Link to this function</span>
-    </a>
-    <h1 class="signature">default_get_context__expand_all_refs(conn, params, get_context_provider, options)</h1>
-
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/v3/helpers.ex#L21" class="view-source" rel="help" title="View Source">
-       <span class="icon-code" aria-hidden="true"></span>
-       <span class="sr-only">View Source</span>
-     </a>
-
-
-  </div>
-
-  <section class="docstring">
-
-<p>See <a href="#default_get_context__expand_all_refs/4"><code class="inline">Noizu.AdvancedScaffolding.Helpers.default_get_context__expand_all_refs/4</code></a>.</p>
-  </section>
-</section>
-<section class="detail" id="default_get_context__expand_refs/4">
-
-  <div class="detail-header">
-    <a href="#default_get_context__expand_refs/4" class="detail-link" title="Link to this function">
-      <span class="icon-link" aria-hidden="true"></span>
-      <span class="sr-only">Link to this function</span>
-    </a>
-    <h1 class="signature">default_get_context__expand_refs(conn, params, get_context_provider, options)</h1>
-
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/v3/helpers.ex#L22" class="view-source" rel="help" title="View Source">
-       <span class="icon-code" aria-hidden="true"></span>
-       <span class="sr-only">View Source</span>
-     </a>
-
-
-  </div>
-
-  <section class="docstring">
-
-<p>See <a href="#default_get_context__expand_refs/4"><code class="inline">Noizu.AdvancedScaffolding.Helpers.default_get_context__expand_refs/4</code></a>.</p>
-  </section>
-</section>
-<section class="detail" id="default_get_context__json_format/4">
-
-  <div class="detail-header">
-    <a href="#default_get_context__json_format/4" class="detail-link" title="Link to this function">
-      <span class="icon-link" aria-hidden="true"></span>
-      <span class="sr-only">Link to this function</span>
-    </a>
-    <h1 class="signature">default_get_context__json_format(conn, params, get_context_provider, options)</h1>
-
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/v3/helpers.ex#L19" class="view-source" rel="help" title="View Source">
-       <span class="icon-code" aria-hidden="true"></span>
-       <span class="sr-only">View Source</span>
-     </a>
-
-
-  </div>
-
-  <section class="docstring">
-
-<p>See <a href="#default_get_context__json_format/4"><code class="inline">Noizu.AdvancedScaffolding.Helpers.default_get_context__json_format/4</code></a>.</p>
-  </section>
-</section>
-<section class="detail" id="default_get_context__json_formats/4">
-
-  <div class="detail-header">
-    <a href="#default_get_context__json_formats/4" class="detail-link" title="Link to this function">
-      <span class="icon-link" aria-hidden="true"></span>
-      <span class="sr-only">Link to this function</span>
-    </a>
-    <h1 class="signature">default_get_context__json_formats(conn, params, get_context_provider, options)</h1>
-
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/v3/helpers.ex#L20" class="view-source" rel="help" title="View Source">
-       <span class="icon-code" aria-hidden="true"></span>
-       <span class="sr-only">View Source</span>
-     </a>
-
-
-  </div>
-
-  <section class="docstring">
-
-<p>See <a href="#default_get_context__json_formats/4"><code class="inline">Noizu.AdvancedScaffolding.Helpers.default_get_context__json_formats/4</code></a>.</p>
-  </section>
-</section>
-<section class="detail" id="default_get_context__token_reason_options/4">
-
-  <div class="detail-header">
-    <a href="#default_get_context__token_reason_options/4" class="detail-link" title="Link to this function">
-      <span class="icon-link" aria-hidden="true"></span>
-      <span class="sr-only">Link to this function</span>
-    </a>
-    <h1 class="signature">default_get_context__token_reason_options(conn, params, get_context_provider, opts)</h1>
-
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/v3/helpers.ex#L23" class="view-source" rel="help" title="View Source">
-       <span class="icon-code" aria-hidden="true"></span>
-       <span class="sr-only">View Source</span>
-     </a>
-
-
-  </div>
-
-  <section class="docstring">
-
-<p>See <a href="#default_get_context__token_reason_options/4"><code class="inline">Noizu.AdvancedScaffolding.Helpers.default_get_context__token_reason_options/4</code></a>.</p>
-  </section>
-</section>
-<section class="detail" id="ensure_resp_content_type/2">
-
-  <div class="detail-header">
-    <a href="#ensure_resp_content_type/2" class="detail-link" title="Link to this function">
-      <span class="icon-link" aria-hidden="true"></span>
-      <span class="sr-only">Link to this function</span>
-    </a>
-    <h1 class="signature">ensure_resp_content_type(conn, content_type)</h1>
-
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/v3/helpers.ex#L17" class="view-source" rel="help" title="View Source">
-       <span class="icon-code" aria-hidden="true"></span>
-       <span class="sr-only">View Source</span>
-     </a>
-
-
-  </div>
-
-  <section class="docstring">
-
-<p>See <a href="#ensure_resp_content_type/2"><code class="inline">Noizu.AdvancedScaffolding.Helpers.ensure_resp_content_type/2</code></a>.</p>
+<p>Prepare banner string output.</p>
   </section>
 </section>
 <section class="detail" id="expand_concurrency/1">
@@ -499,7 +490,7 @@ Functions
     </a>
     <h1 class="signature">expand_concurrency(options)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/v3/helpers.ex#L12" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/helpers.ex#L71" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -509,7 +500,7 @@ Functions
 
   <section class="docstring">
 
-<p>See <a href="#expand_concurrency/1"><code class="inline">Noizu.AdvancedScaffolding.Helpers.expand_concurrency/1</code></a>.</p>
+<p>  Extract concurrency settings from options</p>
   </section>
 </section>
 <section class="detail" id="expand_ref?/1">
@@ -521,7 +512,7 @@ Functions
     </a>
     <h1 class="signature">expand_ref?(options)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/v3/helpers.ex#L13" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/helpers.ex#L89" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -531,7 +522,7 @@ Functions
 
   <section class="docstring">
 
-<p>See <a href="#expand_ref?/1"><code class="inline">Noizu.AdvancedScaffolding.Helpers.expand_ref?/1</code></a>.</p>
+<p>  Should entity be expanded for poison/entity expand.</p>
   </section>
 </section>
 <section class="detail" id="expand_ref?/3">
@@ -545,7 +536,7 @@ Functions
     </a>
     <h1 class="signature">expand_ref?(path, depth, options \\ nil)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/v3/helpers.ex#L14" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/helpers.ex#L92" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -555,7 +546,7 @@ Functions
 
   <section class="docstring">
 
-<p>See <a href="#expand_ref?/3"><code class="inline">Noizu.AdvancedScaffolding.Helpers.expand_ref?/3</code></a>.</p>
+
   </section>
 </section>
 <section class="detail" id="force_put/3">
@@ -565,9 +556,9 @@ Functions
       <span class="icon-link" aria-hidden="true"></span>
       <span class="sr-only">Link to this function</span>
     </a>
-    <h1 class="signature">force_put(entity, path, value)</h1>
+    <h1 class="signature">force_put(entity, p, v)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/v3/helpers.ex#L25" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/helpers.ex#L366" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -577,7 +568,8 @@ Functions
 
   <section class="docstring">
 
-<p>See <a href="#force_put/3"><code class="inline">Noizu.AdvancedScaffolding.Helpers.force_put/3</code></a>.</p>
+<p>  injects maps in path if not already populated.
+  @example <code class="inline">force_put(%{}, [:a, :b, :c], 1) %{a: %{b: %{c: 1}}}</code></p>
   </section>
 </section>
 <section class="detail" id="format_to_atom/2">
@@ -589,7 +581,7 @@ Functions
     </a>
     <h1 class="signature">format_to_atom(v, default)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/v3/helpers.ex#L18" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/helpers.ex#L169" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -599,7 +591,7 @@ Functions
 
   <section class="docstring">
 
-<p>See <a href="#format_to_atom/2"><code class="inline">Noizu.AdvancedScaffolding.Helpers.format_to_atom/2</code></a>.</p>
+<p>Convert string json format specifier to atom if exists or default.</p>
   </section>
 </section>
 <section class="detail" id="get_ip/1">
@@ -611,7 +603,7 @@ Functions
     </a>
     <h1 class="signature">get_ip(conn)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/v3/helpers.ex#L24" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/helpers.ex#L326" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -621,7 +613,7 @@ Functions
 
   <section class="docstring">
 
-<p>See <a href="#get_ip/1"><code class="inline">Noizu.AdvancedScaffolding.Helpers.get_ip/1</code></a>.</p>
+<p>get caller's IP address.</p>
   </section>
 </section>
 <section class="detail" id="json_library/0">
@@ -633,7 +625,7 @@ Functions
     </a>
     <h1 class="signature">json_library()</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/v3/helpers.ex#L15" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/helpers.ex#L119" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -643,7 +635,7 @@ Functions
 
   <section class="docstring">
 
-<p>See <a href="#json_library/0"><code class="inline">Noizu.AdvancedScaffolding.Helpers.json_library/0</code></a>.</p>
+<p>Return Json Provider.</p>
   </section>
 </section>
 <section class="detail" id="page/2">
@@ -655,7 +647,7 @@ Functions
     </a>
     <h1 class="signature">page(page, query)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/v3/helpers.ex#L11" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/helpers.ex#L49" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -665,117 +657,7 @@ Functions
 
   <section class="docstring">
 
-<p>See <a href="#page/2"><code class="inline">Noizu.AdvancedScaffolding.Helpers.page/2</code></a>.</p>
-  </section>
-</section>
-<section class="detail" id="request_pagination/3">
-
-  <div class="detail-header">
-    <a href="#request_pagination/3" class="detail-link" title="Link to this function">
-      <span class="icon-link" aria-hidden="true"></span>
-      <span class="sr-only">Link to this function</span>
-    </a>
-    <h1 class="signature">request_pagination(params, default_page, default_results_per_page)</h1>
-
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/v3/helpers.ex#L10" class="view-source" rel="help" title="View Source">
-       <span class="icon-code" aria-hidden="true"></span>
-       <span class="sr-only">View Source</span>
-     </a>
-
-
-  </div>
-
-  <section class="docstring">
-
-<p>See <a href="#request_pagination/3"><code class="inline">Noizu.AdvancedScaffolding.Helpers.request_pagination/3</code></a>.</p>
-  </section>
-</section>
-<section class="detail" id="send_resp/4">
-
-  <div class="detail-header">
-    <a href="#send_resp/4" class="detail-link" title="Link to this function">
-      <span class="icon-link" aria-hidden="true"></span>
-      <span class="sr-only">Link to this function</span>
-    </a>
-    <h1 class="signature">send_resp(conn, default_status, default_content_type, body)</h1>
-
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/v3/helpers.ex#L16" class="view-source" rel="help" title="View Source">
-       <span class="icon-code" aria-hidden="true"></span>
-       <span class="sr-only">View Source</span>
-     </a>
-
-
-  </div>
-
-  <section class="docstring">
-
-<p>See <a href="#send_resp/4"><code class="inline">Noizu.AdvancedScaffolding.Helpers.send_resp/4</code></a>.</p>
-  </section>
-</section>
-<section class="detail" id="update_expand_options/2">
-
-  <div class="detail-header">
-    <a href="#update_expand_options/2" class="detail-link" title="Link to this function">
-      <span class="icon-link" aria-hidden="true"></span>
-      <span class="sr-only">Link to this function</span>
-    </a>
-    <h1 class="signature">update_expand_options(entity, options)</h1>
-
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/v3/helpers.ex#L78" class="view-source" rel="help" title="View Source">
-       <span class="icon-code" aria-hidden="true"></span>
-       <span class="sr-only">View Source</span>
-     </a>
-
-
-  </div>
-
-  <section class="docstring">
-
-<p>  Update Entity.expand! option depth and path.</p>
-  </section>
-</section>
-<section class="detail" id="update_options/3">
-
-  <div class="detail-header">
-    <a href="#update_options/3" class="detail-link" title="Link to this function">
-      <span class="icon-link" aria-hidden="true"></span>
-      <span class="sr-only">Link to this function</span>
-    </a>
-    <h1 class="signature">update_options(entity, context, options)</h1>
-
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/v3/helpers.ex#L59" class="view-source" rel="help" title="View Source">
-       <span class="icon-code" aria-hidden="true"></span>
-       <span class="sr-only">View Source</span>
-     </a>
-
-
-  </div>
-
-  <section class="docstring">
-
-<p>  Update Poison Format/Expansion options.</p>
-  </section>
-</section>
-<section class="detail" id="update_options__json_format/2">
-
-  <div class="detail-header">
-    <a href="#update_options__json_format/2" class="detail-link" title="Link to this function">
-      <span class="icon-link" aria-hidden="true"></span>
-      <span class="sr-only">Link to this function</span>
-    </a>
-    <h1 class="signature">update_options__json_format(entity, options)</h1>
-
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/v3/helpers.ex#L33" class="view-source" rel="help" title="View Source">
-       <span class="icon-code" aria-hidden="true"></span>
-       <span class="sr-only">View Source</span>
-     </a>
-
-
-  </div>
-
-  <section class="docstring">
-
-<p>  Update Poison Format/Expansion options.</p>
+<p>Return query page (e.g. run next(query) until reaching desired page.</p>
   </section>
 </section>
 

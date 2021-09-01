@@ -5,12 +5,12 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.25.1">
-    <meta name="project" content="Noizu.AdvancedScaffolding v1.0.0">
+    <meta name="project" content="Noizu.AdvancedScaffolding v1.0.1">
 
-    <title>Noizu.AdvancedScaffolding.Schema.PersistenceSettings — Noizu.AdvancedScaffolding v1.0.0</title>
+    <title>Noizu.AdvancedScaffolding.Schema.PersistenceSettings — Noizu.AdvancedScaffolding v1.0.1</title>
     <link rel="stylesheet" href="dist/elixir-a172fe91e725dcb259e2.css" />
 
-    <script src="dist/sidebar_items-2325a70380.js"></script>
+    <script src="dist/sidebar_items-06ef32eb59.js"></script>
 
       <script src="docs_config.js"></script>
 
@@ -58,7 +58,7 @@
 Noizu.AdvancedScaffolding
       </a>
       <strong class="sidebar-projectVersion">
-        v1.0.0
+        v1.0.1
       </strong>
     </div>
 
@@ -70,8 +70,6 @@ Noizu.AdvancedScaffolding
       <li><a id="modules-list-link" href="#full-list">Modules</a></li>
 
 
-      <li><a id="tasks-list-link" href="#full-list">Mix Tasks</a></li>
-
   </ul>
   <div class="gradient"></div>
   <ul id="full-list" class="sidebar-fullList"></ul>
@@ -82,15 +80,19 @@ Noizu.AdvancedScaffolding
     <div id="content" class="content-inner">
 
       <h1>
-Noizu.AdvancedScaffolding.Schema.PersistenceSettings <small class="app-vsn">(Noizu.AdvancedScaffolding v1.0.0)</small>
+Noizu.AdvancedScaffolding.Schema.PersistenceSettings <small class="app-vsn">(Noizu.AdvancedScaffolding v1.0.1)</small>
 
-          <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/v3/common/schema/persistence_settings.ex#L1" title="View Source" class="view-source" rel="help">
+          <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/schema/peristence/persistence_settings.ex#L1" title="View Source" class="view-source" rel="help">
             <span class="icon-code" aria-hidden="true"></span>
             <span class="sr-only">View Source</span>
           </a>
 
       </h1>
 
+
+        <section id="moduledoc">
+<p>Persistence layers and configuration details for domain object entities.</p>
+        </section>
 
 
         <section id="summary" class="details-list">
@@ -122,9 +124,39 @@ Noizu.AdvancedScaffolding.Schema.PersistenceSettings <small class="app-vsn">(Noi
     </h2>
 <div class="summary-row">
   <div class="summary-signature">
+    <a href="#file_rel_dir/1">file_rel_dir(module_path)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#file_rel_dir/3">file_rel_dir(arg1, arg2, acc)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#module_rel/2">module_rel(base, module_path)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#module_rel/3">module_rel(arg1, arg2, acc)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
     <a href="#update_schema_fields/2">update_schema_fields(this, field_type_map)</a>
 
   </div>
+
+    <div class="summary-synopsis"><p>Expand out fields for each persistence type and update our persistence settings with our updated layers/schemas/tables fields.</p></div>
 
 </div>
 
@@ -151,7 +183,7 @@ Types
     </a>
     <h1 class="signature">t()</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/v3/common/schema/persistence_settings.ex#L3" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/schema/peristence/persistence_settings.ex#L7" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -192,16 +224,16 @@ Types
 Functions
           </h1>
           <div class="functions-list">
-<section class="detail" id="update_schema_fields/2">
+<section class="detail" id="file_rel_dir/1">
 
   <div class="detail-header">
-    <a href="#update_schema_fields/2" class="detail-link" title="Link to this function">
+    <a href="#file_rel_dir/1" class="detail-link" title="Link to this function">
       <span class="icon-link" aria-hidden="true"></span>
       <span class="sr-only">Link to this function</span>
     </a>
-    <h1 class="signature">update_schema_fields(this, field_type_map)</h1>
+    <h1 class="signature">file_rel_dir(module_path)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/v3/common/schema/persistence_settings.ex#L42" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/schema/peristence/persistence_settings.ex#L84" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -212,6 +244,94 @@ Functions
   <section class="docstring">
 
 
+  </section>
+</section>
+<section class="detail" id="file_rel_dir/3">
+
+  <div class="detail-header">
+    <a href="#file_rel_dir/3" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">file_rel_dir(arg1, arg2, acc)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/schema/peristence/persistence_settings.ex#L88" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="module_rel/2">
+
+  <div class="detail-header">
+    <a href="#module_rel/2" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">module_rel(base, module_path)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/schema/peristence/persistence_settings.ex#L96" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="module_rel/3">
+
+  <div class="detail-header">
+    <a href="#module_rel/3" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">module_rel(arg1, arg2, acc)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/schema/peristence/persistence_settings.ex#L102" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="update_schema_fields/2">
+
+  <div class="detail-header">
+    <a href="#update_schema_fields/2" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">update_schema_fields(this, field_type_map)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/schema/peristence/persistence_settings.ex#L54" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Expand out fields for each persistence type and update our persistence settings with our updated layers/schemas/tables fields.</p>
   </section>
 </section>
 
