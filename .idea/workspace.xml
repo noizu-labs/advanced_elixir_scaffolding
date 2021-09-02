@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ae58bc41-455c-447f-90eb-f1325731ba9b" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/behaviours/schema_info.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/behaviours/schema_info.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/domain_object.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/domain_object.ex" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,7 +41,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/index" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../Jetzy/elixir-backend" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />

@@ -180,12 +180,12 @@ defmodule Noizu.DomainObject.SchemaInfo do
   end
 
   #--------------------------------------------
-  # __noizu_scaffolding_schema__
+  # __noizu_schema_info__
   #--------------------------------------------
   @doc """
     Returns Scaffolding Schema implementation.
   """
-  def __noizu_scaffolding_schema__(caller, options, block) do
+  def __noizu_schema_info__(caller, options, block) do
     base_prefix = options[:base_prefix] || :auto
     database_prefix = options[:database_prefix] || :auto
     Noizu.AdvancedScaffolding.Implementation.DomainObject.Scaffolding.DefaultScaffoldingSchemaProvider
