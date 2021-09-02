@@ -78,6 +78,7 @@ a = %Entity{
 # Content Permission Annotation and Fields
 
 - Flag fields that should only be accessible by administrators, owning user, or users owner has shared with with field types and annotation. Flag PII fields automatically suppress in log output by default.
+
 ```elixir
 
 defmodule Entity do
@@ -351,11 +352,11 @@ end
 
 # Crud
 
-Json formatting (for mobile view collapse to string %MyApp.Image.Type{1, description: %{title: "User"}}) -> "User"
+Json formatting (for mobile view collapse to string `%MyApp.Image.Type{1, description: %{title: "User"}}) -> "User"`
 
 Data setup helpers.
 
-and  this line in  jetzy/lib/jetzy_schema/mysql/enum_tables.ex
+and  this line in  `jetzy/lib/jetzy_schema/mysql/enum_tables.ex`
 
 ```elixir
 
@@ -375,45 +376,45 @@ defmodule MyAppSchema.MySQL.Image.TypeTable do
 schema "image_type" do
 #field :description, MyApp.VersionedString.EctoUniversalReference
 
-          #  Standard Time Stamps
-          field :created_on, :utc_datetime_usec
-          field :modified_on, :utc_datetime_usec
-          field :deleted_on, :utc_datetime_usec
-        end
+      #  Standard Time Stamps
+      field :created_on, :utc_datetime_usec
+      field :modified_on, :utc_datetime_usec
+      field :deleted_on, :utc_datetime_usec
+    end
 
-        
-      #-------------------------------
-      # new
-      #-------------------------------
-      def new(options \\ %{}) do
-        struct(__MODULE__, options)
-      end
+    
+  #-------------------------------
+  # new
+  #-------------------------------
+  def new(options \\ %{}) do
+    struct(__MODULE__, options)
+  end
 
-      #-------------------------------
-      # changeset
-      #-------------------------------
-      def changeset(record, params) do
-        fields = Map.keys(record) -- [:__struct__, :__schema__, :__meta__]
-        record
-        |> cast(params, fields)
-        |> validate_required([])
-      end
+  #-------------------------------
+  # changeset
+  #-------------------------------
+  def changeset(record, params) do
+    fields = Map.keys(record) -- [:__struct__, :__schema__, :__meta__]
+    record
+    |> cast(params, fields)
+    |> validate_required([])
+  end
 
 
-      
-      defdelegate __entity__(), to: MyApp.Image.Type.Entity
-      defdelegate __repo__(), to: MyApp.Image.Type.Entity
-      defdelegate __sref__(), to: MyApp.Image.Type.Entity
-      defdelegate __erp__(), to: MyApp.Image.Type.Entity
+  
+  defdelegate __entity__(), to: MyApp.Image.Type.Entity
+  defdelegate __repo__(), to: MyApp.Image.Type.Entity
+  defdelegate __sref__(), to: MyApp.Image.Type.Entity
+  defdelegate __erp__(), to: MyApp.Image.Type.Entity
 
-      defdelegate __persistence__(setting \\ :all), to:  MyApp.Image.Type
-      defdelegate __persistence__(selector, setting), to:  MyApp.Image.Type
-      defdelegate __nmid__(setting), to: MyApp.Image.Type.Entity
+  defdelegate __persistence__(setting \\ :all), to:  MyApp.Image.Type
+  defdelegate __persistence__(selector, setting), to:  MyApp.Image.Type
+  defdelegate __nmid__(setting), to: MyApp.Image.Type.Entity
 
-      def __schema_table__(), do: :image_type
+  def __schema_table__(), do: :image_type
 
-      def __noizu_info__(:type), do: :enum_table
-      defdelegate __noizu_info__(setting), to:  MyApp.Image.Type
+  def __noizu_info__(:type), do: :enum_table
+  defdelegate __noizu_info__(setting), to:  MyApp.Image.Type
 end
 
 ```
