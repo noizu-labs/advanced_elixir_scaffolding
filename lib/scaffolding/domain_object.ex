@@ -3,12 +3,14 @@ defmodule Noizu.DomainObject do
   @doc """
   Setup Base Domain Object, this struct will in turn hold Entity, Repo, Index, etc.
 
-  @see Noizu.AdvancedScaffolding.Internal.Core.Base.Behaviour
-  @see Noizu.AdvancedScaffolding.Internal.Persistence.Base.Behaviour
-  @see Noizu.AdvancedScaffolding.Internal.EntityIndex.Base.Behaviour
-  @see Noizu.AdvancedScaffolding.Internal.Json.Base.Behaviour
+  ## See
+  - `Noizu.AdvancedScaffolding.Internal.Core.Base.Behaviour`
+  - `Noizu.AdvancedScaffolding.Internal.Persistence.Base.Behaviour`
+  - `Noizu.AdvancedScaffolding.Internal.EntityIndex.Base.Behaviour`
+  - `Noizu.AdvancedScaffolding.Internal.Json.Base.Behaviour`
 
-  @example ```
+  ## Example
+  ```elixir
   defmodule User do
     use Noizu.DomainObject
     Noizu.DomainObject.noizu_entity() do
@@ -30,13 +32,15 @@ defmodule Noizu.DomainObject do
   @doc """
   Initialize a DomainObject.Entity. Caller passes in identifier and field definitions which are in turn used to generate the domain object entity's configuration options and defstruct statement.
 
-  @see Noizu.AdvancedScaffolding.Internal.Core.Entity.Behaviour
-  @see Noizu.AdvancedScaffolding.Internal.Persistence.Entity.Behaviour
-  @see Noizu.AdvancedScaffolding.Internal.EntityIndex.Entity.Behaviour
-  @see Noizu.AdvancedScaffolding.Internal.Index.Entity.Behaviour
-  @see Noizu.AdvancedScaffolding.Internal.Json.Entity.Behaviour
+  ## See
+  - `Noizu.AdvancedScaffolding.Internal.Core.Entity.Behaviour`
+  - `Noizu.AdvancedScaffolding.Internal.Persistence.Entity.Behaviour`
+  - `Noizu.AdvancedScaffolding.Internal.EntityIndex.Entity.Behaviour`
+  - `Noizu.AdvancedScaffolding.Internal.Index.Behaviour`
+  - `Noizu.AdvancedScaffolding.Internal.Json.Entity.Behaviour`
 
-  @example ```
+  ## Example
+  ```elixir
   defmodule User do
     use Noizu.DomainObject
     Noizu.DomainObject.noizu_entity() do
@@ -78,6 +82,8 @@ defmodule Noizu.DomainObject do
   @doc """
     Type Handler Behavior. Used for casting/loading embedded fields into their persistence layer format.
     For example domain objects may include a TimeStamp field.
+
+
     ```elixir
     defmodule Entity do
       @universal_identifier true
@@ -90,6 +96,7 @@ defmodule Noizu.DomainObject do
 
     Where the time stamp field contains a created_on, modified_on, deleted_on field. When  casting to  an Ecto database the nested structure can be replaced
     with `my_image_update_created_on` ,`my_image_update_modified_on` ,and `my_image_update_deleted_on` which would match DateTime fields in our Ecto  Table schema.
+
 
    ```elixir
     defmodule Noizu.DomainObject.TimeStamp.Second do
@@ -142,6 +149,7 @@ defmodule Noizu.DomainObject do
   providing by default a simple repo structure  %Repo{ entities: [], length: 0} which may be used to pass round specific sets of records or as an embed option for domain objects
   provided ta TypeHandler and optional SphinxHandler is provided.
 
+  ## Example
   ```elixir
   defmodule MyApp.MyDomainObject do
     ...

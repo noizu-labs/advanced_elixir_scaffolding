@@ -64,6 +64,7 @@ defmodule Noizu.AdvancedScaffolding.Mixfile do
   defp docs do
     [
       source_url_pattern: "https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/%{path}#L%{line}",
+      main: "readme",
       extras: ["README.md", "TODO.md", "COPYRIGHT", "markdown/sample_conventions_doc.md"],
       source_ref: "v#{@version}",
       source_url: @source_url,
@@ -100,6 +101,7 @@ defmodule Noizu.AdvancedScaffolding.Mixfile do
       ],
       nest_modules_by_prefix: [
         Mix.Tasks.Scaffolding,
+        Noizu,
         Noizu.DomainObject,
         Noizu.SimpleObject,
         Noizu.AdvancedScaffolding,

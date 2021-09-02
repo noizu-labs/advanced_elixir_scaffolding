@@ -205,34 +205,42 @@ New Features
 ===========================================
 Advanced Scaffolding / Annotation / Indexing / Telemetry / Json Formatting / Security / PII management.
 
+## See
+- `Noizu.AdvancedScaffolding.Internal.Core.Entity.Behaviour`
+- `Noizu.AdvancedScaffolding.Internal.Persistence.Entity.Behaviour`
+- `Noizu.AdvancedScaffolding.Internal.EntityIndex.Entity.Behaviour`
+- `Noizu.AdvancedScaffolding.Internal.Index.Behaviour`
+- `Noizu.AdvancedScaffolding.Internal.Json.Entity.Behaviour`
+
+
 # Json Formatting Annotation
 - Support for multiple json formatting view (mobile, admin, etc.)
+- 
 ```elixir
 @json_format_group {:user_clients, [:compact]}
 @json_provider unquote(json_provider)
 defmodule Entity do
-Noizu.DomainObject.noizu_entity do
-@meta {:enum_entity, true}
-identifier :integer
+  Noizu.DomainObject.noizu_entity do
+    @meta {:enum_entity, true}
+    identifier :integer
+    @json {:*, :expand}
+    @json_embed {:user_clients, [{:title, as: :name}]}
+    @json_embed {:verbose_mobile, [{:title, as: :name}, {:body, as: :description}, {:editor, sref: true}, :revision]}
+    public_field :description, nil, type: Noizu.VersionedString.Type
 
-          @json {:*, :expand}
-          @json_embed {:user_clients, [{:title, as: :name}]}
-          @json_embed {:verbose_mobile, [{:title, as: :name}, {:body, as: :description}, {:editor, sref: true}, :revision]}
-          public_field :description, nil, type: Noizu.VersionedString.Type
+    @json {:*, format: :iso8601}
+    @json_ignore :user_clients
+    public_field :created_on, nil, type: Noizu.DateTime.Type
 
-          @json {:*, format: :iso8601}
-          @json_ignore :user_clients
-          public_field :created_on, nil, type: Noizu.DateTime.Type
+    @json {:*, format: :iso8601}
+    @json_ignore [:user_clients]
+    public_field :modified_on, nil, type: Noizu.DateTime.Type
 
-          @json {:*, format: :iso8601}
-          @json_ignore [:user_clients]
-          public_field :modified_on, nil, type: Noizu.DateTime.Type
-
-          @json {:*, format: :iso8601}
-          @json_ignore [:user_clients, :verbose_mobile]
-          public_field :deleted_on, nil, type: Noizu.DateTime.Type
-        end
-      end
+    @json {:*, format: :iso8601}
+    @json_ignore [:user_clients, :verbose_mobile]
+    public_field :deleted_on, nil, type: Noizu.DateTime.Type
+  end
+end
 ```
 
 - Support for embedding nested components inside of entity. E.g. pull CMS record details and return inline as port of entity instead of as nested objects.
