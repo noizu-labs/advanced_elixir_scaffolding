@@ -10,7 +10,7 @@
     <title>Noizu.DomainObject — Noizu.AdvancedScaffolding v1.0.1</title>
     <link rel="stylesheet" href="dist/elixir-a172fe91e725dcb259e2.css" />
 
-    <script src="dist/sidebar_items-06ef32eb59.js"></script>
+    <script src="dist/sidebar_items-b5ca367566.js"></script>
 
       <script src="docs_config.js"></script>
 
@@ -110,8 +110,7 @@ Noizu.DomainObject <small class="app-vsn">(Noizu.AdvancedScaffolding v1.0.1)</sm
 
   </div>
 
-    <div class="summary-synopsis"><p>Setup Base Domain Object, this struct will in turn hold Entity, Repo, Index, etc.
-@example <code class="inline">defmodule User do use Noizu.DomainObject Noizu.DomainObject.noizu_entity() do public_field :name end end</code></p></div>
+    <div class="summary-synopsis"><p>Setup Base Domain Object, this struct will in turn hold Entity, Repo, Index, etc.</p></div>
 
 </div>
 <div class="summary-row">
@@ -120,8 +119,7 @@ Noizu.DomainObject <small class="app-vsn">(Noizu.AdvancedScaffolding v1.0.1)</sm
 
   </div>
 
-    <div class="summary-synopsis"><p>Initialize a DomainObject.Entity. Caller passes in identifier and field definitions which are in turn used to generate the domain object entity's configuration options and defstruct statement.
-@example <code class="inline">defmodule User do use Noizu.DomainObject Noizu.DomainObject.noizu_entity() do public_field :name end end</code></p></div>
+    <div class="summary-synopsis"><p>Initialize a DomainObject.Entity. Caller passes in identifier and field definitions which are in turn used to generate the domain object entity's configuration options and defstruct statement.</p></div>
 
 </div>
 <div class="summary-row">
@@ -130,6 +128,10 @@ Noizu.DomainObject <small class="app-vsn">(Noizu.AdvancedScaffolding v1.0.1)</sm
 
   </div>
 
+    <div class="summary-synopsis"><p>Module for handling saving to/ updating/tracking and creating Sphinx record types.
+Provides methods for creating xml schema definitions, real time definitions, config snippets,
+internal book keeping (for tracking if a record is realtime, delta, primary index), etc.</p></div>
+
 </div>
 <div class="summary-row">
   <div class="summary-signature">
@@ -137,12 +139,18 @@ Noizu.DomainObject <small class="app-vsn">(Noizu.AdvancedScaffolding v1.0.1)</sm
 
   </div>
 
+    <div class="summary-synopsis"><p>Provides scaffolding for a DomainObject.Repo module. If used with no options this behavior wll provide everything needed for basic crud. get/cache/update/delete  as well as
+providing by default a simple repo structure  %Repo{ entities: [], length: 0} which may be used to pass round specific sets of records or as an embed option for domain objects
+provided ta TypeHandler and optional SphinxHandler is provided.</p></div>
+
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#noizu_scaffolding_schema/2">noizu_scaffolding_schema(options \\ [], list)</a>
+    <a href="#noizu_schema_info/2">noizu_schema_info(options \\ [], list)</a>
 
   </div>
+
+    <div class="summary-synopsis"><p>  Configure your DomainObject Schema module. Provides runtime compiled list of modules, sref mapping/Noizu.ERP String.t support, etc.</p></div>
 
 </div>
 <div class="summary-row">
@@ -151,6 +159,9 @@ Noizu.DomainObject <small class="app-vsn">(Noizu.AdvancedScaffolding v1.0.1)</sm
 
   </div>
 
+    <div class="summary-synopsis"><p>Similar to type handler, but responsible for casting fields to a sphinx index record.
+In addition the field expansion support like in our type handler behaviour it also provides default values, field type (:attr_unit, :attr_multi64, :field), and bit width (for int fields).</p></div>
+
 </div>
 <div class="summary-row">
   <div class="summary-signature">
@@ -158,12 +169,17 @@ Noizu.DomainObject <small class="app-vsn">(Noizu.AdvancedScaffolding v1.0.1)</sm
 
   </div>
 
+    <div class="summary-synopsis"><p>  Inject Scaffolding fields into a Ecto.Table entity.</p></div>
+
 </div>
 <div class="summary-row">
   <div class="summary-signature">
     <a href="#noizu_type_handler/1">noizu_type_handler(options \\ [])</a>
 
   </div>
+
+    <div class="summary-synopsis"><p>  Type Handler Behavior. Used for casting/loading embedded fields into their persistence layer format.
+  For example domain objects may include a TimeStamp field.</p></div>
 
 </div>
 
@@ -192,7 +208,7 @@ Functions
     </a>
     <h1 class="signature">__using__(options \\ nil)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/domain_object.ex#L14" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/domain_object.ex#L20" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -204,8 +220,10 @@ Functions
 
   <section class="docstring">
 
-<p>Setup Base Domain Object, this struct will in turn hold Entity, Repo, Index, etc.
-@example <code class="inline">defmodule User do use Noizu.DomainObject Noizu.DomainObject.noizu_entity() do public_field :name end end</code></p>
+<p>Setup Base Domain Object, this struct will in turn hold Entity, Repo, Index, etc.</p><p>@see Noizu.AdvancedScaffolding.Internal.Core.Base.Behaviour
+@see Noizu.AdvancedScaffolding.Internal.Persistence.Base.Behaviour
+@see Noizu.AdvancedScaffolding.Internal.EntityIndex.Base.Behaviour
+@see Noizu.AdvancedScaffolding.Internal.Json.Base.Behaviour</p><p>@example <code class="inline">defmodule User do use Noizu.DomainObject Noizu.DomainObject.noizu_entity() do public_field :name end end</code></p>
   </section>
 </section>
 <section class="detail" id="noizu_entity/2">
@@ -219,7 +237,7 @@ Functions
     </a>
     <h1 class="signature">noizu_entity(options \\ [], list)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/domain_object.ex#L35" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/domain_object.ex#L48" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -231,8 +249,11 @@ Functions
 
   <section class="docstring">
 
-<p>Initialize a DomainObject.Entity. Caller passes in identifier and field definitions which are in turn used to generate the domain object entity's configuration options and defstruct statement.
-@example <code class="inline">defmodule User do use Noizu.DomainObject Noizu.DomainObject.noizu_entity() do public_field :name end end</code></p>
+<p>Initialize a DomainObject.Entity. Caller passes in identifier and field definitions which are in turn used to generate the domain object entity's configuration options and defstruct statement.</p><p>@see Noizu.AdvancedScaffolding.Internal.Core.Entity.Behaviour
+@see Noizu.AdvancedScaffolding.Internal.Persistence.Entity.Behaviour
+@see Noizu.AdvancedScaffolding.Internal.EntityIndex.Entity.Behaviour
+@see Noizu.AdvancedScaffolding.Internal.Index.Entity.Behaviour
+@see Noizu.AdvancedScaffolding.Internal.Json.Entity.Behaviour</p><p>@example <code class="inline">defmodule User do use Noizu.DomainObject Noizu.DomainObject.noizu_entity() do public_field :name end end</code></p>
   </section>
 </section>
 <section class="detail" id="noizu_index/2">
@@ -246,7 +267,7 @@ Functions
     </a>
     <h1 class="signature">noizu_index(options \\ [], list)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/domain_object.ex#L75" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/domain_object.ex#L132" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -258,7 +279,9 @@ Functions
 
   <section class="docstring">
 
-
+<p>Module for handling saving to/ updating/tracking and creating Sphinx record types.
+Provides methods for creating xml schema definitions, real time definitions, config snippets,
+internal book keeping (for tracking if a record is realtime, delta, primary index), etc.</p>
   </section>
 </section>
 <section class="detail" id="noizu_repo/2">
@@ -272,7 +295,7 @@ Functions
     </a>
     <h1 class="signature">noizu_repo(options \\ [], list)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/domain_object.ex#L83" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/domain_object.ex#L165" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -284,21 +307,39 @@ Functions
 
   <section class="docstring">
 
+<p>Provides scaffolding for a DomainObject.Repo module. If used with no options this behavior wll provide everything needed for basic crud. get/cache/update/delete  as well as
+providing by default a simple repo structure  %Repo{ entities: [], length: 0} which may be used to pass round specific sets of records or as an embed option for domain objects
+provided ta TypeHandler and optional SphinxHandler is provided.</p><pre><code class="makeup elixir"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">MyApp.MyDomainObject</span><span class="w"> </span><span class="k" data-group-id="9844953290-1">do</span><span class="w">
+  </span><span class="n">...</span><span class="w">
+  </span><span class="kd">defmodule</span><span class="w"> </span><span class="nc">Repo</span><span class="w"> </span><span class="k" data-group-id="9844953290-2">do</span><span class="w">
+     </span><span class="nc">Noizu.DomainObject</span><span class="o">.</span><span class="n">noizu_repo</span><span class="w"> </span><span class="k" data-group-id="9844953290-3">do</span><span class="w">
+     </span><span class="k" data-group-id="9844953290-3">end</span><span class="w">
+  </span><span class="k" data-group-id="9844953290-2">end</span><span class="w">
 
+  </span><span class="kd">defmodule</span><span class="w"> </span><span class="nc">Repo.PersistenceStrategy</span><span class="w"> </span><span class="k" data-group-id="9844953290-4">do</span><span class="w">
+    </span><span class="kn">require</span><span class="w">  </span><span class="nc">Noizu.DomainObject</span><span class="w">
+    </span><span class="nc">Noizu.DomainObject</span><span class="o">.</span><span class="n">noizu_type_handler</span><span class="p" data-group-id="9844953290-5">(</span><span class="p" data-group-id="9844953290-5">)</span><span class="w">
+  </span><span class="k" data-group-id="9844953290-4">end</span><span class="w">
+
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">pre_create_callback</span><span class="p" data-group-id="9844953290-6">(</span><span class="n">field</span><span class="p">,</span><span class="w"> </span><span class="n">entity</span><span class="p">,</span><span class="w"> </span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="n">options</span><span class="p" data-group-id="9844953290-6">)</span><span class="w"> </span><span class="k" data-group-id="9844953290-7">do</span><span class="w">
+      </span><span class="c1"># a domain object included a Repo set of entities of type MyApp.DomainObject.Entity. From this callback we may write each of these to a 12m table  for our entity.</span><span class="w">
+      </span><span class="k">super</span><span class="p" data-group-id="9844953290-8">(</span><span class="n">field</span><span class="p">,</span><span class="w"> </span><span class="n">entity</span><span class="p">,</span><span class="w"> </span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="n">options</span><span class="p" data-group-id="9844953290-8">)</span><span class="w">
+  </span><span class="k" data-group-id="9844953290-7">end</span><span class="w">
+</span><span class="k" data-group-id="9844953290-1">end</span></code></pre>
   </section>
 </section>
-<section class="detail" id="noizu_scaffolding_schema/2">
+<section class="detail" id="noizu_schema_info/2">
 
-    <span id="noizu_scaffolding_schema/1"></span>
+    <span id="noizu_schema_info/1"></span>
 
   <div class="detail-header">
-    <a href="#noizu_scaffolding_schema/2" class="detail-link" title="Link to this macro">
+    <a href="#noizu_schema_info/2" class="detail-link" title="Link to this macro">
       <span class="icon-link" aria-hidden="true"></span>
       <span class="sr-only">Link to this macro</span>
     </a>
-    <h1 class="signature">noizu_scaffolding_schema(options \\ [], list)</h1>
+    <h1 class="signature">noizu_schema_info(options \\ [], list)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/domain_object.ex#L51" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/domain_object.ex#L70" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -310,7 +351,7 @@ Functions
 
   <section class="docstring">
 
-
+<p>  Configure your DomainObject Schema module. Provides runtime compiled list of modules, sref mapping/Noizu.ERP String.t support, etc.</p>
   </section>
 </section>
 <section class="detail" id="noizu_sphinx_handler/1">
@@ -324,7 +365,7 @@ Functions
     </a>
     <h1 class="signature">noizu_sphinx_handler(options \\ [])</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/domain_object.ex#L67" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/domain_object.ex#L119" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -336,7 +377,8 @@ Functions
 
   <section class="docstring">
 
-
+<p>Similar to type handler, but responsible for casting fields to a sphinx index record.
+In addition the field expansion support like in our type handler behaviour it also provides default values, field type (:attr_unit, :attr_multi64, :field), and bit width (for int fields).</p>
   </section>
 </section>
 <section class="detail" id="noizu_table/1">
@@ -350,7 +392,7 @@ Functions
     </a>
     <h1 class="signature">noizu_table(options \\ [])</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/domain_object.ex#L43" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/domain_object.ex#L59" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -362,7 +404,7 @@ Functions
 
   <section class="docstring">
 
-
+<p>  Inject Scaffolding fields into a Ecto.Table entity.</p>
   </section>
 </section>
 <section class="detail" id="noizu_type_handler/1">
@@ -376,7 +418,7 @@ Functions
     </a>
     <h1 class="signature">noizu_type_handler(options \\ [])</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/domain_object.ex#L59" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/domain_object.ex#L107" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -388,7 +430,24 @@ Functions
 
   <section class="docstring">
 
-
+<p>  Type Handler Behavior. Used for casting/loading embedded fields into their persistence layer format.
+  For example domain objects may include a TimeStamp field.</p><pre><code class="makeup elixir"><span class="w">  </span><span class="kd">defmodule</span><span class="w"> </span><span class="nc">Entity</span><span class="w"> </span><span class="k" data-group-id="9987518445-1">do</span><span class="w">
+    </span><span class="na">@universal_identifier</span><span class="w"> </span><span class="no">true</span><span class="w">
+    </span><span class="nc">Noizu.DomainObject</span><span class="o">.</span><span class="n">noizu_entity</span><span class="w"> </span><span class="k" data-group-id="9987518445-2">do</span><span class="w">
+      </span><span class="na">@index</span><span class="w"> </span><span class="no">true</span><span class="w">
+      </span><span class="n">public_field</span><span class="w"> </span><span class="ss">:my_image_update</span><span class="p">,</span><span class="w"> </span><span class="no">nil</span><span class="p">,</span><span class="w"> </span><span class="nc">Noizu.Scaffolding.V3.TimeStamp.PersistenceStrategy</span><span class="w">
+    </span><span class="k" data-group-id="9987518445-2">end</span><span class="w">
+  </span><span class="k" data-group-id="9987518445-1">end</span></code></pre><p>  Where the time stamp field contains a created_on, modified_on, deleted_on field. When  casting to  an Ecto database the nested structure can be replaced
+  with <code class="inline">my_image_update_created_on</code> ,<code class="inline">my_image_update_modified_on</code> ,and <code class="inline">my_image_update_deleted_on</code> which would match DateTime fields in our Ecto  Table schema.</p><pre><code class="makeup elixir"><span class="w">  </span><span class="kd">defmodule</span><span class="w"> </span><span class="nc">Noizu.DomainObject.TimeStamp.Second</span><span class="w"> </span><span class="k" data-group-id="5962173848-1">do</span><span class="w">
+    </span><span class="kn">use</span><span class="w"> </span><span class="nc">Noizu.SimpleObject</span><span class="w">
+    </span><span class="na">@vsn</span><span class="w"> </span><span class="mf">1.0</span><span class="w">
+    </span><span class="nc">Noizu.SimpleObject</span><span class="o">.</span><span class="n">noizu_struct</span><span class="p" data-group-id="5962173848-2">(</span><span class="p" data-group-id="5962173848-2">)</span><span class="w"> </span><span class="k" data-group-id="5962173848-3">do</span><span class="w">
+      </span><span class="n">date_time_handler</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Application</span><span class="o">.</span><span class="n">get_env</span><span class="p" data-group-id="5962173848-4">(</span><span class="ss">:noizu_advanced_scaffolding</span><span class="p">,</span><span class="w"> </span><span class="ss">:data_time_handler</span><span class="p">,</span><span class="w"> </span><span class="nc">Noizu.DomainObject.DateTime.Second.TypeHandler</span><span class="p" data-group-id="5962173848-4">)</span><span class="w">
+      </span><span class="n">public_field</span><span class="w"> </span><span class="ss">:created_on</span><span class="p">,</span><span class="w"> </span><span class="no">nil</span><span class="p">,</span><span class="w"> </span><span class="n">date_time_handler</span><span class="w">
+      </span><span class="n">public_field</span><span class="w"> </span><span class="ss">:modified_on</span><span class="p">,</span><span class="w"> </span><span class="no">nil</span><span class="p">,</span><span class="w"> </span><span class="n">date_time_handler</span><span class="w">
+      </span><span class="n">public_field</span><span class="w"> </span><span class="ss">:deleted_on</span><span class="p">,</span><span class="w"> </span><span class="no">nil</span><span class="p">,</span><span class="w"> </span><span class="n">date_time_handler</span><span class="w">
+    </span><span class="k" data-group-id="5962173848-3">end</span><span class="w">
+   </span><span class="c1">#...</span></code></pre>
   </section>
 </section>
 
