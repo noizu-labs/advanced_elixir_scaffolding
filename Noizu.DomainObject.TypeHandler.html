@@ -54,7 +54,7 @@
 
   <div class="sidebar-header">
     <div class="sidebar-projectDetails">
-      <a href="README.html" class="sidebar-projectName">
+      <a href="readme.html" class="sidebar-projectName">
 Noizu.AdvancedScaffolding
       </a>
       <strong class="sidebar-projectVersion">
@@ -92,13 +92,13 @@ Noizu.DomainObject.TypeHandler <small class="app-vsn">(Noizu.AdvancedScaffolding
 
         <section id="moduledoc">
 <p>Field Type Handler to assist mapping entity fields into and out of different persistence layer formats, and to deal with persistence for fields which are
-nested fields in our DomainObject.Entity  but are written to their own tables in RDMS or even Mnesia format, or which generate additional indexing artifacts during creation/updates.</p><p>For example an Entity.time_stamp field should expand out to  [{created_on, DateTime.to_unix(timestamp.created)}, ...] when writing to Mnesia for example to support date time unix epoch index columns.</p><pre><code class="makeup elixir"><span class="p" data-group-id="6666828399-1">%</span><span class="nc" data-group-id="6666828399-1">Mnesia.Table</span><span class="p" data-group-id="6666828399-1">{</span><span class="w">
+nested fields in our DomainObject.Entity  but are written to their own tables in RDMS or even Mnesia format, or which generate additional indexing artifacts during creation/updates.</p><p>For example an Entity.time_stamp field should expand out to  [{created_on, DateTime.to_unix(timestamp.created)}, ...] when writing to Mnesia for example to support date time unix epoch index columns.</p><pre><code class="makeup elixir"><span class="p" data-group-id="4133731530-1">%</span><span class="nc" data-group-id="4133731530-1">Mnesia.Table</span><span class="p" data-group-id="4133731530-1">{</span><span class="w">
   </span><span class="ss">identifier</span><span class="p">:</span><span class="w"> </span><span class="n">identifier</span><span class="p">,</span><span class="w">
   </span><span class="ss">created_on</span><span class="p">:</span><span class="w"> </span><span class="n">unix_time_stamp</span><span class="p">,</span><span class="w">
-  </span><span class="ss">entity</span><span class="p">:</span><span class="w">  </span><span class="p" data-group-id="6666828399-2">%</span><span class="nc" data-group-id="6666828399-2">MyEntity</span><span class="p" data-group-id="6666828399-2">{</span><span class="w">
-    </span><span class="ss">time_stamp</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="6666828399-3">%{</span><span class="ss">created_on</span><span class="p">:</span><span class="w"> </span><span class="nc">DateTime</span><span class="o">.</span><span class="n">t</span><span class="p" data-group-id="6666828399-3">}</span><span class="w">
-  </span><span class="p" data-group-id="6666828399-2">}</span><span class="w">
-</span><span class="p" data-group-id="6666828399-1">}</span></code></pre>
+  </span><span class="ss">entity</span><span class="p">:</span><span class="w">  </span><span class="p" data-group-id="4133731530-2">%</span><span class="nc" data-group-id="4133731530-2">MyEntity</span><span class="p" data-group-id="4133731530-2">{</span><span class="w">
+    </span><span class="ss">time_stamp</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="4133731530-3">%{</span><span class="ss">created_on</span><span class="p">:</span><span class="w"> </span><span class="nc">DateTime</span><span class="o">.</span><span class="n">t</span><span class="p" data-group-id="4133731530-3">}</span><span class="w">
+  </span><span class="p" data-group-id="4133731530-2">}</span><span class="w">
+</span><span class="p" data-group-id="4133731530-1">}</span></code></pre>
         </section>
 
 
