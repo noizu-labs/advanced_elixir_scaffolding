@@ -3,70 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="ae58bc41-455c-447f-90eb-f1325731ba9b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/behaviours/schema_info.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/behaviours/schema_info.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/behaviours/search_index_handler.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/behaviours/search_index_handler.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/behaviours/type_handler.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/behaviours/type_handler.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/common/schema/metadata/ecto_metadata.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/common/schema/metadata/ecto_metadata.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/common/schema/metadata/metadata.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/common/schema/metadata/metadata.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/common/schema/metadata/redis_metadata.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/common/schema/metadata/redis_metadata.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/common/schema/peristence/persistence_layer.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/common/schema/peristence/persistence_layer.ex" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/scaffolding/common/schema/peristence/persistence_settings.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/common/schema/peristence/persistence_settings.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/common/sphinx/bool.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/common/sphinx/bool.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/common/sphinx/float.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/common/sphinx/float.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/common/sphinx/integer.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/common/sphinx/integer.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/common/sphinx/nullable_integer.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/common/sphinx/nullable_integer.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/common/sphinx/time_stamp.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/common/sphinx/time_stamp.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/common/type_handlers/time_stamp.second.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/common/type_handlers/time_stamp.second.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/common/universal_reference/universal_reference.type.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/common/universal_reference/universal_reference.type.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/domain_object.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/domain_object.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/domain_object/domain_object.base.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/domain_object/domain_object.base.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/domain_object/domain_object.entity.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/domain_object/domain_object.entity.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/domain_object/domain_object.index.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/domain_object/domain_object.index.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/domain_object/domain_object.inspect.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/domain_object/domain_object.inspect.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/domain_object/domain_object.repo.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/domain_object/domain_object.repo.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/domain_object/domain_object.table.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/domain_object/domain_object.table.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/domain_object/entity/field.macros.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/domain_object/entity/field.macros.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/domain_object/ref/basic_reference.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/domain_object/ref/basic_reference.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/domain_object/ref/enum_reference.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/domain_object/ref/enum_reference.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/domain_object/ref/reference.behaviour.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/domain_object/ref/reference.behaviour.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/domain_object/ref/universal_reference.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/domain_object/ref/universal_reference.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/enum/enum_type.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/enum/enum_type.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/helpers.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/helpers.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/core/base.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/core/base.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/core/entity.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/core/entity.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/core/entity.implementation.default.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/core/entity.implementation.default.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/core/repo.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/core/repo.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/core/repo.implementation.default.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/core/repo.implementation.default.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/entity_index/base.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/entity_index/base.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/entity_index/entity.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/entity_index/entity.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/entity_index/entity.implementation.default.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/entity_index/entity.implementation.default.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/entity_index/repo.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/entity_index/repo.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/index/index.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/index/index.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/index/index.implementation.default.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/index/index.implementation.default.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/inspect/entity.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/inspect/entity.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/inspect/entity.implementation.default.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/inspect/entity.implementation.default.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/inspect/repo.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/inspect/repo.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/json/base.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/json/base.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/json/entity.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/json/entity.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/json/entity.implementation.default.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/json/entity.implementation.default.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/json/repo.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/json/repo.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/persistence/base.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/persistence/base.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/persistence/entity.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/persistence/entity.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/persistence/entity.implementation.default.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/persistence/entity.implementation.default.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/persistence/repo.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/persistence/repo.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/persistence/repo.implementation.default.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/persistence/repo.implementation.default.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/poison_encoder.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/poison_encoder.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/protocols/ecto_entity.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/protocols/ecto_entity.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/protocols/entity_protocol.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/protocols/entity_protocol.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/protocols/permission_protocol.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/protocols/permission_protocol.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/protocols/restricted_protocol.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/protocols/restricted_protocol.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/simple_object.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/simple_object.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/fixtures/nmid_behaviour.ex" beforeDir="false" afterPath="$PROJECT_DIR$/test/fixtures/nmid_behaviour.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/fixtures/v3/domain_object.schema.ex" beforeDir="false" afterPath="$PROJECT_DIR$/test/fixtures/v3/domain_object.schema.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/fixtures/v3/foo.ex" beforeDir="false" afterPath="$PROJECT_DIR$/test/fixtures/v3/foo.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/fixtures/v3/foo.type.ex" beforeDir="false" afterPath="$PROJECT_DIR$/test/fixtures/v3/foo.type.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/scaffolding/v3/repo_test.exs" beforeDir="false" afterPath="$PROJECT_DIR$/test/scaffolding/v3/repo_test.exs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/test_helper.exs" beforeDir="false" afterPath="$PROJECT_DIR$/test/test_helper.exs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -176,7 +113,8 @@
       <workItem from="1629831867307" duration="14135000" />
       <workItem from="1630090888409" duration="7900000" />
       <workItem from="1630776181435" duration="4292000" />
-      <workItem from="1630780821952" duration="461000" />
+      <workItem from="1630780821952" duration="544000" />
+      <workItem from="1630795320408" duration="245000" />
     </task>
     <servers />
   </component>

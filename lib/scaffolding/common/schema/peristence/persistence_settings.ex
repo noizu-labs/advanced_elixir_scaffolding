@@ -272,7 +272,11 @@ defmodule Noizu.AdvancedScaffolding.Schema.PersistenceSettings do
                |> Enum.slice(0..-2)
         root_table = Module.split(metadata.database)
         inner_path = module_rel(root_table, path)
-        table = Module.concat(root_table ++ inner_path ++ ["Table"])
+        # @todo we require an override mechanism
+        table = cond do
+                  options[:table] -> options[:table]
+                  :else -> Module.concat(root_table ++ inner_path ++ ["Table"])
+                end
         __expand_layer__(provider, table, module, options)
     end
 
