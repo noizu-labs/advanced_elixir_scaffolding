@@ -1,3 +1,8 @@
+#-------------------------------------------------------------------------------
+# Author: Keith Brings <keith.brings@noizu.com>
+# Copyright (C) 2021 Noizu Labs Inc. All rights reserved.
+#-------------------------------------------------------------------------------
+
 defmodule Noizu.AdvancedScaffolding.Test.Fixture.V3.DomainObject.Schema do
   require Noizu.DomainObject
   #alias Noizu.ElixirScaffolding.Implementation.DomainObject.Scaffolding.DefaultScaffoldingSchemaProvider.Default, as: Provider

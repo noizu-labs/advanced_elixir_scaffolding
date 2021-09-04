@@ -1,3 +1,9 @@
+#-------------------------------------------------------------------------------
+# Author: Keith Brings <keith.brings@noizu.com>
+# Copyright (C) 2021 Noizu Labs Inc. All rights reserved.
+#-------------------------------------------------------------------------------
+
+
 defmodule Noizu.DomainObject.SchemaInfo do
   @moduledoc """
     Provides details about a projects Domain Object Schema, provides sref string ERP support, etc.

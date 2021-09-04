@@ -1,3 +1,9 @@
+#-------------------------------------------------------------------------------
+# Author: Keith Brings <keith.brings@noizu.com>
+# Copyright (C) 2021 Noizu Labs Inc. All rights reserved.
+#-------------------------------------------------------------------------------
+
+
 defmodule Noizu.AdvancedScaffolding.Internal.Ecto.Reference.Enum do
   @moduledoc """
   Provides ECTO handler to convert between a Enum type DomainObject.Entity mysql enum code and elixir atom representation.

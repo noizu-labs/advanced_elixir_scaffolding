@@ -1,3 +1,8 @@
+#-------------------------------------------------------------------------------
+# Author: Keith Brings <keith.brings@noizu.com>
+# Copyright (C) 2021 Noizu Labs Inc. All rights reserved.
+#-------------------------------------------------------------------------------
+
 defprotocol Noizu.Entity.Protocol do
   @fallback_to_any true
   def expand!(entity, context, options \\ nil)

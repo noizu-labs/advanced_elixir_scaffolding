@@ -1,3 +1,9 @@
+#-------------------------------------------------------------------------------
+# Author: Keith Brings <keith.brings@noizu.com>
+# Copyright (C) 2021 Noizu Labs Inc. All rights reserved.
+#-------------------------------------------------------------------------------
+
+
 defmodule Noizu.DomainObject.TypeHandler do
   @moduledoc """
   Field Type Handler to assist mapping entity fields into and out of different persistence layer formats, and to deal with persistence for fields which are

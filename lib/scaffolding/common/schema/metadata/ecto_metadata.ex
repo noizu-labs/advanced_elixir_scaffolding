@@ -1,3 +1,9 @@
+#-------------------------------------------------------------------------------
+# Author: Keith Brings <keith.brings@noizu.com>
+# Copyright (C) 2021 Noizu Labs Inc. All rights reserved.
+#-------------------------------------------------------------------------------
+
+
 defmodule Noizu.AdvancedScaffolding.Schema.Metadata.Ecto do
   @moduledoc """
   The Scaffolding library requires Ecto.Repo modules (if used within scaffolding) to include a metadata() method that returns

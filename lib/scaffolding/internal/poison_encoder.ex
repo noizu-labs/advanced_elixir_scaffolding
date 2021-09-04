@@ -1,3 +1,8 @@
+#-------------------------------------------------------------------------------
+# Author: Keith Brings <keith.brings@noizu.com>
+# Copyright (C) 2021 Noizu Labs Inc. All rights reserved.
+#-------------------------------------------------------------------------------
+
 defmodule Noizu.Poison.Encoder do
   @moduledoc """
   Custom Poison Encoder Implementation, it handles stripping PII, formatting, etc.

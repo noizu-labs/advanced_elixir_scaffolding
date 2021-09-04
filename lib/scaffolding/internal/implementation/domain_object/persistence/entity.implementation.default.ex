@@ -1,3 +1,9 @@
+#-------------------------------------------------------------------------------
+# Author: Keith Brings <keith.brings@noizu.com>
+# Copyright (C) 2021 Noizu Labs Inc. All rights reserved.
+#-------------------------------------------------------------------------------
+
+
 defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Entity.Implementation.Default do
   alias Noizu.AdvancedScaffolding.Schema.PersistenceLayer
 

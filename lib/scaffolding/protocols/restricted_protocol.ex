@@ -1,3 +1,8 @@
+#-------------------------------------------------------------------------------
+# Author: Keith Brings <keith.brings@noizu.com>
+# Copyright (C) 2021 Noizu Labs Inc. All rights reserved.
+#-------------------------------------------------------------------------------
+
 defprotocol Noizu.RestrictedAccess.Protocol do
   @fallback_to_any true
   def restricted_view(entity, context, options \\ nil)

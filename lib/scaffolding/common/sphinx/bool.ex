@@ -1,3 +1,9 @@
+#-------------------------------------------------------------------------------
+# Author: Keith Brings <keith.brings@noizu.com>
+# Copyright (C) 2021 Noizu Labs Inc. All rights reserved.
+#-------------------------------------------------------------------------------
+
+
 defmodule Noizu.AdvancedScaffolding.Sphinx.Type.Bool do
   @moduledoc """
   Encode/Decode Bool value for Sphinx Database.

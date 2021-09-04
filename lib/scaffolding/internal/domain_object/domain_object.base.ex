@@ -1,3 +1,9 @@
+#-------------------------------------------------------------------------------
+# Author: Keith Brings <keith.brings@noizu.com>
+# Copyright (C) 2021 Noizu Labs Inc. All rights reserved.
+#-------------------------------------------------------------------------------
+
+
 defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Base do
   @moduledoc """
     Provides scaffolding for domain object top level module which in turn contains the nested Entity, Repo, Index, etc. modules.

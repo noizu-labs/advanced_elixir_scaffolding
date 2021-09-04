@@ -1,3 +1,9 @@
+#-------------------------------------------------------------------------------
+# Author: Keith Brings <keith.brings@noizu.com>
+# Copyright (C) 2021 Noizu Labs Inc. All rights reserved.
+#-------------------------------------------------------------------------------
+
+
 defmodule Noizu.AdvancedScaffolding.Internal.Ecto.Reference.Basic do
   @moduledoc """
   Provides ECTO handler to convert between a DomainObject.Entity mysql identifier and elixir ref format.

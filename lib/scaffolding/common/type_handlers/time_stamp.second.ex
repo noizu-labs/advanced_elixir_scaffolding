@@ -2,6 +2,7 @@
 # Author: Keith Brings <keith.brings@noizu.com>
 # Copyright (C) 2021 Noizu Labs, Inc. All rights reserved.
 #-------------------------------------------------------------------------------
+
 defmodule Noizu.DomainObject.TimeStamp.Second do
   use Noizu.SimpleObject
   @vsn 1.0

@@ -1,4 +1,9 @@
-defmodule Type do
+#-------------------------------------------------------------------------------
+# Author: Keith Brings <keith.brings@noizu.com>
+# Copyright (C) 2021 Noizu Labs Inc. All rights reserved.
+#-------------------------------------------------------------------------------
+
+defmodule UniversalReference.Type do
   @moduledoc """
   Ecto ENUM Custom Type.
   """

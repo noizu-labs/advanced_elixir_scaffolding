@@ -1,6 +1,6 @@
 #-------------------------------------------------------------------------------
 # Author: Keith Brings <keith.brings@noizu.com>
-# Copyright (C) 2021 JetzyApp. All rights reserved.
+# Copyright (C) 2021 Noizu Labs Inc. All rights reserved.
 #-------------------------------------------------------------------------------
 
 defmodule Noizu.AdvancedScaffolding.Test.Fixture.V3.Foo.Type do
