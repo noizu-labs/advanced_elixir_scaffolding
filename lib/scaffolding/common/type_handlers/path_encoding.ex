@@ -205,9 +205,9 @@ defmodule Noizu.DomainObject.EncodedPath do
 
 
     #--------------------------------------
-    #
+    # dump
     #--------------------------------------
-    def cast(field, _segment, v, _type, %{type: :ecto}, _context, _options) do
+    def dump(field, _segment, v, _type, %{type: :ecto}, _context, _options) do
       [
         {:"#{field}_depth", v && v.depth},
         {:"#{field}_a11", v && v.matrix.a11},
@@ -216,22 +216,22 @@ defmodule Noizu.DomainObject.EncodedPath do
         {:"#{field}_a22", v && v.matrix.a22},
       ]
     end
-    def cast(field, _segment, v, _type, %{ecto: :mnesia}, _context, _options) do
+    def dump(field, _segment, v, _type, %{ecto: :mnesia}, _context, _options) do
       [
         {:"#{field}_depth", v && v.depth},
         {:"#{field}_path", v && v.materialized_path},
       ]
     end
-    def cast(field, _segment, v, _type, _, _context, _options) do
+    def dump(field, _segment, v, _type, _, _context, _options) do
       [
         {field, v}
       ]
     end
 
     #--------------------------------------
-    # dump
+    # cast
     #--------------------------------------
-    def dump(field, record, _type, %{type: :ecto}, _context, _options) do
+    def cast(field, record, _type, %{type: :ecto}, _context, _options) do
       m = %{
         a11: get_in(record, [Access.key( "#{field}_a11")]),
         a12: get_in(record, [Access.key( "#{field}_a12")]),
@@ -241,8 +241,20 @@ defmodule Noizu.DomainObject.EncodedPath do
       v = m.a11 && m.a12 && m.a21 && m.a22 && Noizu.DomainObject.EncodedPath.new(m)
       [{field, v}]
     end
-    def dump(field, record, type, layer, context, options), do: super(field, record, type, layer, context, options)
+    def cast(field, record, type, layer, context, options), do: super(field, record, type, layer, context, options)
 
+
+
+    #===------
+    # from_json
+    #===------
+    def from_json(_format, field, json, _context, _options) do
+      case json[Atom.to_string(field)] do
+        v when is_bitstring(v) or is_list(v) or is_map(v) ->
+          Noizu.DomainObject.EncodedPath.from_json(v)
+        _ -> nil
+      end
+    end
 
 
 

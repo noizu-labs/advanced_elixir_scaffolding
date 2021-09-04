@@ -64,7 +64,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Entity.Implementation.D
                        f when is_function(f, 3) -> f.(entry, entity, context)
                        f when is_function(f, 4) -> f.(entry, entity, context, options)
                      end
-            type.handler.cast(entry[:source], entry[:segment], source, type, layer, context, options)
+            type.handler.dump(entry[:source], entry[:segment], source, type, layer, context, options)
           Map.has_key?(entity, field) -> {field, get_in(entity, [Access.key(field)])}
           :else -> nil
         end
@@ -96,7 +96,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Entity.Implementation.D
                        f when is_function(f, 3) -> f.(entry, entity, context)
                        f when is_function(f, 4) -> f.(entry, entity, context, options)
                      end
-            type.handler.cast(entry[:source], entry[:segment], source, type, layer, context, options)
+            type.handler.dump(entry[:source], entry[:segment], source, type, layer, context, options)
           Map.has_key?(entity, field) -> {field, get_in(entity, [Access.key(field)])}
           :else -> nil
         end

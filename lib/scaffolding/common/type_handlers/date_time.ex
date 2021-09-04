@@ -25,14 +25,33 @@ defmodule Noizu.DomainObject.DateTime do
     end
     def pre_create_callback!(field, entity, context, options), do: pre_create_callback(field, entity, context, options)
 
-    def cast(field, _segment, nil, _type, %{type: :ecto}, _context, _options), do: {field, nil}
-    def cast(field, _segment, nil, _type, %{type: :mnesia}, _context, _options), do: {field, nil}
-    def cast(field, _segment, v, _type, %{type: :ecto}, _context, _options), do: {field, %{v| microsecond: {0, 6}}}
-    def cast(field, _segment, v, _type, %{type: :mnesia}, _context, _options), do: {field, DateTime.to_unix(v, :millisecond)}
 
+    #===------
+    # dump
+    #===------
+    def dump(field, _segment, nil, _type, %{type: :ecto}, _context, _options), do: {field, nil}
+    def dump(field, _segment, nil, _type, %{type: :mnesia}, _context, _options), do: {field, nil}
+    def dump(field, _segment, v, _type, %{type: :ecto}, _context, _options), do: {field, %{v| microsecond: {0, 6}}}
+    def dump(field, _segment, v, _type, %{type: :mnesia}, _context, _options), do: {field, DateTime.to_unix(v, :millisecond)}
 
+    #===------
+    # from_json
+    #===------
+    def from_json(_format, field, json, _context, _options) do
+      case json[Atom.to_string(field)] do
+        v when is_bitstring(v) ->
+             case DateTime.from_iso8601(v) do
+               {:ok, v} -> v
+               _ -> nil
+             end
+        v when is_integer(v) -> DateTime.from_unix(v, :millisecond)
+        _ -> nil
+      end
+    end
 
-
+    #===------
+    #
+    #===------
     def __sphinx_field__(), do: true
     def __sphinx_expand_field__(field, indexing, _settings), do: {field, __MODULE__, indexing}
     def __sphinx_has_default__(_field, _indexing, _settings), do: false
@@ -80,12 +99,25 @@ defmodule Noizu.DomainObject.DateTime do
     end
     def pre_create_callback!(field, entity, context, options), do: pre_create_callback(field, entity, context, options)
 
-    def cast(field, _segment, nil, _type, %{type: :ecto}, _context, _options), do: {field, nil}
-    def cast(field, _segment, nil, _type, %{type: :mnesia}, _context, _options), do: {field, nil}
-    def cast(field, _segment, v, _type, %{type: :ecto}, _context, _options), do: {field, DateTime.truncate(v, :second)}
-    def cast(field, _segment, v, _type, %{type: :mnesia}, _context, _options), do: {field, DateTime.to_unix(v, :second)}
+    def dump(field, _segment, nil, _type, %{type: :ecto}, _context, _options), do: {field, nil}
+    def dump(field, _segment, nil, _type, %{type: :mnesia}, _context, _options), do: {field, nil}
+    def dump(field, _segment, v, _type, %{type: :ecto}, _context, _options), do: {field, DateTime.truncate(v, :second)}
+    def dump(field, _segment, v, _type, %{type: :mnesia}, _context, _options), do: {field, DateTime.to_unix(v, :second)}
 
-
+    #===------
+    # from_json
+    #===------
+    def from_json(_format, field, json, _context, _options) do
+      case json[Atom.to_string(field)] do
+        v when is_bitstring(v) ->
+          case DateTime.from_iso8601(v) do
+            {:ok, v} -> v
+            _ -> nil
+          end
+        v when is_integer(v) -> DateTime.from_unix(v, :second)
+        _ -> nil
+      end
+    end
 
     #def __strip_inspect__(field, value, _opts), do: {field, value && DateTime.to_iso8601(value)}
 

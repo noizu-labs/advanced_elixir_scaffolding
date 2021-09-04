@@ -9,6 +9,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Json.Entity do
     @callback __strip_pii__(any, any) :: any
     @callback __json__() :: any
     @callback __json__(any) :: any
+    @callback from_json(format :: any, json :: any, context :: any, options :: any) :: map() | {:error, atom | tuple}
 
 
 
@@ -42,8 +43,19 @@ defmodule Noizu.AdvancedScaffolding.Internal.Json.Entity do
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
         def __strip_pii__(entity, level), do: @__nzdo__json_implementation.__strip_pii__(__MODULE__, entity, level)
 
+
+        @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+        @doc """
+        Parse Json to obtain entity of this type.
+
+        @note this should probably be a repo method although with polymorphism that gets a little complex, will be moved later.
+        """
+        def from_json(format, json, context, options \\ nil), do: @__nzdo__json_implementation.from_json(__MODULE__, format, json, context, options)
+
         defoverridable [
           __strip_pii__: 2,
+          from_json: 3,
+          from_json: 4,
         ]
 
       end

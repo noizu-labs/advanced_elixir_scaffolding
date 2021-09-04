@@ -35,8 +35,11 @@ defmodule Noizu.DomainObject.TypeHandler do
   @callback post_delete_callback(any, any, any, any) :: any
   @callback post_delete_callback!(any, any, any, any) :: any
 
-  @callback cast(any, any, any, any, any, any, any) :: any
-  @callback dump(any, any, any, any, any, any) :: any
+  @callback dump(any, any, any, any, any, any, any) :: any
+  @callback cast(any, any, any, any, any, any) :: any
+
+  @callback from_json(format :: any, field :: atom,  json :: any, context :: any, options :: any) :: map() | nil
+
   end
 
   #--------------------------------------------
@@ -150,15 +153,16 @@ defmodule Noizu.DomainObject.TypeHandler do
       @doc """
       Cast database record fields back into entity.field of this type.
       For example to reconstruct a TimeStamp entity by grabbing the RDMS table's created_on, modified_on, deleted_on fields.
-      @note the system incorrectly uses cast to cast to database format not from format and needs to be patched to match the convention used by Ecto.Type
       """
-      def cast(field, _segment, value, _type, _layer, _context, _options), do: {field, value}
+      def cast(field, record, _type, _layer, _context, _options), do: [{field, record && get_in(record, [Access.key(field)])}]
+
 
       @doc """
       Cast database record fields to database format.
-      @note the system incorrectly uses dump to convert from database to entity.field format when it should be using dump to send to the database and cast to read from it.
       """
-      def dump(field, record, _type, _layer, _context, _options), do: [{field, record && get_in(record, [Access.key(:field)])}]
+      def dump(field, _segment, value, _type, _layer, _context, _options), do: {field, value}
+
+      def from_json(_format, _field, _json, _context, _options), do: nil
 
       defoverridable [
         compare: 2,
@@ -181,8 +185,9 @@ defmodule Noizu.DomainObject.TypeHandler do
         pre_delete_callback!: 4,
         post_delete_callback: 4,
         post_delete_callback!: 4,
-        cast: 7,
-        dump: 6,
+        cast: 6,
+        dump: 7,
+        from_json: 5
       ]
     end
   end

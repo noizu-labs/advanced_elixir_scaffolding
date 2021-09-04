@@ -3,7 +3,7 @@ defmodule Noizu.AdvancedScaffolding.Test.Fixture.V3.DomainObject.Schema do
   #alias Noizu.ElixirScaffolding.Implementation.DomainObject.Scaffolding.DefaultScaffoldingSchemaProvider.Default, as: Provider
 
 
-  Noizu.DomainObject.noizu_scaffolding_schema(app: :noizu_advanced_scaffolding, base_prefix: Noizu, database_prefix: Noizu.AdvancedScaffolding.Database) do
+  Noizu.DomainObject.noizu_schema_info(app: :noizu_advanced_scaffolding, base_prefix: Noizu, database_prefix: Noizu.AdvancedScaffolding.Database) do
     def nmid_keys(), do: __noizu_info__(:nmid_indexes)
   end
 

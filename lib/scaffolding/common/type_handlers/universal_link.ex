@@ -17,9 +17,9 @@ defmodule Noizu.DomainObject.UniversalLink do
     def pre_create_callback!(_field, entity, _context, _options), do: entity
 
     #--------------------------------------
-    #
+    # cast
     #--------------------------------------
-    def cast(field, _segment, v, _type, %{type: :ecto}, _context, _options) do
+    def dump(field, _segment, v, _type, %{type: :ecto}, _context, _options) do
       case Noizu.ERP.ref(v) do
         {:ref, m, identifier} ->
           [
@@ -33,21 +33,21 @@ defmodule Noizu.DomainObject.UniversalLink do
           ]
       end
     end
-    def cast(field, _segment, v, _type, %{ecto: :mnesia}, _context, _options) do
+    def dump(field, _segment, v, _type, %{ecto: :mnesia}, _context, _options) do
       [
         {field, Noizu.ERP.ref(v)}
       ]
     end
-    def cast(field, _segment, v, _type, _, _context, _options) do
+    def dump(field, _segment, v, _type, _, _context, _options) do
       [
         {field, Noizu.ERP.ref(v)}
       ]
     end
 
     #--------------------------------------
-    #
+    # cast
     #--------------------------------------
-    def dump(field, record, _type, %{type: :ecto}, _context, _options) do
+    def cast(field, record, _type, %{type: :ecto}, _context, _options) do
       source_field = "#{field}_source"
       id_field = "#{field}_identifier"
       source = get_in(record, [Access.key(source_field)])
@@ -55,9 +55,22 @@ defmodule Noizu.DomainObject.UniversalLink do
       ref = source && source.__entity__.ref(identifier)
       [{field, ref}]
     end
-    def dump(field, record, type, layer, context, options), do: super(field, record, type, layer, context, options)
+    def cast(field, record, type, layer, context, options), do: super(field, record, type, layer, context, options)
 
 
+    #===------
+    # from_json
+    #===------
+    def from_json(_format, field, json, _context, _options) do
+      case json[Atom.to_string(field)] do
+        v when is_bitstring(v) ->
+          Noizu.ERP.ref(v)
+        v when is_map(v) ->
+          IO.puts "if a map, check for kind field and if found use a generic json to entity method"
+          nil
+        _ -> nil
+      end
+    end
 
 
     #===============================================

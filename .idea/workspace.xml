@@ -3,7 +3,16 @@
   <component name="ChangeListManager">
     <list default="true" id="ae58bc41-455c-447f-90eb-f1325731ba9b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/behaviours/type_handler.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/behaviours/type_handler.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/common/type_handlers/date_time.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/common/type_handlers/date_time.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/common/type_handlers/path_encoding.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/common/type_handlers/path_encoding.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/common/type_handlers/time_stamp.millisecond.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/common/type_handlers/time_stamp.millisecond.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/common/type_handlers/time_stamp.second.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/common/type_handlers/time_stamp.second.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/common/type_handlers/universal_link.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/common/type_handlers/universal_link.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/json/entity.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/json/entity.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/json/entity.implementation.default.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/json/entity.implementation.default.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/persistence/entity.implementation.default.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/persistence/entity.implementation.default.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/fixtures/v3/domain_object.schema.ex" beforeDir="false" afterPath="$PROJECT_DIR$/test/fixtures/v3/domain_object.schema.ex" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,18 +49,18 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../Jetzy/elixir-backend" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/json" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/json" />
       <recent name="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/index" />
       <recent name="$PROJECT_DIR$/lib/scaffolding/internal/implementation/core" />
       <recent name="$PROJECT_DIR$/lib/scaffolding/internal/implementation/json" />
       <recent name="$PROJECT_DIR$/lib/scaffolding/internal/implementation/inspect" />
-      <recent name="$PROJECT_DIR$/lib/scaffolding/internal/implementation/index" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/lib/scaffolding/internal/domain_object" />
@@ -112,6 +121,7 @@
       <updated>1629831866367</updated>
       <workItem from="1629831867307" duration="14135000" />
       <workItem from="1630090888409" duration="7900000" />
+      <workItem from="1630776181435" duration="3795000" />
     </task>
     <servers />
   </component>

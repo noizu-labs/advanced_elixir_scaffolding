@@ -27,5 +27,27 @@ defmodule Noizu.AdvancedScaffolding.Internal.Json.Entity.Implementation.Default 
     struct(entity.__struct__, v)
   end
 
+  def from_json(m, format, json, context, options) do
+    field_types = m.__noizu_info__(:field_types)
+    fields = Map.keys(m.__struct__([])) -- [:__struct__, :__transient__, :initial]
+    full_kind = Atom.to_string(m)
+    partial_kind = String.split(full_kind, ".") |> String.slice(-2 .. -1) |> Enum.join(".")
+    if json["kind"] == full_kind || json["kind"] == partial_kind do
+      # todo if entity identifier is set then we should load the existing entity and only apply the delta here,
+      Enum.map(
+        fields,
+        fn (field) ->
+          # @todo check for a json as clause
+          v = json[Atom.to_string(field)]
+          cond do
+            type = field_types[field] ->
+              {field, type.handler.from_json(format, v, context, options)}
+            :else -> {field, v}
+          end
+        end
+      )
+      |> m.__struct__()
+    end
+  end
 
 end

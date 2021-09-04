@@ -86,17 +86,17 @@ defmodule Noizu.DomainObject.TimeStamp.Millisecond do
     def pre_create_callback!(field, entity, context, options), do: pre_create_callback(field, entity, context, options)
 
     #----------------------------------
-    # cast
+    # dump
     #----------------------------------
-    def cast(:time_stamp, _segment, nil, _type, _layer, _context, _options), do: [{:created_on, nil}, {:modified_on, nil}, {:deleted_on, nil}]
-    def cast(:time_stamp, _segment, v = %{__struct__: Noizu.DomainObject.TimeStamp.Millisecond}, _type, %{type: :ecto}, _context, _options) do
+    def dump(:time_stamp, _segment, nil, _type, _layer, _context, _options), do: [{:created_on, nil}, {:modified_on, nil}, {:deleted_on, nil}]
+    def dump(:time_stamp, _segment, v = %{__struct__: Noizu.DomainObject.TimeStamp.Millisecond}, _type, %{type: :ecto}, _context, _options) do
       [
         {:created_on, v.created_on && %{v.created_on| microsecond: {0, 6}}},
         {:modified_on, v.modified_on && %{v.modified_on| microsecond: {0, 6}}},
         {:deleted_on, v.deleted_on && %{v.deleted_on| microsecond: {0, 6}}},
       ]
     end
-    def cast(:time_stamp, _segment, v = %{__struct__: Noizu.DomainObject.TimeStamp.Millisecond}, _type, %{type: :mnesia}, _context, _options) do
+    def dump(:time_stamp, _segment, v = %{__struct__: Noizu.DomainObject.TimeStamp.Millisecond}, _type, %{type: :mnesia}, _context, _options) do
       [
         {:created_on, v.created_on && DateTime.to_unix(v.created_on, :millisecond)},
         {:modified_on, v.modified_on && DateTime.to_unix(v.modified_on, :millisecond)},
@@ -104,10 +104,28 @@ defmodule Noizu.DomainObject.TimeStamp.Millisecond do
       ]
     end
 
+    def dump(field, _segment, nil, _type, _layer, _context, _options), do: [{:"#{field}_created_on", nil}, {:"#{field}_modified_on", nil}, {:"#{field}_deleted_on", nil}]
+    def dump(field, _segment, v = %{__struct__: Noizu.DomainObject.TimeStamp.Millisecond}, _type, %{type: :ecto}, _context, _options) do
+      [
+        {:"#{field}_created_on", v.created_on && %{v.created_on| microsecond: {0, 6}}},
+        {:"#{field}_modified_on", v.modified_on && %{v.modified_on| microsecond: {0, 6}}},
+        {:"#{field}_deleted_on", v.deleted_on && %{v.deleted_on| microsecond: {0, 6}}},
+      ]
+    end
+    def dump(field, _segment, v = %{__struct__: Noizu.DomainObject.TimeStamp.Millisecond}, _type, %{type: :mnesia}, _context, _options) do
+      [
+        {:"#{field}_created_on", v.created_on && DateTime.to_unix(v.created_on, :millisecond)},
+        {:"#{field}_modified_on", v.modified_on && DateTime.to_unix(v.modified_on, :millisecond)},
+        {:"#{field}_deleted_on", v.deleted_on && DateTime.to_unix(v.deleted_on, :millisecond)}
+      ]
+    end
+    def dump(field, segment, value, type, layer, context, options), do: super(field, segment, value, type, layer, context, options)
+
+
     #----------------------------------
-    # dump
+    # cast
     #----------------------------------
-    def dump(:time_stamp, record, _type, %{type: :ecto}, _context, _options) do
+    def cast(:time_stamp, record, _type, %{type: :ecto}, _context, _options) do
       {:time_stamp,
         %Noizu.DomainObject.TimeStamp.Millisecond{
           created_on: record && record.created_on,
@@ -116,9 +134,31 @@ defmodule Noizu.DomainObject.TimeStamp.Millisecond do
         }
       }
     end
-    def dump(field, record, type, layer, context, options), do: super(field, record, type, layer, context, options)
+    def cast(field, record, _type, %{type: :ecto}, _context, _options) do
+      {field,
+        %Noizu.DomainObject.TimeStamp.Millisecond{
+          created_on: record && Map.get(record, :"#{field}_created_on"),
+          modified_on: record && Map.get(record, :"#{field}_modified_on"),
+          deleted_on: record && Map.get(record, :"#{field}_deleted_on"),
+        }
+      }
+    end
+    def cast(field, record, type, layer, context, options), do: super(field, record, type, layer, context, options)
 
-
+    #===------
+    # from_json
+    #===------
+    def from_json(format, field, json, context, options) do
+      case json[Atom.to_string(field)] do
+        v when is_map(v) ->
+          %Noizu.DomainObject.TimeStamp.Millisecond{
+            created_on:  Noizu.DomainObject.DateTime.Millisecond.TypeHandler.from_json(format, :created_on, v, context, options),
+            modified_on:  Noizu.DomainObject.DateTime.Millisecond.TypeHandler.from_json(format, :modified_on, v, context, options),
+            deleted_on:  Noizu.DomainObject.DateTime.Millisecond.TypeHandler.from_json(format, :deleted_on, v, context, options),
+          }
+        _ -> nil
+      end
+    end
 
     #===============================================
     # Sphinx Handler
