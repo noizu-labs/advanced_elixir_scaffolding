@@ -94,7 +94,7 @@ defmodule Noizu.DomainObject do
       @universal_identifier true
       Noizu.DomainObject.noizu_entity do
         @index true
-        public_field :my_image_update, nil, Noizu.Scaffolding.V3.TimeStamp.PersistenceStrategy
+        public_field :my_image_update, nil, Noizu.Scaffolding.V3.TimeStamp.TypeHandler
       end
     end
     ```
@@ -163,7 +163,7 @@ defmodule Noizu.DomainObject do
        end
     end
 
-    defmodule Repo.PersistenceStrategy do
+    defmodule Repo.TypeHandler do
       require  Noizu.DomainObject
       Noizu.DomainObject.noizu_type_handler()
     end

@@ -82,8 +82,12 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Repo do
                            @ref @__nzdo__allowed_refs
                            public_field :entities
                            public_field :length
+                           transient_field :filter
+                           transient_field :retrieved_on, nil, Noizu.DomainObject.DateTime.Millisecond.TypeHandler
+                           transient_field :pagination
+
                            @inspect [ignore: true]
-                           public_field :__transient__
+                           transient_field :__transient__
                          end
 
                        after

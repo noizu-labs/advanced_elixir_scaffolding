@@ -78,10 +78,17 @@ defmodule Noizu.AdvancedScaffolding.Internal.Core.Repo do
         #
         #---------------------
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-        def has_permission?(ref, permission, context, options \\ []), do: @__nzdo__repo_default.has_permission?(__MODULE__, ref, permission, context, options)
+        def has_permission?(permission, %{__struct__: Noizu.ElixirCore.CallingContext} = context), do: @__nzdo__repo_default.has_permission?(__MODULE__, permission, context, nil)
+        def has_permission?(permission, %{__struct__: Noizu.ElixirCore.CallingContext} = context, options), do: @__nzdo__repo_default.has_permission?(__MODULE__, permission, context, options)
+        def has_permission?(ref, permission, %{__struct__: Noizu.ElixirCore.CallingContext} = context), do: @__nzdo__repo_default.has_permission?(__MODULE__, ref, permission, context, nil)
+        def has_permission?(ref, permission, %{__struct__: Noizu.ElixirCore.CallingContext} = context, options), do: @__nzdo__repo_default.has_permission?(__MODULE__, ref, permission, context, options)
 
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-        def has_permission!(ref, permission, context, options \\ []), do: @__nzdo__repo_default.has_permission!(__MODULE__, ref, permission, context, options)
+        def has_permission!(permission, %{__struct__: Noizu.ElixirCore.CallingContext} = context), do: @__nzdo__repo_default.has_permission!(__MODULE__, permission, context, nil)
+        def has_permission!(permission, %{__struct__: Noizu.ElixirCore.CallingContext} = context, options), do: @__nzdo__repo_default.has_permission!(__MODULE__, permission, context, options)
+        def has_permission!(ref, permission, %{__struct__: Noizu.ElixirCore.CallingContext} = context), do: @__nzdo__repo_default.has_permission!(__MODULE__, ref, permission, context, nil)
+        def has_permission!(ref, permission, %{__struct__: Noizu.ElixirCore.CallingContext} = context, options), do: @__nzdo__repo_default.has_permission!(__MODULE__, ref, permission, context, options)
+
 
 
 
@@ -108,8 +115,11 @@ defmodule Noizu.AdvancedScaffolding.Internal.Core.Repo do
           record!: 1,
           record!: 2,
 
+          has_permission?: 2,
           has_permission?: 3,
           has_permission?: 4,
+
+          has_permission!: 2,
           has_permission!: 3,
           has_permission!: 4,
         ]

@@ -44,6 +44,10 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Entity.Implementation.D
     end
   end
 
+  def strip_transient(entity) do
+    struct(entity.__struct__, Map.from_struct(entity) |> Map.drop(entity.__struct__.__fields__(:transient)))
+  end
+
   #-----------------------------------
   # __as_record_type__
   #-----------------------------------
@@ -56,7 +60,9 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Entity.Implementation.D
       fn (field) ->
         cond do
           field == :identifier -> {field, entity.identifier}
-          field == :entity -> {field, entity}
+          field == :entity ->
+            # Transient fields are stripped here for the embedded entry as TypeHandlers may require transient details to correctly unpack.
+            {field, strip_transient(entity)}
           entry = layer.schema_fields[field] ->
             type = field_types[entry[:source]]
             source = case entry[:selector] do

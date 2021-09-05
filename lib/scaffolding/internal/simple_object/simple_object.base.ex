@@ -405,6 +405,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.SimpleObject.Base do
         update_in(acc, [field], &( Map.merge(&1 || %{}, options)))
       end)
       @__nzdo__persisted_fields Enum.filter(@__nzdo__field_list -- [:initial, :__transient__], &(!@__nzdo__field_attributes_map[&1][:transient]))
+      @__nzdo__transient_fields Enum.filter(@__nzdo__field_list, &(&1 == :initial || &1 == :__transient__ || @__nzdo__field_attributes_map[&1][:transient]))
 
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def __noizu_info__() do
@@ -458,6 +459,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.SimpleObject.Base do
       end
       def __fields__(:fields), do: @__nzdo__field_list
       def __fields__(:persisted), do: @__nzdo__persisted_fields
+      def __fields__(:transient), do: @__nzdo__transient_fields
       def __fields__(:types), do: @__nzdo__field_types_map
       def __fields__(:json), do: @__nzdo__json_config
       def __fields__(:attributes), do: @__nzdo__field_attributes_map

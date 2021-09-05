@@ -22,6 +22,11 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo do
     @callback cache(ref :: entity_reference, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
     @callback delete_cache(ref :: entity_reference, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
 
+    @callback list(pagination :: any, filter :: any, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: map() | {:error, atom | tuple}
+    @callback list!(pagination :: any, filter :: any, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: map() | {:error, atom | tuple}
+    @callback list_cache!(pagination :: any, filter :: any, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: map() | {:error, atom | tuple}
+    @callback clear_list_cache!(filter :: any, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: :ok | {:error, atom | tuple}
+
     @callback get(ref :: entity_reference, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
     @callback post_get_callback(entity :: entity, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
     @callback layer_get(layer :: layer, ref :: entity_reference, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
@@ -358,6 +363,19 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo do
           end
         end
 
+
+        @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+        def list(pagination, filter, context, options \\ nil), do: @__nzdo__repo_default.list(__MODULE__, pagination, filter, context, options)
+
+        @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+        def list!(pagination, filter, context, options \\ nil), do: @__nzdo__repo_default.list!(__MODULE__, pagination, filter, context, options)
+
+        @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+        def list_cache!(pagination, filter, context, options \\ nil), do: @__nzdo__repo_default.list_cache!(__MODULE__, pagination, filter, context, options)
+
+        @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+        def clear_list_cache!(filter, context, options \\ nil), do: @__nzdo__repo_default.clear_list_cache!(__MODULE__, filter, context, options)
+
         #---------------------
         #
         #---------------------
@@ -438,8 +456,16 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo do
           layer_post_delete_callback: 4,
           layer_post_delete_callback!: 4,
 
+          list: 3,
+          list: 4,
+          list!: 3,
+          list!: 4,
 
+          list_cache!: 3,
+          list_cache!: 4,
 
+          clear_list_cache!: 2,
+          clear_list_cache!: 3,
         ]
       end
     end

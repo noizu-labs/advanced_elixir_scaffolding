@@ -787,6 +787,32 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
   end
   def has_permission!(_m, _repo, _permission, _context, _options), do: false
 
+  #-----------------
+  # list
+  #-------------------
+  def list(m, pagination, filter, _context, _options) do
+    # @todo generic logic to query mnesia or ecto, including pagination
+    struct(m, [pagination: pagination, filter: filter, entities: [], length: 0, retrieved_on: DateTime.utc_now()])
+  end
 
+  #-----------------
+  #
+  #-------------------
+  def list!(m, pagination, filter, _context, _options) do
+    # @todo generic logic to query mnesia or ecto, including pagination
+    struct(m, [pagination: pagination, filter: filter, entities: [], length: 0, retrieved_on: DateTime.utc_now()])
+  end
+
+  def list_cache!(m, pagination, filter, context, options) do
+    # @todo retrieve cached list results. If no cache query all records and cache paginaation results. Return requested page and async process remaining.
+    # Cache may be redis set of ids, or fastglobal depending on (future) entity annotation/options.
+    m.list!(pagination, filter, context, options)
+  end
+
+
+  def clear_list_cache!(_m, _filter, _context, _options) do
+    # @todo clear all cache records for this filter
+    :ok
+  end
 
 end
