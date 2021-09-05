@@ -181,6 +181,8 @@ defmodule Noizu.AdvancedScaffolding.Internal.Index do
       quote do
         @settings [
           :type,
+          :indexing,
+          :field_types,
           :schema_open,
           :schema_close,
           :index_stem,
@@ -197,6 +199,13 @@ defmodule Noizu.AdvancedScaffolding.Internal.Index do
         def __noizu_info__(:all), do: Enum.map(@settings, &({&1, __noizu_info__(&1)}))
         def __noizu_info__(:type), do: :index
         def __noizu_info__(:indexing), do: __indexing__()
+
+        if @__nzdo__indexing_source == __MODULE__ do
+          def __noizu_info__(:field_types), do: {:error, {:nyi, :stand_alone_indexing}}
+        else
+          def __noizu_info__(:field_types), do: @__nzdo__indexing_source.__noizu_info__(:field_types)
+        end
+
         def __noizu_info__(:schema_open), do: __schema_open__()
         def __noizu_info__(:schema_close), do: __schema_close__()
         def __noizu_info__(:index_stem), do: __index_stem__()
