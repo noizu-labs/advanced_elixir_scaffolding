@@ -195,7 +195,7 @@ defmodule Noizu.DomainObject.SchemaInfo do
     base_prefix = options[:base_prefix] || :auto
     database_prefix = options[:database_prefix] || :auto
     Noizu.AdvancedScaffolding.Implementation.DomainObject.Scaffolding.DefaultScaffoldingSchemaProvider
-    scaffolding_schema_provider = options[:scaffolding_schema_imp] || Noizu.DomainObject.SchemaInfo.Default
+    scaffolding_schema_provider = options[:scaffolding_schema_implementation] || Noizu.DomainObject.SchemaInfo.Default
     app = options[:app] || throw "You must pass noizu_scaffolding_schema(app: :your_app)"
     s1 = quote do
            @behaviour Noizu.DomainObject.SchemaInfo.Behaviour

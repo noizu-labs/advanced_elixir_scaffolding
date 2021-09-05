@@ -104,8 +104,8 @@ defmodule Noizu.AdvancedScaffolding.Internal.SimpleObject.Base do
     struct_implementation_provider = options[:implementation] || Noizu.AdvancedScaffolding.Internal.SimpleObject.Base
 
     inspect_provider = cond do
-                         options[:inspect_imp] == false -> false
-                         :else -> options[:inspect_imp] || Noizu.AdvancedScaffolding.Internal.DomainObject.Inspect
+                         options[:inspect_implementation] == false -> false
+                         :else -> options[:inspect_implementation] || Noizu.AdvancedScaffolding.Internal.DomainObject.Inspect
                        end
 
     process_config = quote do
