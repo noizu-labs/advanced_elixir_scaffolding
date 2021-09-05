@@ -1,7 +1,7 @@
 .idea
 .iml
 # Core Dumps
-core.*
+./core.*
 
 # App artifacts
 /_build

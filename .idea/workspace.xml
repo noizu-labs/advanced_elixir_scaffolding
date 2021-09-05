@@ -3,8 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="ae58bc41-455c-447f-90eb-f1325731ba9b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/behaviours/schema_info.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/behaviours/schema_info.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/simple_object/simple_object.base.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/simple_object/simple_object.base.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/common/universal_reference/universal_reference.type.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/common/universal_reference/universal_reference.type.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/domain_object/domain_object.table.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/domain_object/domain_object.table.ex" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -115,7 +115,9 @@
       <workItem from="1630090888409" duration="7900000" />
       <workItem from="1630776181435" duration="4292000" />
       <workItem from="1630780821952" duration="544000" />
-      <workItem from="1630795320408" duration="4211000" />
+      <workItem from="1630795320408" duration="4856000" />
+      <workItem from="1630807377169" duration="20000" />
+      <workItem from="1630819288591" duration="1651000" />
     </task>
     <servers />
   </component>
