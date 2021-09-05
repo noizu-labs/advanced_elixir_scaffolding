@@ -30,7 +30,7 @@ defmodule Noizu.Poison.Encoder do
     |> List.flatten()
     |> Enum.filter(fn ({_, v}) -> v && true end)
     |> Map.new()
-    |> put_in([:kind], entity.__struct__.__sref__)
+    |> put_in([:kind], noizu_entity.__struct__.__kind__())
     |> put_in([:json_format], json_format)
     |> Poison.Encoder.encode(options)
   end

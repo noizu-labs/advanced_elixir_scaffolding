@@ -25,7 +25,6 @@ defmodule Noizu.AdvancedScaffolding.Internal.EntityIndex.Base do
     defmacro __before_compile__(env) do
       nzdo__index_implementation = Module.get_attribute(env.module, :nzdo__index_implementation)
       nzdo__entity = Module.get_attribute(env.module, :__nzdo__entity)
-
       quote do
         @behaviour Noizu.AdvancedScaffolding.Internal.EntityIndex.Base.Behaviour
         #################################################

@@ -4,22 +4,15 @@
 #-------------------------------------------------------------------------------
 
 defmodule Noizu.DomainObject.EncodedPath do
+  use Noizu.SimpleObject
   @vsn 1.0
-  @type t :: %__MODULE__{
-               path: list,
-               materialized_path: tuple,
-               matrix: tuple,
-               depth: integer,
-               vsn: float
-             }
-
-  defstruct [
-    path: nil,
-    materialized_path: nil,
-    matrix: nil,
-    depth: 0,
-    vsn: @vsn
-  ]
+  @kind "EncodedPath.t"
+  Noizu.SimpleObject.noizu_struct() do
+    public_field :path
+    public_field :materialized_path
+    public_field :matrix
+    public_field :depth
+  end
 
   @identity_matrix %{
     a11: 1,
@@ -162,19 +155,25 @@ defmodule Noizu.DomainObject.EncodedPath do
     }
   end
 
-  #---------------------------
+  #===------
   # from_json
-  #---------------------------
-  def from_json(nil), do: nil
-  def from_json(json) when is_list(json), do: new(json)
-  def from_json(%{"path" => path}) when is_list(path), do: new(path)
-  def from_json(%{"a11" => a11, "a12" => a12, "a21" => a21, "a22" => a22}) do
+  #===------
+  def from_json(_format, json, _context, _options \\ nil) do
+    case inner_from_json(json) do
+      {:error, _} -> nil
+      v -> v
+    end
+  end
+
+  def inner_from_json(json) when is_list(json), do: new(json)
+  def inner_from_json(%{"path" => path}) when is_list(path), do: new(path)
+  def inner_from_json(%{"a11" => a11, "a12" => a12, "a21" => a21, "a22" => a22}) do
     case {a11, a12, a21, a22} do
       {a11, a12, a21, a22} when a12 > 0 and a22 > 0 -> new(%{a11: a11, a12: -a12, a21: a21, a22: -a22})
       {a11, a12, a21, a22} when a12 <= 0 and a22 <= 0 -> new(%{a11: a11, a12: a12, a21: a21, a22: a22})
     end
   end
-  def from_json(json) when is_bitstring(json) do
+  def inner_from_json(json) when is_bitstring(json) do
     parse = json
             |> String.split(".")
             |> String.trim()
@@ -193,10 +192,7 @@ defmodule Noizu.DomainObject.EncodedPath do
       error -> error
     end
   end
-  def from_json(_), do: {:error, :invalid_json}
-
-  def vsn(), do: @vsn
-
+  def inner_from_json(_), do: {:error, :invalid_json}
 
   defmodule TypeHandler do
     require  Noizu.DomainObject
@@ -248,12 +244,8 @@ defmodule Noizu.DomainObject.EncodedPath do
     #===------
     # from_json
     #===------
-    def from_json(_format, field, json, _context, _options) do
-      case json[Atom.to_string(field)] do
-        v when is_bitstring(v) or is_list(v) or is_map(v) ->
-          Noizu.DomainObject.EncodedPath.from_json(v)
-        _ -> nil
-      end
+    def from_json(format, field, json, context, options \\ nil) do
+      Noizu.DomainObject.EncodedPath.from_json(format, json[Atom.to_string(field)], context, options)
     end
 
 

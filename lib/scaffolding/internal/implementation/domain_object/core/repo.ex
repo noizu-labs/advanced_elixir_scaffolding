@@ -63,6 +63,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Core.Repo do
         def __entity__(), do: @__nzdo__base.__entity__()
         def __repo__(), do: __MODULE__
         def __sref__(), do: @__nzdo__base.__sref__()
+        def __kind__(), do: @__nzdo__base.__repo_kind__()
         def __erp__(), do: @__nzdo__base.__erp__()
         def id(ref), do: @__nzdo__base.id(ref)
         def ref(ref), do: @__nzdo__base.ref(ref)
@@ -101,6 +102,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Core.Repo do
           __poly_base__: 0,
           __repo__: 0,
           __sref__: 0,
+          __kind__: 0,
           __erp__: 0,
 
           id: 1,
@@ -131,11 +133,13 @@ defmodule Noizu.AdvancedScaffolding.Internal.Core.Repo do
       quote do
 
 
+
         #################################################
         # __noizu_info__
         #################################################
         def __noizu_info__(), do: put_in(@__nzdo__base.__noizu_info__(), [:type], :repo)
         def __noizu_info__(:type), do: :repo
+        def __noizu_info__(:kind), do: __kind__() # this is a gotcha since unlike most methods besides type the response is entity/repo dependent.
         def __noizu_info__(report), do: @__nzdo__base.__noizu_info__(report)
 
         #################################################

@@ -195,6 +195,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Table do
         def __entity__(), do: @__nzdo__entity.__entity__()
         def __repo__(), do: @__nzdo__entity.__repo__()
         def __sref__(), do: @__nzdo__entity.__sref__()
+        def __kind__(), do: @__nzdo__entity.__kind__()
         #----------------------
         # erp
         #----------------------
@@ -322,7 +323,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Table do
       end
 
       if !@__nzdo__no_entity_association do
-        defoverridable [__entity__: 0, __repo__: 0, __sref__: 0, __erp__: 0]
+        defoverridable [__entity__: 0, __repo__: 0, __sref__: 0, __kind__: 0, __erp__: 0]
       end
 
       @file __ENV__.file

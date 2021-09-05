@@ -96,6 +96,8 @@ defmodule Noizu.AdvancedScaffolding.Internal.Core.Base do
           def __repo__(), do: __poly_base__().__repo__()
         end
         def __sref__(), do: @__nzdo__sref
+        def __kind__(), do: @__nzdo__kind
+        def __repo_kind__(), do: "Repo(#{@__nzdo__kind})"
         def __erp__(), do: @__nzdo__entity
 
 
@@ -134,6 +136,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Core.Base do
               :struct,
               :repo,
               :sref,
+              :kind,
               :restrict_provider,
               :poly,
               :json_configuration,
@@ -160,7 +163,8 @@ defmodule Noizu.AdvancedScaffolding.Internal.Core.Base do
         else
           def __noizu_info__(:repo), do: __poly_base__().__repo__()
         end
-        def __noizu_info__(:sref), do: @__nzdo__sref
+        def __noizu_info__(:sref), do: __sref__()
+        def __noizu_info__(:kind), do: __kind__()
         def __noizu_info__(:restrict_provider), do: nil
         def __noizu_info__(:poly), do: @__nzdo__poly_settings
         @entity_driven_properties [

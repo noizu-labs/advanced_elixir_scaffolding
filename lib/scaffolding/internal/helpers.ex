@@ -97,6 +97,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Helpers do
       repo = options[:repo]
       vsn = options[:vsn]
       sref = options[:sref]
+      kind = options[:kind]
 
 
       entity = cond do
@@ -132,10 +133,12 @@ defmodule Noizu.AdvancedScaffolding.Internal.Helpers do
       @__nzdo__poly? ((@__nzdo__poly_base != @__nzdo__base || @__nzdo__poly_support) && true || false)
       @__nzdo__repo repo || Noizu.AdvancedScaffolding.Internal.Helpers.extract_attribute(:repo, Module.concat([@__nzdo__poly_base, "Repo"]))
       @__nzdo__sref sref || Noizu.AdvancedScaffolding.Internal.Helpers.extract_attribute(:sref, :unsupported)
+      @__nzdo__kind kind || Noizu.AdvancedScaffolding.Internal.Helpers.extract_attribute(:kind, @__nzdo__sref)
       @vsn vsn || Noizu.AdvancedScaffolding.Internal.Helpers.extract_attribute(:vsn, 1.0)
 
       if @__nzdo__base_open? && !options[:for_repo] do
         Module.put_attribute(@__nzdo__base, :__nzdo__sref, @__nzdo__sref)
+        Module.put_attribute(@__nzdo__base, :__nzdo__kind, @__nzdo__kind)
         Module.put_attribute(@__nzdo__base, :__nzdo__entity, __MODULE__)
         Module.put_attribute(@__nzdo__base, :__nzdo__struct, __MODULE__)
         Module.put_attribute(@__nzdo__base, :__nzdo__poly_support, @__nzdo__poly_support)

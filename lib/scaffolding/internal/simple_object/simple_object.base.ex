@@ -27,6 +27,8 @@ defmodule Noizu.AdvancedScaffolding.Internal.SimpleObject.Base do
     @callback __strip_pii__(any, any) :: any
     @callback __valid__(any, any) :: any
     @callback __valid__(any, any, any) :: any
+
+    @callback __kind__() :: String.t | atom
   end
 
   defmodule Default do
@@ -207,7 +209,9 @@ defmodule Noizu.AdvancedScaffolding.Internal.SimpleObject.Base do
   end
 
 
-  defmacro __using__(_options \\ nil) do
+  defmacro __using__(options \\ nil) do
+    options = Macro.expand(options, __ENV__)
+    kind = options[:kind]
     quote do
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       alias Noizu.AdvancedScaffolding.Schema.PersistenceLayer
@@ -215,6 +219,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.SimpleObject.Base do
       @__nzdo__internal_imp Noizu.AdvancedScaffolding.Internal.DomainObject.Entity.Default
       @__nzdo__core_imp Noizu.AdvancedScaffolding.Internal.Core.Entity.Implementation.Default
       @__nzdo__index_imp Noizu.AdvancedScaffolding.Internal.DomainObject.Entity.Default
+      @__nzso_kind unquote(kind) || (Module.has_attribute?(__MODULE__, :kind) && Module.get_attribute(__MODULE__, :kind)) || __MODULE__
 
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def __as_record__(%{__struct__: PersistenceLayer} = layer, identifier, entity, context, options \\ nil),
@@ -250,6 +255,8 @@ defmodule Noizu.AdvancedScaffolding.Internal.SimpleObject.Base do
       def __valid__(%{__struct__: __MODULE__} = entity, context, options \\ nil), do: @__nzdo__core_imp.__valid__(__MODULE__, entity, context, options)
 
 
+      def __kind__(), do: @__nzso_kind
+
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       defoverridable [
         __as_record__: 4,
@@ -273,6 +280,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.SimpleObject.Base do
         __strip_pii__: 2,
         __valid__: 2,
         __valid__: 3,
+        __kind__: 0,
       ]
     end
   end
@@ -287,6 +295,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.SimpleObject.Base do
         base: @__nzdo__poly_base
       }
       @__nzdo__meta__map Map.new(@__nzdo__meta || [])
+
 
 
 
@@ -414,15 +423,14 @@ defmodule Noizu.AdvancedScaffolding.Internal.SimpleObject.Base do
             :type,
             :base,
             :struct,
-            :entity,
-            :repo,
-            :sref,
+            :kind,
             :restrict_provider,
             :poly,
             :json_configuration,
             :identifier_type,
             :fields,
             :field_attributes,
+            :field_permissions,
             :field_types,
             :persistence,
             :associated_types,
@@ -436,6 +444,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.SimpleObject.Base do
       def __noizu_info__(:type), do: :simple
       def __noizu_info__(:base), do: @__nzdo__base
       def __noizu_info__(:struct), do: __MODULE__
+      def __noizu_info__(:kind), do: __kind__()
       def __noizu_info__(:restrict_provider), do: nil
       def __noizu_info__(:poly), do: @__nzdo__poly_settings
       def __noizu_info__(:json_configuration), do: @__nzdo__json_config

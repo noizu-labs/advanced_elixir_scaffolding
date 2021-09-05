@@ -109,6 +109,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Core.Entity do
         def __poly_base__(), do: @__nzdo__poly_base
         def __repo__(), do: @__nzdo__base.__repo__()
         def __sref__(), do: @__nzdo__base.__sref__()
+        def __kind__(), do: @__nzdo__base.__kind__()
         def __erp__(), do: @__nzdo__base.__erp__()
 
 
@@ -222,6 +223,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Core.Entity do
           __poly_base__: 0,
           __repo__: 0,
           __sref__: 0,
+          __kind__: 0,
           __erp__: 0,
 
           __valid_identifier__: 1,

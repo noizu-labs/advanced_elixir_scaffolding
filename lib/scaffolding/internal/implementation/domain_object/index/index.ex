@@ -11,6 +11,10 @@ defmodule Noizu.AdvancedScaffolding.Internal.Index do
 
   defmodule Behaviour do
     alias Noizu.AdvancedScaffolding.Types
+
+    @callback __indexing__() :: any
+    @callback __indexing__(any) :: any
+
     @callback fields(any, any) :: any
     @callback build(any, any, any) :: any
 
@@ -43,6 +47,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Index do
     def __configure__(options) do
       options = Macro.expand(options, __ENV__)
       base = options[:stand_alone]
+      inline_source = options[:inline] && options[:entity]
       index_stem = options[:index_stem]
       source_dir = options[:source_dir] || Application.get_env(:noizu_advanced_scaffolding, :sphinx_data_dir, "/sphinx/data")
 
@@ -59,8 +64,8 @@ defmodule Noizu.AdvancedScaffolding.Internal.Index do
         # Find Base
         #---------------------
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-        @__nzdo__base  (unquote(base) && __MODULE__)|| (Module.split(__MODULE__) |> Enum.slice(0..-2) |> Module.concat())
-
+        @__nzdo__base  (unquote(base) && __MODULE__) || (Module.split(__MODULE__) |> Enum.slice(0..-2) |> Module.concat())
+        @__nzdo__indexing_source unquote(inline_source) || __MODULE__
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
         @__nzdo__sref Module.get_attribute(@__nzdo__base, :__nzdo__sref) || Module.get_attribute(__MODULE__, :sref)
 
@@ -81,6 +86,16 @@ defmodule Noizu.AdvancedScaffolding.Internal.Index do
       quote do
         @behaviour Noizu.AdvancedScaffolding.Internal.Index.Behaviour
         @__nzdo__index_implementation unquote(implementation)
+
+
+        if @__nzdo__indexing_source == __MODULE__ do
+          def __indexing__(), do: {:error, {:nyi, :stand_alone_indexing}}
+          def __indexing__(p), do: {:error, {:nyi, :stand_alone_indexing}}
+        else
+          def __indexing__(), do: @__nzdo__indexing_source.__indexing__()
+          def __indexing__(p), do: @__nzdo__indexing_source.__indexing__(p)
+        end
+
 
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
         def fields(context, options), do: @__nzdo__index_implementation.fields(__MODULE__, context, options)
@@ -130,6 +145,10 @@ defmodule Noizu.AdvancedScaffolding.Internal.Index do
 
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
         defoverridable [
+
+          __indexing__: 0,
+          __indexing__: 1,
+
           fields: 2,
           build: 3,
           update_index: 3,
@@ -177,6 +196,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Index do
         def __noizu_info__(), do: __noizu_info__(:all)
         def __noizu_info__(:all), do: Enum.map(@settings, &({&1, __noizu_info__(&1)}))
         def __noizu_info__(:type), do: :index
+        def __noizu_info__(:indexing), do: __indexing__()
         def __noizu_info__(:schema_open), do: __schema_open__()
         def __noizu_info__(:schema_close), do: __schema_close__()
         def __noizu_info__(:index_stem), do: __index_stem__()
