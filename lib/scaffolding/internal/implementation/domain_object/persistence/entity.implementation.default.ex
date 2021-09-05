@@ -54,8 +54,8 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Entity.Implementation.D
   def __as_record_type__(domain_object, layer = %{__struct__: PersistenceLayer, type: :mnesia, table: table}, entity, context, options) do
     context = Noizu.ElixirCore.CallingContext.system(context)
     field_types = domain_object.__noizu_info__(:field_types)
-    fields = Map.keys(table.__struct__([])) -- [:__struct__, :__transient__, :initial]
-    Enum.map(
+    fields = Map.keys(struct(table.__struct__(), [])) -- [:__struct__, :__transient__, :initial]
+    embed_fields = Enum.map(
       fields,
       fn (field) ->
         cond do
@@ -84,13 +84,14 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Entity.Implementation.D
     )
     |> List.flatten()
     |> Enum.filter(&(&1))
-    |> layer.table.__struct__()
+
+    struct(layer.table.__struct__(), embed_fields)
   end
 
   def __as_record_type__(domain_object, layer = %{type: :ecto, table: table}, entity, _context, options) do
     context = Noizu.ElixirCore.CallingContext.admin()
     field_types = domain_object.__noizu_info__(:field_types)
-    Enum.map(
+    embed_fields = Enum.map(
       domain_object.__fields__(:persisted),
       fn (field) ->
         cond do
@@ -116,7 +117,8 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Entity.Implementation.D
     )
     |> List.flatten()
     |> Enum.filter(&(&1))
-    |> table.__struct__()
+
+    struct(table.__struct__(), embed_fields)
   end
 
   def __as_record_type__(_domain_object, _layer, _entity, _context, _options), do: nil

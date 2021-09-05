@@ -35,7 +35,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Json.Entity.Implementation.Default 
 
   def from_json(m, format, json, context, options) do
     field_types = m.__noizu_info__(:field_types)
-    fields = Map.keys(m.__struct__([])) -- [:__struct__, :__transient__, :initial]
+    fields = Map.keys(struct(m.__struct__(), [])) -- [:__struct__, :__transient__, :initial]
     full_kind = Atom.to_string(m)
     partial_kind = String.split(full_kind, ".") |> String.slice(-2 .. -1) |> Enum.join(".")
     if json["kind"] == full_kind || json["kind"] == partial_kind do
