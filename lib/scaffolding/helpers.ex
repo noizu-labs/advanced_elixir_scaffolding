@@ -533,6 +533,30 @@ defmodule Noizu.AdvancedScaffolding.Helpers do
   end
 
 
+  def request_pagination(params, default_page, default_results_per_page) do
+    page = case params["pg"] || default_page do
+             v when is_integer(v) -> v
+             v when is_bitstring(v) ->
+               case Integer.parse(v) do
+                 {v, ""} -> v
+                 _ -> default_page
+               end
+             _ -> default_page
+           end
+
+    results_per_page = case params["rpp"] || default_results_per_page do
+                         v when is_integer(v) -> v
+                         v when is_bitstring(v) ->
+                           case Integer.parse(v) do
+                             {v, ""} -> v
+                             _ -> default_results_per_page
+                           end
+                         _ -> default_results_per_page
+                       end
+
+    {page, results_per_page}
+  end
+
 
   defmodule CustomHelper do
     defmacro __using__(_ \\ nil) do
@@ -546,7 +570,7 @@ defmodule Noizu.AdvancedScaffolding.Helpers do
         def __update_expand_options__(entity, options), do: Noizu.AdvancedScaffolding.Helpers.__update_expand_options__(entity, options)
         def expand_ref?(options), do: Noizu.AdvancedScaffolding.Helpers.expand_ref?(options)
         def expand_ref?(path, depth, options \\ nil), do: Noizu.AdvancedScaffolding.Helpers.expand_ref?(path, depth, options)
-        def api_response(conn, response, context, options), do: Noizu.AdvancedScaffolding.Helpers.api_response(conn, response, context, options)
+        def api_response(conn, response, context, options \\ nil), do: Noizu.AdvancedScaffolding.Helpers.api_response(conn, response, context, options)
         def json_library(), do: Noizu.AdvancedScaffolding.Helpers.json_library()
         def __send_resp__(conn, default_status, default_content_type, body), do: Noizu.AdvancedScaffolding.Helpers.__send_resp__(conn, default_status, default_content_type, body)
         def __ensure_resp_content_type__(conn, content_type), do: Noizu.AdvancedScaffolding.Helpers.__ensure_resp_content_type__(conn, content_type)
@@ -570,6 +594,7 @@ defmodule Noizu.AdvancedScaffolding.Helpers do
           expand_ref?: 1,
           expand_ref?: 2,
           expand_ref?: 3,
+          api_response: 3,
           api_response: 4,
           json_library: 0,
           __send_resp__: 4,
