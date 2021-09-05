@@ -289,7 +289,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Core.Entity do
         end)
 
         @__nzdo__persisted_fields Enum.filter(@__nzdo__field_list -- [:initial, :__transient__], &(!@__nzdo__field_attributes_map[&1][:transient]))
-        @__nzdo__transient_fields Enum.filter(@__nzdo__field_list, &(&1 == :initial || &1 == :__transient__ ||  @__nzdo__field_attributes_map[&1][:transient]))
+        @__nzdo__transient_fields Enum.filter(@__nzdo__field_list, &(@__nzdo__field_attributes_map[&1][:transient])) ++ [:initial, :__transient__]
 
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
         @__nzdo_associated_types (
