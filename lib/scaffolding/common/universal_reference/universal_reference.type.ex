@@ -3,7 +3,7 @@
 # Copyright (C) 2021 Noizu Labs Inc. All rights reserved.
 #-------------------------------------------------------------------------------
 
-defmodule UniversalReference.Type do
+defmodule Noizu.DomainObject.UniversalReference.Type do
   @moduledoc """
   Ecto ENUM Custom Type.
   """

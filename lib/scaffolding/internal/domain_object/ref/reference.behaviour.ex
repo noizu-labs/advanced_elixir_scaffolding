@@ -10,10 +10,10 @@ defmodule Noizu.AdvancedScaffolding.Internal.Ecto.Reference.Behaviour do
   """
 
 
-  @callback type() :: any
+  #@callback type() :: any
   @callback __entity__() :: any
-  @callback cast(any) :: any
-  @callback cast!(any) :: any
-  @callback dump(any) :: any
-  @callback load(any) :: any
+  #@callback cast(any) :: any
+  #@callback cast!(any) :: any
+  #@callback dump(any) :: any
+  #@callback load(any) :: any
 end

@@ -22,8 +22,16 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Entity do
     @callback __as_record__(layer :: Noizu.AdvancedScaffolding.Schema.PersistenceLayer.t | atom, Types.entity_or_ref, Noizu.ElixirCore.CallingContext.t, Types.options) :: map() | nil
     @callback __as_record__!(layer :: Noizu.AdvancedScaffolding.Schema.PersistenceLayer.t | atom, Types.entity_or_ref, Noizu.ElixirCore.CallingContext.t, Types.options) :: map() | nil
 
+    @callback __as_record_type__(any, any, any) :: any
+    @callback __as_record_type__(any, any, any, any) :: any
+
+    @callback __as_record_type__!(any, any, any) :: any
+    @callback __as_record_type__!(any, any, any, any) :: any
+
     @callback __from_record__(layer :: Noizu.AdvancedScaffolding.Schema.PersistenceLayer.t | atom, Types.entity_or_ref, Noizu.ElixirCore.CallingContext.t, Types.options) :: map() | nil
     @callback __from_record__!(layer :: Noizu.AdvancedScaffolding.Schema.PersistenceLayer.t | atom, Types.entity_or_ref, Noizu.ElixirCore.CallingContext.t, Types.options) :: map() | nil
+
+
 
 
     @callback __persistence__() :: any
@@ -60,6 +68,13 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Entity do
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
         def __as_record__(%{__struct__: PersistenceLayer} = layer, entity, context, options \\ nil), do: @nzdo__persistence_implementation.__as_record__(__MODULE__, layer, entity, context, options)
         def __as_record__!(%{__struct__: PersistenceLayer} = layer, entity, context, options \\ nil), do: @nzdo__persistence_implementation.__as_record__!(__MODULE__, layer, entity, context, options)
+
+
+        @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+        def __as_record_type__(%{__struct__: PersistenceLayer} = layer, entity, context, options \\ nil),
+            do: @nzdo__persistence_implementation.__as_record_type__(__MODULE__, layer, entity, context, options)
+        def __as_record_type__!(%{__struct__: PersistenceLayer} = layer, entity, context, options \\ nil),
+            do: @nzdo__persistence_implementation.__as_record_type__!(__MODULE__, layer, entity, context, options)
 
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
         def __from_record__(%{__struct__: PersistenceLayer} = layer, record, context, options \\ nil), do: @nzdo__persistence_implementation.__from_record__(__MODULE__, layer, record, context, options)
@@ -105,6 +120,13 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Entity do
           __as_record__: 4,
           __as_record__!: 3,
           __as_record__!: 4,
+
+          __as_record_type__: 3,
+          __as_record_type__: 4,
+
+          __as_record_type__!: 3,
+          __as_record_type__!: 4,
+
           __from_record__: 3,
           __from_record__: 4,
           __from_record__!: 3,
