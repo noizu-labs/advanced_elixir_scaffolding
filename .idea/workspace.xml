@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="ae58bc41-455c-447f-90eb-f1325731ba9b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/common/schema/peristence/persistence_settings.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/common/schema/peristence/persistence_settings.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/domain_object/domain_object.repo.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/domain_object/domain_object.repo.ex" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -114,7 +114,7 @@
       <workItem from="1630090888409" duration="7900000" />
       <workItem from="1630776181435" duration="4292000" />
       <workItem from="1630780821952" duration="544000" />
-      <workItem from="1630795320408" duration="245000" />
+      <workItem from="1630795320408" duration="4069000" />
     </task>
     <servers />
   </component>

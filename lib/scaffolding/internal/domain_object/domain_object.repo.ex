@@ -11,7 +11,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Repo do
   #
   #--------------------------------------------
   def __noizu_repo__(caller, options, block) do
-    extension_provider = options[:extension_imp] || nil
+    extension_provider = options[:extension_implementation] || nil
     has_extension = extension_provider && true || false
     options = put_in(options || [], [:for_repo], true)
 
