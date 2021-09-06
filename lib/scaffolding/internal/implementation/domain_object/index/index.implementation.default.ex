@@ -9,6 +9,46 @@ defmodule Noizu.AdvancedScaffolding.Internal.Index.Implementation.Default do
   Default Implementation.
   """
   require Logger
+  alias Giza.SphinxQL
+
+  def __search_max_results__(_m, _conn, _params, _context, _options), do: nil
+  def __search_limit__(_m, _conn, _params, _context, _options), do: nil
+  def __search_content__(_m, _conn, _params, _context, _options), do: nil
+  def __search_order_by__(_m, _conn, _params, _context, _options), do: nil
+  def __search_indexes__(_m, _conn, _params, _context, _options), do: nil
+
+  def search_query(m, _conn, _params, context, options), do: m.__build_search_query__([], [], context, options)
+  def __build_search_query__(_m, _index_clauses, _field_clauses, _context, _options), do: "CONSTRUCT SEARCH QUERY HERE"
+  def search(m, conn, params, context, options) do
+    query = m.search_query(conn, params, context, options)
+    results = case SphinxQL.new() |> SphinxQL.raw(query) |> SphinxQL.send() do
+                {:ok, response} ->
+                  fields = Enum.slice(response.fields, 1..-1)
+                  field_map = %{
+                    "weight" => :weight, "distance" => :distance
+                  }
+                  response.matches
+                  |> Task.async_stream(
+                       fn(record) ->
+                         universal_identifier = List.first(record)
+                         entity = {:todo, :load, {:universal, universal_identifier}}
+                         (Enum.map(0..(length(fields) - 1), fn(index) ->
+                                                              f = Enum.at(fields, index)
+                                                              {field_map[f] || f, Enum.at(record, index + 1)}
+                         end) ++ [{:record, entity}]) |> Map.new()
+                       end, max_concurrency: 32, limit: 60_000
+                     )
+                  |> Enum.map(fn({:ok, v}) -> v end)
+                  |> Enum.filter(&(&1))
+                _ ->
+                  []
+              end
+    # todo search result entity
+    %{results: results}
+  end
+
+
+
 
 
   def update_index(_mod, _entity, _context, _options), do: nil

@@ -11,9 +11,30 @@ defmodule Noizu.AdvancedScaffolding.Internal.Index do
 
   defmodule Behaviour do
     alias Noizu.AdvancedScaffolding.Types
+    alias Noizu.ElixirCore.CallingContext
+
+    alias Noizu.AdvancedScaffolding.Types, as: T
+
+    @callback has_permission?(field :: atom, filter :: atom | tuple, context :: CallingContext.t, options :: list | map()) :: true | false | :inherit
 
     @callback __indexing__() :: any
     @callback __indexing__(any) :: any
+
+    @callback __search_clause__(seach_clause :: T.search_clauses,  conn :: Plug.Conn.t, params :: map(), context :: CallingContext.t, options :: list | map()) :: T.index_query_clause | T.error
+
+    @callback __search_max_results__(conn :: Plug.Conn.t, params :: map(), context :: CallingContext.t, options :: list | map()) :: T.index_query_clause | T.error
+    @callback __search_limit__(conn :: Plug.Conn.t, params :: map(), context :: CallingContext.t, options :: list | map()) :: T.index_query_clause | T.error
+    @callback __search_content__(conn :: Plug.Conn.t, params :: map(), context :: CallingContext.t, options :: list | map()) :: T.index_query_clause | T.error
+    @callback __search_order_by__(conn :: Plug.Conn.t, params :: map(), context :: CallingContext.t, options :: list | map()) :: T.index_query_clause | T.error
+    @callback __search_indexes__(conn :: Plug.Conn.t, params :: map(), context :: CallingContext.t, options :: list | map()) :: T.index_query_clause | T.error
+
+    @callback search_query(conn :: Plug.Conn.t, params :: map(), context :: CallingContext.t, options :: list | map()) :: T.query_snippet
+    @callback __build_search_query__(index_clauses :: [T.index_query_clause], filter_clauses :: [T.field_query_clause], context :: CallingContext.t, options :: list | map()) :: T.query_snippet
+
+    @callback search(conn :: Plug.Conn.t, params :: map(), context :: CallingContext.t, options :: list | map()) :: T.search_results
+
+
+
 
     @callback fields(any, any) :: any
     @callback build(any, any, any) :: any
@@ -22,6 +43,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Index do
     @callback delete_index(any, any, any) :: any
 
     @callback sql_escape_string(String.t) :: String.t
+
 
     @callback __extract_field__(any, any, any, any) :: any
     @callback __index_schema_fields__(any, any) :: any
@@ -97,6 +119,22 @@ defmodule Noizu.AdvancedScaffolding.Internal.Index do
         end
 
 
+        def __search_clause__(:max_results, conn, params, context, options), do: __search_max_results__(conn, params, context, options)
+        def __search_clause__(:limit, conn, params, context, options), do: __search_limit__(conn, params, context, options)
+        def __search_clause__(:content, conn, params, context, options), do: __search_content__(conn, params, context, options)
+        def __search_clause__(:order_by, conn, params, context, options), do: __search_order_by__(conn, params, context, options)
+        def __search_clause__(:indexes, conn, params, context, options), do: __search_indexes__(conn, params, context, options)
+
+        def __search_max_results__(conn, params, context, options), do: @__nzdo__index_implementation.__search_max_results__(__MODULE__, conn, params, context, options)
+        def __search_limit__(conn, params, context, options), do: @__nzdo__index_implementation.__search_limit__(__MODULE__, conn, params, context, options)
+        def __search_content__(conn, params, context, options), do: @__nzdo__index_implementation.__search_content__(__MODULE__, conn, params, context, options)
+        def __search_order_by__(conn, params, context, options), do: @__nzdo__index_implementation.__search_order_by__(__MODULE__, conn, params, context, options)
+        def __search_indexes__(conn, params, context, options), do: @__nzdo__index_implementation.__search_indexes__(__MODULE__, conn, params, context, options)
+
+        def search_query(conn, params, context, options), do: @__nzdo__index_implementation.search_query(__MODULE__, conn, params, context, options)
+        def __build_search_query__(index_clauses, field_clauses, context, options), do: @__nzdo__index_implementation.__build_search_query__(__MODULE__, index_clauses, field_clauses, context, options)
+        def search(conn, params, context, options), do: @__nzdo__index_implementation.search(__MODULE__, conn, params, context, options)
+
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
         def fields(context, options), do: @__nzdo__index_implementation.fields(__MODULE__, context, options)
 
@@ -148,6 +186,16 @@ defmodule Noizu.AdvancedScaffolding.Internal.Index do
 
           __indexing__: 0,
           __indexing__: 1,
+
+          __search_clause__: 5,
+          __search_max_results__: 4,
+          __search_limit__: 4,
+          __search_content__: 4,
+          __search_order_by__: 4,
+          __search_indexes__: 4,
+          search_query: 4,
+          __build_search_query__: 4,
+          search: 4,
 
           fields: 2,
           build: 3,

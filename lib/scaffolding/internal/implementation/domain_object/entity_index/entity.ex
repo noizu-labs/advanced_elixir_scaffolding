@@ -107,15 +107,24 @@ defmodule Noizu.AdvancedScaffolding.Internal.EntityIndex.Entity do
                            List.flatten(@__nzdo__field_indexing || []),
                            @__nzdo__indexes,
                            fn ({{field, index}, indexing}, acc) ->
-                             cond do
-                               acc[index][:fields][field] == nil ->
-                                 put_in(acc, [index, :fields, field], indexing)
-                               e = acc[index][:fields][field] ->
-                                 e = Enum.reduce(indexing, e, fn ({k, v}, acc) -> put_in(acc, [k], v) end)
-                                 put_in(acc, [index, :fields, field], e)
-                             end
+                             index_field_config = cond do
+                                                    existing = acc[index][:fields][field] ->
+                                                      Enum.reduce(indexing, existing, fn ({k, v}, acc) ->
+                                                        put_in(acc, [k], v)
+                                                      end)
+                                                    :else -> indexing
+                                                  end
+                             index_field_config = cond do
+                                                    index_field_config[:with] -> index_field_config
+                                                    index_field_config[:with] == false -> index_field_config
+                                                    ft = Module.get_attribute(__MODULE__, :__nzdo__field_types_map, [])[field] ->
+                                                      put_in(index_field_config, [:with], ft.handler)
+                                                    :else -> index_field_config
+                                                  end
+                             put_in(acc, [index, :fields, field], index_field_config)
                            end
                          )
+
 
         #################################################
         # __indexing__

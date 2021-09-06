@@ -26,4 +26,19 @@ defmodule Noizu.AdvancedScaffolding.Types do
   @type index_noizu_info_settings :: :all |:type | :schema_open | :schema_close | :index_stem | :rt_index | :delta_index | :primary_index |:rt_source | :delta_source | :primary_source |:data_dir
 
 
+
+  @type error :: {:error, tuple | atom}
+  @type search_results :: %{__struct__: any, entities: list} | error
+  @type search_clauses :: :max_results | :limit | :content | :order_by
+  @type query_snippet :: String.t | map() | error
+
+  @type query_clause_type :: :fields | :indexes | :where | :match
+  @type query_clause :: String.t | map() | {:error, any}
+  @type query_clauses :: [{query_clause_type, query_clause} | error] | error
+  @type field_query_clause :: {field :: atom, filter :: atom | tuple, query_clauses}
+
+  @type index_clause_type :: :fields | :indexes | :where | :match | :order_by | :limit | :config
+  @type index_query_clause :: {index_clause_type, query_clause}
+
+
 end

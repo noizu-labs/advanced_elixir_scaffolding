@@ -12,6 +12,15 @@ defmodule Noizu.DomainObject.SearchIndexHandler do
 
   defmodule Behaviour do
     @type sphinx_encoding :: :field | :attr_uint | :attr_int | :attr_bigint | :attr_bool | :attr_multi | :attr_multi64 | :attr_timestamp | :attr_float | atom
+
+
+    # ----- search construction
+    alias Noizu.AdvancedScaffolding.Types, as: T
+    @callback has_permission?(index :: any, field :: atom, filter :: atom | tuple, context :: Noizu.ElixirCore.CallingContext.t, options :: list | map()) :: true | false
+    # search clauses with permision filters applied.
+    @callback __search_clauses__(index :: any, field :: atom, conn :: any, params :: map(), context :: Noizu.ElixirCore.CallingContext.t, options :: list | map()) :: [T.query_clause] | {:error, any}
+    # ----- search construction
+
     @callback __sphinx_field__() :: boolean
     @callback __sphinx_expand_field__(field :: atom, indexing :: map(), settings :: map()) :: any
     @callback __sphinx_has_default__(field :: atom, indexing :: map(), settings :: map()) :: boolean
@@ -110,6 +119,18 @@ defmodule Noizu.DomainObject.SearchIndexHandler do
         get_in(entity, [Access.key(field)])
       end
 
+
+      def has_permission?(index, field, filter, context, options) do
+        case index.has_permission?(field, filter, context, options) do
+          :inherit -> true
+          v-> v
+        end
+      end
+
+      def __search_clauses__(_index, _field, _conn, _params, _context, _options) do
+        []
+      end
+
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       defoverridable [
         __sphinx_field__: 0,
@@ -119,6 +140,9 @@ defmodule Noizu.DomainObject.SearchIndexHandler do
         __sphinx_bits__: 3,
         __sphinx_encoding__: 3,
         __sphinx_encoded__: 4,
+      
+        has_permission?: 5,
+        __search_clauses__: 6,
       ]
     end
   end
