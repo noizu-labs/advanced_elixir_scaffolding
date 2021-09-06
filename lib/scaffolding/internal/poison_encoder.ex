@@ -25,7 +25,7 @@ defmodule Noizu.Poison.Encoder do
                         end
 
     # @todo implment DO annotation support to feed in this option in entity.
-    if options[:__suppress_meta__] || noizu_entity.__transient__[:json][:__suppress_meta__] || noizu_entity.__struct__.__noizu_info__(:json_configuration)[:format_settings][json_format][:__suppress_meta__] do
+    if noizu_entity.__struct__.__noizu_info__(:json_configuration)[:format_settings][json_format][:__suppress_meta__] do
       Map.from_struct(entity)
       |> Enum.map(&(encode_field(noizu_entity.__struct__, json_format, &1, context, options)))
       |> Enum.filter(&(&1 != nil))
