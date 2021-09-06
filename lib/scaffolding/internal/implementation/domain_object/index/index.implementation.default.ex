@@ -11,8 +11,59 @@ defmodule Noizu.AdvancedScaffolding.Internal.Index.Implementation.Default do
   require Logger
   alias Giza.SphinxQL
 
+
+
+
   def __search_max_results__(_m, _conn, _params, _context, _options), do: nil
-  def __search_limit__(_m, _conn, _params, _context, _options), do: nil
+  def __search_limit__(m, conn, _params, _context, _options) do
+    page = cond do
+             page = conn.query_params["page"] ->
+               case Integer.parse(page) do
+                 {page, ""} when page > 0 -> page
+                 _ -> 1
+               end
+             :else -> 1
+           end
+
+    rpp = cond do
+            rpp = conn.query_params["rpp"] ->
+              case Integer.parse(rpp) do
+                {rpp, ""} -> rpp
+                _ -> m.__indexing__(:rpp)
+              end
+            :else -> m.__indexing__(:rpp)
+          end
+
+    limit = cond do
+              v = conn.query_params["limit"] ->
+                case Integer.parse(v) do
+                  {v, ""} when v > 0 -> v
+                  _else -> rpp
+                end
+              :else -> rpp
+            end
+
+    skip = cond do
+              v = conn.query_params["offset"] ->
+                case Integer.parse(v) do
+                  {v, ""} when v > 0 -> v
+                  _else -> 0
+                end
+              :else -> 0
+            end
+
+    clause = cond do
+               page > 1 ->
+                 offset = ((page - 1) * rpp) + skip
+                 "LIMIT #{offset}, #{limit}"
+               skip > 0 ->
+                 "LIMIT #{skip}, #{limit}"
+               :else ->
+                 "LIMIT #{limit}"
+             end
+    {:limit, clause}
+  end
+
   def __search_content__(_m, _conn, _params, _context, _options), do: nil
   def __search_order_by__(_m, _conn, _params, _context, _options), do: nil
   def __search_indexes__(_m, _conn, _params, _context, _options), do: nil

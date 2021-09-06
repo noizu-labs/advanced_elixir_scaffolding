@@ -515,19 +515,19 @@ defmodule Noizu.AdvancedScaffolding.Helpers do
   def __update_options__json_format__(entity, options) when is_atom(entity) do
     if function_exported?(entity, :__noizu_info__, 1) do
       cond do
-        entity == nil -> :default
+        entity == nil -> :mobile
         format = options[:json_formats][entity] -> format
         format = options[:json_formats][entity.__noizu_info__(:poly)][:base] -> format
         format = options[:json_format] -> format
-        format = entity.__noizu_info__(:json_format) -> format
-        :else -> :default
+        format = function_exported?(entity, :__json__, 1) && entity.__json__(:default) -> format
+        :else -> :mobile
       end
     else
       cond do
-        entity == nil -> :default
+        entity == nil -> :mobile
         format = options[:json_formats][entity] -> format
         format = options[:json_format] -> format
-        :else -> :default
+        :else -> :mobile
       end
     end
   end
@@ -558,11 +558,239 @@ defmodule Noizu.AdvancedScaffolding.Helpers do
   end
 
 
+  def extract_setting(command, setting, conn, params, default \\ nil, options \\ nil)
+
+  def extract_setting(:extract, {:inject, {type, value}}, _conn, _params, _default, _options) do
+    {type, value}
+  end
+
+  def extract_setting(:extract, setting, conn, params, default, options) do
+    cond do
+      options[:include_query_params] != false && Map.has_key?(conn.query_params, setting) && !(conn.query_params[setting] in ["",nil]) ->
+        {:query_param, conn.query_params[setting]}
+      options[:include_body_params] != false && is_map(conn.body_params) && Map.has_key?(conn.body_params, setting) ->
+        {:body_param, conn.body_params[setting]}
+      options[:include_params] != false && is_map(params) && Map.has_key?(params, setting) && !(params[setting] in ["",nil]) ->
+        {:params, params[setting]}
+      :else ->
+        {:default, default}
+    end
+  end
+
+  def extract_setting({:float, units}, setting, conn, params, default, options) when is_list(units) do
+    case extract_setting(:extract, setting, conn, params, default, options) do
+      {type, extracted_value} when type in [:query_param, :body_param, :param] ->
+        case extracted_value do
+          v when v in [nil, "null"] -> {type, nil}
+          v when is_float(v) -> (nil in units) && {type, v} || {{:error, {:missing_unit, {type, extracted_value}}}, default}
+          v when is_integer(v) -> (nil in units) && {type, v + 0.0} || {{:error, {:missing_unit, {type, extracted_value}}}, default}
+          %{"value" => v, "unit" => u} ->
+            cond do
+              !(u in units) -> {{:error, {:invalid_unit, {type, {v,u}}}}, default}
+              v == nil -> {type, {v,u}}
+              is_float(v) -> {type, {v, u}}
+              is_integer(v) -> {type, {v + 0.0, u}}
+            end
+          v when is_bitstring(v) ->
+            case Float.parse(extracted_value) do
+              {v, ""} -> (nil in units) && {type, v} || {{:error, {:missing_unit, {type, extracted_value}}}, default}
+              {v, suffix} -> (suffix in units) && {type, {v, suffix}} || {{:error, {:invalid_unit, {type, extracted_value}}}, default}
+              :error -> {{:error, {:parse_error, {type, extracted_value}}}, default}
+              _error -> {{:error, {:parse_error, {type, extracted_value}}}, default}
+            end
+        end
+      other -> other
+    end
+  end
+  def extract_setting({:float, suffix}, setting, conn, params, default, options) do
+    case extract_setting(:extract, setting, conn, params, default, options) do
+      {type, extracted_value} when type in [:query_param, :body_param, :param] ->
+        case extracted_value do
+          v when v in [nil, "null"] -> {type, nil}
+          v when is_float(v) -> suffix == "" && {type, v} || {{:error, {:missing_suffix, {type, extracted_value}}}, default}
+          v when is_integer(v) -> suffix == "" && {type, v + 0.0} || {{:error, {:missing_suffix, {type, extracted_value}}}, default}
+          v when is_bitstring(v) ->
+            case Float.parse(extracted_value) do
+              {v, ^suffix} -> {type, v}
+              {_, _wrong_suffix} -> {{:error, {:unexpected_suffix, {type, extracted_value}}}, default}
+              :error -> {{:error, {:parse_error, {type, extracted_value}}}, default}
+              _error -> {{:error, {:parse_error, {type, extracted_value}}}, default}
+            end
+        end
+      other -> other
+    end
+  end
+  def extract_setting(:float, setting, conn, params, default, options) do
+    extract_setting({:float, ""}, setting, conn, params, default, options)
+  end
+
+
+  def extract_setting({:integer, units}, setting, conn, params, default, options) when is_list(units) do
+    case extract_setting(:extract, setting, conn, params, default, options) do
+      {type, extracted_value} when type in [:query_param, :body_param, :param] ->
+        case extracted_value do
+          v when v in [nil, "null"] -> {type, nil}
+          v when is_float(v) ->
+            cond do
+              !(nil in units) -> {{:error, {:missing_unit, {type, extracted_value}}}, default}
+              round(v) != v ->  {{:warning, {:expected_int, {type, extracted_value}}}, round(v)}
+              :else -> {type, v}
+            end
+          v when is_integer(v) -> (nil in units) && {type, v} || {{:error, {:missing_unit, {type, extracted_value}}}, default}
+          %{"value" => v, "unit" => u} ->
+            cond do
+              !(u in units) -> {{:error, {:invalid_unit, {type, {v,u}}}}, default}
+              v == nil -> {type, u && {v,u}}
+              is_integer(v) -> {type, u && {v, u} || v}
+              is_float(v) && (round(v) == v) -> {type, u && {round(v), u} || round(v)}
+              is_float(v) && (round(v) != v) -> {{:warning, {:expected_int, {type, extracted_value}}}, u && {round(v), u} || round(v)}
+            end
+          v when is_bitstring(v) ->
+            case Float.parse(extracted_value) do
+              {v, ""} ->
+                cond do
+                  !(nil in units)  -> {{:error, {:missing_unit, {type, extracted_value}}}, default}
+                  round(v) == v -> {type, round(v)}
+                  round(v) != v -> {{:warning, {:expected_int, {type, extracted_value}}}, round(v)}
+                end
+              {v, suffix} ->
+                if (suffix in units) do
+                  round(v) == v && {type, {round(v), suffix}} || {{:warning, {:expected_int, {type, extracted_value}}}, {round(v), suffix}}
+                else
+                {{:error, {:invalid_unit, {type, extracted_value}}}, default}
+                end
+              :error -> {{:error, {:parse_error, {type, extracted_value}}}, default}
+              _error -> {{:error, {:parse_error, {type, extracted_value}}}, default}
+            end
+        end
+      other -> other
+    end
+  end
+  def extract_setting({:integer, suffix}, setting, conn, params, default, options) do
+    case extract_setting(:extract, setting, conn, params, default, options) do
+      {type, extracted_value} when type in [:query_param, :body_param, :param] ->
+        case extracted_value do
+          v when v in [nil, "null"] -> {type, nil}
+          v when is_integer(v) -> suffix == "" && {type, v} || {{:error, {:missing_suffix, {type, extracted_value}}}, default}
+          v when is_float(v) -> round(v) == v && {type, round(v)} || {{:warning, {:expected_int, {type, extracted_value}}}, round(v)}
+          v when is_bitstring(v) ->
+            case Float.parse(extracted_value) do
+              {v, ^suffix} ->
+                (round(v) == v) && {type, round(v)} || {{:warning, {:expected_int, {type, extracted_value}}}, round(v)}
+              {_, _wrong_suffix} -> {{:error, {:unexpected_suffix, {type, extracted_value}}}, default}
+              :error -> {{:error, {:parse_error, {type, extracted_value}}}, default}
+              _error -> {{:error, {:parse_error, {type, extracted_value}}}, default}
+            end
+        end
+      other -> other
+    end
+  end
+  def extract_setting(:integer, setting, conn, params, default, options) do
+    extract_setting({:integer, ""}, setting, conn, params, default, options)
+  end
+
+  def extract_setting({:positive_integer, suffix}, setting, conn, params, default, options) do
+    case extract_setting({:integer, suffix}, setting, conn, params, default, options) do
+      {type, extracted_value} when type in [:query_param, :body_param, :param] ->
+        cond do
+          extracted_value == nil -> {type, nil}
+          is_integer(extracted_value) && extracted_value >= 0 -> {type, extracted_value}
+          is_float(extracted_value) && extracted_value >= 0 ->
+            round(extracted_value) == extracted_value &&  {type, round(extracted_value)} || {{:warning, {:expected_int, {type, extracted_value}}}, round(extracted_value)}
+          :else -> {{:error, {:negative_int, {type, extracted_value}}}, default}
+        end
+      error = {{:error, _e}, _v} -> error
+      v = {:default, _} -> v
+    end
+  end
+  def extract_setting(:positive_integer, setting, conn, params, default, options) do
+    extract_setting({:positive_integer, ""}, setting, conn, params, default, options)
+  end
+
+  def extract_setting({:atom, atom_list}, setting, conn, params, default, options) when is_list(atom_list) do
+    am = Enum.map(atom_list, &({is_atom(&1) && Atom.to_string(&1) || &1, &1})) |> Map.new()
+    extract_setting({:atom, am}, setting, conn, params, default, options)
+  end
+  def extract_setting({:atom, atom_map}, setting, conn, params, default, options) when is_map(atom_map) do
+    case extract_setting(:extract, setting, conn, params, default, options) do
+      v = {type, extracted_value} when type in [:query_param, :body_param, :param] ->
+        cond do
+          extracted_value == nil -> v
+          is_bitstring(extracted_value) ->
+            cond do
+              a = atom_map[extracted_value] -> {type, a}
+              a = options[:lowercase_value] != false &&  atom_map[String.downcase(extracted_value)] -> {type, a}
+              :else -> {{:error, {:invalid_atom, {type, extracted_value}}}, default}
+            end
+        end
+      error = {{:error, _e}, _v} -> error
+      v = {:default, _} -> v
+    end
+  end
+
+  def extract_setting({:atom, type_handler}, setting, conn, params, default, options) when is_atom(type_handler) do
+    case extract_setting(:extract, setting, conn, params, default, options) do
+      v = {type, extracted_value} when type in [:query_param, :body_param, :param] ->
+        cond do
+          extracted_value == nil -> v
+          is_bitstring(extracted_value) ->
+            cond do
+              a = type_handler.json_to_atom(extracted_value) -> {type, a}
+              a = options[:lowercase_value] != false &&  type_handler.json_to_atom(String.downcase(extracted_value)) -> {type, a}
+              :else -> {{:error, {:invalid_atom, {type, extracted_value}}}, default}
+            end
+        end
+      error = {{:error, _e}, _v} -> error
+      v = {:default, _} -> v
+    end
+  end
+
+  def extract_setting({:list, of_type}, setting, conn, params, default, options) do
+    case extract_setting(:extract, setting, conn, params, default, options) do
+      {type, extracted_value} when type in [:query_param, :body_param, :param] ->
+        case extracted_value do
+          nil -> {type, nil}
+          [] -> {type, []}
+          "" -> {type, []}
+          v when is_list(v) or is_bitstring(v) ->
+            out_list = (is_list(v) && v || (String.split(v, ",") |> Enum.map(&(String.trim(&1)))))
+                       |>  Enum.map(&(extract_setting(of_type, {:inject, {type, &1}}, conn, params, nil, options)))
+            has_errors = Enum.find(out_list, fn
+              ({:default, _}) -> true
+              ({{:error, _}, _v}) -> true
+              ({t, _}) -> !(t in [:query_param, :body_param, :param])
+            end) && true
+            has_successful = Enum.find(out_list, fn
+              ({{:warning, _}, _}) -> true
+              ({t, _}) -> t in [:query_param, :body_param, :param]
+              _ -> false
+            end) && true
+
+            cond do
+              !has_errors -> {type, out_list}
+              has_successful -> {{:error, {:has_errors, {type, v}}}, out_list}
+              :else -> {{:error, {:parse_failure, {type, v}} }, default}
+            end
+          sv ->
+            case extract_setting(of_type, {:inject, {type, sv}}, conn, params, nil, options) do
+              {t, ev} when t in [:query_param, :body_param, :param] -> {type, [ev]}
+              _ -> {{:error, {:invalid_single_element, {type, extracted_value}}}, default}
+            end
+        end
+      other -> other
+    end
+  end
+
+
+
+
+
   defmodule CustomHelper do
     defmacro __using__(_ \\ nil) do
       quote do
         import Noizu.AdvancedScaffolding.Helpers
 
+        def extract_setting(command, setting, conn, params, default \\ nil, options \\ nil), do: Noizu.AdvancedScaffolding.Helpers.extract_setting(command, setting, conn, params, default, options)
         def banner_text(header, msg, len \\ 120, pad \\ 0), do: Noizu.AdvancedScaffolding.Helpers.banner_text(header, msg, len, pad)
         def request_pagination(params, default_page, default_results_per_page), do: Noizu.AdvancedScaffolding.Helpers.request_pagination(params, default_page, default_results_per_page)
         def page(page, query), do: Noizu.AdvancedScaffolding.Helpers.page(page, query)
@@ -584,6 +812,9 @@ defmodule Noizu.AdvancedScaffolding.Helpers do
         def force_put(entity, path, value), do: Noizu.AdvancedScaffolding.Helpers.force_put(entity, path, value)
 
         defoverridable [
+          extract_setting: 4,
+          extract_setting: 5,
+          extract_setting: 6,
           banner_text: 2,
           banner_text: 3,
           banner_text: 4,

@@ -270,11 +270,11 @@ defmodule Noizu.AdvancedScaffolding.Internal.Helpers do
       json_supported_formats = options[:json_supported_formats]
 
       @__nzdo__json_provider json_provider || Noizu.AdvancedScaffolding.Internal.Helpers.extract_json_attribute(:json_provider, :provider, Noizu.Poison.Encoder)
-      @__nzdo__json_format json_format || Noizu.AdvancedScaffolding.Internal.Helpers.extract_has_json_attribute(:json_format, :default, :default)
       @__nzdo__json_supported_formats json_supported_formats || Noizu.AdvancedScaffolding.Internal.Helpers.extract_has_json_attribute(
         :json_supported_formats, :formats,
         [:standard, :admin, :verbose, :compact, :mobile, :verbose_mobile]
       )
+      @__nzdo__json_format json_format || Noizu.AdvancedScaffolding.Internal.Helpers.extract_has_json_attribute(:json_format, :default, List.first(@__nzdo__json_supported_formats))
       @__nzdo__json_format_groups (
                                     Enum.map(
                                       Noizu.AdvancedScaffolding.Internal.Helpers.extract_json_attribute(:json_format_group, :format_groups, []),

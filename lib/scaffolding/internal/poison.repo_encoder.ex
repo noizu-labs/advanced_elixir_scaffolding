@@ -18,18 +18,22 @@ defmodule Noizu.Poison.RepoEncoder do
     case noizu_repo do
       %{entities: unprocessed_entities} when is_list(unprocessed_entities) ->
         {expanded_entities, options} = cond do
-                                         options[:__nzdo__restricted?] && options[:__nzdo__expanded?] -> {noizu_repo, options}
+                                         options[:__nzdo__restricted?] && options[:__nzdo__expanded?] ->
+                                           {unprocessed_entities, options}
                                          !options[:__nzdo__restricted?] && options[:__nzdo__expanded?] ->
-                                           {Noizu.RestrictedAccess.Protocol.restricted_view(unprocessed_entities, context, options[:restricted_view] || []), options}
+                                           options_b = options
+                                                     |> put_in([:__nzdo__restricted?], true)
+                                           {Noizu.RestrictedAccess.Protocol.restricted_view(unprocessed_entities, context, options), options_b}
                                          :else ->
                                            options_b = options
                                                        |> put_in([:__nzdo__restricted?], false)
                                                        |> put_in([:__nzdo__expanded?], false)
                                            expanded = Noizu.Entity.Protocol.expand!(unprocessed_entities, context, options_b)
-                                           restricted = Noizu.RestrictedAccess.Protocol.restricted_view(expanded, context, options[:restricted_view] || [])
-                                           options = options
+                                           options_c = options_b
+                                                       |> put_in([:__nzdo__expanded?], true)
+                                           restricted = Noizu.RestrictedAccess.Protocol.restricted_view(expanded, context, options)
+                                           options = options_c
                                                      |> put_in([:__nzdo__restricted?], true)
-                                                     |> put_in([:__nzdo__expanded?], true)
                                            {restricted, options}
                                        end
         # Note currently we don't support expansion/restrict on Repo struct fields.
@@ -44,6 +48,9 @@ defmodule Noizu.Poison.RepoEncoder do
         |> put_in([:json_format], json_format)
         |> Poison.Encoder.encode(options)
     end
+  rescue e ->
+    IO.error("[JSON] ", Exception.format(:error, e, __STACKTRACE__))
+    Exception.format(:error, e, __STACKTRACE__) |> Poison.Encoder.encode(options)
   end
 
 

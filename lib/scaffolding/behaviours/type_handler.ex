@@ -170,7 +170,7 @@ defmodule Noizu.DomainObject.TypeHandler do
 
       def from_json(_format, _field, _json, _context, _options), do: nil
 
-      def to_json(_json_format, as_field, value, _settings, _context, _options) do
+      def to_json(json_format, as_field, value, _settings, _context, _options) do
         {as_field, value}
       end
 

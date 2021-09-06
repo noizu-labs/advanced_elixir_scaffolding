@@ -196,7 +196,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Core.Base do
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
         def __enum__(), do: __enum__(:all)
         def __enum__(:all) do
-          Enum.map([:list, :default, :is_enum_table, :value_type, :type], &({&1, __enum__(&1)}))
+          Enum.map([:list, :default, :is_enum?, :value_type, :type], &({&1, __enum__(&1)}))
         end
         def __enum__(:list), do: @__nzdo__enum_list
         def __enum__(:default), do: @__nzdo__enum_default_value

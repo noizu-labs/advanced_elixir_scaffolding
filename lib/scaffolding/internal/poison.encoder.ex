@@ -7,6 +7,7 @@ defmodule Noizu.Poison.Encoder do
   @moduledoc """
   Custom Poison Encoder Implementation, it handles stripping PII, formatting, etc.
   """
+  require Logger
 
   @doc """
   Convert struct into json string.
@@ -15,28 +16,33 @@ defmodule Noizu.Poison.Encoder do
     context = options[:context]
     {json_format, options} = Noizu.AdvancedScaffolding.Helpers.__update_options__(noizu_entity, context, options)
     {entity, options} = cond do
-                          options[:__nzdo__restricted?] && options[:__nzdo__expanded?] -> {noizu_entity, options}
+                          options[:__nzdo__restricted?] && options[:__nzdo__expanded?] ->
+                            {noizu_entity, options}
                           !options[:__nzdo__restricted?] && options[:__nzdo__expanded?] ->
-                            {Noizu.RestrictedAccess.Protocol.restricted_view(noizu_entity, context, options[:restricted_view] || []), options}
+                            options_b = options
+                                      |> put_in([:__nzdo__restricted?], true)
+                            {Noizu.RestrictedAccess.Protocol.restricted_view(noizu_entity, context, options), options_b}
                           :else ->
                             options_b = options
                                         |> put_in([:__nzdo__restricted?], false)
                                         |> put_in([:__nzdo__expanded?], false)
                             expanded = Noizu.Entity.Protocol.expand!(noizu_entity, context, options_b)
-                            restricted = Noizu.RestrictedAccess.Protocol.restricted_view(expanded, context, options[:restricted_view] || [])
-                            options = options
-                                      |> put_in([:__nzdo__restricted?], true)
+
+                            options_c = options_b
                                       |> put_in([:__nzdo__expanded?], true)
+                            restricted = Noizu.RestrictedAccess.Protocol.restricted_view(expanded, context, options)
+                            options = options_c
+                                      |> put_in([:__nzdo__restricted?], true)
+
                             {restricted, options}
                         end
-
     # @todo implment DO annotation support to feed in this option in entity.
     if noizu_entity.__struct__.__noizu_info__(:json_configuration)[:format_settings][json_format][:__suppress_meta__] do
       Map.from_struct(entity)
       |> Enum.map(&(encode_field(noizu_entity.__struct__, json_format, &1, context, options)))
       |> Enum.filter(&(&1 != nil))
       |> List.flatten()
-      |> Enum.filter(fn ({_, v}) -> v != nil end)
+      |> Enum.filter(fn({_, v}) -> v != nil end)
       |> Map.new()
       |> Poison.Encoder.encode(options)
     else
@@ -44,12 +50,16 @@ defmodule Noizu.Poison.Encoder do
       |> Enum.map(&(encode_field(noizu_entity.__struct__, json_format, &1, context, options)))
       |> Enum.filter(&(&1 != nil))
       |> List.flatten()
-      |> Enum.filter(fn ({_, v}) -> v != nil end)
+      |> Enum.filter(fn({_, v}) -> v != nil end)
       |> Map.new()
       |> put_in([:kind], noizu_entity.__struct__.__kind__())
       |> put_in([:json_format], json_format)
       |> Poison.Encoder.encode(options)
     end
+
+  rescue e ->
+    Logger.error("[JSON] ", Exception.format(:error, e, __STACKTRACE__))
+    Exception.format(:error, e, __STACKTRACE__) |> Poison.Encoder.encode(options)
   end
 
   defp encode_field(mod, json_format, {field, value}, context, options) do
@@ -67,25 +77,31 @@ defmodule Noizu.Poison.Encoder do
 
     if include do
       {expanded, v} = cond do
-                        field_settings[:sref] -> {false, Noizu.ERP.sref(value)}
-                        options[:__nzdo__expanded?] -> {true, value}
-                        field_settings[:expand] -> {true, Noizu.Entity.Protocol.expand!(value, context, options)}
-                        :else -> {false, value}
+                        field_settings[:sref] ->
+                          {false, Noizu.ERP.sref(value)}
+                        options[:__nzdo__expanded?] ->
+                          {true, value}
+                        field_settings[:expand] ->
+                          {true, Noizu.Entity.Protocol.expand!(value, context, options)}
+                        :else ->
+                          {false, value}
                       end
-
       cond do
         embed = field_settings[:embed] ->
           if (v) do
             v = cond do
-                  expanded -> v
-                  :else -> Noizu.Entity.Protocol.expand!(value, context, options) # switch back to value not v incase sref was used.
+                  expanded ->
+                    v
+                  :else ->
+                    Noizu.Entity.Protocol.expand!(value, context, options) # switch back to value not v incase sref was used.
                 end
 
-            Enum.map(
+            v && Enum.map(
               embed,
               fn (e) ->
                 case e do
-                  {f, true} -> {f, get_in(v, [Access.key(f)])}
+                  {f, true} ->
+                    {f, get_in(v, [Access.key(f)])}
                   {f, c} ->
                     as = c[:as] || f
                     v2 = get_in(v, [Access.key(f)])
@@ -122,23 +138,32 @@ defmodule Noizu.Poison.Encoder do
                   {as, v}
                 format ->
                   cond do
-                    is_atom(format) && function_exported?(format, :to_json, 6) -> format.to_json(json_format, as, v, field_settings, context, options)
-                    is_function(format, 6) -> format.(json_format, as, v, field_settings, context, options)
+                    is_atom(format) && function_exported?(format, :to_json, 6) ->
+                      format.to_json(json_format, as, v, field_settings, context, options)
+                    is_function(format, 6) ->
+                      format.(json_format, as, v, field_settings, context, options)
                     ft = mod.__noizu_info__(:field_types)[field] ->
                       cond do
-                        ft.handler && function_exported?(ft.handler, :to_json, 6) -> ft.handler.to_json(json_format, as, v, field_settings, context, options)
-                        :else -> {as, v}
+                        ft.handler && function_exported?(ft.handler, :to_json, 6) ->
+                          ft.handler.to_json(json_format, as, v, field_settings, context, options)
+                        :else ->
+                          {as, v}
                       end
-                    :else -> {as, v}
+                    :else ->
+                      {as, v}
                   end
               end
-            field_settings[:format] == false -> {as, v}
+            field_settings[:format] == false ->
+              {as, v}
             ft = mod.__noizu_info__(:field_types)[field] ->
               cond do
-                ft.handler && function_exported?(ft.handler, :to_json, 6) -> ft.handler.to_json(json_format, as, v, field_settings, context, options)
-                :else -> {as, v}
+                ft.handler && function_exported?(ft.handler, :to_json, 6) ->
+                  ft.handler.to_json(json_format, as, v, field_settings, context, options)
+                :else ->
+                  {as, v}
               end
-            :else -> {as, v}
+            :else ->
+              {as, v}
           end
       end
     end
