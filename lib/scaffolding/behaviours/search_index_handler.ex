@@ -16,7 +16,7 @@ defmodule Noizu.DomainObject.SearchIndexHandler do
 
     # ----- search construction
     alias Noizu.AdvancedScaffolding.Types, as: T
-    @callback has_permission?(index :: any, field :: atom, filter :: atom | tuple, context :: Noizu.ElixirCore.CallingContext.t, options :: list | map()) :: true | false
+    @callback has_query_permission?(index :: any, field :: atom, filter :: atom | tuple, context :: Noizu.ElixirCore.CallingContext.t, options :: list | map()) :: true | false
     # search clauses with permision filters applied.
     @callback __search_clauses__(index :: any, field :: atom, conn :: any, params :: map(), context :: Noizu.ElixirCore.CallingContext.t, options :: list | map()) :: [T.query_clause] | {:error, any}
     # ----- search construction
@@ -120,8 +120,8 @@ defmodule Noizu.DomainObject.SearchIndexHandler do
       end
 
 
-      def has_permission?(index, field, filter, context, options) do
-        case index.has_permission?(field, filter, context, options) do
+      def has_query_permission?(index, field, filter, context, options) do
+        case index.has_query_permission?(field, filter, context, options) do
           :inherit -> true
           v-> v
         end
@@ -140,8 +140,8 @@ defmodule Noizu.DomainObject.SearchIndexHandler do
         __sphinx_bits__: 3,
         __sphinx_encoding__: 3,
         __sphinx_encoded__: 4,
-      
-        has_permission?: 5,
+
+        has_query_permission?: 5,
         __search_clauses__: 6,
       ]
     end

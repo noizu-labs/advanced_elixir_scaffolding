@@ -15,7 +15,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Index do
 
     alias Noizu.AdvancedScaffolding.Types, as: T
 
-    @callback has_permission?(field :: atom, filter :: atom | tuple, context :: CallingContext.t, options :: list | map()) :: true | false | :inherit
+    @callback has_query_permission?(field :: atom, filter :: atom | tuple, context :: CallingContext.t, options :: list | map()) :: true | false | :inherit
 
     @callback __indexing__() :: any
     @callback __indexing__(any) :: any
@@ -118,6 +118,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Index do
           def __indexing__(p), do: @__nzdo__indexing_source.__indexing__(p)
         end
 
+        def has_query_permission?(_field, _filter, _context, _options), do: :inherit
 
         def __search_clause__(:max_results, conn, params, context, options), do: __search_max_results__(conn, params, context, options)
         def __search_clause__(:limit, conn, params, context, options), do: __search_limit__(conn, params, context, options)
@@ -183,6 +184,8 @@ defmodule Noizu.AdvancedScaffolding.Internal.Index do
 
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
         defoverridable [
+
+          has_query_permission?: 4,
 
           __indexing__: 0,
           __indexing__: 1,
