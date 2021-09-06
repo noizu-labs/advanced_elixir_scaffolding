@@ -22,9 +22,23 @@ defmodule Noizu.AdvancedScaffolding.Internal.Json.Repo do
       end
     end
 
-    def __implement__(_options) do
-    end
+    def __implement__(options) do
+      json_provider = options[:json_provider]
+      disable_json_imp = (json_provider == false)
+      quote do
+        jp = Module.get_attribute(__MODULE__, :json_provider, nil)
+        djp = (jp == false)
+        @__nzdo__repo_json_provider (!(djp || unquote(disable_json_imp))) && (unquote(json_provider) || Module.get_attribute(__MODULE__, :json_provider, Noizu.Poison.RepoEncoder))
 
+        @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+        if (__nzdo__json_provider = @__nzdo__repo_json_provider) do
+          defimpl Poison.Encoder  do
+            @__nzdo__repo_json_provider __nzdo__json_provider
+            def encode(entity, options \\ nil), do: @__nzdo__repo_json_provider.encode(entity, options)
+          end
+        end
+      end
+    end
 
     defmacro __before_compile__(_env) do
       quote do

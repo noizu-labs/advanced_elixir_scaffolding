@@ -6,7 +6,7 @@
 defmodule Noizu.DomainObject.TimeStamp.Millisecond do
   use Noizu.SimpleObject
   @vsn 1.0
-  @kind "uTimeStamp.t"
+  @kind "__uTimeStamp__"
   Noizu.SimpleObject.noizu_struct() do
     date_time_handler = Application.get_env(:noizu_advanced_scaffolding, :usec_data_time_handler, Noizu.DomainObject.DateTime.Millisecond.TypeHandler)
     @json {[:mobile, :verbose], :suppress_meta}

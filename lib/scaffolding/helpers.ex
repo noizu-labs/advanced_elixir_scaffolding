@@ -74,7 +74,7 @@ defmodule Noizu.AdvancedScaffolding.Helpers do
                                             [h] -> {h, [max(h - 1, 1)]}
                                             [h | t] -> {h, t}
                                             _ ->
-                                              h = System.schedulers_online()
+                                              h = System.schedulers_online() * 8
                                               {h, [max(h - 1, 1)]}
                                           end
     {max_concurrency, put_in(options, [:max_concurrency], next_concurrency)}
@@ -483,7 +483,7 @@ defmodule Noizu.AdvancedScaffolding.Helpers do
   """
   def __update_expand_options__(entity, options) when is_atom(entity) do
     sm = try do
-           entity.sref_module()
+           entity.__kind__()
     rescue _e -> "[error]"
          end
     (options || %{})
@@ -492,7 +492,7 @@ defmodule Noizu.AdvancedScaffolding.Helpers do
   end
   def __update_expand_options__(%{__struct__: m} = _entity, options) do
     sm = try do
-           m.sref_module()
+           m.__kind__()
     rescue _e -> "[error]"
          end
     (options || %{})

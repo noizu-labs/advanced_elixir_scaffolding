@@ -6,7 +6,7 @@
 defmodule Noizu.DomainObject.TimeStamp.Second do
   use Noizu.SimpleObject
   @vsn 1.0
-  @kind "TimeStamp.t"
+  @kind "__TimeStamp__"
   Noizu.SimpleObject.noizu_struct() do
     date_time_handler = Application.get_env(:noizu_advanced_scaffolding, :data_time_handler, Noizu.DomainObject.DateTime.Second.TypeHandler)
     @json {[:mobile, :verbose], :suppress_meta}

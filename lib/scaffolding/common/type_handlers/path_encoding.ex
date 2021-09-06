@@ -6,7 +6,7 @@
 defmodule Noizu.DomainObject.EncodedPath do
   use Noizu.SimpleObject
   @vsn 1.0
-  @kind "EncodedPath.t"
+  @kind "__EncodedPath__"
   Noizu.SimpleObject.noizu_struct() do
     @json {[:mobile, :verbose], :suppress_meta}
     public_field :path

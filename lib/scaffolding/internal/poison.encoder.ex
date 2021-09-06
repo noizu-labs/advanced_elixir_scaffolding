@@ -16,12 +16,18 @@ defmodule Noizu.Poison.Encoder do
     {json_format, options} = Noizu.AdvancedScaffolding.Helpers.__update_options__(noizu_entity, context, options)
     {entity, options} = cond do
                           options[:__nzdo__restricted?] && options[:__nzdo__expanded?] -> {noizu_entity, options}
-                          !options[:__nzdo__restricted?] ->
+                          !options[:__nzdo__restricted?] && options[:__nzdo__expanded?] ->
                             {Noizu.RestrictedAccess.Protocol.restricted_view(noizu_entity, context, options[:restricted_view]), options}
-                          !options[:__nzdo__expanded?] ->
-                            {_, options} = pop_in(options, [:__nzdo__restricted?])
-                            {_, options} = pop_in(options, [:__nzdo__expanded?])
-                            {Noizu.Entity.Protocol.expand!(noizu_entity, context, options), options}
+                          :else ->
+                            options_b = options
+                                        |> put_in([:__nzdo__restricted?], false)
+                                        |> put_in([:__nzdo__expanded?], false)
+                            expanded = Noizu.Entity.Protocol.expand!(noizu_entity, context, options_b)
+                            restricted = Noizu.RestrictedAccess.Protocol.restricted_view(expanded, context, options[:restricted_view])
+                            options = options
+                                      |> put_in([:__nzdo__restricted?], true)
+                                      |> put_in([:__nzdo__expanded?], true)
+                            {restricted, options}
                         end
 
     # @todo implment DO annotation support to feed in this option in entity.
@@ -110,9 +116,9 @@ defmodule Noizu.Poison.Encoder do
               case field_settings[:format] do
                 :iso8601 ->
                   v = case v do
-                    %DateTime{} -> DateTime.to_iso8601(v)
-                    _ -> v
-                  end
+                        %DateTime{} -> DateTime.to_iso8601(v)
+                        _ -> v
+                      end
                   {as, v}
                 format ->
                   cond do
