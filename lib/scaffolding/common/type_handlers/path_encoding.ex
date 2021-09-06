@@ -8,6 +8,7 @@ defmodule Noizu.DomainObject.EncodedPath do
   @vsn 1.0
   @kind "EncodedPath.t"
   Noizu.SimpleObject.noizu_struct() do
+    @json {[:mobile, :verbose], :suppress_meta}
     public_field :path
     public_field :materialized_path
     public_field :matrix
@@ -248,6 +249,13 @@ defmodule Noizu.DomainObject.EncodedPath do
       Noizu.DomainObject.EncodedPath.from_json(format, json[Atom.to_string(field)], context, options)
     end
 
+
+    def to_json(format, as, value, _settings, _context, _options) when format in [:mobile, :verbose_mobile] do
+      {as, value && Enum.join(value.path || [], ".")}
+    end
+    def to_json(format, as, value, settings, context, options) do
+      super(format, as, value, settings, context, options)
+    end
 
 
     #===============================================

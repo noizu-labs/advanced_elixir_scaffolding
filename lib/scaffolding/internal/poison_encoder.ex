@@ -24,15 +24,26 @@ defmodule Noizu.Poison.Encoder do
                             {Noizu.Entity.Protocol.expand!(noizu_entity, context, options), options}
                         end
 
-    Map.from_struct(entity)
-    |> Enum.map(&(encode_field(noizu_entity.__struct__, json_format, &1, context, options)))
-    |> Enum.filter(&(&1))
-    |> List.flatten()
-    |> Enum.filter(fn ({_, v}) -> v && true end)
-    |> Map.new()
-    |> put_in([:kind], noizu_entity.__struct__.__kind__())
-    |> put_in([:json_format], json_format)
-    |> Poison.Encoder.encode(options)
+    # @todo implment DO annotation support to feed in this option in entity.
+    if options[:__suppress_meta__] || noizu_entity.__transient__[:json][:__suppress_meta__] || noizu_entity.__struct__.__noizu_info__(:json_configuration)[:format_settings][json_format][:__suppress_meta__] do
+      Map.from_struct(entity)
+      |> Enum.map(&(encode_field(noizu_entity.__struct__, json_format, &1, context, options)))
+      |> Enum.filter(&(&1 != nil))
+      |> List.flatten()
+      |> Enum.filter(fn ({_, v}) -> v != nil end)
+      |> Map.new()
+      |> Poison.Encoder.encode(options)
+    else
+      Map.from_struct(entity)
+      |> Enum.map(&(encode_field(noizu_entity.__struct__, json_format, &1, context, options)))
+      |> Enum.filter(&(&1 != nil))
+      |> List.flatten()
+      |> Enum.filter(fn ({_, v}) -> v != nil end)
+      |> Map.new()
+      |> put_in([:kind], noizu_entity.__struct__.__kind__())
+      |> put_in([:json_format], json_format)
+      |> Poison.Encoder.encode(options)
+    end
   end
 
   defp encode_field(mod, json_format, {field, value}, context, options) do
@@ -44,7 +55,7 @@ defmodule Noizu.Poison.Encoder do
                 field_settings[:include] == false -> false
                 field_settings[:include] == true -> true
                 white_list == true -> false
-                is_list(white_list) && Enum.member?(white_list, field) -> true
+                is_list(white_list) && !Enum.member?(white_list, field) -> false
                 :else -> true
               end
 
@@ -94,19 +105,35 @@ defmodule Noizu.Poison.Encoder do
           end
         :else ->
           as = field_settings[:as] || field
-          v = cond do
-                field_settings[:format] ->
-                  case field_settings[:format] do
-                    :iso8601 ->
-                      case v do
-                        %DateTime{} -> DateTime.to_iso8601(v)
-                        _ -> v
-                      end
+          cond do
+            field_settings[:format] ->
+              case field_settings[:format] do
+                :iso8601 ->
+                  v = case v do
+                    %DateTime{} -> DateTime.to_iso8601(v)
                     _ -> v
                   end
-                :else -> v
+                  {as, v}
+                format ->
+                  cond do
+                    is_atom(format) && function_exported?(format, :to_json, 6) -> format.to_json(json_format, as, v, field_settings, context, options)
+                    is_function(format, 6) -> format.(json_format, as, v, field_settings, context, options)
+                    ft = mod.__noizu_info__(:field_types)[field] ->
+                      cond do
+                        ft.handler && function_exported?(ft.handler, :to_json, 6) -> ft.handler.to_json(json_format, as, v, field_settings, context, options)
+                        :else -> {as, v}
+                      end
+                    :else -> {as, v}
+                  end
               end
-          {as, v}
+            field_settings[:format] == false -> {as, v}
+            ft = mod.__noizu_info__(:field_types)[field] ->
+              cond do
+                ft.handler && function_exported?(ft.handler, :to_json, 6) -> ft.handler.to_json(json_format, as, v, field_settings, context, options)
+                :else -> {as, v}
+              end
+            :else -> {as, v}
+          end
       end
     end
   end

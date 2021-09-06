@@ -170,6 +170,10 @@ defmodule Noizu.DomainObject.TypeHandler do
 
       def from_json(_format, _field, _json, _context, _options), do: nil
 
+      def to_json(_json_format, as_field, value, _settings, _context, _options) do
+        {as_field, value}
+      end
+
       defoverridable [
         compare: 2,
         sync: 3,
@@ -193,7 +197,8 @@ defmodule Noizu.DomainObject.TypeHandler do
         post_delete_callback!: 4,
         cast: 6,
         dump: 7,
-        from_json: 5
+        from_json: 5,
+        to_json: 6,
       ]
     end
   end

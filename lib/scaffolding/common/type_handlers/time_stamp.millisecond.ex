@@ -9,6 +9,7 @@ defmodule Noizu.DomainObject.TimeStamp.Millisecond do
   @kind "uTimeStamp.t"
   Noizu.SimpleObject.noizu_struct() do
     date_time_handler = Application.get_env(:noizu_advanced_scaffolding, :usec_data_time_handler, Noizu.DomainObject.DateTime.Millisecond.TypeHandler)
+    @json {[:mobile, :verbose], :suppress_meta}
     public_field :created_on, nil, date_time_handler
     public_field :modified_on, nil, date_time_handler
     public_field :deleted_on, nil, date_time_handler
@@ -90,32 +91,32 @@ defmodule Noizu.DomainObject.TimeStamp.Millisecond do
     def dump(:time_stamp, _segment, nil, _type, _layer, _context, _options), do: [{:created_on, nil}, {:modified_on, nil}, {:deleted_on, nil}]
     def dump(:time_stamp, _segment, v = %{__struct__: Noizu.DomainObject.TimeStamp.Millisecond}, _type, %{type: :ecto}, _context, _options) do
       [
-        {:created_on, v.created_on && %{v.created_on| microsecond: {0, 6}}},
-        {:modified_on, v.modified_on && %{v.modified_on| microsecond: {0, 6}}},
-        {:deleted_on, v.deleted_on && %{v.deleted_on| microsecond: {0, 6}}},
+        {:created_on, v.created_on && %{v.created_on| microsecond: {0, 6}} || nil },
+        {:modified_on, v.modified_on && %{v.modified_on| microsecond: {0, 6}} || nil},
+        {:deleted_on, v.deleted_on && %{v.deleted_on| microsecond: {0, 6}} || nil},
       ]
     end
     def dump(:time_stamp, _segment, v = %{__struct__: Noizu.DomainObject.TimeStamp.Millisecond}, _type, %{type: :mnesia}, _context, _options) do
       [
-        {:created_on, v.created_on && DateTime.to_unix(v.created_on, :millisecond)},
-        {:modified_on, v.modified_on && DateTime.to_unix(v.modified_on, :millisecond)},
-        {:deleted_on, v.deleted_on && DateTime.to_unix(v.deleted_on, :millisecond)}
+        {:created_on, v.created_on && DateTime.to_unix(v.created_on, :millisecond) || nil},
+        {:modified_on, v.modified_on && DateTime.to_unix(v.modified_on, :millisecond) || nil},
+        {:deleted_on, v.deleted_on && DateTime.to_unix(v.deleted_on, :millisecond) || nil}
       ]
     end
 
     def dump(field, _segment, nil, _type, _layer, _context, _options), do: [{:"#{field}_created_on", nil}, {:"#{field}_modified_on", nil}, {:"#{field}_deleted_on", nil}]
     def dump(field, _segment, v = %{__struct__: Noizu.DomainObject.TimeStamp.Millisecond}, _type, %{type: :ecto}, _context, _options) do
       [
-        {:"#{field}_created_on", v.created_on && %{v.created_on| microsecond: {0, 6}}},
-        {:"#{field}_modified_on", v.modified_on && %{v.modified_on| microsecond: {0, 6}}},
-        {:"#{field}_deleted_on", v.deleted_on && %{v.deleted_on| microsecond: {0, 6}}},
+        {:"#{field}_created_on", v.created_on && %{v.created_on| microsecond: {0, 6}} || nil},
+        {:"#{field}_modified_on", v.modified_on && %{v.modified_on| microsecond: {0, 6}} || nil},
+        {:"#{field}_deleted_on", v.deleted_on && %{v.deleted_on| microsecond: {0, 6}} || nil},
       ]
     end
     def dump(field, _segment, v = %{__struct__: Noizu.DomainObject.TimeStamp.Millisecond}, _type, %{type: :mnesia}, _context, _options) do
       [
-        {:"#{field}_created_on", v.created_on && DateTime.to_unix(v.created_on, :millisecond)},
-        {:"#{field}_modified_on", v.modified_on && DateTime.to_unix(v.modified_on, :millisecond)},
-        {:"#{field}_deleted_on", v.deleted_on && DateTime.to_unix(v.deleted_on, :millisecond)}
+        {:"#{field}_created_on", v.created_on && DateTime.to_unix(v.created_on, :millisecond) || nil},
+        {:"#{field}_modified_on", v.modified_on && DateTime.to_unix(v.modified_on, :millisecond) || nil},
+        {:"#{field}_deleted_on", v.deleted_on && DateTime.to_unix(v.deleted_on, :millisecond) || nil}
       ]
     end
     def dump(field, segment, value, type, layer, context, options), do: super(field, segment, value, type, layer, context, options)

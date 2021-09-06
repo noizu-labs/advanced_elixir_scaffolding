@@ -633,6 +633,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Entity.Field.Macros do
     |> Enum.uniq()
   end
 
+
   #---------------------------------
   #
   #---------------------------------
@@ -645,6 +646,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Entity.Field.Macros do
     # {[selectors], ..}
     # {selector, as: "RenameTo"}
     # {selector, embed: [list]}
+    # {[selectors], :suppress_meta}
     Enum.reduce(
       entries || [],
       acc,
@@ -655,6 +657,8 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Entity.Field.Macros do
           acc,
           fn (s, acc) ->
             case s do
+              :suppress_meta -> __set_option__(acc, selectors, [:__suppress_meta__], {:suppress_meta, true})
+              {:suppress_meta, _} -> __set_option__(acc, selectors, [:__suppress_meta__], s)
               :expand -> __set_option__(acc, selectors, fields, {:expand, true})
               :sref -> __set_option__(acc, selectors, fields, {:sref, true})
               :ignore -> __set_option__(acc, selectors, fields, {:include, false})
@@ -788,20 +792,31 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Entity.Field.Macros do
       # Universals Fields (always include)
       #----------------------
       @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
-      #Module.put_attribute(__MODULE__, :__nzdo__fields, {:initial, nil})
-      @inspect [ignore: true]
-      FieldMacros.transient_field :initial
+      if !@__nzdo__fields[:initial] do
+        @inspect [ignore: true]
+        @json_ignore :*
+        FieldMacros.transient_field :initial
+      end
 
       @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
-      Module.put_attribute(__MODULE__, :__nzdo__fields, {:meta, %{}})
+      if !@__nzdo__fields[:__transient__] do
+        @inspect [ignore: true]
+        @json_ignore :*
+        FieldMacros.transient_field :__transient__
+      end
 
       @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
-      #Module.put_attribute(__MODULE__, :__nzdo__fields, {:__transient__, nil})
-      @inspect [ignore: true]
-      FieldMacros.transient_field :__transient__
+      if !@__nzdo__fields[:meta] do
+        @json_ignore :*
+        FieldMacros.restricted_field :meta, %{}
+      end
 
       @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
-      Module.put_attribute(__MODULE__, :__nzdo__fields, {:vsn, @vsn})
+      if !@__nzdo__fields[:vsn] do
+        @json_ignore [:mobile, :verbose_mobile]
+        FieldMacros.public_field :vsn, @vsn
+      end
+
       @file __ENV__.file
       :ok
     end
