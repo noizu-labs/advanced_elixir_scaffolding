@@ -77,7 +77,7 @@ defmodule Noizu.AdvancedScaffolding.Helpers do
                                               h = System.schedulers_online() * 8
                                               {h, [max(h - 1, 1)]}
                                           end
-    {max_concurrency, put_in(options, [:max_concurrency], next_concurrency)}
+    {max_concurrency, put_in(options || [], [:max_concurrency], next_concurrency)}
   end
 
   #-------------------------

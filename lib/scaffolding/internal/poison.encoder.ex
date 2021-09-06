@@ -17,13 +17,13 @@ defmodule Noizu.Poison.Encoder do
     {entity, options} = cond do
                           options[:__nzdo__restricted?] && options[:__nzdo__expanded?] -> {noizu_entity, options}
                           !options[:__nzdo__restricted?] && options[:__nzdo__expanded?] ->
-                            {Noizu.RestrictedAccess.Protocol.restricted_view(noizu_entity, context, options[:restricted_view]), options}
+                            {Noizu.RestrictedAccess.Protocol.restricted_view(noizu_entity, context, options[:restricted_view] || []), options}
                           :else ->
                             options_b = options
                                         |> put_in([:__nzdo__restricted?], false)
                                         |> put_in([:__nzdo__expanded?], false)
                             expanded = Noizu.Entity.Protocol.expand!(noizu_entity, context, options_b)
-                            restricted = Noizu.RestrictedAccess.Protocol.restricted_view(expanded, context, options[:restricted_view])
+                            restricted = Noizu.RestrictedAccess.Protocol.restricted_view(expanded, context, options[:restricted_view] || [])
                             options = options
                                       |> put_in([:__nzdo__restricted?], true)
                                       |> put_in([:__nzdo__expanded?], true)
