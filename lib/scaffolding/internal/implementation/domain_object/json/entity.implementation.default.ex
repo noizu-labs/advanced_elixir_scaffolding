@@ -17,6 +17,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Json.Entity.Implementation.Default 
     level_4: 4,
     level_5: 5,
     level_6: 6,
+    default: 6,
   }
 
   def __strip_pii__(_m, entity, max_level) do
@@ -25,7 +26,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Json.Entity.Implementation.Default 
       Map.from_struct(entity),
       fn ({field, value}) ->
         cond do
-          (@pii_levels[entity.__struct__.__noizu_info__(:field_attributes)[field][:pii]] || @pii_levels[:level_6]) >= max_level -> {field, value}
+          (@pii_levels[entity.__struct__.__noizu_info__(:field_attributes)[field][:pii]]) >= max_level -> {field, value}
           :else -> {field, :"*RESTRICTED*"}
         end
       end

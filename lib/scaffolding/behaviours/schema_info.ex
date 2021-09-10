@@ -112,17 +112,17 @@ defmodule Noizu.DomainObject.SchemaInfo do
     def parse_sref(mod, sref) do
       cond do
         Regex.match?(~r/^ref\.([^.]*)\.(.*)$/, sref) ->
-          [_p, m_str, id_str| _] = Regex.run(~r/^ref\.([^.]*)\.(.*)$/, sref)
+          [_p, m_str, _id_str| _] = Regex.run(~r/^ref\.([^.]*)\.(.*)$/, sref)
           m = mod.sref_map()[m_str] || Noizu.DomainObject.UnsupportedModule
-          m.ref(id_str)
+          m.ref(sref)
         Regex.match?(~r/^ref\.([^.\[\{]*)\[(.*)\]$/, sref) ->
-          [_p, m_str, id_str| _] = Regex.run(~r/^ref\.([^.\[\{]*)\[(.*)\]$/, sref)
+          [_p, m_str, _id_str| _] = Regex.run(~r/^ref\.([^.\[\{]*)\[(.*)\]$/, sref)
           m = mod.sref_map()[m_str] || Noizu.DomainObject.UnsupportedModule
-          m.ref(id_str)
+          m.ref(sref)
         Regex.match?(~r/^ref\.([^.\[\{]*)\{(.*)\}$/, sref) ->
-          [_p, m_str, id_str| _] = Regex.run(~r/^ref\.([^.\[\{]*)\{(.*)\}$/, sref)
+          [_p, m_str, _id_str| _] = Regex.run(~r/^ref\.([^.\[\{]*)\{(.*)\}$/, sref)
           m = mod.sref_map()[m_str] || Noizu.DomainObject.UnsupportedModule
-          m.ref(id_str)
+          m.ref(sref)
         :else -> nil
       end
     end

@@ -568,6 +568,18 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Entity.Field.Macros do
   #---------------------------------
   #
   #---------------------------------
+  def __expand_json_entry__(setting, field, config, opts) when setting in [:expand, :sref, :ignore, :include] do
+    selector = config.supported
+    fields = __expand_json_field__(field, config, opts)
+    settings = [setting]
+    {selector, fields, settings}
+  end
+  def __expand_json_entry__({setting, settings}, field, config, opts) when setting in [:format, :embed, :as] do
+    selector = config.supported
+    fields = __expand_json_field__(field, config, opts)
+    settings = [{setting, settings}]
+    {selector, fields, settings}
+  end
   def __expand_json_entry__({selector, settings}, field, config, opts) do
     selector = __expand_json_selector__(selector, config, opts)
     fields = __expand_json_field__(field, config, opts)
@@ -648,7 +660,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Entity.Field.Macros do
     # {selector, embed: [list]}
     # {[selectors], :suppress_meta}
     Enum.reduce(
-      entries || [],
+      List.flatten(entries || []),
       acc,
       fn (entry, acc) ->
         {selectors, fields, settings} = __expand_json_entry__(entry, field, config, opts)

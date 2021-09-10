@@ -179,43 +179,47 @@ defmodule Noizu.DomainObject.UniversalReference do
     end
   end
 
-  def entity!(%{__struct__: __MODULE__} = this) do
-    Noizu.ERP.entity!(resolve(this))
+  def entity!(ref, options \\ [])
+  def entity!(%{__struct__: __MODULE__} = this, options) do
+    Noizu.ERP.entity!(resolve(this), options)
   end
-  def entity!(v) do
+  def entity!(v, _) do
     case encode(v) do
       nil -> nil
       u = %{__struct__: __MODULE__} -> entity!(u)
     end
   end
 
-  def entity(%{__struct__: __MODULE__} = this) do
-    Noizu.ERP.entity(resolve(this))
+  def entity(ref, options \\ [])
+  def entity(%{__struct__: __MODULE__} = this, options) do
+    Noizu.ERP.entity(resolve(this), options)
   end
-  def entity(v) do
+  def entity(v, options) do
     case encode(v) do
       nil -> nil
-      u = %{__struct__: __MODULE__} -> entity(u)
+      u = %{__struct__: __MODULE__} -> entity(u, options)
     end
   end
 
-  def record!(%{__struct__: __MODULE__} = this) do
-    Noizu.ERP.record!(resolve(this))
+  def record!(ref, options \\ [])
+  def record!(%{__struct__: __MODULE__} = this, options) do
+    Noizu.ERP.record!(resolve(this), options)
   end
-  def record!(v) do
+  def record!(v, options) do
     case encode(v) do
       nil -> nil
-      u = %{__struct__: __MODULE__} -> record!(u)
+      u = %{__struct__: __MODULE__} -> record!(u, options)
     end
   end
 
-  def record(%{__struct__: __MODULE__} = this) do
-    Noizu.ERP.record(resolve(this))
+  def record(ref, options \\ [])
+  def record(%{__struct__: __MODULE__} = this, options) do
+    Noizu.ERP.record(resolve(this), options)
   end
-  def record(v) do
+  def record(v, options) do
     case encode(v) do
       nil -> nil
-      u = %{__struct__: __MODULE__} -> record(u)
+      u = %{__struct__: __MODULE__} -> record(u, options)
     end
   end
 
