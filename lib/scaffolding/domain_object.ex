@@ -129,7 +129,10 @@ defmodule Noizu.DomainObject do
   In addition the field expansion support like in our type handler behaviour it also provides default values, field type (:attr_unit, :attr_multi64, :field), and bit width (for int fields).
   """
   defmacro noizu_sphinx_handler(options \\ []) do
-    options = Macro.expand(options, __ENV__)
+    options = case options do
+                [] -> []
+                _ -> Macro.expand(options, __ENV__)
+              end
     Noizu.DomainObject.SearchIndexHandler.__noizu_sphinx_handler__(__CALLER__, options)
   end
 

@@ -79,6 +79,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Table do
     provider = options[:implementation] || Noizu.AdvancedScaffolding.Internal.DomainObject.Table.Default
     noizu_domain_object_schema = options[:noizu_domain_object_schema] || Application.get_env(:noizu_advanced_scaffolding, :domain_object_schema)
     nmid_source = options[:nmid_source] || :nmid_indexes
+    nmid_index = options[:nmid_index]
     app_name = options[:app_name] || :auto
     ecto_table = options[:ecto_table]
     disable_nmid = options[:disable_nmid] || false
@@ -124,6 +125,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Table do
                               Module.has_attribute?(__MODULE__, :nmid_bare) -> Module.get_attribute(__MODULE__, :nmid_bare)
                               :else -> false
                             end)
+        @__nzdo__nmid_index unquote(nmid_index) || Module.get_attribute(__MODULE__, :nmid_index)
       end
 
       #----------------------
@@ -296,7 +298,14 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Table do
               bare: __nmid__(:bare)
             }
           end
-          def __nmid__(:index) , do: @__nzdo__noizu_domain_object_schema.__noizu_info__(@nmid_source)[@__nzdo__nmid_sequencer]
+
+          cond do
+            @__nzdo__nmid_index ->
+              def __nmid__(:index), do:  @__nzdo__nmid_index
+            :else ->
+              def __nmid__(:index), do: throw "#{__MODULE__} @nmid_index required."
+          end
+
           def __nmid__(:generator), do: @__nzdo__nmid_generator
           def __nmid__(:sequencer), do: @__nzdo__nmid_sequencer
           def __nmid__(:bare), do: @__nzdo__nmid_bare

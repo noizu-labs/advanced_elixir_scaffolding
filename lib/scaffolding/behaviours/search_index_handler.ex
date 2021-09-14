@@ -37,7 +37,7 @@ defmodule Noizu.DomainObject.SearchIndexHandler do
   Sphinx Handler Behavior
   """
   def __noizu_sphinx_handler__(_caller, options) do
-    options = Macro.expand(options, __ENV__)
+    #options = Macro.expand(options, __ENV__)
     quote do
       @behaviour Noizu.DomainObject.SearchIndexHandler.Behaviour
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
