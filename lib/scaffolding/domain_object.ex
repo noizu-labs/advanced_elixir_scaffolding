@@ -25,7 +25,7 @@ defmodule Noizu.DomainObject do
   ```
   """
   defmacro __using__(options \\ nil) do
-    options = Macro.expand(options, __ENV__)
+    #options = Macro.expand(options, __ENV__)
     quote do
       use Noizu.AdvancedScaffolding.Internal.DomainObject.Base, unquote(options)
     end
@@ -55,7 +55,7 @@ defmodule Noizu.DomainObject do
   ```
   """
   defmacro noizu_entity(options \\ [], [do: block]) do
-    options = Macro.expand(options, __ENV__)
+    #options = Macro.expand(options, __ENV__)
     Noizu.AdvancedScaffolding.Internal.DomainObject.Entity.__noizu_entity__(__CALLER__, options, block)
   end
 
@@ -66,7 +66,7 @@ defmodule Noizu.DomainObject do
     Inject Scaffolding fields into a Ecto.Table entity.
   """
   defmacro noizu_table(options \\ []) do
-    options = Macro.expand(options, __ENV__)
+    #options = Macro.expand(options, __ENV__)
     Noizu.AdvancedScaffolding.Internal.DomainObject.Table.__noizu_table__(__CALLER__, options)
   end
 
@@ -77,7 +77,7 @@ defmodule Noizu.DomainObject do
     Configure your DomainObject Schema module. Provides runtime compiled list of modules, sref mapping/Noizu.ERP String.t support, etc.
   """
   defmacro noizu_schema_info(options \\ [], [do: block]) do
-    options = Macro.expand(options, __ENV__)
+    #options = Macro.expand(options, __ENV__)
     Noizu.DomainObject.SchemaInfo.__noizu_schema_info__(__CALLER__, options, block)
   end
 
@@ -117,7 +117,7 @@ defmodule Noizu.DomainObject do
     ```
   """
   defmacro noizu_type_handler(options \\ []) do
-    options = Macro.expand(options, __ENV__)
+    #options = Macro.expand(options, __ENV__)
     Noizu.DomainObject.TypeHandler.__noizu_type_handler__(__CALLER__, options)
   end
 
@@ -129,10 +129,10 @@ defmodule Noizu.DomainObject do
   In addition the field expansion support like in our type handler behaviour it also provides default values, field type (:attr_unit, :attr_multi64, :field), and bit width (for int fields).
   """
   defmacro noizu_sphinx_handler(options \\ []) do
-    options = case options do
-                [] -> []
-                _ -> Macro.expand(options, __ENV__)
-              end
+    #options = case options do
+    #            [] -> []
+    #            _ -> Macro.expand(options, __ENV__)
+    #          end
     Noizu.DomainObject.SearchIndexHandler.__noizu_sphinx_handler__(__CALLER__, options)
   end
 
@@ -145,7 +145,7 @@ defmodule Noizu.DomainObject do
   internal book keeping (for tracking if a record is realtime, delta, primary index), etc.
   """
   defmacro noizu_index(options \\ [], [do: block]) do
-    options = Macro.expand(options, __ENV__)
+    #options = Macro.expand(options, __ENV__)
     Noizu.AdvancedScaffolding.Internal.DomainObject.Index.__noizu_index__(__CALLER__, options, block)
   end
 
@@ -179,7 +179,7 @@ defmodule Noizu.DomainObject do
   ```
   """
   defmacro noizu_repo(options \\ [], [do: block]) do
-    options = Macro.expand(options, __ENV__)
+    #options = Macro.expand(options, __ENV__)
     Noizu.AdvancedScaffolding.Internal.DomainObject.Repo.__noizu_repo__(__CALLER__, options, block)
   end
 
