@@ -356,8 +356,8 @@ defmodule Noizu.AdvancedScaffolding.Internal.SimpleObject.Base do
                          end
                        )
 
-      def __indexing__(), do: __indexing__(:indexes)
-      def __indexing__(:indexes), do: @__nzdo__indexes
+      def __indexing__(), do: @__nzdo__indexes
+      def __indexing__(p), do: @__nzdo__indexes[p]
 
       #################################################
       # __persistence__

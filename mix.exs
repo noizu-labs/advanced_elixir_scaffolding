@@ -40,7 +40,7 @@ defmodule Noizu.AdvancedScaffolding.Mixfile do
   def application do
     [
       applications: [:logger],
-      extra_applications: [:fastglobal, :noizu_core, :poison, :amnesia, :noizu_mnesia_versioning, :decimal]
+      extra_applications: [:fastglobal, :noizu_core, :poison, :amnesia, :noizu_mnesia_versioning, :decimal, :timex]
     ]
   end # end application
 
@@ -57,6 +57,7 @@ defmodule Noizu.AdvancedScaffolding.Mixfile do
       {:poison, "~> 3.1.0", optional: true},
       {:plug, "~> 1.0", optional: true},
       {:fastglobal, "~> 1.0"},
+      {:timex, "~3.7"},
       {:decimal, "~> 2.0.0"},
     ]
   end # end deps

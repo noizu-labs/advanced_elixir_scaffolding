@@ -11,80 +11,205 @@ defmodule Noizu.AdvancedScaffolding.Internal.Index.Implementation.Default do
   require Logger
   alias Giza.SphinxQL
 
+  @doc """
+    Maximum search results to index for query.
+  """
+  def __search_max_results__(m, conn, params, _context, options) do
+    max_results = case Noizu.AdvancedScaffolding.Helpers.extract_setting(:positive_integer, "max_results", conn, params, nil, options) do
+      {_, v} when is_integer(v) -> v
+      _ -> m.__indexing__()[:options][:max_results]
+    end
+    max_results = min(max_results, m.__indexing__()[:max_result_limit])
+    {:max_results, "option max_matches=#{max_results}"}
+  end
 
-
-
-  def __search_max_results__(_m, _conn, _params, _context, _options), do: nil
-  def __search_limit__(m, conn, _params, _context, _options) do
-    page = cond do
-             page = conn.query_params["page"] ->
-               case Integer.parse(page) do
-                 {page, ""} when page > 0 -> page
-                 _ -> 1
-               end
-             :else -> 1
-           end
-
-    rpp = cond do
-            rpp = conn.query_params["rpp"] ->
-              case Integer.parse(rpp) do
-                {rpp, ""} -> rpp
-                _ -> m.__indexing__(:rpp)
-              end
-            :else -> m.__indexing__(:rpp)
-          end
-
-    limit = cond do
-              v = conn.query_params["limit"] ->
-                case Integer.parse(v) do
-                  {v, ""} when v > 0 -> v
-                  _else -> rpp
-                end
-              :else -> rpp
-            end
-
-    skip = cond do
-              v = conn.query_params["offset"] ->
-                case Integer.parse(v) do
-                  {v, ""} when v > 0 -> v
-                  _else -> 0
-                end
-              :else -> 0
-            end
+  @doc """
+  Query offset/limit pagination.
+  """
+  def __search_limit__(m, conn, params, _context, options) do
+    page = Noizu.AdvancedScaffolding.Helpers.extract_setting(:positive_integer, "page", conn, params, 1, options) |> elem(1)
+    rpp = Noizu.AdvancedScaffolding.Helpers.extract_setting(:positive_integer, "rpp", conn, params, m.__indexing__()[:rpp], options) |> elem(1)
+    limit = Noizu.AdvancedScaffolding.Helpers.extract_setting(:positive_integer, "limit", conn, params, rpp, options) |> elem(1)
+    skip = Noizu.AdvancedScaffolding.Helpers.extract_setting(:positive_integer, "offset", conn, params, 0, options) |> elem(1)
 
     clause = cond do
-               page > 1 ->
-                 offset = ((page - 1) * rpp) + skip
-                 "LIMIT #{offset}, #{limit}"
-               skip > 0 ->
-                 "LIMIT #{skip}, #{limit}"
-               :else ->
-                 "LIMIT #{limit}"
+               page > 1 -> "LIMIT #{((page - 1) * rpp) + skip}, #{limit}"
+               skip > 0 -> "LIMIT #{skip}, #{limit}"
+               :else -> "LIMIT #{limit}"
              end
     {:limit, clause}
   end
 
-  def __search_content__(_m, _conn, _params, _context, _options), do: nil
-  def __search_order_by__(_m, _conn, _params, _context, _options), do: nil
-  def __search_indexes__(_m, _conn, _params, _context, _options), do: nil
+  @doc """
+  Text Match Search
+  """
+  def __search_content__(m, conn, params, _context, options) do
+    case Noizu.AdvancedScaffolding.Helpers.extract_setting(:extract, "query", conn, params, nil, options)  do
+      {_, v} when is_bitstring(v) -> {:match, m.sql_escape_string(v)}
+      _ -> nil
+    end
+  end
 
-  def search_query(m, _conn, _params, context, options), do: m.__build_search_query__([], [], context, options)
-  def __build_search_query__(_m, _index_clauses, _field_clauses, _context, _options), do: "CONSTRUCT SEARCH QUERY HERE"
+  @doc """
+  Search Order By
+  """
+  def __search_order_by__(_m, conn, params, indexes, _context, options) do
+    indexes = Enum.map(indexes, fn(i) ->
+      case i do
+        {:field, {field, _query}} -> field
+        {:field, field} -> field
+        {:where, {field, _query}} -> field
+        _ -> nil
+      end
+    end) |> Enum.filter(&(&1))
+
+    indexes = MapSet.new(indexes ++["weight"])
+    case Noizu.AdvancedScaffolding.Helpers.extract_setting(:extract, "order_by", conn, params, nil, options)  do
+      {_, v} when is_bitstring(v) ->
+        o = Enum.map(String.split(v, ","),
+              fn(entry) ->
+                case Regex.run(~r/^([a-zA-Z_0-9]*) *(ASC|DESC)?$/, String.trim(entry)) do
+                  [_, ""] -> nil
+                  [_, "", _d] -> nil
+                  [_, v] -> Enum.member?(indexes, v) && {v, "#{v} DESC"} || nil
+                  [_, v, "ASC"] -> Enum.member?(indexes, v) && {v, "#{v} ASC"} || nil
+                  [_, v, "DESC"] -> Enum.member?(indexes, v) && {v, "#{v} DESC"} || nil
+                  _ -> nil
+                end
+              end)  |> Enum.filter(&(&1))
+        case o do
+          [] -> nil
+          _ ->
+            a = Enum.map(o, fn({v,_}) -> v end) -- ["weight"]
+            o = Enum.map(o, fn({_,v}) -> v end)
+            {:order_by, {a, "ORDER BY " <> Enum.join(o, ", ")}}
+        end
+      _ -> nil
+    end
+  end
+
+  def __search_indexes__(m, conn, params, context, options) do
+    Enum.map(m.__indexing__.fields, fn({field, field_options}) ->
+      cond do
+        handler = field_options[:with] ->
+          cond do
+            {:__search_clauses__, 6} in handler.module_info(:exports) -> handler.__search_clauses__(m, {field, field_options}, conn, params, context, options)
+            :else -> []
+         end
+        :else -> []
+      end
+    end) |> List.flatten() |> Enum.filter(&(&1))
+  end
+
+  def search_query(m, conn, params, context, options) do
+    limit = m.__search_limit__(conn, params, context, options)
+    max = m.__search_max_results__(conn, params, context, options)
+    content = m.__search_content__(conn, params, context, options)
+    fields = m.__search_indexes__(conn, params, context, options)
+    order_by = m.__search_order_by__(conn, params, fields, context, options)
+    m.__build_search_query__([limit, max, content, order_by], fields, context, options)
+  end
+  def __build_search_query__(m, index_clauses, field_clauses, _context, options) do
+    index_clauses |> Enum.filter(&(&1)) |> List.flatten() |> Enum.filter(&(&1))
+    field_clauses |> Enum.filter(&(&1)) |> List.flatten() |> Enum.filter(&(&1))
+
+
+    #===---
+    # order_by, additional_fields
+    #===---
+    {additional_fields, order_by} = Enum.find(index_clauses, fn(v) ->
+      case v do
+        {:order_by, _} -> true
+        _ -> false
+      end
+    end) |> case do
+              {:order_by, c} -> c
+              _ -> {[], nil}
+            end
+    order_by = case(order_by) do
+                 v when is_bitstring(v) -> v
+                 _ -> "ORDER BY weight DESC"
+               end
+
+    #===---
+    # fields
+    #===---
+    fields = Enum.map([{:field, "id"}, {:field, "WEIGHT() as weight"}] ++ field_clauses, fn(v) ->
+      case v do
+        {:field, {_, c}} -> c
+        {:field, c} -> c
+        _ -> nil
+      end
+    end) |> Enum.filter(&(&1))
+    fields = (fields ++ additional_fields) |> Enum.map(&(String.replace(&1, ".", "_"))) |> Enum.uniq() |> Enum.join(", ")
+
+    #===---
+    # where
+    #===---
+    join = case options[:join_with] do
+             :and -> " AND "
+             :or -> " OR "
+             _ -> " AND "
+           end
+    where = Enum.map(field_clauses, fn(v) ->
+      case v do
+        {:where, {_,c}} -> c
+        {:where, c} -> c
+        _ -> nil
+      end
+    end) |> Enum.filter(&(&1)) |> case do
+                 [] -> ""
+                 v -> "WHERE " <> Enum.join(v, join)
+               end
+
+    #===---
+    # limit
+    #===---
+    limit = Enum.find(index_clauses, fn(v) ->
+      case v do
+        {:limit, _} -> true
+        _ -> false
+      end
+    end) |> case() do
+                 {:limit, c} -> c
+                 _ -> ""
+               end
+
+    #===---
+    # max_results
+    #===---
+    max_results = Enum.find(index_clauses, fn(v) ->
+      case v do
+        {:max_results, _} -> true
+        _ -> false
+      end
+    end) |> case() do
+              {:max_results, c} -> c
+              _ -> "LIMIT 250"
+            end
+
+
+    #===---
+    # indexes
+    #===---
+    indexes = [m.__rt_index__(), m.__delta_index__(), m.__primary_index__()] |> Enum.filter(&(&1)) |> Enum.join(", ")
+
+    "SELECT #{fields} FROM #{indexes} #{where} #{order_by} #{limit} #{max_results}"
+  end
+
   def search(m, conn, params, context, options) do
-    query = m.search_query(conn, params, context, options)
-    results = case SphinxQL.new() |> SphinxQL.raw(query) |> SphinxQL.send() do
+    query = m.search_query(conn, params, context, options) |> IO.inspect
+    results = case SphinxQL.new() |> SphinxQL.raw(query) |> SphinxQL.send() |> IO.inspect do
                 {:ok, response} ->
-                  fields = Enum.slice(response.fields, 1..-1)
-                  field_map = %{
-                    "weight" => :weight, "distance" => :distance
-                  }
+                  fields = Enum.zip(response.fields, 0..length(response.fields)) |> Map.new()
+                  field_map = %{"id" => :identifier, "weight" => :weight}
                   response.matches
                   |> Task.async_stream(
                        fn(record) ->
                          universal_identifier = List.first(record)
                          entity = {:todo, :load, {:universal, universal_identifier}}
                          (Enum.map(0..(length(fields) - 1), fn(index) ->
-                                                              f = Enum.at(fields, index)
+                                                              f = fields[index]
                                                               {field_map[f] || f, Enum.at(record, index + 1)}
                          end) ++ [{:record, entity}]) |> Map.new()
                        end, max_concurrency: 32, limit: 60_000
@@ -447,28 +572,40 @@ defmodule Noizu.AdvancedScaffolding.Internal.Index.Implementation.Default do
   #===---------
   # __expand_indexes__
   #===---------
-  def __expand_indexes__(nil, _base), do: %{}
-  def __expand_indexes__([], _base), do: %{}
+  def __expand_indexes__(nil, base), do: __expand_indexes__(%{}, base)
+  def __expand_indexes__([], base), do: __expand_indexes__(%{}, base)
   def __expand_indexes__(indexes, base) do
     Enum.map(indexes, &(__expand_index__(&1, base)))
     |> Enum.filter(&(&1))
     |> Map.new()
   end
 
+
+  @default_rpp 250
+  @default_max_results 25_000
+  @default_max_result_limit 1_000_000_000
   #===---------
   # __expand_index__
   #===---------
   def __expand_index__(l, base) do
-    case l do
+    {indexer, options} = case l do
       {{:inline, type}, options} when is_list(options) or is_map(options) -> __inline_indexer__(base, type, options)
       {[{:inline, type}], options} when is_list(options) or is_map(options) -> __inline_indexer__(base, type, options)
       [{:inline, type}] when is_atom(type) -> __inline_indexer__(base, type, [])
       {:inline, type} when is_atom(type) -> __inline_indexer__(base, type, [])
-      {indexer, options} when is_atom(indexer) and is_map(options) -> {indexer, %{options: options, fields: %{}}}
-      {indexer, options} when is_atom(indexer) and is_list(options) -> {indexer, %{options: Map.new(options), fields: %{}}}
-      indexer when is_atom(indexer) -> {indexer, %{options: %{}, fields: %{}}}
+      {indexer, options} when is_atom(indexer) and is_map(options) ->
+        {indexer, %{options: options, fields: %{}}}
+      {indexer, options} when is_atom(indexer) and is_list(options) ->
+        {indexer, %{options: Map.new(options), fields: %{}}}
+      indexer when is_atom(indexer) ->
+        {indexer, %{options: %{}, fields: %{}}}
       _ -> raise "Invalid @index annotation #{inspect l}"
     end
+    options = options
+              |> update_in([:rpp], &(&1 || @default_rpp))
+              |> update_in([:max_results], &(&1 || @default_max_results))
+              |> update_in([:max_result_limit], &(&1 || @default_max_result_limit))
+    {indexer, options}
   end
 
   #===---------
@@ -488,7 +625,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Index.Implementation.Default do
       Module.open?(base) -> Module.put_attribute(base, :__nzdo__inline_index, true)
       :else -> raise "Inline Index not possible when base Module is closed"
     end
-    {indexer, %{option: put_in(options, [:indexer], type), fields: %{}}}
+    {indexer, %{options: Map.new(put_in(options, [:indexer], type)), fields: %{}}}
   end
 
   #===---------

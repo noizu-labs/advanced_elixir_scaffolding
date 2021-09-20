@@ -99,9 +99,6 @@ defmodule Noizu.AdvancedScaffolding.Internal.EntityIndex.Entity do
 
     defmacro __before_compile__(_env) do
       quote do
-
-
-
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
         @__nzdo__indexes Enum.reduce(
                            List.flatten(@__nzdo__field_indexing || []),
@@ -121,7 +118,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.EntityIndex.Entity do
                                                       put_in(index_field_config, [:with], ft.handler)
                                                     :else -> index_field_config
                                                   end
-                             put_in(acc, [index, :fields, field], index_field_config)
+                             acc && put_in(acc, [index, :fields, field], index_field_config)
                            end
                          )
 
@@ -133,14 +130,12 @@ defmodule Noizu.AdvancedScaffolding.Internal.EntityIndex.Entity do
         @doc """
           Search Index Configuration
         """
-        def __indexing__(), do: __indexing__(:indexes)
+        def __indexing__(), do: @__nzdo__indexes
 
         @doc """
           Search Index Configuration
         """
-        def __indexing__(:indexes), do: @__nzdo__indexes
-
-
+        def __indexing__(p), do: @__nzdo__indexes[p]
       end
     end
 

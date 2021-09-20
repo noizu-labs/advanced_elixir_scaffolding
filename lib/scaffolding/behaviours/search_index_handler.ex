@@ -3,22 +3,19 @@
 # Copyright (C) 2021 Noizu Labs Inc. All rights reserved.
 #-------------------------------------------------------------------------------
 
-
 defmodule Noizu.DomainObject.SearchIndexHandler do
   @moduledoc """
   Behaviour for converting field types into search index format.
   """
 
-
   defmodule Behaviour do
     @type sphinx_encoding :: :field | :attr_uint | :attr_int | :attr_bigint | :attr_bool | :attr_multi | :attr_multi64 | :attr_timestamp | :attr_float | atom
-
 
     # ----- search construction
     alias Noizu.AdvancedScaffolding.Types, as: T
     @callback has_query_permission?(index :: any, field :: atom, filter :: atom | tuple, context :: Noizu.ElixirCore.CallingContext.t, options :: list | map()) :: true | false
     # search clauses with permision filters applied.
-    @callback __search_clauses__(index :: any, field :: atom, conn :: any, params :: map(), context :: Noizu.ElixirCore.CallingContext.t, options :: list | map()) :: [T.query_clause] | {:error, any}
+    @callback __search_clauses__(index :: any, settings :: tuple, conn :: any, params :: map(), context :: Noizu.ElixirCore.CallingContext.t, options :: list | map()) :: [T.query_clause] | {:error, any}
     # ----- search construction
 
     @callback __sphinx_field__() :: boolean
@@ -127,8 +124,8 @@ defmodule Noizu.DomainObject.SearchIndexHandler do
         end
       end
 
-      def __search_clauses__(_index, _field, _conn, _params, _context, _options) do
-        []
+      def __search_clauses__(_index, _settings, _conn, _params, _context, _options) do
+        nil
       end
 
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"

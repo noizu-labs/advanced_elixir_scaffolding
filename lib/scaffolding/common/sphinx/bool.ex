@@ -12,6 +12,34 @@ defmodule Noizu.AdvancedScaffolding.Sphinx.Type.Bool do
   require Noizu.DomainObject
   Noizu.DomainObject.noizu_sphinx_handler()
 
+
+  #===------
+  #
+  #===------
+  @boolean_true MapSet.new(["TRUE", "True", "true", "T", "t", "on", "On", "ON", "Y", "y", "YES", "yes", "Yes", true, 1])
+  @boolean_false MapSet.new(["FALSE", "False", "false", "F", "f", "off", "Off", "OFF", "NO", "N", "n", "no", "No", false, 0])
+
+  def __search_clauses__(_index, {field, _settings}, conn, params, _context, options) do
+    search = case field do
+               {p, f} -> "#{p}.#{f}"
+               _ -> "#{field}"
+             end
+    case Noizu.AdvancedScaffolding.Helpers.extract_setting(:extract, search, conn, params, nil, options) do
+      {_, nil} -> nil
+      {_, v} ->
+        cond do
+          Enum.member?(@boolean_true, v) ->
+            param = String.replace(search, ".", "_")
+            "#{param} == 1"
+          Enum.member?(@boolean_false, v) ->
+            param = String.replace(search, ".", "_")
+            "#{param} == 0"
+          :else -> nil
+        end
+      _ -> nil
+    end
+  end
+
   #----------------------------
   # type
   #----------------------------

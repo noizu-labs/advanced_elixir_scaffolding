@@ -169,12 +169,32 @@ defmodule Noizu.DomainObject.TimeStamp.Second do
     #===============================================
     # Sphinx Handler
     #===============================================
+
+
+    #===------
+    #
+    #===------
+    def __search_clauses__(index, {field, settings}, conn, params, context, options) do
+      date_time_handler = Application.get_env(:noizu_advanced_scaffolding, :usec_data_time_handler, Noizu.DomainObject.DateTime.Second.TypeHandler)
+      search = case field do
+                 {p, f} -> "#{p}.#{f}"
+                 _ -> "#{field}"
+               end
+      [
+        date_time_handler.__search_clauses__(index, {{search, :created_on}, settings}, conn, params, context, options),
+        date_time_handler.__search_clauses__(index, {{search, :modified_on}, settings}, conn, params, context, options),
+        date_time_handler.__search_clauses__(index, {{search, :deleted_on}, settings}, conn, params, context, options),
+        Noizu.AdvancedScaffolding.Sphinx.Type.Bool.__search_clauses__(index, {{search, :deleted}, settings}, conn, params, context, options),
+      ] |> Enum.filter(&(&1))
+    end
+
     def __sphinx_field__(), do: true
     def __sphinx_expand_field__(field, indexing, _settings) do
       indexing = update_in(indexing, [:from], &(&1 || field))
       [
         {:"#{field}_created_on", __MODULE__, put_in(indexing, [:sub], :created_on)}, #rather than __MODULE__ here we could use Sphinx providers like Sphinx.NullableInteger
         {:"#{field}_modified_on", __MODULE__, put_in(indexing, [:sub], :modified_on)},
+        {:"#{field}_deleted_on", __MODULE__, put_in(indexing, [:sub], :deleted_on)},
         {:"#{field}_deleted", __MODULE__, put_in(indexing, [:sub], :deleted)},
       ]
     end
@@ -186,6 +206,7 @@ defmodule Noizu.DomainObject.TimeStamp.Second do
       cond do
         indexing[:sub] == :created_on -> :attr_timestamp
         indexing[:sub] == :modified_on -> :attr_timestamp
+        indexing[:sub] == :deleted_on -> :attr_timestamp
         indexing[:sub] == :deleted -> :attr_uint
       end
     end
@@ -194,6 +215,7 @@ defmodule Noizu.DomainObject.TimeStamp.Second do
       cond do
         indexing[:sub] == :created_on -> value && value.created_on && DateTime.to_unix(value.created_on) || 9999999999
         indexing[:sub] == :modified_on -> value && value.modified_on && DateTime.to_unix(value.modified_on) || 9999999999
+        indexing[:sub] == :deleted_on -> value && value.deleted_on && DateTime.to_unix(value.deleted_on) || 9999999999
         indexing[:sub] == :deleted -> value && value.deleted_on && 1 || 0
       end
     end

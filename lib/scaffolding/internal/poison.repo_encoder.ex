@@ -49,7 +49,7 @@ defmodule Noizu.Poison.RepoEncoder do
         |> Poison.Encoder.encode(options)
     end
   rescue e ->
-    IO.error("[JSON] ", Exception.format(:error, e, __STACKTRACE__))
+    IO.warn("[JSON] ", Exception.format(:error, e, __STACKTRACE__))
     Exception.format(:error, e, __STACKTRACE__) |> Poison.Encoder.encode(options)
   end
 

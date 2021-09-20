@@ -138,13 +138,13 @@ defmodule Noizu.Poison.Encoder do
                   {as, v}
                 format ->
                   cond do
-                    is_atom(format) && function_exported?(format, :to_json, 6) ->
+                    is_atom(format) && ({:to_json, 6} in format.module_info(:exports)) ->
                       format.to_json(json_format, as, v, field_settings, context, options)
                     is_function(format, 6) ->
                       format.(json_format, as, v, field_settings, context, options)
                     ft = mod.__noizu_info__(:field_types)[field] ->
                       cond do
-                        ft.handler && function_exported?(ft.handler, :to_json, 6) ->
+                        ft.handler && ({:to_json, 6} in ft.handler.module_info(:exports)) ->
                           ft.handler.to_json(json_format, as, v, field_settings, context, options)
                         :else ->
                           {as, v}
@@ -157,7 +157,7 @@ defmodule Noizu.Poison.Encoder do
               {as, v}
             ft = mod.__noizu_info__(:field_types)[field] ->
               cond do
-                ft.handler && function_exported?(ft.handler, :to_json, 6) ->
+                ft.handler && ({:to_json, 6} in ft.handler.module_info(:exports)) ->
                   ft.handler.to_json(json_format, as, v, field_settings, context, options)
                 :else ->
                   {as, v}

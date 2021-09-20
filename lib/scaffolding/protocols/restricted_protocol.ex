@@ -100,7 +100,7 @@ end
 defmodule Noizu.RestrictedAccess.Protocol.Derive.Struct do
   def restricted_view(entity, context, options) do
     cond do
-      !function_exported?(entity.__struct__, :__noizu_info__, 1) -> entity
+      !({:__noizu_info__, 1} in entity.__struct__.module_info(:exports)) -> entity
       m = entity.__struct__.__noizu_info__(:restrict_provider) -> m.restricted_view(entity, context, options)
       :else -> Noizu.RestrictedAccess.Protocol.Derive.NoizuStruct.restricted_view(entity, context, options)
     end
@@ -108,7 +108,7 @@ defmodule Noizu.RestrictedAccess.Protocol.Derive.Struct do
 
   def restricted_update(entity, current, context, options) do
     cond do
-      !function_exported?(entity.__struct__, :__noizu_info__, 1) -> entity
+      !({:__noizu_info__, 1} in entity.__struct__.module_info(:exports)) -> entity
       m = entity.__struct__.__noizu_info__(:restrict_provider) -> m.restricted_update(entity, current, context, options)
       :else -> Noizu.RestrictedAccess.Protocol.Derive.NoizuStruct.restricted_update(entity, current, context, options)
     end
@@ -116,7 +116,7 @@ defmodule Noizu.RestrictedAccess.Protocol.Derive.Struct do
 
   def restricted_create(entity, context, options) do
     cond do
-      !function_exported?(entity.__struct__, :__noizu_info__, 1) -> entity
+      !({:__noizu_info__, 1} in entity.__struct__.module_info(:exports)) -> entity
       m = entity.__struct__.__noizu_info__(:restrict_provider) -> m.restricted_create(entity, context, options)
       :else -> Noizu.RestrictedAccess.Protocol.Derive.NoizuStruct.restricted_create(entity, context, options)
     end

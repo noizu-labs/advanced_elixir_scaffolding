@@ -25,7 +25,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Index do
     @callback __search_max_results__(conn :: Plug.Conn.t, params :: map(), context :: CallingContext.t, options :: list | map()) :: T.index_query_clause | T.error
     @callback __search_limit__(conn :: Plug.Conn.t, params :: map(), context :: CallingContext.t, options :: list | map()) :: T.index_query_clause | T.error
     @callback __search_content__(conn :: Plug.Conn.t, params :: map(), context :: CallingContext.t, options :: list | map()) :: T.index_query_clause | T.error
-    @callback __search_order_by__(conn :: Plug.Conn.t, params :: map(), context :: CallingContext.t, options :: list | map()) :: T.index_query_clause | T.error
+    @callback __search_order_by__(conn :: Plug.Conn.t, params :: map(), indexes :: [T.index_query_clause],  context :: CallingContext.t, options :: list | map()) :: T.index_query_clause | T.error
     @callback __search_indexes__(conn :: Plug.Conn.t, params :: map(), context :: CallingContext.t, options :: list | map()) :: T.index_query_clause | T.error
 
     @callback search_query(conn :: Plug.Conn.t, params :: map(), context :: CallingContext.t, options :: list | map()) :: T.query_snippet
@@ -114,8 +114,8 @@ defmodule Noizu.AdvancedScaffolding.Internal.Index do
           def __indexing__(), do: {:error, {:nyi, :stand_alone_indexing}}
           def __indexing__(p), do: {:error, {:nyi, :stand_alone_indexing}}
         else
-          def __indexing__(), do: @__nzdo__indexing_source.__indexing__()
-          def __indexing__(p), do: @__nzdo__indexing_source.__indexing__(p)
+          def __indexing__(), do: @__nzdo__indexing_source.__indexing__()[__MODULE__]
+          def __indexing__(p), do: __indexing__()[p]
         end
 
         def has_query_permission?(_field, _filter, _context, _options), do: :inherit
@@ -123,13 +123,12 @@ defmodule Noizu.AdvancedScaffolding.Internal.Index do
         def __search_clause__(:max_results, conn, params, context, options), do: __search_max_results__(conn, params, context, options)
         def __search_clause__(:limit, conn, params, context, options), do: __search_limit__(conn, params, context, options)
         def __search_clause__(:content, conn, params, context, options), do: __search_content__(conn, params, context, options)
-        def __search_clause__(:order_by, conn, params, context, options), do: __search_order_by__(conn, params, context, options)
-        def __search_clause__(:indexes, conn, params, context, options), do: __search_indexes__(conn, params, context, options)
+
 
         def __search_max_results__(conn, params, context, options), do: @__nzdo__index_implementation.__search_max_results__(__MODULE__, conn, params, context, options)
         def __search_limit__(conn, params, context, options), do: @__nzdo__index_implementation.__search_limit__(__MODULE__, conn, params, context, options)
         def __search_content__(conn, params, context, options), do: @__nzdo__index_implementation.__search_content__(__MODULE__, conn, params, context, options)
-        def __search_order_by__(conn, params, context, options), do: @__nzdo__index_implementation.__search_order_by__(__MODULE__, conn, params, context, options)
+        def __search_order_by__(conn, params, indexes, context, options), do: @__nzdo__index_implementation.__search_order_by__(__MODULE__, conn, params, indexes, context, options)
         def __search_indexes__(conn, params, context, options), do: @__nzdo__index_implementation.__search_indexes__(__MODULE__, conn, params, context, options)
 
         def search_query(conn, params, context, options), do: @__nzdo__index_implementation.search_query(__MODULE__, conn, params, context, options)
@@ -194,7 +193,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Index do
           __search_max_results__: 4,
           __search_limit__: 4,
           __search_content__: 4,
-          __search_order_by__: 4,
+          __search_order_by__: 5,
           __search_indexes__: 4,
           search_query: 4,
           __build_search_query__: 4,

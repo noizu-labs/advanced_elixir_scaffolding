@@ -37,7 +37,7 @@ defmodule Noizu.AdvancedScaffolding.Types do
   @type query_clauses :: [{query_clause_type, query_clause} | error] | error
   @type field_query_clause :: {field :: atom, filter :: atom | tuple, query_clauses}
 
-  @type index_clause_type :: :fields | :indexes | :where | :match | :order_by | :limit | :config
+  @type index_clause_type :: :fields | :indexes | :where | :match | :order_by | :limit | :config | :max_results
   @type index_query_clause :: {index_clause_type, query_clause}
 
 

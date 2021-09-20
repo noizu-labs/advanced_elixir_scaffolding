@@ -44,7 +44,7 @@ defmodule Noizu.DomainObject.DateTime do
                {:ok, v} -> v
                _ -> nil
              end
-        v when is_integer(v) -> DateTime.from_unix(v, :millisecond)
+        v when is_integer(v) -> DateTime.from_unix!(v, :millisecond)
         _ -> nil
       end
     end
@@ -52,6 +52,74 @@ defmodule Noizu.DomainObject.DateTime do
     #===------
     #
     #===------
+    def __search_clauses__(_index, {field, _settings}, conn, params, _context, options) do
+      search = case field do
+                 {p, f} -> "#{p}.#{f}"
+                 _ -> "#{field}"
+               end
+      case Noizu.AdvancedScaffolding.Helpers.extract_setting(:extract, search, conn, params, nil, options) do
+        {_, nil} -> nil
+        {source, v} when source in [:query_param, :body_param, :params, :default] and is_bitstring(v) ->
+          v = String.trim(v)
+          {type, v} = cond do
+                        v == "" -> {nil, nil}
+                        Regex.match?(~r/^<=.*/, v) -> {" <= ", String.slice(v, 2..-1) |> String.trim()}
+                        Regex.match?(~r/^<.*/, v) -> {" < ", String.slice(v, 1..-1) |> String.trim()}
+                        Regex.match?(~r/^>=.*/, v) -> {" >= ", String.slice(v, 2..-1) |> String.trim()}
+                        Regex.match?(~r/^>.*/, v) -> {" > ", String.slice(v, 1..-1) |> String.trim()}
+                        :else -> {" == ", v}
+                      end
+          cond do
+            !type -> nil
+            v == "" -> nil
+            Regex.match?(~r/^[0-9]+$/, v) ->
+              param = String.replace(search, ".", "_")
+              v = DateTime.from_unix!(String.to_integer(v), :millisecond)
+              {:where, {param, "#{param} #{type} '#{DateTime.to_iso8601(v)}'"}}
+
+            Regex.match?(~r/^[0-9]{1,2}-[0-9]{1,2}-[0-9]{2,4}$/, v) ->
+              param = String.replace(search, ".", "_")
+              t = DateTime.from_unix!(0)
+              case Regex.run(~r/^([0-9]{1,2})-([0-9]{1,2})-([0-9]{2,4})$/, v) do
+                [_, m,d,y] ->
+                   m = String.to_integer(m)
+                   d = String.to_integer(d)
+                   y = String.to_integer(y)
+                   t = %{t| day: d, month: m, year: y}
+                  {:where, {search, "#{param} #{type} '#{DateTime.to_iso8601(t)}'"}}
+                _ -> nil
+              end
+
+            Regex.match?(~r/^[0-9]+ *[Yy]$/, v) ->
+              case Integer.parse(v) do
+                {v, _} ->
+                  param = String.replace(search, ".", "_")
+                  shift = case type do
+                            " <= " -> v
+                            " < " -> v - 1
+                            " >= " -> v
+                            " > " -> v + 1
+                            " == " -> v - 1
+                          end
+                  now = (options[:current_time] || DateTime.utc_now())
+                        |> Timex.shift(years: -shift)
+
+                  c = case type do
+                    " <= " -> "#{param} >= '#{DateTime.to_iso8601(now)}'"
+                    " < " -> "#{param} > '#{DateTime.to_iso8601(now)}'"
+                    " >= " -> "#{param} <= '#{DateTime.to_iso8601(now)}'"
+                    " > " -> "#{param} < '#{DateTime.to_iso8601(now)}'"
+                    " == " ->
+                      until = Timex.shift(now, years: 1)
+                      "#{param} >= '#{DateTime.to_iso8601(now)}' AND #{param} <= '#{DateTime.to_iso8601(until)}'"
+                  end
+                  {:where, {search, c}}
+              end
+            :else -> nil
+          end
+      end
+    end
+
     def __sphinx_field__(), do: true
     def __sphinx_expand_field__(field, indexing, _settings), do: {field, __MODULE__, indexing}
     def __sphinx_has_default__(_field, _indexing, _settings), do: false
@@ -114,12 +182,84 @@ defmodule Noizu.DomainObject.DateTime do
             {:ok, v} -> v
             _ -> nil
           end
-        v when is_integer(v) -> DateTime.from_unix(v, :second)
+        v when is_integer(v) -> DateTime.from_unix!(v, :second)
         _ -> nil
       end
     end
 
     #def __strip_inspect__(field, value, _opts), do: {field, value && DateTime.to_iso8601(value)}
+
+    #===------
+    #
+    #===------
+    def __search_clauses__(_index, {field, _settings}, conn, params, _context, options) do
+      search = case field do
+                {p, f} -> "#{p}.#{f}"
+                _ -> "#{field}"
+              end
+      case Noizu.AdvancedScaffolding.Helpers.extract_setting(:extract, search, conn, params, nil, options) do
+        {_, nil} -> nil
+        {source, v} when source in [:query_param, :body_param, :params, :default] and is_bitstring(v) ->
+          v = String.trim(v)
+          {type, v} = cond do
+                        v == "" -> {nil, nil}
+                        Regex.match?(~r/^<=.*/, v) -> {" <= ", String.slice(v, 2..-1) |> String.trim()}
+                        Regex.match?(~r/^<.*/, v) -> {" < ", String.slice(v, 1..-1) |> String.trim()}
+                        Regex.match?(~r/^>=.*/, v) -> {" >= ", String.slice(v, 2..-1) |> String.trim()}
+                        Regex.match?(~r/^>.*/, v) -> {" > ", String.slice(v, 1..-1) |> String.trim()}
+                        :else -> {" == ", v}
+                      end
+          cond do
+            !type -> nil
+            v == "" -> nil
+            Regex.match?(~r/^[0-9]+$/, v) ->
+              v = DateTime.from_unix!(String.to_integer(v), :second)
+              param = String.replace(search, ".", "_")
+              {:where, {search, "#{param} #{type} '#{DateTime.to_iso8601(v)}'"}}
+
+
+            Regex.match?(~r/^[0-9]{1,2}-[0-9]{1,2}-[0-9]{2,4}$/, v) ->
+              param = String.replace(search, ".", "_")
+              t = DateTime.from_unix!(0)
+              case Regex.run(~r/^([0-9]{1,2})-([0-9]{1,2})-([0-9]{2,4})$/, v) do
+                [_, m,d,y] ->
+                  m = String.to_integer(m)
+                  d = String.to_integer(d)
+                  y = String.to_integer(y)
+                  t = %{t| day: d, month: m, year: y}
+                  {:where, {search, "#{param} #{type} '#{DateTime.to_iso8601(t)}'"}}
+                _ -> nil
+              end
+
+            Regex.match?(~r/^[0-9]+ *[Yy]$/, v) ->
+              case Integer.parse(v) do
+                {v, _} ->
+                  param = String.replace(search, ".", "_")
+                  shift = case type do
+                            " <= " -> v
+                            " < " -> v - 1
+                            " >= " -> v
+                            " > " -> v + 1
+                            " == " -> v - 1
+                          end
+                  now = (options[:current_time] || DateTime.utc_now())
+                        |> Timex.shift(years: -shift)
+
+                  c = case type do
+                        " <= " -> "#{param} >= '#{DateTime.to_iso8601(now)}'"
+                        " < " -> "#{param} > '#{DateTime.to_iso8601(now)}'"
+                        " >= " -> "#{param} <= '#{DateTime.to_iso8601(now)}'"
+                        " > " -> "#{param} < '#{DateTime.to_iso8601(now)}'"
+                        " == " ->
+                          until = Timex.shift(now, years: 1)
+                          "#{param} >= '#{DateTime.to_iso8601(now)}' AND #{param} <= '#{DateTime.to_iso8601(until)}'"
+                      end
+                  {:where, {search, c}}
+              end
+            :else -> nil
+          end
+      end
+    end
 
     def __sphinx_field__(), do: true
     def __sphinx_expand_field__(field, indexing, _settings), do: {field, __MODULE__, indexing}

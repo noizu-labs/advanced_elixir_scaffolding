@@ -9,8 +9,8 @@ defimpl Noizu.ERP, for: Any do
     case ref do
       %{__struct__: m} ->
         cond do
-          function_exported?(m, :__erp__, 0) -> m.__erp__.id(ref)
-          function_exported?(m, :erp_handler, 0) -> m.erp_handler.id(ref)
+          {:__erp__, 0} in m.module_info(:exports) -> m.__erp__.id(ref)
+          {:erp_handler, 0} in m.erp_handler.module_info(:exports) -> m.erp_handler.id(ref)
           :else -> nil
         end
       _ -> nil
@@ -21,8 +21,8 @@ defimpl Noizu.ERP, for: Any do
     case ref do
       %{__struct__: m} ->
         cond do
-          function_exported?(m, :__erp__, 0) -> m.__erp__.ref(ref)
-          function_exported?(m, :erp_handler, 0) -> m.erp_handler.ref(ref)
+          {:__erp__, 0} in m.module_info(:exports) -> m.__erp__.ref(ref)
+          {:erp_handler, 0} in m.module_info(:exports) -> m.erp_handler.ref(ref)
           :else -> nil
         end
       _ -> nil
@@ -34,7 +34,7 @@ defimpl Noizu.ERP, for: Any do
       %{__struct__: m} ->
         cond do
           function_exported?(m, :__erp__, 0) -> m.__erp__.sref(ref)
-          function_exported?(m, :erp_handler, 0) -> m.erp_handler.sref(ref)
+          {:erp_handler, 0} in m.module_info(:exports) -> m.erp_handler.sref(ref)
           :else -> nil
         end
       _ -> nil
@@ -46,8 +46,8 @@ defimpl Noizu.ERP, for: Any do
     case ref do
       %{__struct__: m} ->
         cond do
-          function_exported?(m, :__erp__, 0) -> m.__erp__.record(ref, options)
-          function_exported?(m, :erp_handler, 0) -> m.erp_handler.record(ref, options)
+          {:__erp__, 0} in m.module_info(:exports) -> m.__erp__.record(ref, options)
+          {:erp_handler, 0} in m.module_info(:exports) -> m.erp_handler.record(ref, options)
           :else -> nil
         end
       _ -> nil
@@ -61,8 +61,8 @@ defimpl Noizu.ERP, for: Any do
     case ref do
       %{__struct__: m} ->
         cond do
-          function_exported?(m, :__erp__, 0) -> m.__erp__.record!(ref, options)
-          function_exported?(m, :erp_handler, 0) -> m.erp_handler.record!(ref, options)
+          {:__erp__, 0} in m.module_info(:exports) -> m.__erp__.record!(ref, options)
+          {:erp_handler, 0} in m.module_info(:exports) -> m.erp_handler.record!(ref, options)
           :else -> nil
         end
       _ -> nil
@@ -77,8 +77,8 @@ defimpl Noizu.ERP, for: Any do
     case ref do
       %{__struct__: m} ->
         cond do
-          function_exported?(m, :__erp__, 0) -> m.__erp__.entity(ref, options)
-          function_exported?(m, :erp_handler, 0) -> m.erp_handler.entity(ref, options)
+          {:__erp__, 0} in m.module_info(:exports) -> m.__erp__.entity(ref, options)
+          {:erp_handler, 0} in m.module_info(:exports) -> m.erp_handler.entity(ref, options)
           :else -> nil
         end
       _ -> nil
@@ -91,8 +91,8 @@ defimpl Noizu.ERP, for: Any do
     case ref do
       %{__struct__: m} ->
         cond do
-          function_exported?(m, :__erp__, 0) -> m.__erp__.entity!(ref, options)
-          function_exported?(m, :erp_handler, 0) -> m.erp_handler.entity!(ref, options)
+          {:__erp__, 0} in m.module_info(:exports) -> m.__erp__.entity!(ref, options)
+          {:erp_handler, 0} in m.module_info(:exports) -> m.erp_handler.entity!(ref, options)
           :else -> nil
         end
       _ -> nil

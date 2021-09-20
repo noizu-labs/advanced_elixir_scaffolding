@@ -141,7 +141,7 @@ defmodule Noizu.Entity.Protocol.Derive.NoizuStruct do
     cond do
       is_list(deriving[:only]) -> Enum.member?(deriving[:only], field)
       is_list(deriving[:except]) -> !Enum.member?(deriving[:except], field)
-      function_exported?(mod, :__noizu_info__, 1) -> mod.__noizu_info__(:json_configuration)[:format_settings][json_format][field][:expand]
+      ({:__noizu_info__, 1} in mod.module_info(:exports)) -> mod.__noizu_info__(:json_configuration)[:format_settings][json_format][field][:expand]
       :else -> true
     end
   end
