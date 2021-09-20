@@ -57,7 +57,7 @@ defmodule Noizu.AdvancedScaffolding.Mixfile do
       {:poison, "~> 3.1.0", optional: true},
       {:plug, "~> 1.0", optional: true},
       {:fastglobal, "~> 1.0"},
-      {:timex, "~3.7"},
+      {:timex, "~> 3.7"},
       {:decimal, "~> 2.0.0"},
     ]
   end # end deps
