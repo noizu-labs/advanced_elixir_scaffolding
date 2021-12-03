@@ -243,7 +243,9 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo do
 
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
         def layer_create(%{__struct__: PersistenceLayer} = layer, entity, context, options), do: @__nzdo__repo_default.layer_create(__MODULE__, layer, entity, context, options)
+        def layer_create(nil, entity, context, options), do: @__nzdo__repo_default.layer_create(__MODULE__, nil, entity, context, options)
         def layer_create!(%{__struct__: PersistenceLayer} = layer, entity, context, options), do: @__nzdo__repo_default.layer_create!(__MODULE__, layer, entity, context, options)
+        def layer_create!(nil, entity, context, options), do: @__nzdo__repo_default.layer_create!(__MODULE__, nil, entity, context, options)
 
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
         def layer_pre_create_callback(%{__struct__: PersistenceLayer} = layer, entity, context, options),

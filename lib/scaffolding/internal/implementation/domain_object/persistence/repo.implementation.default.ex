@@ -10,7 +10,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
   alias Noizu.AdvancedScaffolding.Schema.PersistenceLayer
 
   require Amnesia.Fragment
-
+  require Logger
   #------------------------------------------
   # generate_identifier
   #------------------------------------------
@@ -251,29 +251,41 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
   # Create
   #=====================================================================
   def create(m, entity, context, options) do
-    settings = m.__persistence__()
-    entity = m.pre_create_callback(entity, context, options)
-    entity = Enum.reduce(
-      settings.layers,
-      entity,
-      fn (layer, entity) ->
-        cond do
-          layer.cascade_create? && (options[:cascade_block?] || options[layer.schema][:cascade_block?] || layer.cascade_block?) ->
-            m.layer_create(layer, entity, context, options)
-          layer.cascade_create? ->
-            spawn fn ->
-              options = put_in(options || %{}, [:transaction!], true)
-              m.layer_create!(layer, entity, context, options)
-            end
-            entity
-          :else -> entity
+    try do
+      settings = m.__persistence__()
+      entity = m.pre_create_callback(entity, context, options)
+      entity = Enum.reduce(
+        settings.layers,
+        entity,
+        fn (layer, entity) ->
+          cond do
+            layer.cascade_create? && (options[:cascade_block?] || options[layer.schema][:cascade_block?] || layer.cascade_block?) ->
+              m.layer_create(layer, entity, context, options)
+            layer.cascade_create? ->
+              spawn fn ->
+                options = put_in(options || %{}, [:transaction!], true)
+                m.layer_create!(layer, entity, context, options)
+              end
+              entity
+            :else -> entity
+          end
         end
-      end
-    )
-    m.post_create_callback(entity, context, options)
+      )
+      m.post_create_callback(entity, context, options)
+    rescue e ->
+      Logger.error("[#{m}.create] rescue|\n#{inspect entity}\n---- #{Exception.format(:error, e, __STACKTRACE__)}\n-------------------------")
+      entity
+    catch :exit, e ->
+      Logger.error("[#{m}.create] exit|\n#{inspect entity}\n---- #{Exception.format(:error, e, __STACKTRACE__)}\n-------------------------")
+      entity
+      e ->
+        Logger.error("[#{m}.create] catch|\n#{inspect entity}\n---- #{Exception.format(:error, e, __STACKTRACE__)}\n-------------------------")
+        entity
+    end
   end
 
   def create!(m, entity, context, options) do
+    try do
     options = put_in(options || %{}, [:transaction!], true)
     settings = m.__persistence__()
     entity = m.pre_create_callback!(entity, context, options)
@@ -292,6 +304,16 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
       end
     )
     m.post_create_callback!(entity, context, options)
+    rescue e ->
+      Logger.error("[#{m}.create!] rescue|\n#{inspect entity}\n---- #{Exception.format(:error, e, __STACKTRACE__)}\n-------------------------")
+      entity
+    catch :exit, e ->
+      Logger.error("[#{m}.create!] exit|\n#{inspect entity}\n---- #{Exception.format(:error, e, __STACKTRACE__)}\n-------------------------")
+      entity
+      e ->
+        Logger.error("[#{m}.create!] catch|\n#{inspect entity}\n---- #{Exception.format(:error, e, __STACKTRACE__)}\n-------------------------")
+        entity
+    end
   end
 
   #------------------------------------------
@@ -394,12 +416,19 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
     entity = m.layer_create_callback(layer, entity, context, options)
     m.layer_post_create_callback(layer, entity, context, options)
   end
+  def layer_create(m, layer, entity, _context, _options) do
+    Logger.error("Unsupported call to create by #{m} layer unknown #{inspect layer}| #{inspect entity}")
+    entity
+  end
   def layer_create!(m, %{__struct__: PersistenceLayer} = layer, entity, context, options) do
     entity = m.layer_pre_create_callback!(layer, entity, context, options)
     entity = m.layer_create_callback!(layer, entity, context, options)
     m.layer_post_create_callback!(layer, entity, context, options)
   end
-
+  def layer_create!(m, layer, entity, _context, _options) do
+    Logger.error("Unsupported call to create by #{m} layer unknown #{inspect layer}| #{inspect entity}")
+    entity
+  end
   #------------------------------------------
   # Create - layer_pre_create_callback
   #------------------------------------------
@@ -430,14 +459,32 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
   # Create - layer_create_callback
   #------------------------------------------
   def layer_create_callback(m, %{__struct__: PersistenceLayer} = layer, entity, context, options) do
-    m.__entity__().__as_record__(layer, entity, context, options)
-    |> layer_create_loop(layer, context, options)
+    record = m.__entity__().__as_record__(layer, entity, context, options)
+    try do
+      layer_create_loop(record, layer, context, options)
+    rescue e ->
+      Logger.error("[#{m}.layer_create_callback] rescue|\n--------------------\n#{inspect record}\n--------------------\n#{inspect layer}\n--------------------\n#{inspect entity}\n--------------------\n #{Exception.format(:error, e, __STACKTRACE__)}\n-------------------------")
+    catch
+      :exit, e ->
+        Logger.error("[#{m}.layer_create_callback] exit|\n--------------------\n#{inspect record}\n--------------------\n#{inspect layer}\n--------------------\n#{inspect entity}\n--------------------\n #{Exception.format(:error, e, __STACKTRACE__)}\n-------------------------")
+      e ->
+        Logger.error("[#{m}.layer_create_callback] catch|\n--------------------\n#{inspect record}\n--------------------\n#{inspect layer}\n--------------------\n#{inspect entity}\n--------------------\n #{Exception.format(:error, e, __STACKTRACE__)}\n-------------------------")
+    end
     entity
   end
 
   def layer_create_callback!(m, %{__struct__: PersistenceLayer} = layer, entity, context, options) do
-    m.__entity__().__as_record__!(layer, entity, context, options)
-    |> layer_create_loop!(layer, context, options)
+    record = m.__entity__().__as_record__!(layer, entity, context, options)
+    try do
+      layer_create_loop!(record, layer, context, options)
+    rescue e ->
+      Logger.error("[#{m}.layer_create_callback] rescue|\n--------------------\n#{inspect record}\n--------------------\n#{inspect layer}\n--------------------\n#{inspect entity}\n--------------------\n #{Exception.format(:error, e, __STACKTRACE__)}\n-------------------------")
+    catch
+      :exit, e ->
+        Logger.error("[#{m}.layer_create_callback] exit|\n--------------------\n#{inspect record}\n--------------------\n#{inspect layer}\n--------------------\n#{inspect entity}\n--------------------\n #{Exception.format(:error, e, __STACKTRACE__)}\n-------------------------")
+      e ->
+        Logger.error("[#{m}.layer_create_callback] catch|\n--------------------\n#{inspect record}\n--------------------\n#{inspect layer}\n--------------------\n#{inspect entity}\n--------------------\n #{Exception.format(:error, e, __STACKTRACE__)}\n-------------------------")
+    end
     entity
   end
 

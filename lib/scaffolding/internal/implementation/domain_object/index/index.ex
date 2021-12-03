@@ -49,6 +49,8 @@ defmodule Noizu.AdvancedScaffolding.Internal.Index do
     @callback __index_schema_fields__(any, any) :: any
     @callback __index_header__(any, any, any) :: any
     @callback __index_record__(any, any, any, any) ::any
+    @callback __index_supported__?(any, any, any) :: any
+
 
     @callback __schema_open__() :: String.t
     @callback __schema_close__() :: String.t
@@ -166,6 +168,9 @@ defmodule Noizu.AdvancedScaffolding.Internal.Index do
         def __index_header__(type, context, options), do: @__nzdo__index_implementation.__index_header__(__MODULE__, type, context, options)
 
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+        def __index_supported__?(type, context, options), do: @__nzdo__index_implementation.__index_supported__?(__MODULE__, type, context, options)
+
+        @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
         def __index_record__(type, entity, context, options), do: @__nzdo__index_implementation.__index_record__(__MODULE__, type, entity, context, options)
 
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
@@ -209,6 +214,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Index do
           __schema_close__: 0,
           __extract_field__: 4,
           __index_schema_fields__: 2,
+          __index_supported__?: 3,
           __index_header__: 3,
           __index_record__: 4,
 

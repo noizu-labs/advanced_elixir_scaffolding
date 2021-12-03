@@ -267,7 +267,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Index.Implementation.Default do
   def __index_schema_fields__(mod, _context, options) do
     settings = mod.__indexing__()[mod]
     expanded_fields = Enum.map(
-                        settings[:fields],
+                        settings[:fields] || [],
                         fn ({field, indexing}) ->
                           field_type = mod.__noizu_info__(:field_types)[field]
                           {field, indexing} = cond do
@@ -337,6 +337,11 @@ defmodule Noizu.AdvancedScaffolding.Internal.Index.Implementation.Default do
       :else -> fields
     end
 
+  end
+
+  def __index_supported__?(mod, _type, _context, _options) do
+    fields = mod.__indexing__()[mod][:fields]
+    (is_list(fields) && length(fields) > 0) && true || false
   end
 
   def __index_header__(mod, :xml, context, options) do

@@ -12,9 +12,6 @@ defmodule Noizu.AdvancedScaffolding.Internal.EntityIndex.Entity do
   defmodule Behaviour do
     #alias Noizu.AdvancedScaffolding.Types
 
-
-
-
     @callback __write_indexes__(any, any, any) :: any
     @callback __update_indexes__(any, any, any) :: any
     @callback __delete_indexes__(any, any, any) :: any

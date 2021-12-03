@@ -566,6 +566,7 @@ defmodule Noizu.AdvancedScaffolding.Helpers do
 
   def extract_setting(:extract, setting, conn, params, default, options) do
     cond do
+      options == nil -> {:default, default}
       options[:include_query_params] != false && Map.has_key?(conn.query_params, setting) && !(conn.query_params[setting] in ["",nil]) ->
         {:query_param, conn.query_params[setting]}
       options[:include_body_params] != false && is_map(conn.body_params) && Map.has_key?(conn.body_params, setting) ->

@@ -144,7 +144,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Ecto.EnumType do
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
         def description(enum) when is_integer(enum) do
           enum = @enum_to_atom[enum] || throw "#{enum} enum not found in #{__MODULE__}"
-          @atom_descriptions[enum] || "no description"
+          @atom_descriptions[enum] || "no description - #{enum}"
         end
 
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
