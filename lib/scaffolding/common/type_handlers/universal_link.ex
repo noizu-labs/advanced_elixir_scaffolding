@@ -25,11 +25,13 @@ defmodule Noizu.DomainObject.UniversalLink do
           [
             {:"#{field}_type", m.__persistence__().ecto_entity},
             {:"#{field}_identifier", identifier},
+            {field, {:ref, m, identifier}}
           ]
         _ ->
           [
             {:"#{field}_type", nil},
             {:"#{field}_identifier", nil},
+            {field, nil}
           ]
       end
     end

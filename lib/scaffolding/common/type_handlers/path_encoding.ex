@@ -208,9 +208,9 @@ defmodule Noizu.DomainObject.EncodedPath do
       [
         {:"#{field}_depth", v && v.depth},
         {:"#{field}_a11", v && v.matrix.a11},
-        {:"#{field}_a12", v && v.matrix.a12},
+        {:"#{field}_a12", v && -v.matrix.a12},
         {:"#{field}_a21", v && v.matrix.a21},
-        {:"#{field}_a22", v && v.matrix.a22},
+        {:"#{field}_a22", v && -v.matrix.a22},
       ]
     end
     def dump(field, _segment, v, _type, %{ecto: :mnesia}, _context, _options) do
@@ -231,9 +231,9 @@ defmodule Noizu.DomainObject.EncodedPath do
     def cast(field, record, _type, %{type: :ecto}, _context, _options) do
       m = %{
         a11: get_in(record, [Access.key( "#{field}_a11")]),
-        a12: get_in(record, [Access.key( "#{field}_a12")]),
+        a12: -get_in(record, [Access.key( "#{field}_a12")]),
         a21: get_in(record, [Access.key( "#{field}_a21")]),
-        a22: get_in(record, [Access.key( "#{field}_a22")]),
+        a22: -get_in(record, [Access.key( "#{field}_a22")]),
       }
       v = m.a11 && m.a12 && m.a21 && m.a22 && Noizu.DomainObject.EncodedPath.new(m)
       [{field, v}]
@@ -284,9 +284,9 @@ defmodule Noizu.DomainObject.EncodedPath do
         !value -> nil
         indexing[:sub] == :depth -> value.depth
         indexing[:sub] == :a11 -> value.matrix.a11
-        indexing[:sub] == :a12 -> value.matrix.a12
+        indexing[:sub] == :a12 -> -value.matrix.a12
         indexing[:sub] == :a21 -> value.matrix.a21
-        indexing[:sub] == :a22 -> value.matrix.a22
+        indexing[:sub] == :a22 -> -value.matrix.a22
       end
     end
 
