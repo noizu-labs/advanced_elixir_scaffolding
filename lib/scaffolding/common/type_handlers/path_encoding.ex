@@ -279,7 +279,6 @@ defmodule Noizu.DomainObject.EncodedPath do
     end
     def __sphinx_encoded__(_field, entity, indexing, _settings) do
       value = get_in(entity, [Access.key(indexing[:from])])
-              |> Noizu.ERP.entity!()
       cond do
         !value -> nil
         indexing[:sub] == :depth -> value.depth
