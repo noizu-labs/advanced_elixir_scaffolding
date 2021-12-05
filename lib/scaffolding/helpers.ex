@@ -243,7 +243,7 @@ defmodule Noizu.AdvancedScaffolding.Helpers do
             if path do
               extended = case String.split(path, ".") do
                            [v] ->
-                             e = get_context_provider.sref_module(String.trim(v))
+                             e = get_context_provider.sref_to_module(String.trim(v))
                              e && [e, "*"]
                            v when is_list(v) ->
                              Enum.reduce_while(
@@ -255,31 +255,34 @@ defmodule Noizu.AdvancedScaffolding.Helpers do
                                    e == "*" -> {:cont, acc ++ [e]}
                                    e == "++" -> {:cont, acc ++ [e]}
                                    e == "+" -> {:cont, acc ++ [e]}
-                                   Regex.match?(~r/^\{[0-9,]+\}$/, e) -> {:cont, acc ++ [e]}
-                                   e = get_context_provider.sref_module(String.trim(e)) -> {:cont, acc ++ [e]}
-                                   :else -> {:halt, nil}
+                                   v = get_context_provider.sref_to_module(e) -> {:cont, acc ++ [v]}
+                                   Regex.match?(~r/^[A-Za-z]*[a-zA-Z\(\)]+$/, e) -> {:cont, acc ++ [String.replace(e, "(","\\(") |> String.replace(")", "\\)")]}
+                                   Regex.match?(~r/^\{[0-9,a-zA-Z\(\)\-]+\}$/, e) -> {:cont, acc ++ [String.replace(e, "(","\\(") |> String.replace(")", "\\)")]}
+                                   :else ->
+                                     {:halt, nil}
                                  end
                                end
                              )
                          end
               if extended do
+                extended = Enum.reverse(extended)
                 [h | t] = extended
                 head = cond do
-                         is_atom(h) -> "^#{h.sref_module()}"
-                         h == "**" -> "^([a-z_\\-0-9\\.])*"
-                         h == "++" -> "^([a-z_\\-0-9\\.])+"
-                         :else -> "^([a-z_\\-0-9])#{h}"
+                         is_atom(h) -> "^#{h.__sref__()}"
+                         h == "**" -> "^([A-Za-z_\\-0-9()\\.\\(\\)\\[\\]\\{\\}])*"
+                         h == "++" -> "^([A-Za-z_\\-0-9\\.\\(\\)\\[\\]\\{\\}])+"
+                         :else -> "^#{h}"
                        end
                 reg = Enum.reduce(
                         t,
                         head,
                         fn (x, acc) ->
                           cond do
-                            is_atom(x) -> acc <> "\.#{x.sref_module()}"
-                            x == "**" -> acc <> "([a-z_\\-0-9\\.])*"
-                            x == "++" -> acc <> "([a-z_\\-0-9\\.])+"
-                            Regex.match?(~r/^\{[0-9,]+\}$/, x) -> acc <> "([a-z_\\-0-9]*\.)#{x}"
-                            :else -> acc <> "([a-z_\\-0-9])#{x}"
+                            is_atom(x) -> acc <> "\\\.#{x.__sref__()}"
+                            x == "**" -> acc <> "\\\.?([A-Za-z_\\-0-9\\.\\(\\)\\[\\]\\{\\}])*"
+                            x == "++" -> acc <> "\\\.([A-Za-z_\\-0-9\\.\\(\\)\\[\\]\\{\\}])+"
+                            Regex.match?(~r/^\{[0-9,a-zA-Z\\(\\)\\-]+\}$/, x) -> acc <> "\\\.?([A-Za-z_\\-0-9\\(\\)]*\.)#{x}"
+                            :else -> acc <> "\\\.#{x}"
                           end
                         end
                       ) <> "$"

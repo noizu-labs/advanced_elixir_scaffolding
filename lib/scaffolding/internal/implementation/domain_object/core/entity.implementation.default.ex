@@ -63,7 +63,13 @@ defmodule Noizu.AdvancedScaffolding.Internal.Core.Entity.Implementation.Default 
       :else -> nil
     end
   end
-  def ref(domain_object, ref), do: domain_object.__valid_identifier__(ref) && {:ref, domain_object, ref}
+  def ref(domain_object, ref) when is_bitstring(ref) do
+    ref = domain_object.__string_to_id__(ref)
+    ref && domain_object.__valid_identifier__(ref) && {:ref, domain_object, ref}
+  end
+  def ref(domain_object, ref) do
+    domain_object.__valid_identifier__(ref) && {:ref, domain_object, ref}
+  end
 
   #------------------
   # sref
@@ -228,7 +234,13 @@ defmodule Noizu.AdvancedScaffolding.Internal.Core.Entity.Implementation.Default 
   #-----------------------------------
   def __string_to_id__(_m, _, nil), do: nil
   def __string_to_id__(_m, _, id) when not is_bitstring(id), do: throw "invalid sref id part #{inspect id}"
-  def __string_to_id__(_m, :integer, id), do: String.to_integer(id)
+  def __string_to_id__(_m, :integer, id) do
+    case Integer.parse(id) do
+      {v, ""} -> v
+      :error -> nil
+      _ -> nil
+    end
+  end
   def __string_to_id__(_m, :string, id), do: id
   def __string_to_id__(_m, :hash, id), do: id
   def __string_to_id__(_m, :uuid, id), do: UUID.string_to_binary!(id)
