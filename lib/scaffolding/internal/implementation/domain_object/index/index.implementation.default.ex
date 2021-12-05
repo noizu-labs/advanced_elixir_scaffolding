@@ -89,7 +89,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Index.Implementation.Default do
   end
 
   def __search_indexes__(m, conn, params, context, options) do
-    Enum.map(m.__indexing__.fields, fn({field, field_options}) ->
+    Enum.map(m.__indexing__()[:fields], fn({field, field_options}) ->
       cond do
         handler = field_options[:with] ->
           cond do
@@ -265,7 +265,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Index.Implementation.Default do
   def __extract_field__(_mod, _field, _entity, _context, _options), do: nil
 
   def __index_schema_fields__(mod, _context, options) do
-    settings = mod.__indexing__()[mod]
+    settings = mod.__indexing__()
     expanded_fields = Enum.map(
                         settings[:fields] || [],
                         fn ({field, indexing}) ->
@@ -336,12 +336,14 @@ defmodule Noizu.AdvancedScaffolding.Internal.Index.Implementation.Default do
 
       :else -> fields
     end
-
   end
 
-  def __index_supported__?(mod, _type, _context, _options) do
-    fields = mod.__indexing__()[mod][:fields]
-    (is_list(fields) && length(fields) > 0) && true || false
+  def __index_supported__?(mod, type, _context, _options) do
+    cond do
+      type != :real_time -> true
+      mod.__indexing__()[:options][:type] == type -> true
+      :else -> false
+    end
   end
 
   def __index_header__(mod, :xml, context, options) do
@@ -365,7 +367,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Index.Implementation.Default do
                           :attr_bigint -> "<sphinx:attr name=\"#{field}\" type=\"bigint\" #{bit_section} #{default_section}  />"
                           :attr_bool -> "<sphinx:attr name=\"#{field}\" type=\"bool\" #{default}  />"
                           :attr_multi -> "<sphinx:attr name=\"#{field}\" type=\"multi\" #{default}  />"
-                          :attr_multi64 -> "<sphinx:attr name=\"#{field}\" type=\"multi\" #{default}  />"
+                          :attr_multi_64 -> "<sphinx:attr name=\"#{field}\" type=\"multi\" #{default}  />"
                           :attr_timestamp -> "<sphinx:attr name=\"#{field}\" type=\"timestamp\" #{default}  />"
                           :attr_float -> "<sphinx:attr name=\"#{field}\" type=\"float\" #{default}  />"
                           _ -> raise "#{mod}.#{field} has invalid encoding type #{inspect encoding}"
@@ -393,7 +395,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Index.Implementation.Default do
 
   def __index_record__(mod, record_type, entity, context, options) do
     uid = Noizu.EctoEntity.Protocol.universal_identifier(entity)
-    settings = mod.__indexing__()[mod]
+    settings = mod.__indexing__()
     raw = mod.__index_schema_fields__(context, options)
 
     # Obtain Base and ob Fields
@@ -459,7 +461,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Index.Implementation.Default do
                               end
 
                             # Multi Part Attribute
-                            (v.encoding == :attr_multi || v.encoding == :attr_multi64) ->
+                            (v.encoding == :attr_multi || v.encoding == :attr_multi_64) ->
                               cond do
                                 record_type == :real_time -> "(" <> Enum.join(v.value || [], ",") <> ")"
                                 :else -> Enum.join(v.value || [], ",")
@@ -513,6 +515,9 @@ defmodule Noizu.AdvancedScaffolding.Internal.Index.Implementation.Default do
 
   end
 
+  def rt_attr(encoding), do: "rt_#{encoding}"
+
+
   def __config__(mod, context, options) do
     raw = mod.__index_schema_fields__(context, options)
     blobs = raw
@@ -523,7 +528,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Index.Implementation.Default do
            |> Enum.filter(fn ({_field, _provider, blob, _encoding, _bits, _indexing, _default}) -> blob == nil end)
            |> Enum.map(fn ({field, _provider, _blob, encoding, _bits, _indexing, _default}) -> {field, encoding} end)
 
-    rt_fields = Enum.map(base ++ blobs, fn ({field, encoding}) -> "rt_#{encoding} = #{field}" end)
+    rt_fields = Enum.map(base ++ blobs, fn ({field, encoding}) -> "#{rt_attr(encoding)} = #{field}" end)
                 |> Enum.join("\n      ")
 
     """

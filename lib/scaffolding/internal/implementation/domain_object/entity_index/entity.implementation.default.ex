@@ -12,7 +12,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.EntityIndex.Entity.Implementation.D
   alias Giza.SphinxQL
 
   def __write_index__(domain_object, entity, index, settings, context, options) do
-    IO.puts "WRITE INDEX: #{inspect domain_object}"
+    IO.puts "WRITE INDEX: #{inspect domain_object} . . ."
     cond do
       settings[:options][:type] == :real_time ->
         cond do
@@ -22,9 +22,11 @@ defmodule Noizu.AdvancedScaffolding.Internal.EntityIndex.Entity.Implementation.D
             fields = index.__index_record__(:real_time, entity, context, options) # todo merge options / settings. E.g. for locale randomization etc.
             record = Enum.join(fields, " ,")
             query = replace <> " (" <> record <> ") "
-            Logger.info "SPHINX QUERY| #{query}"
-            SphinxQL.new() |> SphinxQL.raw(query) |> SphinxQL.send()
-          :else -> :unsupported
+            IO.puts "SPHINX QUERY| #{query}"
+            SphinxQL.new() |> SphinxQL.raw(query) |> SphinxQL.send() |> IO.inspect()
+          :else ->
+            IO.puts ":real_time NOT SUPPORTED"
+            :unsupported
         end
       :else ->
         IO.puts "TODO - #{domain_object} - Perform record keeping so entity's can be reindexed/delta-indexed. etc."

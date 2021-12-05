@@ -437,7 +437,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Entity.Field.Macros do
   def __extract_index_setting__(_mod, field, indexers, :attr_bigint = encoding, _opts), do: Enum.map(indexers, &({{field, &1}, %{index: true, encoding: encoding}}))
   def __extract_index_setting__(_mod, field, indexers, :attr_bool = encoding, _opts), do: Enum.map(indexers, &({{field, &1}, %{index: true, encoding: encoding}}))
   def __extract_index_setting__(_mod, field, indexers, :attr_multi = encoding, _opts), do: Enum.map(indexers, &({{field, &1}, %{index: true, encoding: encoding}}))
-  def __extract_index_setting__(_mod, field, indexers, :attr_multi64 = encoding, _opts), do: Enum.map(indexers, &({{field, &1}, %{index: true, encoding: encoding}}))
+  def __extract_index_setting__(_mod, field, indexers, :attr_multi_64 = encoding, _opts), do: Enum.map(indexers, &({{field, &1}, %{index: true, encoding: encoding}}))
   def __extract_index_setting__(_mod, field, indexers, :attr_timestamp = encoding, _opts), do: Enum.map(indexers, &({{field, &1}, %{index: true, encoding: encoding}}))
   def __extract_index_setting__(_mod, field, indexers, :attr_float = encoding, _opts), do: Enum.map(indexers, &({{field, &1}, %{index: true, encoding: encoding}}))
   def __extract_index_setting__(_mod, field, indexers, true, _opts) do

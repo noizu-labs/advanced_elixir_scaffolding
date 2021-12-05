@@ -9,7 +9,7 @@ defmodule Noizu.DomainObject.SearchIndexHandler do
   """
 
   defmodule Behaviour do
-    @type sphinx_encoding :: :field | :attr_uint | :attr_int | :attr_bigint | :attr_bool | :attr_multi | :attr_multi64 | :attr_timestamp | :attr_float | atom
+    @type sphinx_encoding :: :field | :attr_uint | :attr_int | :attr_bigint | :attr_bool | :attr_multi | :attr_multi_64 | :attr_timestamp | :attr_float | atom
 
     # ----- search construction
     alias Noizu.AdvancedScaffolding.Types, as: T
@@ -98,7 +98,7 @@ defmodule Noizu.DomainObject.SearchIndexHandler do
 
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       @doc """
-      (Sub)field sphinx field type: :attr_bigint, :attr_uint, :attr_multi64, etc.
+      (Sub)field sphinx field type: :attr_bigint, :attr_uint, :attr_multi_64, etc.
       If we break a DomainObject.Entity field into multiple sub fields for sphinx we may inspect the per subfield `indexing` attribute here.
       For example if a field expands to subfields in our __sphinx_expand_field__ method we may inject a :sub attribute in that method specifying the name of each specific subfield.
       `[{:"\#{field}_my_sub_field", @handler, put_in(indexing, [:sub], :my_sub_field)}]`

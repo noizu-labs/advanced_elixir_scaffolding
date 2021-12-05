@@ -126,7 +126,7 @@ defmodule Noizu.DomainObject do
   #--------------------------------------------
   @doc """
   Similar to type handler, but responsible for casting fields to a sphinx index record.
-  In addition the field expansion support like in our type handler behaviour it also provides default values, field type (:attr_unit, :attr_multi64, :field), and bit width (for int fields).
+  In addition the field expansion support like in our type handler behaviour it also provides default values, field type (:attr_unit, :attr_multi_64, :field), and bit width (for int fields).
   """
   defmacro noizu_sphinx_handler(options \\ []) do
     #options = case options do

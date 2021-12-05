@@ -25,6 +25,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.EntityIndex.Base do
     defmacro __before_compile__(env) do
       nzdo__index_implementation = Module.get_attribute(env.module, :nzdo__index_implementation)
       nzdo__entity = Module.get_attribute(env.module, :__nzdo__entity)
+      nzdo__base = env.module
       quote do
         @behaviour Noizu.AdvancedScaffolding.Internal.EntityIndex.Base.Behaviour
         #################################################
@@ -46,6 +47,10 @@ defmodule Noizu.AdvancedScaffolding.Internal.EntityIndex.Base do
             @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
             unquote(nzdo__index_implementation).noizu_index(entity: unquote(nzdo__entity), inline: true) do
             end
+
+            @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+            def __base__(), do: unquote(nzdo__base)
+
           end
         end
         @file __ENV__.file
