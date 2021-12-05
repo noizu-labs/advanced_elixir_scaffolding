@@ -161,7 +161,13 @@ defmodule Noizu.AdvancedScaffolding.Internal.Helpers do
       #----------------------
       @__nzdo__indexes Noizu.AdvancedScaffolding.Internal.Helpers.extract_transform_attribute(:index, :indexing, {Noizu.AdvancedScaffolding.Internal.Index.Implementation.Default, :__expand_indexes__, [@__nzdo__base]}, [])
       @__nzdo__index_list Enum.map(@__nzdo__indexes, fn ({k, _v}) -> k end)
-      @__nzdo__inline_index Noizu.AdvancedScaffolding.Internal.Index.Implementation.Default.__domain_object_indexer__(@__nzdo__base)
+      index_mod = Noizu.AdvancedScaffolding.Internal.Index.Implementation.Default.__domain_object_indexer__(@__nzdo__base)
+      index_mod = cond do
+                    @__nzdo__indexes[index_mod] -> index_mod
+                    :else -> false
+                  end
+      #IO.puts "#{__MODULE__}:: CHECK #{inspect @__nzdo__indexes[index_mod]} ... #{inspect index_mod}"
+      @__nzdo__inline_index index_mod
 
       if (@__nzdo__base_open? && !options[:for_repo]) do
         Module.put_attribute(@__nzdo__base, :__nzdo__indexes, @__nzdo__indexes)

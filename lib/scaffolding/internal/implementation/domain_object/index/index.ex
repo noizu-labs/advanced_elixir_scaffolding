@@ -93,7 +93,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Index do
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
         @__nzdo__sref Module.get_attribute(@__nzdo__base, :__nzdo__sref) || Module.get_attribute(__MODULE__, :sref)
 
-        @index_stem unquote(index_stem) || @__nzdo__sref
+        @index_stem unquote(index_stem) || @__nzdo__sref && String.replace("#{@__nzdo__sref}", "-", "_")
         @rt_index unquote(rt_index) || :"rt_index__#{@index_stem}"
         @delta_index unquote(delta_index) || :"delta_index__#{@index_stem}"
         @primary_index unquote(primary_index) || :"primary_index__#{@index_stem}"
