@@ -136,13 +136,7 @@ defmodule Noizu.DomainObject.DateTime do
                 %DateTime{} -> DateTime.to_unix(value)
                 _ -> nil
               end
-      value = case value do
-                9999999999 -> 9999999998 # work around for nil handling
-                nil -> 9999999999
-                v when is_integer(v) -> v
-                _ -> 9999999999
-              end
-      value
+      value || 0
     end
   end
 
@@ -277,13 +271,7 @@ defmodule Noizu.DomainObject.DateTime do
                 %DateTime{} -> DateTime.to_unix(value)
                 _ -> nil
               end
-      value = case value do
-                9999999999 -> 9999999998 # work around for nil handling
-                nil -> 9999999999
-                v when is_integer(v) -> v
-                _ -> 9999999999
-              end
-      value
+      value || 0
     end
   end
 end

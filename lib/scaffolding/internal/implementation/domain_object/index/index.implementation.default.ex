@@ -274,6 +274,8 @@ defmodule Noizu.AdvancedScaffolding.Internal.Index.Implementation.Default do
                                                 indexing[:as] -> {field, update_in(indexing, [:from], &(&1 || field))}
                                                 :else -> {field, indexing}
                                               end
+                          indexing[:with] && Code.ensure_loaded(indexing[:with])
+                          field_type[:handler] && Code.ensure_loaded(field_type[:handler])
                           cond do
                             provider = indexing[:with] && Kernel.function_exported?(indexing[:with], :__sphinx_field__, 0) && indexing[:with] ->
                               provider.__sphinx_expand_field__(field, indexing, settings)
@@ -389,7 +391,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Index.Implementation.Default do
              |> Enum.join(", ")
     cond do
       options[:raw] -> fields
-      :else -> "REPLACE INTO #{index} (#{fields}) VALUES"
+      :else -> "REPLACE INTO #{index} (id, #{fields}) VALUES"
     end
   end
 

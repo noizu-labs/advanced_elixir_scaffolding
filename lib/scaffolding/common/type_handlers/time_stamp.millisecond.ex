@@ -206,10 +206,10 @@ defmodule Noizu.DomainObject.TimeStamp.Millisecond do
     def __sphinx_encoded__(_field, entity, indexing, _settings) do
       value = get_in(entity, [Access.key(indexing[:from])])
       cond do
-        indexing[:sub] == :created_on -> value && value.created_on && DateTime.to_unix(value.created_on) || 9999999999
-        indexing[:sub] == :modified_on -> value && value.modified_on && DateTime.to_unix(value.modified_on) || 9999999999
-        indexing[:sub] == :deleted_on -> value && value.deleted_on && DateTime.to_unix(value.deleted_on) || 9999999999
-        indexing[:sub] == :deleted -> value && value.deleted_on && 1 || 0
+        indexing[:sub] == :created_on -> (value && value.created_on && DateTime.to_unix(value.created_on)) || 0
+        indexing[:sub] == :modified_on -> (value && value.modified_on && DateTime.to_unix(value.modified_on)) || 0
+        indexing[:sub] == :deleted_on -> (value && value.deleted_on && DateTime.to_unix(value.deleted_on)) || 0
+        indexing[:sub] == :deleted -> (value && value.deleted_on) && 1 || 0
       end
     end
 
