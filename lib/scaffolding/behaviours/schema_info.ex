@@ -50,19 +50,28 @@ defmodule Noizu.DomainObject.SchemaInfo do
       |> Enum.filter(&( List.starts_with?(Module.split(&1),Module.split(scope))))
     end
 
+
+    def module_children_loaded(app, scope) do
+      module_children(app, scope)
+      |> Enum.map(fn(m) ->
+        Code.ensure_loaded?(m)
+        m
+      end)
+    end
+
     @doc """
     Return list of Scaffolding modules in `app` starting with `base` whose __noizu_info__(:type) matches the provided `types` filter.
     """
     def filter_modules(app, base, %MapSet{} = types) do
-      module_children(app, base)
+      module_children_loaded(app, base)
       |> Enum.filter(&(function_exported?(&1, :__noizu_info__, 1) && Enum.member?(types, &1.__noizu_info__(:type))))
     end
     def filter_modules(app, base, types) when is_list(types) do
-      module_children(app, base)
+      module_children_loaded(app, base)
       |> Enum.filter(&(function_exported?(&1, :__noizu_info__, 1) && Enum.member?(types, &1.__noizu_info__(:type))))
     end
     def filter_modules(app, base, type) do
-      module_children(app, base)
+      module_children_loaded(app, base)
       |> Enum.filter(&(function_exported?(&1, :__noizu_info__, 1) && &1.__noizu_info__(:type) == type))
     end
 
@@ -72,6 +81,20 @@ defmodule Noizu.DomainObject.SchemaInfo do
     def filter_modules(app, base, type, filter) do
       filter_modules(app, base, type)
       |> Enum.filter(fn(entry) -> filter.(entry) end)
+    end
+
+
+    @doc """
+      cache wrapper for filter_modules/2
+    """
+    def cached_filter(key, app, base) do
+      case FastGlobal.get(key, :cache_miss) do
+        :cache_miss ->
+          cache = module_children_loaded(app, base)
+          FastGlobal.put(key, cache)
+          cache
+        cache_hit -> cache_hit
+      end
     end
 
     @doc """
@@ -322,7 +345,7 @@ defmodule Noizu.DomainObject.SchemaInfo do
       """
       def __flush__(property) when is_atom(property), do: __flush__([property])
       def __flush__(properties) when is_list(properties) do
-        Enum.map(properties ++ :all, fn(property) ->
+        Enum.map(properties ++ [:all], fn(property) ->
           if key = __cache_key__(property) do
             FastGlobal.delete(key)
           end
