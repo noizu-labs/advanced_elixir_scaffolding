@@ -6,7 +6,7 @@
 defmodule Noizu.AdvancedScaffolding.Mixfile do
   use Mix.Project
 
-  @version "1.0.1"
+  @version "1.0.2"
   @source_url "https://github.com/noizu-labs/advanced_elixir_scaffolding"
 
   def project do
@@ -48,7 +48,7 @@ defmodule Noizu.AdvancedScaffolding.Mixfile do
     [
       {:ecto_sql, "~> 3.4"},
       {:amnesia, git: "https://github.com/noizu/amnesia.git", ref: "9266002", optional: true}, # Mnesia Wrapper
-      {:uuid, "~> 1.1" },
+      {:elixir_uuid, "~> 1.2" },
       {:ex_doc, "~> 0.25.1", only: [:test, :dev], optional: true}, # Documentation Provider
       {:markdown, github: "devinus/markdown", optional: true}, # Markdown processor for ex_doc
       {:noizu_core, github: "noizu/ElixirCore", tag: "1.0.10"},

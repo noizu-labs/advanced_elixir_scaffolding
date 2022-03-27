@@ -1,10 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="ae58bc41-455c-447f-90eb-f1325731ba9b" name="Changes" comment="">
+    <list default="true" id="aed1dae2-ee4e-4845-9aac-3af5beead4ab" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/noizu_advanced_scaffolding.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/amnesia.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/benchee.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/benchee_json.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/benchfella.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/cmark.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/connection.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/cowboy.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/db_connection.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/decimal.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/earmark.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/ecto.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/ecto_sql.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/ex_doc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/excoveralls.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/exjsx.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/exquisite.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/fastglobal.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/hackney.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/hoedown.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/inch_ex.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/jason.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/jazz.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/jiffy.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/json.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/markdown.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/mime.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/myxql.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/noizu_core.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/noizu_mnesia_versioning.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/plug.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/poison.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/postgrex.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/redix.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/tds.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/telemetry.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/uuid.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/runConfigurations.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/common/universal_reference/universal_reference.type.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/common/universal_reference/universal_reference.type.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/domain_object/domain_object.table.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/domain_object/domain_object.table.ex" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -14,25 +57,10 @@
   <component name="CompilerWorkspaceConfiguration">
     <option name="CLEAR_OUTPUT_DIRECTORY" value="false" />
   </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="package-info" />
-      </list>
-    </option>
-  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitSEFilterConfiguration">
-    <file-type-list>
-      <filtered-out-file-type name="LOCAL_BRANCH" />
-      <filtered-out-file-type name="REMOTE_BRANCH" />
-      <filtered-out-file-type name="TAG" />
-      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
-    </file-type-list>
-  </component>
-  <component name="ProjectId" id="1xBcLLuBkVfLNHcrue4zNz2IvtG" />
+  <component name="ProjectId" id="26puzKPMyJblaTaPwI4S3vj3Br8" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -40,88 +68,41 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="project.structure.last.edited" value="Modules" />
-    <property name="project.structure.proportion" value="0.0" />
-    <property name="project.structure.side.proportion" value="0.0" />
-  </component>
-  <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/json" />
-      <recent name="$PROJECT_DIR$/lib/scaffolding/internal/implementation/domain_object/index" />
-      <recent name="$PROJECT_DIR$/lib/scaffolding/internal/implementation/core" />
-      <recent name="$PROJECT_DIR$/lib/scaffolding/internal/implementation/json" />
-      <recent name="$PROJECT_DIR$/lib/scaffolding/internal/implementation/inspect" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/lib/scaffolding/internal/domain_object" />
-      <recent name="$PROJECT_DIR$/lib/scaffolding/internal/implementation/persistence" />
-      <recent name="$PROJECT_DIR$/lib/scaffolding/internal" />
-      <recent name="$PROJECT_DIR$/lib/scaffolding/internal/behaviours/domain_object/entity" />
-      <recent name="$PROJECT_DIR$/lib/scaffolding/internal/behaviours/domain_object" />
-    </key>
-  </component>
-  <component name="RunManager" selected="Elixir Mix ExUnit.Run Unit Tests">
-    <configuration name="Mix ExUnit test/scaffolding/v3/repo_test.exs:93" type="MixExUnitRunConfigurationType" factoryName="Elixir Mix ExUnit" temporary="true">
-      <module name="noizu_scaffolding" />
-      <mix-test>
-        <argument>test/scaffolding/v3/repo_test.exs:93</argument>
-      </mix-test>
-      <working-directory url="file://$PROJECT_DIR$" />
-      <module name="noizu_scaffolding" />
-      <module-filters inherit-application-module-filters="true" />
-      <method v="2" />
-    </configuration>
-    <configuration name="Run Unit Tests" type="MixExUnitRunConfigurationType" factoryName="Elixir Mix ExUnit">
-      <module name="noizu_scaffolding" />
-      <mix-test>
-        <argument>--only</argument>
-        <argument>v3</argument>
-      </mix-test>
-      <module name="noizu_scaffolding" />
-      <module-filters inherit-application-module-filters="true" />
-      <method v="2" />
-    </configuration>
-    <configuration name="Build" type="MixRunConfigurationType" factoryName="Elixir Mix">
-      <module name="noizu_scaffolding" />
-      <mix>
-        <argument>compile</argument>
-      </mix>
-      <module name="noizu_scaffolding" />
-      <module-filters inherit-application-module-filters="true" />
-      <method v="2" />
-    </configuration>
-    <list>
-      <item itemvalue="Elixir Mix.Build" />
-      <item itemvalue="Elixir Mix ExUnit.Run Unit Tests" />
-      <item itemvalue="Elixir Mix ExUnit.Mix ExUnit test/scaffolding/v3/repo_test.exs:93" />
-    </list>
-    <recent_temporary>
-      <list>
-        <item itemvalue="Elixir Mix ExUnit.Mix ExUnit test/scaffolding/v3/repo_test.exs:93" />
-      </list>
-    </recent_temporary>
+    <property name="com.google.cloudcode.ide_session_index" value="20220324_0000" />
+    <property name="dart.analysis.tool.window.visible" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/mix.exs" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="show.migrate.to.gradle.popup" value="false" />
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="ae58bc41-455c-447f-90eb-f1325731ba9b" name="Changes" comment="" />
-      <created>1629831866367</created>
+      <changelist id="aed1dae2-ee4e-4845-9aac-3af5beead4ab" name="Changes" comment="" />
+      <created>1648133110360</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1629831866367</updated>
-      <workItem from="1629831867307" duration="14135000" />
-      <workItem from="1630090888409" duration="7900000" />
-      <workItem from="1630776181435" duration="4292000" />
-      <workItem from="1630780821952" duration="544000" />
-      <workItem from="1630795320408" duration="4856000" />
-      <workItem from="1630807377169" duration="20000" />
-      <workItem from="1630819288591" duration="1651000" />
+      <updated>1648133110360</updated>
+      <workItem from="1648133111813" duration="1234000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>
