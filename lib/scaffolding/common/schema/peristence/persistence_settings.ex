@@ -322,6 +322,9 @@ defmodule Noizu.AdvancedScaffolding.Schema.PersistenceSettings do
                            end
 
     load_fallback? = cond do
+                       options[:fallback?] == false -> false
+                       options[:fallback?] == true -> true
+                       options[:load_fallback?] == false -> false
                        options[:load_fallback?] == true -> true
                        type == :mnesia -> true
                        type == :ecto -> true
