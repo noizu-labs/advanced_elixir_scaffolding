@@ -259,9 +259,11 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
         entity,
         fn (layer, entity) ->
           cond do
-            layer.cascade_create? && (options[:cascade_block?] || options[layer.schema][:cascade_block?] || layer.cascade_block?) ->
+            options[:cascade?] == false && options[layer.schema][:cascade?] != true -> entity
+            options[layer.schema][:cascade?] == false -> entity
+            (layer.cascade_create? || options[layer.schema][:cascade?]) && (options[:cascade_block?] || options[layer.schema][:cascade_block?] || layer.cascade_block?) ->
               m.layer_create(layer, entity, context, options)
-            layer.cascade_create? ->
+            (layer.cascade_create? || options[layer.schema][:cascade?]) ->
               spawn fn ->
                 options = put_in(options || %{}, [:transaction!], true)
                 m.layer_create!(layer, entity, context, options)
@@ -286,24 +288,26 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
 
   def create!(m, entity, context, options) do
     try do
-    options = put_in(options || %{}, [:transaction!], true)
-    settings = m.__persistence__()
-    entity = m.pre_create_callback!(entity, context, options)
-    entity = Enum.reduce(
-      settings.layers,
-      entity,
-      fn (layer, entity) ->
-        cond do
-          layer.cascade_create? && (options[:cascade_block?] || options[layer.schema][:cascade_block?] || layer.cascade_block?) ->
-            m.layer_create!(layer, entity, context, options)
-          layer.cascade_create? ->
-            spawn fn -> m.layer_create!(layer, entity, context, options) end
-            entity
-          :else -> entity
+      options = put_in(options || %{}, [:transaction!], true)
+      settings = m.__persistence__()
+      entity = m.pre_create_callback!(entity, context, options)
+      entity = Enum.reduce(
+        settings.layers,
+        entity,
+        fn (layer, entity) ->
+          cond do
+            options[:cascade?] == false && options[layer.schema][:cascade?] != true -> entity
+            options[layer.schema][:cascade?] == false -> entity
+            (layer.cascade_create? || options[layer.schema][:cascade?]) && (options[:cascade_block?] || options[layer.schema][:cascade_block?] || layer.cascade_block?) ->
+              m.layer_create!(layer, entity, context, options)
+            (layer.cascade_create? || options[layer.schema][:cascade?]) ->
+              spawn fn -> m.layer_create!(layer, entity, context, options) end
+              entity
+            :else -> entity
+          end
         end
-      end
-    )
-    m.post_create_callback!(entity, context, options)
+      )
+      m.post_create_callback!(entity, context, options)
     rescue e ->
       Logger.error("[#{m}.create!] rescue|\n#{inspect entity}\n---- #{Exception.format(:error, e, __STACKTRACE__)}\n-------------------------")
       entity
@@ -504,8 +508,11 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
       entity,
       fn (layer, entity) ->
         cond do
-          layer.cascade_update? && (options[:cascade_block?] || options[layer.schema][:cascade_block?] || layer.cascade_block?) -> m.layer_update(layer, entity, context, options)
-          layer.cascade_update? ->
+          options[:cascade?] == false && options[layer.schema][:cascade?] != true -> entity
+          options[layer.schema][:cascade?] == false -> entity
+          (layer.cascade_update? || options[layer.schema][:cascade?]) && (options[:cascade_block?] || options[layer.schema][:cascade_block?] || layer.cascade_block?) ->
+            m.layer_update(layer, entity, context, options)
+          (layer.cascade_update? || options[layer.schema][:cascade?]) ->
             spawn fn ->
               options = put_in(options || %{}, [:transaction!], true)
               m.layer_update!(layer, entity, context, options)
@@ -527,9 +534,11 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
       entity,
       fn (layer, entity) ->
         cond do
-          layer.cascade_update? && (options[:cascade_block?] || options[layer.schema][:cascade_block?] || layer.cascade_block?) ->
+          options[:cascade?] == false && options[layer.schema][:cascade?] != true -> entity
+          options[layer.schema][:cascade?] == false -> entity
+          (layer.cascade_update? || options[layer.schema][:cascade?]) && (options[:cascade_block?] || options[layer.schema][:cascade_block?] || layer.cascade_block?) ->
             m.layer_update!(layer, entity, context, options)
-          layer.cascade_update? ->
+          (layer.cascade_update? || options[layer.schema][:cascade?]) ->
             spawn fn ->
               m.layer_update!(layer, entity, context, options)
             end
@@ -661,9 +670,11 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
       entity,
       fn (layer, entity) ->
         cond do
-          layer.cascade_delete? && (options[:cascade_block?] || options[layer.schema][:cascade_block?] || layer.cascade_block?) ->
+          options[:cascade?] == false && options[layer.schema][:cascade?] != true -> entity
+          options[layer.schema][:cascade?] == false -> entity
+          (layer.cascade_delete? || options[layer.schema][:cascade?]) && (options[:cascade_block?] || options[layer.schema][:cascade_block?] || layer.cascade_block?) ->
             m.layer_delete(layer, entity, context, options)
-          layer.cascade_delete? ->
+          (layer.cascade_delete? || options[layer.schema][:cascade?]) ->
             spawn fn ->
               options = put_in(options || %{}, [:transaction!], true)
               m.layer_delete!(layer, entity, context, options)
@@ -685,9 +696,11 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
       entity,
       fn (layer, entity) ->
         cond do
-          layer.cascade_delete? && (options[:cascade_block?] || options[layer.schema][:cascade_block?] || layer.cascade_block?) ->
+          options[:cascade?] == false && options[layer.schema][:cascade?] != true -> entity
+          options[layer.schema][:cascade?] == false -> entity
+          (layer.cascade_delete? || options[layer.schema][:cascade?]) && (options[:cascade_block?] || options[layer.schema][:cascade_block?] || layer.cascade_block?) ->
             m.layer_delete!(layer, entity, context, options)
-          layer.cascade_delete? ->
+          (layer.cascade_delete? || options[layer.schema][:cascade?]) ->
             spawn fn ->
               m.layer_delete!(layer, entity, context, options)
             end
