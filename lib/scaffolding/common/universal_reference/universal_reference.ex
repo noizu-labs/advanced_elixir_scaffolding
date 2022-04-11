@@ -48,6 +48,7 @@ defmodule Noizu.DomainObject.UniversalReference do
     cond do
       v = (this.ref && Noizu.EctoEntity.Protocol.universal_identifier(this.ref)) -> v
       v = (this.identifier && Noizu.EctoEntity.Protocol.universal_identifier(this.identifier)) -> v
+      _ -> nil
     end
   end
   def universal_identifier({:ref, __MODULE__, v}) when is_integer(v), do: v

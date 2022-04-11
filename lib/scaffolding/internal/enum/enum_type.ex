@@ -53,6 +53,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Ecto.EnumType do
     def load(m, v) when is_integer(v) do
       cond do
         a = m.enum_to_atom(v) -> {:ok, a}
+        a = m.enum_to_atom(0) -> {:ok, a} # Default Value
         true -> raise ArgumentError, "Unsupported #{m} Enum #{inspect v}"
       end
     end
