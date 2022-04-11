@@ -5,10 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="aed1dae2-ee4e-4845-9aac-3af5beead4ab" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/scaffolding/common/universal_reference/universal_reference.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/common/universal_reference/universal_reference.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/enum/enum_type.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/enum/enum_type.ex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/noizu_advanced_scaffolding.iml" beforeDir="false" afterPath="$PROJECT_DIR$/noizu_advanced_scaffolding.iml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,7 +58,7 @@
       <workItem from="1648509057259" duration="807000" />
       <workItem from="1649012804458" duration="1220000" />
       <workItem from="1649118091433" duration="23000" />
-      <workItem from="1649663466065" duration="133000" />
+      <workItem from="1649663466065" duration="474000" />
     </task>
     <servers />
   </component>
