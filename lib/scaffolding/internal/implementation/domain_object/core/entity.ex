@@ -181,6 +181,9 @@ defmodule Noizu.AdvancedScaffolding.Internal.Core.Entity do
             @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
             def entity!("ref.#{@__nzdo__sref}" <> _ = ref), do: __MODULE__.entity!(__MODULE__.ref(ref))
             def entity!(ref, options \\ nil), do: @__nzdo__implementation.entity!(__MODULE__, ref, options)
+
+
+
           :else ->
             @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
             def id(ref), do: @__nzdo__implementation.id(__MODULE__, ref)
@@ -201,32 +204,29 @@ defmodule Noizu.AdvancedScaffolding.Internal.Core.Entity do
             @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
             def entity!(ref, options \\ nil), do: @__nzdo__implementation.entity!(__MODULE__, ref, options)
 
+        end
 
 
 
-            def id_ok(o) do
-              r = ref(o)
-              r && {:ok, r} || {:error, o}
-            end
-            def ref_ok(o) do
-              r = ref(o)
-              r && {:ok, r} || {:error, o}
-            end
-            def sref_ok(o) do
-              r = sref(o)
-              r && {:ok, r} || {:error, o}
-            end
-            def entity_ok(o, options \\ %{}) do
-              r = entity(o, options)
-              r && {:ok, r} || {:error, o}
-            end
-            def entity_ok!(o, options \\ %{}) do
-              r = entity!(o, options)
-              r && {:ok, r} || {:error, o}
-            end
-
-
-
+        def id_ok(o) do
+          r = ref(o)
+          r && {:ok, r} || {:error, o}
+        end
+        def ref_ok(o) do
+          r = ref(o)
+          r && {:ok, r} || {:error, o}
+        end
+        def sref_ok(o) do
+          r = sref(o)
+          r && {:ok, r} || {:error, o}
+        end
+        def entity_ok(o, options \\ %{}) do
+          r = entity(o, options)
+          r && {:ok, r} || {:error, o}
+        end
+        def entity_ok!(o, options \\ %{}) do
+          r = entity!(o, options)
+          r && {:ok, r} || {:error, o}
         end
 
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
