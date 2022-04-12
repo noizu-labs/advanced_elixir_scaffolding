@@ -6,7 +6,7 @@
 defmodule Noizu.AdvancedScaffolding.Mixfile do
   use Mix.Project
 
-  @version "1.0.2"
+  @version "1.0.3"
   @source_url "https://github.com/noizu-labs/advanced_elixir_scaffolding"
 
   def project do
@@ -51,7 +51,7 @@ defmodule Noizu.AdvancedScaffolding.Mixfile do
       {:elixir_uuid, "~> 1.2" },
       {:ex_doc, "~> 0.25.1", only: [:test, :dev], optional: true}, # Documentation Provider
       {:markdown, github: "devinus/markdown", optional: true}, # Markdown processor for ex_doc
-      {:noizu_core, github: "noizu/ElixirCore", tag: "1.0.11"},
+      {:noizu_core, github: "noizu/ElixirCore", tag: "1.0.13"},
       {:noizu_mnesia_versioning, github: "noizu/MnesiaVersioning", tag: "0.1.9", override: true},
       {:redix, github: "whatyouhide/redix", tag: "v0.7.0", optional: true},
       {:poison, "~> 3.1.0", optional: true},

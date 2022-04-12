@@ -148,7 +148,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Core.Entity.Implementation.Default 
       :else -> nil
     end
   end
-
+  
   #-----------------------------------
   # __sref_section_regex__
   #-----------------------------------

@@ -200,6 +200,33 @@ defmodule Noizu.AdvancedScaffolding.Internal.Core.Entity do
             #-----------------
             @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
             def entity!(ref, options \\ nil), do: @__nzdo__implementation.entity!(__MODULE__, ref, options)
+
+
+
+
+            def id_ok(o) do
+              r = ref(o)
+              r && {:ok, r} || {:error, o}
+            end
+            def ref_ok(o) do
+              r = ref(o)
+              r && {:ok, r} || {:error, o}
+            end
+            def sref_ok(o) do
+              r = sref(o)
+              r && {:ok, r} || {:error, o}
+            end
+            def entity_ok(o, options \\ %{}) do
+              r = entity(o, options)
+              r && {:ok, r} || {:error, o}
+            end
+            def entity_ok!(o, options \\ %{}) do
+              r = entity!(o, options)
+              r && {:ok, r} || {:error, o}
+            end
+
+
+
         end
 
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
@@ -248,6 +275,15 @@ defmodule Noizu.AdvancedScaffolding.Internal.Core.Entity do
           record: 2,
           record!: 1,
           record!: 2,
+
+
+          id_ok: 1,
+          ref_ok: 1,
+          sref_ok: 1,
+          entity_ok: 1,
+          entity_ok: 2,
+          entity_ok!: 1,
+          entity_ok!: 2,
 
           has_permission?: 3,
           has_permission?: 4,

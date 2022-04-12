@@ -99,6 +99,31 @@ defimpl Noizu.ERP, for: Any do
     end
   end
 
+
+
+  def id_ok(o) do
+    r = ref(o)
+    r && {:ok, r} || {:error, o}
+  end
+  def ref_ok(o) do
+    r = ref(o)
+    r && {:ok, r} || {:error, o}
+  end
+  def sref_ok(o) do
+    r = sref(o)
+    r && {:ok, r} || {:error, o}
+  end
+  def entity_ok(o, options \\ %{}) do
+    r = entity(o, options)
+    r && {:ok, r} || {:error, o}
+  end
+  def entity_ok!(o, options \\ %{}) do
+    r = entity!(o, options)
+    r && {:ok, r} || {:error, o}
+  end
+
+
+
   defmacro __deriving__(module, _struct, _options) do
     quote do
       defimpl Noizu.ERP, for: unquote(module) do
@@ -109,6 +134,31 @@ defimpl Noizu.ERP, for: Any do
         def record!(%{__struct__: m} = ref, options \\ nil), do: m.__erp__().record!(ref, options)
         def entity(%{__struct__: m} = ref, options \\ nil), do: m.__erp__().entity(ref, options)
         def entity!(%{__struct__: m} = ref, options \\ nil), do: m.__erp__().entity!(ref, options)
+
+
+
+        def id_ok(o) do
+          r = ref(o)
+          r && {:ok, r} || {:error, o}
+        end
+        def ref_ok(o) do
+          r = ref(o)
+          r && {:ok, r} || {:error, o}
+        end
+        def sref_ok(o) do
+          r = sref(o)
+          r && {:ok, r} || {:error, o}
+        end
+        def entity_ok(o, options \\ %{}) do
+          r = entity(o, options)
+          r && {:ok, r} || {:error, o}
+        end
+        def entity_ok!(o, options \\ %{}) do
+          r = entity!(o, options)
+          r && {:ok, r} || {:error, o}
+        end
+
+
       end
     end
   end
@@ -127,4 +177,28 @@ defimpl Noizu.ERP, for: Map do
   def entity(_entity, _options), do: nil
   def entity!(entity, options \\ nil)
   def entity!(_entity, _options), do: nil
+
+
+
+  def id_ok(o) do
+    r = ref(o)
+    r && {:ok, r} || {:error, o}
+  end
+  def ref_ok(o) do
+    r = ref(o)
+    r && {:ok, r} || {:error, o}
+  end
+  def sref_ok(o) do
+    r = sref(o)
+    r && {:ok, r} || {:error, o}
+  end
+  def entity_ok(o, options \\ %{}) do
+    r = entity(o, options)
+    r && {:ok, r} || {:error, o}
+  end
+  def entity_ok!(o, options \\ %{}) do
+    r = entity!(o, options)
+    r && {:ok, r} || {:error, o}
+  end
+
 end # end defimpl EntityReferenceProtocol, for: Map

@@ -112,6 +112,30 @@ defmodule Noizu.AdvancedScaffolding.Internal.Core.Base do
         def record(ref, options \\ nil), do: @__nzdo__entity.record(ref, options)
         def record!(ref, options \\ nil), do: @__nzdo__entity.record!(ref, options)
 
+
+
+        def id_ok(o) do
+          r = ref(o)
+          r && {:ok, r} || {:error, o}
+        end
+        def ref_ok(o) do
+          r = ref(o)
+          r && {:ok, r} || {:error, o}
+        end
+        def sref_ok(o) do
+          r = sref(o)
+          r && {:ok, r} || {:error, o}
+        end
+        def entity_ok(o, options \\ %{}) do
+          r = entity(o, options)
+          r && {:ok, r} || {:error, o}
+        end
+        def entity_ok!(o, options \\ %{}) do
+          r = entity!(o, options)
+          r && {:ok, r} || {:error, o}
+        end
+
+
         @__nzdo__poly_settings  %{
           poly: @__nzdo__poly?,
           support: @__nzdo__poly_support,
