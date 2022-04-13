@@ -114,7 +114,14 @@ defmodule Noizu.AdvancedScaffolding.Internal.Core.Entity do
 
 
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-        def __valid_identifier__(_), do: true
+        def __valid_identifier__(identifier) do
+          cond do
+            __noizu_info__(:identifier_type) == :integer  -> is_integer(identifier)
+            __noizu_info__(:identifier_type) == :atom -> is_atom(identifier)
+            __noizu_info__(:identifier_type) == :ref  -> Kernel.match?({:ref, _, _}, identifier)
+            :else -> raise("You must implement #{__MODULE__}.__valid_identifier__")
+          end
+        end
 
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
         def __sref_section_regex__(type), do: @__nzdo__implementation.__sref_section_regex__(__MODULE__, type)
@@ -165,6 +172,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Core.Entity do
                            end
               identifier && {:ref, __MODULE__, identifier}
             end
+            def ref({:ecto_identifier, __MODULE__, identifier}), do: ref({:ref, __MODULE__, identifier})  # Oversimplification will need to be revisited if there is ID mapping.
             def ref(ref), do: @__nzdo__implementation.ref(__MODULE__, ref)
             # sref
             #-----------------
@@ -190,6 +198,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Core.Entity do
             # ref
             #-----------------
             @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+            def ref({:ecto_identifier, __MODULE__, identifier}), do: ref({:ref, __MODULE__, identifier})  # Oversimplification will need to be revisited if there is ID mapping.
             def ref(ref), do: @__nzdo__implementation.ref(__MODULE__, ref)
             # sref
             #-----------------
@@ -224,6 +233,36 @@ defmodule Noizu.AdvancedScaffolding.Internal.Core.Entity do
           r = entity(o, options)
           r && {:ok, r} || {:error, o}
         end
+        def entity_ok!(o, options \\ %{}) do
+          r = entity!(o, options)
+          r && {:ok, r} || {:error, o}
+        end
+
+        @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+        def id_ok(o) do
+          r = id(o)
+          r && {:ok, r} || {:error, o}
+        end
+
+        @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+        def ref_ok(o) do
+          r = ref(o)
+          r && {:ok, r} || {:error, o}
+        end
+
+        @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+        def sref_ok(o) do
+          r = sref(o)
+          r && {:ok, r} || {:error, o}
+        end
+
+        @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+        def entity_ok(o, options \\ %{}) do
+          r = entity(o, options)
+          r && {:ok, r} || {:error, o}
+        end
+
+        @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
         def entity_ok!(o, options \\ %{}) do
           r = entity!(o, options)
           r && {:ok, r} || {:error, o}
@@ -271,6 +310,15 @@ defmodule Noizu.AdvancedScaffolding.Internal.Core.Entity do
           entity: 2,
           entity!: 1,
           entity!: 2,
+
+          id_ok: 1,
+          ref_ok: 1,
+          sref_ok: 1,
+          entity_ok: 1,
+          entity_ok: 2,
+          entity_ok!: 1,
+          entity_ok!: 2,
+
           record: 1,
           record: 2,
           record!: 1,

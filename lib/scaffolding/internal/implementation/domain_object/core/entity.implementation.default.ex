@@ -67,8 +67,13 @@ defmodule Noizu.AdvancedScaffolding.Internal.Core.Entity.Implementation.Default 
     ref = domain_object.__string_to_id__(ref)
     ref && domain_object.__valid_identifier__(ref) && {:ref, domain_object, ref}
   end
+
+  def ref(domain_object, {:ref, domain_object, id}) do
+    domain_object.__valid_identifier__(id) && {:ref, domain_object, id} || nil
+  end
+
   def ref(domain_object, ref) do
-    domain_object.__valid_identifier__(ref) && {:ref, domain_object, ref}
+    domain_object.__valid_identifier__(ref) && {:ref, domain_object, ref} || nil
   end
 
   #------------------

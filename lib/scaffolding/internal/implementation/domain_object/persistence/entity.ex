@@ -86,6 +86,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Entity do
           def ecto_entity?(), do: true
 
           @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+          def ecto_identifier({:ecto_identifier, __MODULE__, v}), do: v
           cond do
             Module.has_attribute?(__MODULE__, :__nzdo__ecto_identifier_field) -> def ecto_identifier(ref), do: @nzdo__persistence_implementation.ecto_identifier(__MODULE__, ref)
             Module.get_attribute(__MODULE__, :__nzdo__identifier_type) == :integer -> def ecto_identifier(ref), do: __MODULE__.id(ref)
