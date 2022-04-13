@@ -300,16 +300,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Core.Entity do
           record: 2,
           record!: 1,
           record!: 2,
-
-
-          id_ok: 1,
-          ref_ok: 1,
-          sref_ok: 1,
-          entity_ok: 1,
-          entity_ok: 2,
-          entity_ok!: 1,
-          entity_ok!: 2,
-
+        
           has_permission?: 3,
           has_permission?: 4,
           has_permission!: 3,
