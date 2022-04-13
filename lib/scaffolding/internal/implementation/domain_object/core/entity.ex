@@ -215,29 +215,6 @@ defmodule Noizu.AdvancedScaffolding.Internal.Core.Entity do
 
         end
 
-
-
-        def id_ok(o) do
-          r = ref(o)
-          r && {:ok, r} || {:error, o}
-        end
-        def ref_ok(o) do
-          r = ref(o)
-          r && {:ok, r} || {:error, o}
-        end
-        def sref_ok(o) do
-          r = sref(o)
-          r && {:ok, r} || {:error, o}
-        end
-        def entity_ok(o, options \\ %{}) do
-          r = entity(o, options)
-          r && {:ok, r} || {:error, o}
-        end
-        def entity_ok!(o, options \\ %{}) do
-          r = entity!(o, options)
-          r && {:ok, r} || {:error, o}
-        end
-
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
         def id_ok(o) do
           r = id(o)
