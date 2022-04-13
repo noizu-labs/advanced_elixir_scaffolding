@@ -115,11 +115,13 @@ defmodule Noizu.AdvancedScaffolding.Internal.Core.Entity do
 
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
         def __valid_identifier__(identifier) do
-          cond do
-            __noizu_info__(:identifier_type) == :integer  -> is_integer(identifier)
-            __noizu_info__(:identifier_type) == :atom -> is_atom(identifier)
-            __noizu_info__(:identifier_type) == :ref  -> Kernel.match?({:ref, _, _}, identifier)
-            :else -> raise("You must implement #{__MODULE__}.__valid_identifier__")
+          case __noizu_info__(:identifier_type) do
+            :integer -> is_integer(identifier)
+            :atom -> is_atom(identifier)
+            :ref  -> Kernel.match?({:ref, _, _}, identifier)
+            :compound  -> identifier != nil && !Kernel.match?({:ref, _, _}, identifier) && (is_tuple(identifier) || is_list(identifier))
+            :list  -> is_list(identifier)
+            _else -> :unsupported # will be treated as true by the system.
           end
         end
 
