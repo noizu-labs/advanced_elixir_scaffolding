@@ -75,7 +75,7 @@ defimpl Noizu.EctoEntity.Protocol, for: Tuple do
   end
   def supported?({:ecto_identifier, module, _}) do
     try do
-      Module.get_attribute(module, :is_noizu_ecto_entity) || false
+      module.ecto_entity?()
     rescue _e -> false
     catch _e -> false
     end
@@ -130,7 +130,7 @@ defimpl Noizu.EctoEntity.Protocol, for: Tuple do
   #-----------------------------
   def ref({:ecto_identifier, m, _} = ref) do
     if supported?(ref) do
-      m.ecto_identifier(ref)
+      m.ref(ref)
     else
       nil
     end
