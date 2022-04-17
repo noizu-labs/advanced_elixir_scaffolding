@@ -68,7 +68,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
                 m.cache(ref, context, options)
               :else -> nil
             end
-          :else -> v
+          _else -> v
         end
       :else -> throw "#{m}.cache invalid ref #{inspect ref}"
     end
