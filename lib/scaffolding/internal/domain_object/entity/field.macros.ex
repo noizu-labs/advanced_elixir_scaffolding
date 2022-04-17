@@ -798,16 +798,16 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Entity.Field.Macros do
                                  (@__nzdo__field_types || [])
                                  |> Map.new())
       @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
-      @__nzdo__field_list (Enum.map(@__nzdo__fields, fn ({k, _}) -> k end) -- [:initial, :meta])
+      @__nzdo__field_list (Enum.map(@__nzdo__fields, fn ({k, _}) -> k end) -- [:__initial__, :meta])
 
       #----------------------
       # Universals Fields (always include)
       #----------------------
       @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
-      if !@__nzdo__fields[:initial] do
+      if !@__nzdo__fields[:__initial__] do
         @inspect [ignore: true]
         @json_ignore :*
-        FieldMacros.transient_field :initial
+        FieldMacros.transient_field :__initial__
       end
 
       @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
