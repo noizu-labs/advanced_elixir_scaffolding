@@ -172,14 +172,25 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Table do
       def changeset(record, context, options \\ nil)
       def changeset(%{__struct__: __MODULE__} = record, context, options) do
         fields = Map.keys(struct(__MODULE__, [])) -- [:__struct__, :__schema__, :__meta__, :id, :identifier]
-        record
+        repo = __MODULE__.__persistence__().tables[__MODULE__].schema
+        current = repo.get(__MODULE__, Map.get(record, :identifier) || Map.get(record, :id))
+        current
         |> cast(Map.from_struct(record), fields)
         |> validate_changeset(context, options)
       end
       def changeset(record, context, options) when is_list(record) or is_map(record) do
         fields = Map.keys(struct(__MODULE__, [])) -- [:__struct__, :__schema__, :__meta__, :id, :identifier]
-        record
+        repo = __MODULE__.__persistence__().tables[__MODULE__].schema
+        current = repo.get(__MODULE__, get_in(record, [:identifier]) || get_in(record, [:id]))
+        current
         |> cast(record, fields)
+        |> validate_changeset(context, options)
+      end
+      
+      def changeset(%{__struct__: __MODULE__} = current, %{__struct__: __MODULE__} = record, context, options) do
+        fields = Map.keys(struct(__MODULE__, [])) -- [:__struct__, :__schema__, :__meta__, :id, :identifier]
+        current
+        |> cast(Map.from_struct(record), fields)
         |> validate_changeset(context, options)
       end
 
