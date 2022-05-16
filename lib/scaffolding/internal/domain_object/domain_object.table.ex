@@ -186,7 +186,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Table do
         |> cast(record, fields)
         |> validate_changeset(context, options)
       end
-      
+
       def changeset(%{__struct__: __MODULE__} = current, %{__struct__: __MODULE__} = record, context, options) do
         fields = Map.keys(struct(__MODULE__, [])) -- [:__struct__, :__schema__, :__meta__, :id, :identifier]
         current
@@ -194,6 +194,12 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Table do
         |> validate_changeset(context, options)
       end
 
+      def changeset(%{__struct__: __MODULE__} = current,  record, context, options)  when is_list(record) or is_map(record) do
+        fields = Map.keys(struct(__MODULE__, [])) -- [:__struct__, :__schema__, :__meta__, :id, :identifier]
+        current
+        |> cast(record, fields)
+        |> validate_changeset(context, options)
+      end
 
       #----------------------
       #  __schema_table__
