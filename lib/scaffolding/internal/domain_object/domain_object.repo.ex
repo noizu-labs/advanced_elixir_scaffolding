@@ -87,7 +87,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Repo do
                            transient_field :pagination
 
                            @inspect [ignore: true]
-                           transient_field :__transient__
+                           transient_field :__transient__, []
                          end
 
                        after

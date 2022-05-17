@@ -6,7 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="aed1dae2-ee4e-4845-9aac-3af5beead4ab" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/domain_object/domain_object.table.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/domain_object/domain_object.table.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/domain_object/domain_object.repo.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/domain_object/domain_object.repo.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/scaffolding/internal/domain_object/entity/field.macros.ex" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scaffolding/internal/domain_object/entity/field.macros.ex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mix.exs" beforeDir="false" afterPath="$PROJECT_DIR$/mix.exs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/noizu_advanced_scaffolding.iml" beforeDir="false" afterPath="$PROJECT_DIR$/noizu_advanced_scaffolding.iml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,7 +40,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="com.google.cloudcode.ide_session_index" value="20220516_0000" />
+    <property name="com.google.cloudcode.ide_session_index" value="20220517_0000" />
     <property name="dart.analysis.tool.window.visible" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="node.js.detected.package.eslint" value="true" />
@@ -69,7 +72,8 @@
       <workItem from="1650213394286" duration="1231000" />
       <workItem from="1650236414885" duration="2433000" />
       <workItem from="1650862261258" duration="2935000" />
-      <workItem from="1652679747026" duration="593000" />
+      <workItem from="1652679747026" duration="770000" />
+      <workItem from="1652748291070" duration="358000" />
     </task>
     <servers />
   </component>

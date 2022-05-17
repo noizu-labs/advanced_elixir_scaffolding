@@ -814,7 +814,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Entity.Field.Macros do
       if !@__nzdo__fields[:__transient__] do
         @inspect [ignore: true]
         @json_ignore :*
-        FieldMacros.transient_field :__transient__
+        FieldMacros.transient_field :__transient__, []
       end
 
       @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
