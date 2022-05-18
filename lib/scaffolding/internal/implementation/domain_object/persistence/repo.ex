@@ -206,7 +206,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo do
         def layer_pre_get_callback(%{__struct__: PersistenceLayer} = layer, ref, context, options), do: @__nzdo__repo_default.layer_pre_get_callback(__MODULE__, layer, ref, context, options)
         def layer_pre_get_callback!(%{__struct__: PersistenceLayer} = layer, ref, context, options) do
           Noizu.AdvancedScaffolding.Internal.DomainObject.Repo.__layer_transaction_block__(layer) do
-            layer_pre_get_callback(layer, ref, context, options)
+            @__nzdo__repo_default.layer_pre_get_callback(__MODULE__, layer, ref, context, options)
           end
         end
 
@@ -214,7 +214,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo do
         def layer_post_get_callback(%{__struct__: PersistenceLayer} = layer, entity, context, options), do: @__nzdo__repo_default.layer_post_get_callback(__MODULE__, layer, entity, context, options)
         def layer_post_get_callback!(%{__struct__: PersistenceLayer} = layer, entity, context, options) do
           Noizu.AdvancedScaffolding.Internal.DomainObject.Repo.__layer_transaction_block__(layer) do
-            layer_post_get_callback(layer, entity, context, options)
+            @__nzdo__repo_default.layer_post_get_callback(__MODULE__, layer, entity, context, options)
           end
         end
 
@@ -237,7 +237,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo do
         def post_create_callback(entity, context, options), do: @__nzdo__repo_default.post_create_callback(__MODULE__, entity, context, options)
         def post_create_callback!(entity, context, options) do
           Noizu.AdvancedScaffolding.Internal.DomainObject.Repo.__transaction_block__() do
-            post_create_callback(entity, context, options)
+            @__nzdo__repo_default.post_create_callback(__MODULE__, entity, context, options)
           end
         end
 
@@ -252,7 +252,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo do
             do: @__nzdo__repo_default.layer_pre_create_callback(__MODULE__, layer, entity, context, options)
         def layer_pre_create_callback!(%{__struct__: PersistenceLayer} = layer, entity, context, options) do
           Noizu.AdvancedScaffolding.Internal.DomainObject.Repo.__layer_transaction_block__(layer) do
-            layer_pre_create_callback(layer, entity, context, options)
+            @__nzdo__repo_default.layer_pre_create_callback(__MODULE__, layer, entity, context, options)
           end
         end
 
@@ -265,7 +265,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo do
             do: @__nzdo__repo_default.layer_post_create_callback(__MODULE__, layer, entity, context, options)
         def layer_post_create_callback!(%{__struct__: PersistenceLayer} = layer, entity, context, options) do
           Noizu.AdvancedScaffolding.Internal.DomainObject.Repo.__layer_transaction_block__(layer) do
-            layer_post_create_callback(layer, entity, context, options)
+            @__nzdo__repo_default.layer_post_create_callback(__MODULE__, layer, entity, context, options)
           end
         end
 
@@ -289,7 +289,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo do
         def post_update_callback(entity, context, options), do: @__nzdo__repo_default.post_update_callback(__MODULE__, entity, context, options)
         def post_update_callback!(entity, context, options) do
           Noizu.AdvancedScaffolding.Internal.DomainObject.Repo.__transaction_block__() do
-            post_update_callback(entity, context, options)
+            @__nzdo__repo_default.post_update_callback(__MODULE__, entity, context, options)
           end
         end
 
@@ -302,7 +302,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo do
             do: @__nzdo__repo_default.layer_pre_update_callback(__MODULE__, layer, entity, context, options)
         def layer_pre_update_callback!(%{__struct__: PersistenceLayer} = layer, entity, context, options) do
           Noizu.AdvancedScaffolding.Internal.DomainObject.Repo.__layer_transaction_block__(layer) do
-            layer_pre_update_callback(layer, entity, context, options)
+            @__nzdo__repo_default.layer_pre_update_callback(__MODULE__, layer, entity, context, options)
           end
         end
 
@@ -315,7 +315,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo do
             do: @__nzdo__repo_default.layer_post_update_callback(__MODULE__, layer, entity, context, options)
         def layer_post_update_callback!(%{__struct__: PersistenceLayer} = layer, entity, context, options) do
           Noizu.AdvancedScaffolding.Internal.DomainObject.Repo.__layer_transaction_block__(layer) do
-            layer_post_update_callback(layer, entity, context, options)
+            @__nzdo__repo_default.layer_post_update_callback(__MODULE__, layer, entity, context, options)
           end
         end
 
@@ -348,7 +348,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo do
             do: @__nzdo__repo_default.layer_pre_delete_callback(__MODULE__, layer, entity, context, options)
         def layer_pre_delete_callback!(%{__struct__: PersistenceLayer} = layer, entity, context, options) do
           Noizu.AdvancedScaffolding.Internal.DomainObject.Repo.__layer_transaction_block__(layer) do
-            layer_pre_delete_callback(layer, entity, context, options)
+            @__nzdo__repo_default.layer_pre_delete_callback(__MODULE__, layer, entity, context, options)
           end
         end
 
@@ -361,7 +361,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo do
             do: @__nzdo__repo_default.layer_post_delete_callback(__MODULE__, layer, entity, context, options)
         def layer_post_delete_callback!(%{__struct__: PersistenceLayer} = layer, entity, context, options) do
           Noizu.AdvancedScaffolding.Internal.DomainObject.Repo.__layer_transaction_block__(layer) do
-            layer_post_delete_callback(layer, entity, context, options)
+            @__nzdo__repo_default.layer_post_delete_callback(__MODULE__, layer, entity, context, options)
           end
         end
 
