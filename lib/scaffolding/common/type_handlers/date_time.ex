@@ -147,7 +147,9 @@ defmodule Noizu.DomainObject.DateTime do
 
 
     def import(value, type \\ :microsecond)
-    def import(value, :microsecond), do: value && DateTime.from_unix!(DateTime.to_unix(value, :microsecond), :microsecond)
+    def import(value, :microsecond) do
+      value = value && DateTime.truncate(value, :second)
+    end
 
 
     def pre_create_callback(_field, entity, _context, _options) do

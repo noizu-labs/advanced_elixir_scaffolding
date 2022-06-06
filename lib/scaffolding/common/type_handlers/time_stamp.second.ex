@@ -20,6 +20,7 @@ defmodule Noizu.DomainObject.TimeStamp.Second do
   # Methods
   #---------------------------------------------------------------
   def new(new, _options \\ nil) do
+    new = new && DateTime.truncate(new, :second)
     %__MODULE__{
       created_on: new,
       modified_on: new,
@@ -28,6 +29,7 @@ defmodule Noizu.DomainObject.TimeStamp.Second do
   end
   def now(options \\ nil) do
     now = options[:current_time] || DateTime.utc_now()
+    now = now && DateTime.truncate(now, :second)
     %__MODULE__{
       created_on: now,
       modified_on: now,
@@ -38,10 +40,16 @@ defmodule Noizu.DomainObject.TimeStamp.Second do
 
   def import(created_on, modified_on, deleted_on, type \\ :microsecond)
   def import(created_on, modified_on, deleted_on, type) do
+    created_on = @date_time_handler.import(created_on, type)
+    created_on = created_on && DateTime.truncate(created_on, :second)
+    modified_on = @date_time_handler.import(modified_on, type)
+    modified_on = modified_on && DateTime.truncate(modified_on, :second)
+    deleted_on = @date_time_handler.import(deleted_on, type)
+    deleted_on = deleted_on && DateTime.truncate(deleted_on, :second)
     %__MODULE__{
-      created_on: @date_time_handler.import(created_on, type),
-      modified_on: @date_time_handler.import(modified_on, type),
-      deleted_on: @date_time_handler.import(deleted_on, type),
+      created_on: created_on,
+      modified_on: modified_on,
+      deleted_on: deleted_on,
     }
   end
 
@@ -81,12 +89,12 @@ defmodule Noizu.DomainObject.TimeStamp.Second do
     #----------------------------------
     def pre_create_callback(field, entity, _context, options) do
       update_in(entity, [Access.key(field)], fn
-          (v = %{__struct__: Noizu.DomainObject.TimeStamp.Second}) -> v
-          (v = %DateTime{}) -> %Noizu.DomainObject.TimeStamp.Second{created_on: v, modified_on: v, deleted_on: nil}
-          (_) ->
-            now = options[:current_time] || DateTime.utc_now()
-            %Noizu.DomainObject.TimeStamp.Second{created_on: now, modified_on: now, deleted_on: nil}
-        end)
+        (v = %{__struct__: Noizu.DomainObject.TimeStamp.Second}) -> v
+        (v = %DateTime{}) -> %Noizu.DomainObject.TimeStamp.Second{created_on: v, modified_on: v, deleted_on: nil}
+        (_) ->
+          now = options[:current_time] || DateTime.utc_now()
+          %Noizu.DomainObject.TimeStamp.Second{created_on: now, modified_on: now, deleted_on: nil}
+      end)
     end
     def pre_create_callback!(field, entity, context, options), do: pre_create_callback(field, entity, context, options)
 
