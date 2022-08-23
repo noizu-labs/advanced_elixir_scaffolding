@@ -157,161 +157,18 @@ defmodule Noizu.AdvancedScaffolding.Internal.Core.Entity.Implementation.Default 
   #-----------------------------------
   # __sref_section_regex__
   #-----------------------------------
-  def __sref_section_regex__(_, :integer), do: "([0-9]*)"
-  def __sref_section_regex__(_, :string), do: "([0-9a-zA-Z_-]*)"
-  def __sref_section_regex__(_, :hash), do: "([0-9a-zA-Z_-]*)"
-  def __sref_section_regex__(_, :uuid), do: "([0-9a-zA-Z_-]*)"
-  def __sref_section_regex__(m, {:list, template}), do: "(\[((" <> m.__sref_section_regex__(template) <> ",?)+)\])"
-  def __sref_section_regex__(m, {:compound, template, _}), do: m.__sref_section_regex__({:compound, template})
-  def __sref_section_regex__(m, {:compound, template}), do: "(\{" <> Enum.join(Enum.map(template, &(m.__sref_section_regex__(&1))), ",") <> "\})"
-  def __sref_section_regex__(m, {:atom, _c}), do: m.__sref_section_regex__(:atom)
-  def __sref_section_regex__(_, :atom), do: "([a-z_A-Z0-9]*)"
-  def __sref_section_regex__(m, {:ref, _c}), do: m.__sref_section_regex__(:ref)
-  def __sref_section_regex__(_, :ref), do: "(ref\.[a-z0-9\-]+\{[a-z_\-0-9@,.]+\}|ref\.[a-z0-9\-]+\.[a-z_\-0-9@.]+)"
+  def __sref_section_regex__(_, _), do: throw "deprecated"
 
   #-----------------------------------
   # __id_to_string__
   #-----------------------------------
-  def __id_to_string__(_m, _, nil), do: nil
-  def __id_to_string__(_m, :integer, id) when is_integer(id), do: {:ok, Integer.to_string(id)}
-  def __id_to_string__(_m, :string, id) when is_bitstring(id), do: {:ok, id}
-  def __id_to_string__(_m, :hash, id) when is_bitstring(id), do: {:ok, id}
-  def __id_to_string__(_m, :uuid, id), do: {:ok, UUID.binary_to_string!(id)}
-  def __id_to_string__(m, {:list, template}, id) do
-    v = "[" <> (
-                 Enum.map(id, &(m.__id_to_string__(template, &1)))
-                 |> Enum.join(",")) <> "]"
-    {:ok, v}
-  end
-  def __id_to_string__(m, {:compound, template, prep}, id) do
-    case prep do
-      prep when is_function(prep, 2) -> m.__id_to_string__({:compound, template}, prep.(:encode, id))
-      {m, f} -> m.__id_to_string__({:compound, template}, apply(m, f, [:encode, id]))
-      _ -> throw "invalid compound id formatter"
-    end
-  end
-  def __id_to_string__(m, {:compound, template}, id) do
-    template_list = Tuple.to_list(template)
-    id_list = Tuple.to_list(id)
-    length(template_list) != length(id_list) && throw "invalid compound id #{inspect id}"
-    l = Enum.map_reduce(id_list, 0, &({m.__id_to_string__(Enum.at(template_list, &2), &1), &2 + 1}))
-    {:ok, "{" <> Enum.join(l, ",") <> "}"}
-  end
-  def __id_to_string__(_m, :atom, id), do: {:ok, Atom.to_string(id)}
-  def __id_to_string__(_m, {:atom, :existing}, id), do: {:ok, Atom.to_string(id)}
-  def __id_to_string__(_m, {:atom, constraint}, id) do
-    sref = case constraint do
-             v when is_list(v) -> Enum.member?(v, id) && Atom.to_string(id) || throw "unsupported atom id #{inspect id}"
-             v = %MapSet{} -> Enum.member?(v, id) && Atom.to_string(id) || throw "unsupported atom id #{inspect id}"
-             v when is_function(v, 0) -> v.()[id] && Atom.to_string(id) || throw "unsupported atom id #{inspect id}"
-             v when is_function(v, 1) -> v.(id) && Atom.to_string(id) || throw "unsupported atom id #{inspect id}"
-             {m, f} -> apply(m, f, [id]) && Atom.to_string(id) || throw "unsupported atom id #{inspect id}"
-             _ -> throw "invalid atom constraint #{inspect constraint}"
-           end
-    {:ok, "[#{sref}]"}
-  end
-  def __id_to_string__(_m, :ref, id) do
-    if v = Noizu.ERP.sref(id) do
-      {:ok, v}
-    else
-      throw "invalid ref"
-    end
-  end
-  def __id_to_string__(_m, {:ref, constraint}, id) do
-    m = case Noizu.ERP.ref(id) do
-          {:ref, m, _} -> m
-          _else -> throw "invalid ref"
-        end
-    sref = Noizu.ERP.sref(id) || throw "invalid ref"
-    v = case constraint do
-          v when is_list(v) -> Enum.member?(v, m) && sref || throw "unsupported ref id #{inspect sref}"
-          v = %MapSet{} -> Enum.member?(v, m) && sref || throw "unsupported ref id #{inspect sref}"
-          v when is_function(v, 0) -> v.()[m] && sref || throw "unsupported ref id #{inspect sref}"
-          v when is_function(v, 1) -> v.(m) && sref || throw "unsupported ref id #{inspect sref}"
-          {m, f} -> apply(m, f, [m]) && sref || throw "unsupported ref id #{inspect sref}"
-          _ -> throw "invalid ref constraint #{inspect constraint}"
-        end
-    {:ok, v}
-  end
-
+  def __id_to_string__(_, _, _), do: throw "deprecated"
+  
   #-----------------------------------
   # __string_to_id__
   #-----------------------------------
-  def __string_to_id__(_m, _, nil), do: nil
-  def __string_to_id__(_m, _, id) when not is_bitstring(id), do: throw "invalid sref id part #{inspect id}"
-  def __string_to_id__(_m, :integer, id) do
-    case Integer.parse(id) do
-      {v, ""} -> v
-      :error -> nil
-      _ -> nil
-    end
-  end
-  def __string_to_id__(_m, :string, id), do: id
-  def __string_to_id__(_m, :hash, id), do: id
-  def __string_to_id__(_m, :uuid, id), do: UUID.string_to_binary!(id)
-  def __string_to_id__(m, {:list, template}, id) do
-    r = Regex.compile(m.__sref_section_regex__(template))
-    case Regex.split(r, id, :include_captures) do
-      v when is_list(v) and length(v) > 0 ->
-        Enum.filter(v, &(!Enum.member?(["[", ",", "]"], &1)))
-        |> Enum.map(&(m.__string_to_id__(template, &1)))
-      _ -> throw "invalid sref id part #{inspect id}"
-    end
-  end
-  def __string_to_id__(m, {:compound, template, prep}, id) do
-    formatted = m.__string_to_id__({:compound, template}, id)
-    case prep do
-      prep when is_function(prep, 2) -> prep.(:decode, formatted)
-      {m, f} -> apply(m, f, [:decode, formatted])
-      _ -> throw "invalid compound id formatter"
-    end
-  end
-  def __string_to_id__(m, {:compound, template}, id) do
-    template_list = Tuple.to_list(template)
-    id_list = Tuple.to_list(id)
-    length(template_list) != length(id_list) && throw "invalid compound id #{inspect id}"
-    extract = Enum.map(template, &(m.__sref_section_regex__(&1)))
-              |> Enum.join(",")
-    extract = Regex.compile("^{" <> extract <> "}")
-    case Regex.run(extract, id) do
-      nil -> throw "invalid compound id #{extract.source}"
-      [] -> throw "invalid compound id #{extract.source}"
-      v when is_list(v) ->
-        length(v) != length(template_list) && throw "malformed compound id: #{inspect id}"
-        Enum.map(v, &(m.__string_to_id__(Enum.at(template_list, &2), &1)))
-        |> List.to_tuple()
-    end
-  end
-  def __string_to_id__(_m, :atom, id), do: Atom.to_string(id)
-  def __string_to_id__(_m, {:atom, :existing}, id), do: Atom.to_string(id)
-  def __string_to_id__(_m, {:atom, constraint}, id) do
-    sref = case constraint do
-             v when is_list(v) -> Enum.member?(v, id) && Atom.to_string(id) || throw "unsupported atom id #{inspect id}"
-             v = %MapSet{} -> Enum.member?(v, id) && Atom.to_string(id) || throw "unsupported atom id #{inspect id}"
-             v when is_function(v, 0) -> v.()[id] && Atom.to_string(id) || throw "unsupported atom id #{inspect id}"
-             v when is_function(v, 1) -> v.(id) && Atom.to_string(id) || throw "unsupported atom id #{inspect id}"
-             {m, f} -> apply(m, f, [id]) && Atom.to_string(id) || throw "unsupported atom id #{inspect id}"
-             _ -> throw "invalid atom constraint #{inspect constraint}"
-           end
-    "[#{sref}]"
-  end
-  def __string_to_id__(_m, :ref, id), do: Noizu.ERP.sref(id) || throw "invalid ref"
-  def __string_to_id__(_m, {:ref, constraint}, id) do
-    m = case Noizu.ERP.ref(id) do
-          {:ref, m, _} -> m
-          _else -> throw "invalid ref"
-        end
-    sref = Noizu.ERP.sref(id) || throw "invalid ref"
-    case constraint do
-      v when is_list(v) -> Enum.member?(v, m) && sref || throw "unsupported ref id #{inspect sref}"
-      v = %MapSet{} -> Enum.member?(v, m) && sref || throw "unsupported ref id #{inspect sref}"
-      v when is_function(v, 0) -> v.()[m] && sref || throw "unsupported ref id #{inspect sref}"
-      v when is_function(v, 1) -> v.(m) && sref || throw "unsupported ref id #{inspect sref}"
-      {m, f} -> apply(m, f, [m]) && sref || throw "unsupported ref id #{inspect sref}"
-      _ -> throw "invalid ref constraint #{inspect constraint}"
-    end
-  end
-
+  def __string_to_id__(_, _, _), do: throw "deprecated"
+  
   def __valid__(m, entity, context, options) do
     attributes = m.__noizu_info__(:field_attributes)
     field_errors = Enum.map(

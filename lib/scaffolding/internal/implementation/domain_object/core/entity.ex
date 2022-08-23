@@ -111,31 +111,26 @@ defmodule Noizu.AdvancedScaffolding.Internal.Core.Entity do
         def __sref__(), do: @__nzdo__base.__sref__()
         def __kind__(), do: @__nzdo__base.__kind__()
         def __erp__(), do: @__nzdo__base.__erp__()
-
-
+        
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
         def __valid_identifier__(identifier) do
-          case __noizu_info__(:identifier_type) do
-            :integer -> is_integer(identifier)
-            :atom -> is_atom(identifier)
-            :ref  -> Kernel.match?({:ref, _, _}, identifier)
-            :compound  -> identifier != nil && !Kernel.match?({:ref, _, _}, identifier) && (is_tuple(identifier) || is_list(identifier))
-            :list  -> is_list(identifier)
-            _else -> :unsupported # will be treated as true by the system.
-          end
+          Noizu.DomainObject.IdentifierTypeResolver.__valid_identifier__(identifier, __noizu_info__(:identifier_type))
         end
 
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-        def __sref_section_regex__(type), do: @__nzdo__implementation.__sref_section_regex__(__MODULE__, type)
+        def __sref_section_regex__(type) do
+          Noizu.DomainObject.IdentifierTypeResolver.__sref_section_regex__(type)
+        end
 
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-        def __id_to_string__(type, id), do: @__nzdo__implementation.__id_to_string__(__MODULE__, type, id)
-        def __id_to_string__(id), do: @__nzdo__implementation.__id_to_string__(__MODULE__, @__nzdo__identifier_type, id)
+        def __id_to_string__(identifier) do
+          Noizu.DomainObject.IdentifierTypeResolver.__id_to_string__(identifier, __noizu_info__(:identifier_type))
+        end
 
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-        def __string_to_id__(id), do: @__nzdo__implementation.__string_to_id__(__MODULE__, @__nzdo__identifier_type, id)
-        def __string_to_id__(type, id), do: @__nzdo__implementation.__string_to_id__(__MODULE__, type, id)
-
+        def __string_to_id__(identifier) do
+          Noizu.DomainObject.IdentifierTypeResolver.__string_to_id__(identifier, __noizu_info__(:identifier_type))
+        end
 
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
         def __valid__(%{__struct__: __MODULE__} = entity, context, options \\ nil), do: @__nzdo__implementation.__valid__(__MODULE__, entity, context, options)

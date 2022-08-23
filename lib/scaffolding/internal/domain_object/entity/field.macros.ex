@@ -150,13 +150,21 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Entity.Field.Macros do
   # Support
   #==================================================
 
-  def __identifier__(mod, type, _opts) do
+  def __identifier__(mod, type, []) do
     Module.put_attribute(mod, :__nzdo__identifier_type, type)
     __public_field__(mod, :identifier, nil, [])
   end
+  def __identifier__(mod, type, opts) do
+    Module.put_attribute(mod, :__nzdo__identifier_type, {type, opts})
+    __public_field__(mod, :identifier, nil, [])
+  end
 
-  def __ecto_identifier__(mod, _type, _opts) do
-    Module.put_attribute(mod, :__nzdo__ecto_identifier_field, true)
+  def __ecto_identifier__(mod, type, []) do
+    Module.put_attribute(mod, :__nzdo__ecto_identifier_field, type)
+    __public_field__(mod, :ecto_identifier, nil, [])
+  end
+  def __ecto_identifier__(mod, type, opts) do
+    Module.put_attribute(mod, :__nzdo__ecto_identifier_field, {type, opts})
     __public_field__(mod, :ecto_identifier, nil, [])
   end
 
