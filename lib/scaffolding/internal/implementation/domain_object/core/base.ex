@@ -173,7 +173,8 @@ defmodule Noizu.AdvancedScaffolding.Internal.Core.Base do
               :persistence,
               :indexing,
               :meta,
-              :enum
+              :enum,
+              :cache
             ],
             &({&1, __noizu_info__(&1)})
           )
@@ -206,7 +207,22 @@ defmodule Noizu.AdvancedScaffolding.Internal.Core.Base do
         def __noizu_info__(:indexing), do: __indexing__()
         def __noizu_info__(:meta), do: @__nzdo__meta__map
         def __noizu_info__(:enum), do: __enum__()
+        def __noizu_info__(:cache), do: __cache_configuration__()
 
+        #################################################
+        # __cache_configuration__
+        #################################################
+        def __cache_configuration__() do
+          [
+            type: @__nzdo__cache_type,
+            schema: @__nzdo__cache_schema,
+            prime: @__nzdo__cache_prime,
+            ttl: @__nzdo__cache_ttl,
+            miss_ttl: @__nzdo__cache_miss_ttl,
+          ]
+        end
+        
+        
         #################################################
         # __fields__
         #################################################

@@ -828,6 +828,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Entity.Field.Macros do
       @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
       if !@__nzdo__fields[:meta] do
         @json_ignore :*
+        @json {:redis, :include}
         FieldMacros.restricted_field :meta, %{}
       end
 

@@ -7,6 +7,7 @@
       <sourceFolder url="file://$MODULE_DIR$/lib" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/spec" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/config" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/assets/node_modules/phoenix" />
       <excludeFolder url="file://$MODULE_DIR$/assets/node_modules/phoenix_html" />
       <excludeFolder url="file://$MODULE_DIR$/cover" />
@@ -69,6 +70,7 @@
       <excludeFolder url="file://$MODULE_DIR$/_build/test/lib/earmark_parser" />
       <excludeFolder url="file://$MODULE_DIR$/_build/test/lib/ssl_verify_fun" />
       <excludeFolder url="file://$MODULE_DIR$/_build/test/lib/noizu_mnesia_versioning" />
+      <excludeFolder url="file://$MODULE_DIR$/docs" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="ecto_sql" level="project" />
@@ -119,5 +121,6 @@
     <orderEntry type="library" name="benchee_markdown" level="project" />
     <orderEntry type="library" name="assert_value" level="project" />
     <orderEntry type="library" name="hackney" level="project" />
+    <orderEntry type="library" name="semaphore" level="project" />
   </component>
 </module>

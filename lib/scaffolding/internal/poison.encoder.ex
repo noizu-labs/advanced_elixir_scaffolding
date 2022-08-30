@@ -46,14 +46,19 @@ defmodule Noizu.Poison.Encoder do
       |> Map.new()
       |> Poison.Encoder.encode(options)
     else
+      json_meta = %{
+        prepared_on: options[:current_time] || DateTime.utc_now(),
+        kind: json_format == :redis && noizu_entity.__struct__ || noizu_entity.__struct__.__kind__(),
+        format: json_format,
+      }
+    
       Map.from_struct(entity)
       |> Enum.map(&(encode_field(noizu_entity.__struct__, json_format, &1, context, options)))
       |> Enum.filter(&(&1 != nil))
       |> List.flatten()
       |> Enum.filter(fn({_, v}) -> v != nil end)
       |> Map.new()
-      |> put_in([:kind], noizu_entity.__struct__.__kind__())
-      |> put_in([:json_format], json_format)
+      |> put_in([:json_meta], json_meta)
       |> Poison.Encoder.encode(options)
     end
 
@@ -64,14 +69,18 @@ defmodule Noizu.Poison.Encoder do
 
   defp encode_field(mod, json_format, {field, value}, context, options) do
     white_list = mod.__noizu_info__(:json_configuration)[:white_list]
-    field_settings = mod.__noizu_info__(:json_configuration)[:format_settings][json_format][field]
-
+    jf = mod.__noizu_info__(:json_configuration)[:format_settings][json_format]
+    jf = jf || mod.__noizu_info__(:json_configuration)[:format_settings][mod.__fields__(:json)[:default_format] || :standard]
+    
+    field_settings = jf[field]
+    field_attr = mod.__fields__(:attributes)[field]
     # Include?
     include = cond do
                 field_settings[:include] == false -> false
                 field_settings[:include] == true -> true
                 white_list == true -> false
                 is_list(white_list) && !Enum.member?(white_list, field) -> false
+                field_attr[:transient] == true -> false
                 :else -> true
               end
 

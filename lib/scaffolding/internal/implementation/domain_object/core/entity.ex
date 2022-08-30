@@ -81,6 +81,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Core.Entity do
     def __implement__(options) do
       core_implementation = options[:core_implementation] || Noizu.AdvancedScaffolding.Internal.Core.Entity.Implementation.Default
       quote do
+        require Logger
         @nzdo__core_implementation unquote(core_implementation)
         @__nzdo__implementation unquote(core_implementation)
 
@@ -151,20 +152,25 @@ defmodule Noizu.AdvancedScaffolding.Internal.Core.Entity do
             def id(ref), do: @__nzdo__implementation.id(__MODULE__, ref)
             # ref
             #-----------------
+
             @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-            def ref("ref.#{@__nzdo__sref}{" <> id) do
-              identifier = case __string_to_id__(String.slice(id, 0..-2)) do
+            def ref("ref.#{@__nzdo__sref}." <> id) do
+              identifier = case __string_to_id__(id) do
                              {:ok, v} -> v
-                             {:error, _} -> nil
+                             e = {:error, _} ->
+                               Logger.info("[ref] #{inspect e}")
+                               nil
                              v -> v
                            end
               identifier && {:ref, __MODULE__, identifier}
             end
             @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-            def ref("ref.#{@__nzdo__sref}." <> id) do
+            def ref("ref.#{@__nzdo__sref}" <> id) do
               identifier = case __string_to_id__(id) do
                              {:ok, v} -> v
-                             {:error, _} -> nil
+                             e = {:error, _} ->
+                             Logger.info("[ref] #{inspect e}")
+                               nil
                              v -> v
                            end
               identifier && {:ref, __MODULE__, identifier}
@@ -219,15 +225,30 @@ defmodule Noizu.AdvancedScaffolding.Internal.Core.Entity do
         end
 
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-        def ref_ok(o) do
-          r = ref(o)
-          r && {:ok, r} || {:error, o}
+        if is_bitstring(@__nzdo__sref) do
+          def ref_ok("ref.#{@__nzdo__sref}." <> id) do
+            identifier = case __string_to_id__(id) do
+                           {:ok, v} -> v && {:ok, {:ref, __MODULE__, v}}
+                           e = {:error, _} -> e
+                           v -> v && {:ok, {:ref, __MODULE__, v}}
+                         end
+          end
+          @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+          def ref_ok("ref.#{@__nzdo__sref}" <> id) do
+            identifier = case __string_to_id__(id) do
+                           {:ok, v} -> v && {:ok, {:ref, __MODULE__, v}}
+                           e = {:error, _} -> e
+                           v -> v && {:ok, {:ref, __MODULE__, v}}
+                         end
+          end
+        end
+        def ref_ok(ref) do
+          @__nzdo__implementation.ref_ok(__MODULE__, ref)
         end
 
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-        def sref_ok(o) do
-          r = sref(o)
-          r && {:ok, r} || {:error, o}
+        def sref_ok(ref) do
+          @__nzdo__implementation.sref_ok(__MODULE__, ref)
         end
 
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
@@ -269,9 +290,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Core.Entity do
           __valid_identifier__: 1,
           __sref_section_regex__: 1,
           __id_to_string__: 1,
-          __id_to_string__: 2,
           __string_to_id__: 1,
-          __string_to_id__: 2,
 
 
           __valid__: 2,

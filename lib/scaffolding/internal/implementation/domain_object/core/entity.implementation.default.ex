@@ -8,7 +8,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Core.Entity.Implementation.Default 
   @moduledoc """
   Default Implementation.
   """
-
+  require Logger
 
   #-----------------
   # has_permission
@@ -38,20 +38,27 @@ defmodule Noizu.AdvancedScaffolding.Internal.Core.Entity.Implementation.Default 
     end
   end
 
+  def ref(domain_object, identifier) do
+    case domain_object.ref_ok(identifier) do
+      {:ok, v} -> v
+      _ -> nil
+    end
+  end
+  
   #------------------
-  # ref
+  # ref_ok
   #------------------
-  def ref(_domain_object, nil), do: nil
-  def ref(domain_object, %{__struct__: domain_object, identifier: identifier}), do: {:ref, domain_object, identifier}
-  def ref(domain_object, %{__struct__: associated_struct} = entity) do
+  def ref_ok(_domain_object, nil), do: {:error, {:identifier, :is_nil}}
+  def ref_ok(domain_object, %{__struct__: domain_object, identifier: identifier}), do: {:ok, {:ref, domain_object, identifier}}
+  def ref_ok(domain_object, %{__struct__: associated_struct} = entity) do
     association_type = domain_object.__noizu_info__(:associated_types)[associated_struct]
     cond do
-      association_type == nil -> nil
-      association_type == false -> nil
-      association_type == :poly -> associated_struct.ref(entity)
+      association_type == nil -> {:error, {:unsupported_ref, associated_struct}}
+      association_type == false -> {:error, {:unsupported_ref, associated_struct}}
+      association_type == :poly -> associated_struct.ref_ok(entity)
       config = domain_object.__persistence__(:tables)[associated_struct] ->
-        identifier = case config.id_map do
-                       :unsupported -> nil
+        case config.id_map do
+                       :unsupported -> {:error, :unsupported_ref}
                        :same -> get_in(entity, [Access.key(:identifier)]) || get_in(entity, [Access.key(:id)])
                        {m, f} -> apply(m, f, [entity])
                        {m, f, a} when is_list(a) -> apply(m, f, [entity] ++ a)
@@ -59,48 +66,67 @@ defmodule Noizu.AdvancedScaffolding.Internal.Core.Entity.Implementation.Default 
                        f when is_function(f, 1) -> f.(entity)
                        _ -> nil
                      end
-        identifier && {:ref, domain_object, identifier}
-      :else -> nil
+        |> case do
+             nil -> {:error, {:unsupported_ref, associated_struct}}
+             e = {:error, _} -> e
+             v -> {:ok, {:ref, domain_object, v}}
+           end
+      :else -> {:error, {:unsupported_ref, associated_struct}}
     end
   end
-  def ref(domain_object, ref) when is_bitstring(ref) do
-    ref = domain_object.__string_to_id__(ref)
-    ref && domain_object.__valid_identifier__(ref) && {:ref, domain_object, ref}
+  def ref_ok(domain_object, ref) when is_bitstring(ref) do
+    sref_name = domain_object.__sref__()
+    ref = cond do
+            String.starts_with?(ref, "ref.#{sref_name}.") -> String.slice(ref, length("ref.#{sref_name}.")..-1)
+            String.starts_with?(ref, "ref.#{sref_name}") -> String.slice(ref, length("ref.#{sref_name}")..-1)
+            :else -> ref
+          end
+    with {:ok, id} <- domain_object.__string_to_id__(ref),
+         :ok <- domain_object.__valid_identifier__(id) do
+      {:ok, {:ref, domain_object, id}}
+    else
+      e -> e
+    end
   end
 
-  def ref(domain_object, {:ref, domain_object, id}) do
-    domain_object.__valid_identifier__(id) && {:ref, domain_object, id} || nil
+  def ref_ok(domain_object, {:ref, domain_object, id}) do
+    case domain_object.__valid_identifier__(id) do
+      :ok -> {:ok, {:ref, domain_object, id}}
+      e -> e
+    end
   end
 
-  def ref(domain_object, ref) do
-    domain_object.__valid_identifier__(ref) && {:ref, domain_object, ref} || nil
+  def ref_ok(domain_object, ref) do
+    case domain_object.__valid_identifier__(ref) do
+      :ok -> {:ok, {:ref, domain_object, ref}}
+      e -> e
+    end
   end
 
   #------------------
   # sref
   #------------------
   def sref(domain_object, ref) do
+    case sref_ok(domain_object, ref) do
+      {:ok, v} -> v
+      _ -> nil
+    end
+  end
+  
+  #------------------
+  # sref_ok
+  #------------------
+  def sref_ok(domain_object, ref) do
     sref_name = domain_object.__sref__()
     identifier = domain_object.id(ref)
     cond do
-      sref_name == :undefined -> nil
+      sref_name == :undefined -> {:error, {:sref_module_undefined, domain_object}}
       identifier ->
         sref_identifier = case domain_object.__id_to_string__(identifier) do
-                            {:ok, v} -> v
-                            {:error, _} -> throw "#{domain_object}.__id_to_string__ failed for #{inspect identifier}"
-                            v -> v || throw "#{domain_object}.__id_to_string__ failed for #{inspect identifier}"
+                            {:ok, v} -> {:ok, "ref.#{sref_name}.#{v}"}
+                            e -> e
                           end
-        identifier_type = case domain_object.__noizu_info__(:identifier_type) do
-                            identifier_type when is_tuple(identifier_type) -> elem(identifier_type, 0)
-                            identifier_type -> identifier_type
-                          end
-        case identifier_type do
-          :ref -> "ref.#{sref_name}{#{sref_identifier}}"
-          :list -> "ref.#{sref_name}#{sref_identifier}"
-          :compound -> "ref.#{sref_name}#{sref_identifier}"
-          _other -> "ref.#{sref_name}.#{sref_identifier}"
-        end
-      :else -> nil
+      :else -> {:error, {:identifier, nil}}
     end
   end
 
@@ -153,21 +179,6 @@ defmodule Noizu.AdvancedScaffolding.Internal.Core.Entity.Implementation.Default 
       :else -> nil
     end
   end
-  
-  #-----------------------------------
-  # __sref_section_regex__
-  #-----------------------------------
-  def __sref_section_regex__(_, _), do: throw "deprecated"
-
-  #-----------------------------------
-  # __id_to_string__
-  #-----------------------------------
-  def __id_to_string__(_, _, _), do: throw "deprecated"
-  
-  #-----------------------------------
-  # __string_to_id__
-  #-----------------------------------
-  def __string_to_id__(_, _, _), do: throw "deprecated"
   
   def __valid__(m, entity, context, options) do
     attributes = m.__noizu_info__(:field_attributes)

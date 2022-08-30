@@ -190,7 +190,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
   # Get - layer_get
   #------------------------------------------
   def layer_get(m, layer = %{__struct__: PersistenceLayer}, ref, context, options) do
-    identifier = m.layer_pre_get_callback(layer, ref, context, options)
+    identifier = m.layer_get_identifier(layer, ref, context, options)
     cond do
       identifier == nil -> nil
       entity = m.layer_get_callback(layer, identifier, context, options) -> m.layer_post_get_callback(layer, entity, context, options)
@@ -199,7 +199,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
   end
 
   def layer_get!(m, layer = %{__struct__: PersistenceLayer}, ref, context, options) do
-    identifier = m.layer_pre_get_callback!(layer, ref, context, options)
+    identifier = m.layer_get_identifier!(layer, ref, context, options)
     cond do
       identifier == nil -> nil
       entity = m.layer_get_callback!(layer, identifier, context, options) -> m.layer_post_get_callback!(layer, entity, context, options)
@@ -215,11 +215,21 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
     record && m.__entity__().__from_record__(layer, record, context, options)
   end
 
+  def layer_get_callback(m, %{__struct__: PersistenceLayer, type: :ecto} = layer, ref, context, options) when is_list(ref) do
+    record = layer.schema.get_by(layer.table, ref)
+    record && m.__entity__().__from_record__(layer, record, context, options)
+  end
+  
   def layer_get_callback(m, %{__struct__: PersistenceLayer, type: :ecto} = layer, ref, context, options) do
     record = layer.schema.get(layer.table, ref)
     record && m.__entity__().__from_record__(layer, record, context, options)
   end
 
+  def layer_get_callback(m, %{__struct__: PersistenceLayer, type: :redis} = layer, ref, context, options) when is_bitstring(ref) do
+    record = layer.schema.get(ref)
+    record && m.__entity__().__from_record__(layer, record, context, options)
+  end
+  
   def layer_get_callback(_m, _layer, _ref, _context, _options), do: nil
 
 
@@ -227,20 +237,31 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
     record = layer.table.read!(ref)
     record && m.__entity__().__from_record__!(layer, record, context, options)
   end
-
+  
+  def layer_get_callback!(m, %{type: :ecto} = layer, ref, context, options) when is_list(ref) do
+    record = layer.schema.get_by(layer.table, ref)
+    record && m.__entity__().__from_record__!(layer, record, context, options)
+  end
+  
   def layer_get_callback!(m, %{type: :ecto} = layer, ref, context, options) do
     record = layer.schema.get(layer.table, ref)
     record && m.__entity__().__from_record__!(layer, record, context, options)
   end
 
+  def layer_get_callback!(m, %{__struct__: PersistenceLayer, type: :redis} = layer, ref, context, options) when is_bitstring(ref) do
+    record = layer.schema.get!(ref)
+    record && m.__entity__().__from_record__!(layer, record, context, options)
+  end
+  
   def layer_get_callback!(_m, _layer, _ref, _context, _options), do: nil
 
   #------------------------------------------
-  # Get - layer_pre_get_callback
+  # Get - layer_get_identifier
   #------------------------------------------
-  def layer_pre_get_callback(m, %{__struct__: PersistenceLayer, type: :mnesia}, ref, _context, _options), do: m.__entity__().id(ref)
-  def layer_pre_get_callback(_m, %{__struct__: PersistenceLayer, type: :ecto}, ref, _context, _options), do: Noizu.EctoEntity.Protocol.ecto_identifier(ref)
-  def layer_pre_get_callback(_m, _layer, ref, _context, _options), do: ref
+  def layer_get_identifier(m, %{__struct__: PersistenceLayer, type: :mnesia}, ref, _context, _options), do: m.__entity__().id(ref)
+  def layer_get_identifier(_m, %{__struct__: PersistenceLayer, type: :ecto}, ref, _context, _options), do: Noizu.EctoEntity.Protocol.ecto_identifier(ref)
+  def layer_get_identifier(m, %{__struct__: PersistenceLayer, type: :redis}, ref, _context, _options), do: m.__entity__().sref(ref)
+  def layer_get_identifier(_m, _layer, ref, _context, _options), do: ref
 
   #------------------------------------------
   # Get - layer_post_get_callback

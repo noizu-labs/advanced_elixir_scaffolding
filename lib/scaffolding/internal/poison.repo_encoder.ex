@@ -36,16 +36,27 @@ defmodule Noizu.Poison.RepoEncoder do
                                                      |> put_in([:__nzdo__restricted?], true)
                                            {restricted, options}
                                        end
+
+
+        json_meta = %{
+          prepared_on: options[:current_time] || DateTime.utc_now(),
+          kind: json_format == :redis && noizu_repo.__struct__ || noizu_repo.__struct__.__kind__(),
+          format: json_format,
+        }
+        
         # Note currently we don't support expansion/restrict on Repo struct fields.
         %{noizu_repo| entities: expanded_entities}
         |> Map.from_struct()
-        |> put_in([:kind], noizu_repo.__struct__.__kind__())
-        |> put_in([:json_format], json_format)
+        |> put_in([:json_meta], json_meta)
         |> Poison.Encoder.encode(options)
       _ ->
+        json_meta = %{
+          prepared_on: options[:current_time] || DateTime.utc_now(),
+          kind: json_format == :redis && noizu_repo.__struct__ || noizu_repo.__struct__.__kind__(),
+          format: json_format,
+        }
         Map.from_struct(noizu_repo)
-        |> put_in([:kind], noizu_repo.__struct__.__kind__())
-        |> put_in([:json_format], json_format)
+        |> put_in([:json_meta], json_meta)
         |> Poison.Encoder.encode(options)
     end
   rescue e ->

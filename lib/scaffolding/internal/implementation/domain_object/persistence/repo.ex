@@ -30,13 +30,13 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo do
     @callback get(ref :: entity_reference, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
     @callback post_get_callback(entity :: entity, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
     @callback layer_get(layer :: layer, ref :: entity_reference, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
-    @callback layer_pre_get_callback(layer :: layer, ref :: entity_reference, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity_reference | entity | nil
+    @callback layer_get_identifier(layer :: layer, ref :: entity_reference, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity_reference | entity | nil
     @callback layer_post_get_callback(layer :: layer, ref :: entity_reference, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
 
     @callback get!(ref :: entity_reference, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
     @callback post_get_callback!(entity :: entity, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
     @callback layer_get!(layer :: layer, ref :: entity_reference, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
-    @callback layer_pre_get_callback!(layer :: layer, ref :: entity_reference, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity_reference | entity | nil
+    @callback layer_get_identifier!(layer :: layer, ref :: entity_reference, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity_reference | entity | nil
     @callback layer_post_get_callback!(layer :: layer, ref :: entity_reference, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
 
     @callback create(entity :: entity, context :: Noizu.ElixirCore.CallingContext.t, options :: opts) :: entity | nil
@@ -159,21 +159,37 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo do
 
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
         def cache_key(ref, context, options) do
-          sref = __MODULE__.__entity__.sref(ref)
-          sref && :"e_c:#{sref}"
+          h = __MODULE__.__entity__.__noizu_info__(:cache)[:type]
+          h.cache_key(__MODULE__, ref, context, options)
         end
 
+        @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+        def pre_cache(ref, context), do: pre_cache(ref, context, [])
+        def pre_cache(ref, context, options) do
+          #, do: @__nzdo__repo_default.cache(__MODULE__, ref, context, options)
+          h = __MODULE__.__entity__.__noizu_info__(:cache)[:type]
+          h.pre_cache(__MODULE__, ref, context, options)
+        end
+        
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
         def cached(ref, context), do: cached(ref, context, [])
         def cached(ref, context, options), do: cache(ref, context, options)
 
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
         def cache(ref, context), do: cache(ref, context, [])
-        def cache(ref, context, options), do: @__nzdo__repo_default.cache(__MODULE__, ref, context, options)
-
+        def cache(ref, context, options) do
+          #, do: @__nzdo__repo_default.cache(__MODULE__, ref, context, options)
+          h = __MODULE__.__entity__.__noizu_info__(:cache)[:type]
+          h.get_cache(__MODULE__, ref, context, options)
+        end
+        
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
         def delete_cache(ref, context), do: delete_cache(ref, context, [])
-        def delete_cache(ref, context, options), do: @__nzdo__repo_default.delete_cache(__MODULE__, ref, context, options)
+        #def delete_cache(ref, context, options), do: @__nzdo__repo_default.delete_cache(__MODULE__, ref, context, options)
+        def delete_cache(ref, context, options) do
+          h = __MODULE__.__entity__.__noizu_info__(:cache)[:type]
+          h.delete_cache(__MODULE__, ref, context, options)
+        end
 
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
         def generate_identifier(), do: @__nzdo__repo_default.generate_identifier(__MODULE__)
@@ -203,10 +219,10 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo do
         def layer_get_callback!(%{__struct__: PersistenceLayer} = layer, ref, context, options), do: @__nzdo__repo_default.layer_get_callback!(__MODULE__, layer, ref, context, options)
 
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-        def layer_pre_get_callback(%{__struct__: PersistenceLayer} = layer, ref, context, options), do: @__nzdo__repo_default.layer_pre_get_callback(__MODULE__, layer, ref, context, options)
-        def layer_pre_get_callback!(%{__struct__: PersistenceLayer} = layer, ref, context, options) do
+        def layer_get_identifier(%{__struct__: PersistenceLayer} = layer, ref, context, options), do: @__nzdo__repo_default.layer_get_identifier(__MODULE__, layer, ref, context, options)
+        def layer_get_identifier!(%{__struct__: PersistenceLayer} = layer, ref, context, options) do
           Noizu.AdvancedScaffolding.Internal.DomainObject.Repo.__layer_transaction_block__(layer) do
-            @__nzdo__repo_default.layer_pre_get_callback(__MODULE__, layer, ref, context, options)
+            @__nzdo__repo_default.layer_get_identifier(__MODULE__, layer, ref, context, options)
           end
         end
 
@@ -402,8 +418,8 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo do
           layer_get!: 4,
           layer_get_callback: 4,
           layer_get_callback!: 4,
-          layer_pre_get_callback: 4,
-          layer_pre_get_callback!: 4,
+          layer_get_identifier: 4,
+          layer_get_identifier!: 4,
           layer_post_get_callback: 4,
           layer_post_get_callback!: 4,
 

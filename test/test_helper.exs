@@ -17,6 +17,11 @@ alias Noizu.AdvancedScaffolding.Database.NmidV3Generator.Table, as: NmidV3Genera
 Amnesia.Schema.create()
 Amnesia.start
 
+{:ok, sup} = Supervisor.start_link([], [strategy: :one_for_one, name: Test.Supervisor, strategy: :permanent])
+Supervisor.start_child(sup, NoizuSchema.Redis.child_spec(nil))
+
+
+if !Amnesia.Table.exists?(NoizuSchema.Database.AdvancedScaffolding.Test.Fixture.V3.RedisCache.Table), do: NoizuSchema.Database.AdvancedScaffolding.Test.Fixture.V3.RedisCache.Table.create(memory: [node()])
 if !Amnesia.Table.exists?(FooV3Table), do: FooV3Table.create(memory: [node()])
 if !Amnesia.Table.exists?(FooV3TypeTable), do: FooV3TypeTable.create(memory: [node()])
 if !Amnesia.Table.exists?(NmidV3Generator), do: NmidV3Generator.create(memory: [node()])

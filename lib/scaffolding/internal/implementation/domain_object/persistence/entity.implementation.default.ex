@@ -87,7 +87,9 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Entity.Implementation.D
 
     struct(layer.table.__struct__(), embed_fields)
   end
-
+  def __as_record_type__(domain_object, layer = %{type: :redis}, entity, _context, options) do
+       entity
+  end
   def __as_record_type__(domain_object, layer = %{type: :ecto, table: table}, entity, _context, options) do
     context = Noizu.ElixirCore.CallingContext.admin()
     field_types = domain_object.__noizu_info__(:field_types)
@@ -95,7 +97,11 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Entity.Implementation.D
       domain_object.__fields__(:persisted),
       fn (field) ->
         cond do
-          field == :identifier -> {:identifier, Noizu.EctoEntity.Protocol.ecto_identifier(entity)}
+          field == :identifier ->
+            case Noizu.EctoEntity.Protocol.ecto_identifier(entity) do
+              v when is_list(v) -> v
+              v -> {:identifier, v}
+            end
           entry = layer.schema_fields[field] ->
             type = field_types[entry[:source]]
             source = case entry[:selector] do

@@ -6,15 +6,23 @@
 defmodule Noizu.AdvancedScaffolding.Test.Fixture.V3.DomainObject.Schema do
   require Noizu.DomainObject
   #alias Noizu.ElixirScaffolding.Implementation.DomainObject.Scaffolding.DefaultScaffoldingSchemaProvider.Default, as: Provider
-
-
-  Noizu.DomainObject.noizu_schema_info(app: :noizu_advanced_scaffolding, base_prefix: Noizu, database_prefix: Noizu.AdvancedScaffolding.Database) do
+  
+  Noizu.DomainObject.noizu_schema_info(app: :noizu_advanced_scaffolding, base_prefix: Noizu.AdvancedScaffolding, database_prefix: Noizu.AdvancedScaffolding.Database) do
     def nmid_keys(), do: __noizu_info__(:nmid_indexes)
   end
 
+  
   def __nmid_index_list__() do
     %{
       Noizu.AdvancedScaffolding.Test.Fixture.V3.Foo.Entity => 1,
+      Noizu.AdvancedScaffolding.Test.Fixture.V3.TypeTestAtom => 100,
+      Noizu.AdvancedScaffolding.Test.Fixture.V3.TypeTestCompound => 200,
+      Noizu.AdvancedScaffolding.Test.Fixture.V3.TypeTestHash => 300,
+      Noizu.AdvancedScaffolding.Test.Fixture.V3.TypeTestAInteger=> 400,
+      Noizu.AdvancedScaffolding.Test.Fixture.V3.TypeTestList => 500,
+      Noizu.AdvancedScaffolding.Test.Fixture.V3.TypeTestRef => 600,
+      Noizu.AdvancedScaffolding.Test.Fixture.V3.TypeTestString => 700,
+      Noizu.AdvancedScaffolding.Test.Fixture.V3.TypeTestUUID => 800,
     }
   end
 

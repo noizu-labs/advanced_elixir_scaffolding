@@ -285,10 +285,14 @@ defmodule Noizu.DomainObject.SchemaInfo do
         tables: :"__nzss__#{@app}__tables",
         sref_map: :"__nzss__#{@app}__sref_map",
         meta: :"__nzss__#{@app}__meta",
+        identifier_type: :"__nzss__#{@app}__identifier_type"
       })
       @all_properties Map.keys(@cache_keys)
 
 
+      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+      def __noizu_info__(:identifier_type = property), do: Noizu.DomainObject.SchemaInfo.Default.cached_filter(__cache_key__(property), app(), base_prefix(), :identifier_type)
+      
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       @doc """
       Application App

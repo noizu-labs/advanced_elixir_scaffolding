@@ -190,11 +190,51 @@ defmodule Noizu.AdvancedScaffolding.Internal.Helpers do
       a__nzdo__enum_default_value  = Noizu.AdvancedScaffolding.Internal.Helpers.extract_has_enum_attribute(:default_value, :default, :none)
       a__nzdo__enum_ecto_type = Noizu.AdvancedScaffolding.Internal.Helpers.extract_has_enum_attribute(:ecto_type, :value_type, :integer)
 
+      # @todo unified attribute  @cache :fast_global, schema: :default, prime: true, ttl: 300, miss_ttl: 600
+      {a_cache_engine, a_cache_options} = case Noizu.AdvancedScaffolding.Internal.Helpers.extract_has_enum_attribute(:cache, :cache, :default) do
+                                            {engine, options} -> {engine, options}
+                                            v -> {v, []}
+                                          end
+
+      a__nzdo__cache_type = case a_cache_engine do
+                              :default -> Noizu.DomainObject.CacheHandler.FastGlobal
+                              false -> Noizu.DomainObject.CacheHandler.Disabled
+                              true -> Noizu.DomainObject.CacheHandler.FastGlobal
+                              :fast_global -> Noizu.DomainObject.CacheHandler.FastGlobal
+                              :redis -> Noizu.DomainObject.CacheHandler.Redis
+                              :disabled -> Noizu.DomainObject.CacheHandler.Disabled
+                              v -> v
+                            end
+
+      a__nzdo__cache_schema = cond do
+                                Keyword.has_key?(a_cache_options, :schema) -> a_cache_options[:schema]
+                                :else -> Noizu.AdvancedScaffolding.Internal.Helpers.extract_has_enum_attribute(:cache_schema, :cache_schema, :default)
+                              end
+      a__nzdo__cache_prime = cond do
+                               Keyword.has_key?(a_cache_options, :prime) -> a_cache_options[:prime]
+                               :else ->Noizu.AdvancedScaffolding.Internal.Helpers.extract_has_enum_attribute(:cache_prime, :cache_prime, true)
+                             end
+      a__nzdo__cache_ttl = cond do
+                             Keyword.has_key?(a_cache_options, :ttl) -> a_cache_options[:ttl]
+                             :else -> Noizu.AdvancedScaffolding.Internal.Helpers.extract_has_enum_attribute(:cache_ttl, :cache_ttl, 3600)
+                           end
+      a__nzdo__cache_miss_ttl = cond do
+                                  Keyword.has_key?(a_cache_options, :miss_ttl) -> a_cache_options[:miss_ttl]
+                                  :else -> Noizu.AdvancedScaffolding.Internal.Helpers.extract_has_enum_attribute(:cache_miss_ttl, :cache_miss_ttl, 30)
+                                end
+                                
       @__nzdo__auto_generate a__nzdo__auto_generate
       @__nzdo__enum_list a__nzdo__enum_list
       @__nzdo__enum_default_value a__nzdo__enum_default_value
       @__nzdo__enum_ecto_type a__nzdo__enum_ecto_type
-
+      
+      @__nzdo__cache_type a__nzdo__cache_type
+      @__nzdo__cache_schema a__nzdo__cache_schema
+      @__nzdo__cache_prime a__nzdo__cache_prime
+      @__nzdo__cache_ttl a__nzdo__cache_ttl
+      @__nzdo__cache_miss_ttl a__nzdo__cache_miss_ttl
+      
+      
       case Noizu.AdvancedScaffolding.Internal.Helpers.extract_has_persistence_attribute(:universal_identifier, :not_set) do
         :not_set -> :skip
         v -> Module.put_attribute(__MODULE__, :universal_identifier, v)
@@ -229,6 +269,12 @@ defmodule Noizu.AdvancedScaffolding.Internal.Helpers do
       end
 
       if (@__nzdo__base_open?) do
+        Module.put_attribute(@__nzdo__base, :__nzdo__cache_type, a__nzdo__cache_type)
+        Module.put_attribute(@__nzdo__base, :__nzdo__cache_schema, a__nzdo__cache_schema)
+        Module.put_attribute(@__nzdo__base, :__nzdo__cache_prime, a__nzdo__cache_prime)
+        Module.put_attribute(@__nzdo__base, :__nzdo__cache_ttl, a__nzdo__cache_ttl)
+        Module.put_attribute(@__nzdo__base, :__nzdo__cache_miss_ttl, a__nzdo__cache_miss_ttl)
+        
         Module.put_attribute(@__nzdo__base, :__nzdo__auto_generate, a__nzdo__auto_generate)
         Module.put_attribute(@__nzdo__base, :__nzdo__enum_list, a__nzdo__enum_list)
         Module.put_attribute(@__nzdo__base, :__nzdo__enum_table, a__nzdo_persistence.options.enum_table)
@@ -316,7 +362,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Helpers do
 
       __nzdo__json_config = %{
         provider: @__nzdo__json_provider,
-        defualt_format: @__nzdo__json_format,
+        default_format: @__nzdo__json_format,
         white_list: @__nzdo__json_white_list,
         selection_groups: @__nzdo__json_format_groups,
         field_groups: @__nzdo__json_field_groups,

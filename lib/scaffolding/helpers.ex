@@ -151,7 +151,7 @@ defmodule Noizu.AdvancedScaffolding.Helpers do
   #-------------------------
   # format_to_atom
   #-------------------------
-  @default_json_formats [:standard, :admin, :verbose, :compact, :mobile, :verbose_mobile]
+  @default_json_formats [:standard, :admin, :verbose, :compact, :mobile, :verbose_mobile, :redis]
   @json_formats Application.get_env(:noizu_scaffolding, :json_formats, @default_json_formats)
   @formats Map.new(
              @json_formats,
