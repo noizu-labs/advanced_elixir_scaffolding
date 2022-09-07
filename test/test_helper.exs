@@ -21,6 +21,10 @@ Amnesia.start
 Supervisor.start_child(sup, NoizuSchema.Redis.child_spec(nil))
 Supervisor.start_child(sup, {ConCache, [name: ConCache.Default, ttl_check_interval: :timer.seconds(1), global_ttl: :timer.seconds(600)]})
 
+if Code.ensure_loaded?(:rocksdb) do
+  Supervisor.start_child(sup, {Noizu.RocksDB.Supervisor, {[:apple, :bottom, EntityCache], []}   })
+  if !Amnesia.Table.exists?(NoizuSchema.Database.AdvancedScaffolding.Test.Fixture.V3.RocksDB.Table), do: NoizuSchema.Database.AdvancedScaffolding.Test.Fixture.V3.RocksDB.Table.create(memory: [node()])
+end
 
 
 if !Amnesia.Table.exists?(NoizuSchema.Database.AdvancedScaffolding.Test.Fixture.V3.ConCache.Table), do: NoizuSchema.Database.AdvancedScaffolding.Test.Fixture.V3.ConCache.Table.create(memory: [node()])

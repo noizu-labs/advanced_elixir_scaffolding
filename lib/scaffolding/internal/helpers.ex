@@ -206,6 +206,8 @@ defmodule Noizu.AdvancedScaffolding.Internal.Helpers do
                               :con_cache -> Noizu.DomainObject.CacheHandler.ConCache
                               :con -> Noizu.DomainObject.CacheHandler.ConCache
                               :ets -> Noizu.DomainObject.CacheHandler.ConCache
+                              :rocksdb ->  Noizu.DomainObject.CacheHandler.RocksDB
+                              :rock -> Noizu.DomainObject.CacheHandler.RocksDB
                               :disabled -> Noizu.DomainObject.CacheHandler.Disabled
                               v -> v
                             end

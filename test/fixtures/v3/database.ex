@@ -45,6 +45,16 @@ defdatabase NoizuSchema.Database do
   end
 
 
+  deftable AdvancedScaffolding.Test.Fixture.V3.RocksDB.Table, [:identifier, :entity], type: :set, index: [] do
+    @type t :: %__MODULE__{
+                 identifier: any,
+                 entity: any
+               }
+    def __erp__(), do: Noizu.AdvancedScaffolding.Test.Fixture.V3.ConCache.Entity
+    @derive Noizu.ERP
+  end
+  
+
   deftable AdvancedScaffolding.Test.Fixture.V3.ConCache.Table, [:identifier, :entity], type: :set, index: [] do
     @type t :: %__MODULE__{
                  identifier: any,

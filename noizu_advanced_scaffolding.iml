@@ -74,6 +74,9 @@
       <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/semaphore" />
       <excludeFolder url="file://$MODULE_DIR$/_build/test/lib/semaphore" />
       <excludeFolder url="file://$MODULE_DIR$/_build/test/lib/con_cache" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/con_cache" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/rocksdb" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/test/lib/rocksdb" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="ecto_sql" level="project" />
@@ -126,5 +129,7 @@
     <orderEntry type="library" name="hackney" level="project" />
     <orderEntry type="library" name="semaphore" level="project" />
     <orderEntry type="library" name="con_cache" level="project" />
+    <orderEntry type="library" name="rocker" level="project" />
+    <orderEntry type="library" name="rocksdb" level="project" />
   </component>
 </module>

@@ -137,6 +137,43 @@ defmodule Noizu.AdvancedScaffolding.CacheTest do
 
 
 
+  if Code.ensure_loaded?(:rocksdb) do
+  
+  
+  
+    @tag :v3
+    @tag :cache
+    test "RocksDB Cache" do
+      contents = "apple.#{:os.system_time(:second)}"
+      sut = %Noizu.AdvancedScaffolding.Test.Fixture.V3.RocksDBCache.Entity{identifier: :bar, content: contents, meta: %{apple: true}}
+      cache = sut.__struct__.__noizu_info__(:cache)
+      assert cache[:type] == Noizu.DomainObject.CacheHandler.RocksDB
+      Noizu.AdvancedScaffolding.Test.Fixture.V3.RocksDBCache.Repo.pre_cache(sut, Noizu.ElixirCore.CallingContext.system(), [])
+      r = Noizu.AdvancedScaffolding.Test.Fixture.V3.RocksDBCache.Repo.cache(Noizu.ERP.ref(sut), Noizu.ElixirCore.CallingContext.system(), [])
+      assert r.content == contents
+      assert %Noizu.AdvancedScaffolding.Test.Fixture.V3.RocksDBCache.Entity{content: contents, identifier: :bar, meta: %{apple: true}} == r
+    
+      Noizu.AdvancedScaffolding.Test.Fixture.V3.RocksDBCache.Repo.delete_cache(sut, Noizu.ElixirCore.CallingContext.system(), [])
+      r = Noizu.AdvancedScaffolding.Test.Fixture.V3.RocksDBCache.Repo.cache(Noizu.ERP.ref(sut), Noizu.ElixirCore.CallingContext.system(), [])
+      assert r == nil
+    
+      r = Noizu.AdvancedScaffolding.Test.Fixture.V3.RocksDBCache.Repo.cache(Noizu.ERP.ref(sut), Noizu.ElixirCore.CallingContext.system(), [])
+      assert r == nil
+    end
+  
+    @tag :v3
+    @tag :cache
+    test "RocksDB Cache Settings" do
+      sut = Noizu.AdvancedScaffolding.Test.Fixture.V3.RocksDBCache.Entity.__noizu_info__(:cache)
+      assert sut[:type] == Noizu.DomainObject.CacheHandler.RocksDB
+      assert sut[:schema] == :default
+      assert sut[:ttl] == 123
+      assert sut[:miss_ttl] == 5
+      assert sut[:prime] == true
+    end
+    
+  end
+
 
   @tag :v3
   @tag :cache
