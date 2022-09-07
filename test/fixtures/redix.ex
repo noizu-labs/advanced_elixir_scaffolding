@@ -11,28 +11,43 @@ defmodule NoizuSchema.Redis do
   If the record has been transformed from the regular entity to a json format.
   """
   def create_handler(record, _context, _options) do
-    IO.inspect(record, pretty: true, label: :redix)
-    # wip
+    with {:ok, sref} <- Noizu.ERP.sref_ok(record) do
+      # TODO expose ability to obtain entity specific TTL for redis archival
+      set_binary([sref <> ".record", record])
+    end
   end
   
-  def create_handler!(_record, _context, _options) do
-    # wip
+  def create_handler!(record, _context, _options) do
+    with {:ok, sref} <- Noizu.ERP.sref_ok(record) do
+      # TODO expose ability to obtain entity specific TTL for redis archival
+      set_binary([sref <> ".record", record])
+    end
   end
   
-  def update_handler(_record, _context, _options) do
-    # wip
+  def update_handler(record, _context, _options) do
+    with {:ok, sref} <- Noizu.ERP.sref_ok(record) do
+      # TODO expose ability to obtain entity specific TTL for redis archival
+      set_binary([sref <> ".record", record])
+    end
   end
   
-  def update_handler!(_record, _context, _options) do
-    # wip
+  def update_handler!(record, _context, _options) do
+    with {:ok, sref} <- Noizu.ERP.sref_ok(record) do
+      # TODO expose ability to obtain entity specific TTL for redis archival
+      set_binary([sref <> ".record", record])
+    end
   end
   
-  def delete_handler(_record, _context, _options) do
-    # wip
+  def delete_handler(record, _context, _options) do
+    with {:ok, sref} <- Noizu.ERP.sref_ok(record) do
+      delete(sref <> ".record")
+    end
   end
   
-  def delete_handler!(_record, _context, _options) do
-    # wip
+  def delete_handler!(record, _context, _options) do
+    with {:ok, sref} <- Noizu.ERP.sref_ok(record) do
+      delete(sref <> ".record")
+    end
   end
   
   #------------------------

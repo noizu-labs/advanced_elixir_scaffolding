@@ -29,7 +29,7 @@ defmodule Noizu.DomainObject.CacheHandler.FastGlobal do
       cache_key = m.cache_key(ref, context, options) ->
         Noizu.FastGlobal.V3.Cluster.put(
           cache_key,
-          ref,
+          m.__entity__().__to_cache__!(ref, context, options),
           options
         )
         ref
@@ -48,7 +48,8 @@ defmodule Noizu.DomainObject.CacheHandler.FastGlobal do
           cache_key,
           fn () ->
             cond do
-              entity = m.get!(ref, context, options) -> entity
+              entity = m.get!(ref, context, options) ->
+                m.__entity__().__to_cache__!(entity, context, options)
               :else -> {:cache_miss, :os.system_time(:second) + 30 + :rand.uniform(300)}
             end
           end
@@ -64,7 +65,15 @@ defmodule Noizu.DomainObject.CacheHandler.FastGlobal do
                 m.cache(ref, context, options)
               :else -> nil
             end
-          _else -> v
+          _else ->
+            case m.__entity__().__from_cache__!(v, context, options) do
+              {:cache, directive} when directive in [:refresh, :expired] ->
+                FastGlobal.delete(cache_key)
+                nil
+              {:cache, _} -> nil
+              {:error, _} -> nil
+              v -> v
+            end
         end
       :else -> throw "#{m}.cache invalid ref #{inspect ref}"
     end

@@ -17,7 +17,7 @@ defmodule Noizu.AdvancedScaffolding.Test.Fixture.V3.RedisJsonCache do
       public_field :content
     end
 
-    def __from_record__!(%{type: :redis}, json, _, _) do
+    def __from_cache__!(json, _, _) do
       with true <- json[:json_meta][:kind] == "#{__MODULE__}" || {:cache, {:error, :record_mismatch}},
            true <- json[:vsn] == 1.0 || {:cache, {:error, :vsn_mismatch}},
            {:ok, id} = __string_to_id__(json[:identifier]) do
@@ -28,21 +28,6 @@ defmodule Noizu.AdvancedScaffolding.Test.Fixture.V3.RedisJsonCache do
         }
       end
     end
-    def __from_record__!(l,record, context, options), do: super(l, record, context, options)
-    
-    def __from_record__(%{type: :redis}, json, _, _) do
-      with true <- json[:json_meta][:kind] == "#{__MODULE__}" || {:cache, {:error, :record_mismatch}},
-           true <- json[:vsn] == 1.0 || {:cache, {:error, :vsn_mismatch}},
-           {:ok, id} = __string_to_id__(json[:identifier]) do
-        %__MODULE__{
-          identifier: id,
-          content: json[:content],
-          meta: json[:meta]
-        }
-      end
-    end
-    def __from_record__(l,record, context, options), do: super(l, record, context, options)
-    
   end
 
   defmodule Repo do

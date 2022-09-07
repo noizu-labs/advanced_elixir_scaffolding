@@ -31,8 +31,7 @@ defmodule Noizu.DomainObject.CacheHandler.ConCache do
     with {:ok, cache_key} <- m.cache_key(ref, context, options) do
       cond do
         schema = __cache_schema__(m, options) ->
-          ttl = __cache_ttl__(m, options)
-          stripped_entity = Noizu.AdvancedScaffolding.Internal.Persistence.Entity.Implementation.Default.strip_transient(ref)
+          stripped_entity = m.__entity__().__to_cache__!(ref, context, options)
           ttl = __cache_ttl__(m, options)
           cond do
             ttl == :inherit -> ConCache.dirty_put(schema, cache_key, stripped_entity)
@@ -93,7 +92,7 @@ defmodule Noizu.DomainObject.CacheHandler.ConCache do
         __auto_prime_cache__(m, options) == false ->
           {:error, :do_not_prime}
         e = m.get!(ref, context, options) ->
-          {:ok, e}
+          {:ok, m.__entity__().__to_cache__!(ref, context, options)}
         :else ->
           ttl = __miss_ttl__(m, options)
           cond do
@@ -116,7 +115,15 @@ defmodule Noizu.DomainObject.CacheHandler.ConCache do
             __cache_miss__(m, schema, cache_key, ref, context, options)
           end) |> case do
                     {:ok, :cache_miss} -> nil
-                    {:ok, v} -> v
+                    {:ok, v} ->
+                      case m.__entity__().__from_cache__!(v, context, options) do
+                        {:cache, directive} when directive in [:refresh, :expired] ->
+                          ConCache.dirty_delete(schema, cache_key)
+                        {:cache, _} -> nil
+                        {:error, _} -> nil
+                        v -> v
+                      end
+                      
                     _ -> nil
                   end
         :else ->

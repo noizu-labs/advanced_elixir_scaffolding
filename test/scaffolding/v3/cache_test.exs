@@ -119,7 +119,7 @@ defmodule Noizu.AdvancedScaffolding.CacheTest do
     r = Noizu.AdvancedScaffolding.Test.Fixture.V3.ConCache.Repo.cache(Noizu.ERP.ref(sut), Noizu.ElixirCore.CallingContext.system(), [])
     assert r.content == contents
     assert %Noizu.AdvancedScaffolding.Test.Fixture.V3.ConCache.Entity{content: contents, identifier: :bar, meta: %{apple: true}} == r
-    Process.sleep(4000):w
+    Process.sleep(4000)
     r = Noizu.AdvancedScaffolding.Test.Fixture.V3.ConCache.Repo.cache(Noizu.ERP.ref(sut), Noizu.ElixirCore.CallingContext.system(), [])
     assert r == nil
   end

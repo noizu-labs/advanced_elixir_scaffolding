@@ -35,16 +35,13 @@ defmodule Noizu.DomainObject.CacheHandler.RedisJson do
     with {:ok, cache_key} <- m.cache_key(ref, context, options) do
       cond do
         redis = __cache_schema__(m, options) ->
-          if l = m.__persistence__()[:schemas][redis] do
-            json = m.__entity__().__as_record__!(l, ref, context, options)
-            # Extract TTL here.
-            ttl = __cache_ttl__(m, options)
-            cond do
-              ttl == :infinity -> redis.set_json([cache_key, json])
-              :else -> redis.set_json([cache_key, json, "EX", ttl])
-            end
-            ref
+          stripped_entity = m.__entity__().__to_cache__!(ref, context, options)
+          ttl = __cache_ttl__(m, options)
+          cond do
+            ttl == :infinity -> redis.set_json([cache_key, stripped_entity])
+            :else -> redis.set_json([cache_key, stripped_entity, "EX", ttl])
           end
+          ref
         :else ->
           Logger.error("[C:REDIS.json] REDIS NOT SPECIFIED (#{inspect m})")
           throw "[C:REDIS.json] REDIS NOT SPECIFIED (#{inspect m})"
@@ -122,14 +119,12 @@ defmodule Noizu.DomainObject.CacheHandler.RedisJson do
             {:ok, ":nil"} -> nil
             {:ok, nil} -> __cache_miss__(m, redis, cache_key, ref, context, options)
             {:ok, json} ->
-              if l = m.__persistence__()[:schemas][redis] do
-                case m.__entity__().__from_record__!(l, json, context, options) do
-                  {:cache, directive} when directive in [:refresh, :expired] ->
-                    __cache_miss__(m, redis, cache_key, ref, context, options)
-                  {:cache, _} -> nil
-                  {:error, _} -> nil
-                  v -> v
-                end
+              case m.__entity__().__from_cache__!(json, context, options) do
+                {:cache, directive} when directive in [:refresh, :expired] ->
+                  __cache_miss__(m, redis, cache_key, ref, context, options)
+                {:cache, _} -> nil
+                {:error, _} -> nil
+                v -> v
               end
             _ ->
               __cache_miss__(m, redis, cache_key, ref, context, options)

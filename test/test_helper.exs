@@ -19,7 +19,7 @@ Amnesia.start
 
 {:ok, sup} = Supervisor.start_link([], [strategy: :one_for_one, name: Test.Supervisor, strategy: :permanent])
 Supervisor.start_child(sup, NoizuSchema.Redis.child_spec(nil))
-Supervisor.start_child(sup, {ConCache, [name: ConCache.Default, ttl_check_interval: :timer.seconds(1), global_ttl: :timer.seconds(600)]}) |> IO.inspect
+Supervisor.start_child(sup, {ConCache, [name: ConCache.Default, ttl_check_interval: :timer.seconds(1), global_ttl: :timer.seconds(600)]})
 
 
 

@@ -61,7 +61,14 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Entity do
         alias Noizu.AdvancedScaffolding.Schema.PersistenceLayer
         @behaviour Noizu.AdvancedScaffolding.Internal.Persistence.Entity.Behaviour
         @nzdo__persistence_implementation unquote(core_implementation)
-
+        
+        def __to_cache__!(ref, _context, _options) do
+          Noizu.AdvancedScaffolding.Internal.Persistence.Entity.Implementation.Default.strip_transient(ref)
+        end
+        def __from_cache__!(ref, _context, _options) do
+          ref
+        end
+        
         #=======================================
         # Persistence
         #=======================================
@@ -132,6 +139,10 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Entity do
           __from_record__: 4,
           __from_record__!: 3,
           __from_record__!: 4,
+        
+        
+          __from_cache__!: 3,
+          __to_cache__!: 3,
         ]
 
       end
