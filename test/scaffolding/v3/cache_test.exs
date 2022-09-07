@@ -52,6 +52,92 @@ defmodule Noizu.AdvancedScaffolding.CacheTest do
   end
 
 
+
+  @tag :v3
+  @tag :cache
+  test "Redis.Json Cache" do
+    contents = "apple.#{:os.system_time(:second)}"
+    sut = %Noizu.AdvancedScaffolding.Test.Fixture.V3.RedisJsonCache.Entity{identifier: :bar, content: contents, meta: %{apple: true}}
+    cache = sut.__struct__.__noizu_info__(:cache)
+    assert cache[:type] == Noizu.DomainObject.CacheHandler.RedisJson
+    Noizu.AdvancedScaffolding.Test.Fixture.V3.RedisJsonCache.Repo.pre_cache(sut, Noizu.ElixirCore.CallingContext.system(), [])
+    r = Noizu.AdvancedScaffolding.Test.Fixture.V3.RedisJsonCache.Repo.cache(Noizu.ERP.ref(sut), Noizu.ElixirCore.CallingContext.system(), [])
+    assert r.content == contents
+    assert %Noizu.AdvancedScaffolding.Test.Fixture.V3.RedisJsonCache.Entity{content: contents, identifier: :bar, meta: %{apple: true}} == r
+  
+    Noizu.AdvancedScaffolding.Test.Fixture.V3.RedisJsonCache.Repo.delete_cache(sut, Noizu.ElixirCore.CallingContext.system(), [])
+    r = Noizu.AdvancedScaffolding.Test.Fixture.V3.RedisJsonCache.Repo.cache(Noizu.ERP.ref(sut), Noizu.ElixirCore.CallingContext.system(), [])
+    assert r == nil
+  
+    r = Noizu.AdvancedScaffolding.Test.Fixture.V3.RedisJsonCache.Repo.cache(Noizu.ERP.ref(sut), Noizu.ElixirCore.CallingContext.system(), [])
+    assert r == nil
+  end
+
+
+  @tag :v3
+  @tag :cache
+  test "Redis.Json Cache Settings" do
+    sut = Noizu.AdvancedScaffolding.Test.Fixture.V3.RedisJsonCache.Entity.__noizu_info__(:cache)
+    assert sut[:type] == Noizu.DomainObject.CacheHandler.RedisJson
+    assert sut[:schema] == :default
+    assert sut[:ttl] == 123
+    assert sut[:miss_ttl] == 5
+    assert sut[:prime] == true
+  end
+
+
+
+  @tag :v3
+  @tag :cache
+  test "ConCache Cache" do
+    contents = "apple.#{:os.system_time(:second)}"
+    sut = %Noizu.AdvancedScaffolding.Test.Fixture.V3.ConCache.Entity{identifier: :bar, content: contents, meta: %{apple: true}}
+    cache = sut.__struct__.__noizu_info__(:cache)
+    assert cache[:type] == Noizu.DomainObject.CacheHandler.ConCache
+    Noizu.AdvancedScaffolding.Test.Fixture.V3.ConCache.Repo.pre_cache(sut, Noizu.ElixirCore.CallingContext.system(), [])
+    r = Noizu.AdvancedScaffolding.Test.Fixture.V3.ConCache.Repo.cache(Noizu.ERP.ref(sut), Noizu.ElixirCore.CallingContext.system(), [])
+    assert r.content == contents
+    assert %Noizu.AdvancedScaffolding.Test.Fixture.V3.ConCache.Entity{content: contents, identifier: :bar, meta: %{apple: true}} == r
+  
+    Noizu.AdvancedScaffolding.Test.Fixture.V3.ConCache.Repo.delete_cache(sut, Noizu.ElixirCore.CallingContext.system(), [])
+    r = Noizu.AdvancedScaffolding.Test.Fixture.V3.ConCache.Repo.cache(Noizu.ERP.ref(sut), Noizu.ElixirCore.CallingContext.system(), [])
+    assert r == nil
+  
+    r = Noizu.AdvancedScaffolding.Test.Fixture.V3.ConCache.Repo.cache(Noizu.ERP.ref(sut), Noizu.ElixirCore.CallingContext.system(), [])
+    assert r == nil
+  end
+
+
+
+  @tag :v3
+  @tag :cache
+  test "ConCache Cache Expiration" do
+    contents = "apple.#{:os.system_time(:second)}"
+    sut = %Noizu.AdvancedScaffolding.Test.Fixture.V3.ConCache.Entity{identifier: :bar, content: contents, meta: %{apple: true}}
+    cache = sut.__struct__.__noizu_info__(:cache)
+    Noizu.AdvancedScaffolding.Test.Fixture.V3.ConCache.Repo.pre_cache(sut, Noizu.ElixirCore.CallingContext.system(), [ttl: 2])
+    r = Noizu.AdvancedScaffolding.Test.Fixture.V3.ConCache.Repo.cache(Noizu.ERP.ref(sut), Noizu.ElixirCore.CallingContext.system(), [])
+    assert r.content == contents
+    assert %Noizu.AdvancedScaffolding.Test.Fixture.V3.ConCache.Entity{content: contents, identifier: :bar, meta: %{apple: true}} == r
+    Process.sleep(4000):w
+    r = Noizu.AdvancedScaffolding.Test.Fixture.V3.ConCache.Repo.cache(Noizu.ERP.ref(sut), Noizu.ElixirCore.CallingContext.system(), [])
+    assert r == nil
+  end
+
+  @tag :v3
+  @tag :cache
+  test "ConCache Cache Settings" do
+    sut = Noizu.AdvancedScaffolding.Test.Fixture.V3.ConCache.Entity.__noizu_info__(:cache)
+    assert sut[:type] == Noizu.DomainObject.CacheHandler.ConCache
+    assert sut[:schema] == :default
+    assert sut[:ttl] == 123
+    assert sut[:miss_ttl] == 5
+    assert sut[:prime] == true
+  end
+
+
+
+
   @tag :v3
   @tag :cache
   test "FastGlobal Cache" do

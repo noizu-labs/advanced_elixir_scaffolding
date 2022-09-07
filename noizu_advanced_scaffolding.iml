@@ -71,6 +71,9 @@
       <excludeFolder url="file://$MODULE_DIR$/_build/test/lib/ssl_verify_fun" />
       <excludeFolder url="file://$MODULE_DIR$/_build/test/lib/noizu_mnesia_versioning" />
       <excludeFolder url="file://$MODULE_DIR$/docs" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/semaphore" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/test/lib/semaphore" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/test/lib/con_cache" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="ecto_sql" level="project" />
@@ -122,5 +125,6 @@
     <orderEntry type="library" name="assert_value" level="project" />
     <orderEntry type="library" name="hackney" level="project" />
     <orderEntry type="library" name="semaphore" level="project" />
+    <orderEntry type="library" name="con_cache" level="project" />
   </component>
 </module>

@@ -3,12 +3,11 @@
 # Copyright (C) 2021 Noizu Labs Inc. All rights reserved.
 #-------------------------------------------------------------------------------
 
-defmodule Noizu.AdvancedScaffolding.Test.Fixture.V3.RedisCache do
+defmodule Noizu.AdvancedScaffolding.Test.Fixture.V3.ConCache do
   use Noizu.DomainObject
   @vsn 1.0
-  @sref "redis-cache"
-  @cache {:redis, [prime: true, ttl: 123, miss_ttl: 5]}
-  @persistence_layer {NoizuSchema.Database, cascade_block?: true}
+  @sref "con-cache"
+  @cache {:con_cache, [prime: true, ttl: 123, miss_ttl: 5]}
   @persistence_layer {:redis, cascade?: false}
   defmodule Entity do
     @universal_identifier false

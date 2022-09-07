@@ -19,8 +19,12 @@ Amnesia.start
 
 {:ok, sup} = Supervisor.start_link([], [strategy: :one_for_one, name: Test.Supervisor, strategy: :permanent])
 Supervisor.start_child(sup, NoizuSchema.Redis.child_spec(nil))
+Supervisor.start_child(sup, {ConCache, [name: ConCache.Default, ttl_check_interval: :timer.seconds(1), global_ttl: :timer.seconds(600)]}) |> IO.inspect
 
 
+
+if !Amnesia.Table.exists?(NoizuSchema.Database.AdvancedScaffolding.Test.Fixture.V3.ConCache.Table), do: NoizuSchema.Database.AdvancedScaffolding.Test.Fixture.V3.ConCache.Table.create(memory: [node()])
+if !Amnesia.Table.exists?(NoizuSchema.Database.AdvancedScaffolding.Test.Fixture.V3.RedisJsonCache.Table), do: NoizuSchema.Database.AdvancedScaffolding.Test.Fixture.V3.RedisJsonCache.Table.create(memory: [node()])
 if !Amnesia.Table.exists?(NoizuSchema.Database.AdvancedScaffolding.Test.Fixture.V3.RedisCache.Table), do: NoizuSchema.Database.AdvancedScaffolding.Test.Fixture.V3.RedisCache.Table.create(memory: [node()])
 if !Amnesia.Table.exists?(FooV3Table), do: FooV3Table.create(memory: [node()])
 if !Amnesia.Table.exists?(FooV3TypeTable), do: FooV3TypeTable.create(memory: [node()])

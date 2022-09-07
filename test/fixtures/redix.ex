@@ -93,6 +93,25 @@ defmodule NoizuSchema.Redis do
     end
   end
   
+  def get_binary(command) do
+    case get(command) do
+      {:ok, nil} -> {:ok, nil}
+      {:ok, binary} ->
+        with {:ok, raw} <- Base.decode64(binary) do
+          {:ok, :erlang.binary_to_term(raw)}
+        end
+      e -> e
+    end
+  end
+  def set_binary([id,object|t] = _command) do
+    with binary <- :erlang.term_to_binary(object),
+         base64 <- binary && Base.encode64(binary) do
+      set([id, base64|t])
+    else
+      e -> e
+    end
+  end
+  
   defp command_helper(action, command) do
     case command do
       v when is_list(v) -> command([action] ++ v)

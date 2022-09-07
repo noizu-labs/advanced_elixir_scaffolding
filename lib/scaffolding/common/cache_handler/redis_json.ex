@@ -1,9 +1,12 @@
-defmodule Noizu.DomainObject.CacheHandler.Redis do
+defmodule Noizu.DomainObject.CacheHandler.RedisJson do
   @behaviour Noizu.DomainObject.CacheHandler
   require Logger
   
   def cache_key(m, ref, _context, _options) do
-    m.__entity__.sref_ok(ref)
+    case m.__entity__.sref_ok(ref) do
+      {:ok, sref} -> {:ok, sref <> ".json"}
+      e -> e
+    end
   end
   
   #------------------------------------------
@@ -16,11 +19,11 @@ defmodule Noizu.DomainObject.CacheHandler.Redis do
           redis.delete(key)
         else
           error ->
-            Logger.warn(fn -> "[C:REDIS] Invalid Ref #{inspect error}" end)
+            Logger.warn(fn -> "[C:REDIS.json] Invalid Ref #{inspect error}" end)
             error
         end
       :else ->
-        Logger.error("[C:REDIS] REDIS NOT SPECIFIED (#{inspect m})")
+        Logger.error("[C:REDIS.json] REDIS NOT SPECIFIED (#{inspect m})")
         {:error, :config}
     end
   end
@@ -37,17 +40,17 @@ defmodule Noizu.DomainObject.CacheHandler.Redis do
             # Extract TTL here.
             ttl = __cache_ttl__(m, options)
             cond do
-              ttl == :infinity -> redis.set_binary([cache_key, json])
-              :else -> redis.set_binary([cache_key, json, "EX", ttl])
+              ttl == :infinity -> redis.set_json([cache_key, json])
+              :else -> redis.set_json([cache_key, json, "EX", ttl])
             end
             ref
           end
         :else ->
-          Logger.error("[C:REDIS] REDIS NOT SPECIFIED (#{inspect m})")
-          throw "[C:REDIS] REDIS NOT SPECIFIED (#{inspect m})"
+          Logger.error("[C:REDIS.json] REDIS NOT SPECIFIED (#{inspect m})")
+          throw "[C:REDIS.json] REDIS NOT SPECIFIED (#{inspect m})"
       end
     else
-      error -> throw "[C:REDIS] #{m}.cache invalid ref #{inspect error}"
+      error -> throw "[C:REDIS.json] #{m}.cache invalid ref #{inspect error}"
     end
   end
   
@@ -99,8 +102,8 @@ defmodule Noizu.DomainObject.CacheHandler.Redis do
         :else ->
           ttl = __miss_ttl__(m, options)
           cond do
-            ttl == :infinity -> redis.set_binary([cache_key, :cache_miss])
-            :else -> redis.set_binary([cache_key, :cache_miss, "EX", ttl])
+            ttl == :infinity -> redis.set_json([cache_key, ":nil"])
+            :else -> redis.set_json([cache_key, ":nil", "EX", ttl])
           end
           nil
       end
@@ -115,8 +118,8 @@ defmodule Noizu.DomainObject.CacheHandler.Redis do
     with {:ok, cache_key} <- m.cache_key(ref, context, options) do
       cond do
         redis = __cache_schema__(m, options) ->
-          case redis.get_binary(cache_key) do
-            {:ok, :cache_miss} -> nil
+          case redis.get_json(cache_key) do
+            {:ok, ":nil"} -> nil
             {:ok, nil} -> __cache_miss__(m, redis, cache_key, ref, context, options)
             {:ok, json} ->
               if l = m.__persistence__()[:schemas][redis] do
@@ -132,12 +135,12 @@ defmodule Noizu.DomainObject.CacheHandler.Redis do
               __cache_miss__(m, redis, cache_key, ref, context, options)
           end
         :else ->
-          Logger.error("[C:REDIS] REDIS NOT SPECIFIED (#{m})")
-          throw "[C:REDIS] REDIS NOT SPECIFIED (#{m})"
+          Logger.error("[C:REDIS.json] REDIS NOT SPECIFIED (#{m})")
+          throw "[C:REDIS.json] REDIS NOT SPECIFIED (#{m})"
       end
     else
       error ->
-        throw "[C:REDIS] #{m}.cache invalid ref #{inspect error}"
+        throw "[C:REDIS.json] #{m}.cache invalid ref #{inspect error}"
     end
   end
 end

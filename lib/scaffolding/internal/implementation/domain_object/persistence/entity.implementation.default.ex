@@ -88,7 +88,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Entity.Implementation.D
     struct(layer.table.__struct__(), embed_fields)
   end
   def __as_record_type__(domain_object, layer = %{type: :redis}, entity, _context, options) do
-       entity
+    strip_transient(entity)
   end
   def __as_record_type__(domain_object, layer = %{type: :ecto, table: table}, entity, _context, options) do
     context = Noizu.ElixirCore.CallingContext.admin()
@@ -141,12 +141,24 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Entity.Implementation.D
   def __from_record__(_domain_object, _layer, %{entity: temp}, _context, _options) do
     temp
   end
+  def __from_record__(_domain_object, :redis, ref, _context, _options) do
+    ref
+  end
+  def __from_record__(_domain_object, %{type: :redis}, ref, _context, _options) do
+    ref
+  end
   def __from_record__(_domain_object, _layer, _ref, _context, _options) do
     nil
   end
 
   def __from_record__!(_domain_object, _layer, %{entity: temp}, _context, _options) do
     temp
+  end
+  def __from_record__!(_domain_object, :redis, ref, _context, _options) do
+    ref
+  end
+  def __from_record__!(_domain_object, %{type: :redis}, ref, _context, _options) do
+    ref
   end
   def __from_record__!(_domain_object, _layer, _ref, _context, _options) do
     nil

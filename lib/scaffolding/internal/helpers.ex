@@ -202,6 +202,10 @@ defmodule Noizu.AdvancedScaffolding.Internal.Helpers do
                               true -> Noizu.DomainObject.CacheHandler.FastGlobal
                               :fast_global -> Noizu.DomainObject.CacheHandler.FastGlobal
                               :redis -> Noizu.DomainObject.CacheHandler.Redis
+                              :redis_json -> Noizu.DomainObject.CacheHandler.RedisJson
+                              :con_cache -> Noizu.DomainObject.CacheHandler.ConCache
+                              :con -> Noizu.DomainObject.CacheHandler.ConCache
+                              :ets -> Noizu.DomainObject.CacheHandler.ConCache
                               :disabled -> Noizu.DomainObject.CacheHandler.Disabled
                               v -> v
                             end
