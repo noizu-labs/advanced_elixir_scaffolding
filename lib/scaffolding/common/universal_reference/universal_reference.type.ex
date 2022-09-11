@@ -3,7 +3,7 @@
 # Copyright (C) 2021 Noizu Labs Inc. All rights reserved.
 #-------------------------------------------------------------------------------
 
-defmodule Noizu.DomainObject.UniversalReference.Type do
+defmodule Noizu.DomainObject.Integer.UniversalReference.Type do
   @moduledoc """
   Ecto ENUM Custom Type.
   """
@@ -25,7 +25,7 @@ defmodule Noizu.DomainObject.UniversalReference.Type do
     cond do
       v == nil -> {:ok, nil}
       v == 0 -> {:ok, nil}
-      u = Noizu.DomainObject.UniversalReference.encode(v) -> {:ok, u}
+      u = Noizu.DomainObject.Integer.UniversalReference.encode(v) -> {:ok, u}
       :else -> :error
     end
   end
@@ -64,7 +64,7 @@ defmodule Noizu.DomainObject.UniversalReference.Type do
     cond do
       v == nil -> {:ok, nil}
       v == 0 -> {:ok, nil}
-      u = Noizu.DomainObject.UniversalReference.encode(v) -> {:ok, u}
+      u = Noizu.DomainObject.Integer.UniversalReference.encode(v) -> {:ok, u}
       :else -> raise ArgumentError, "Unsupported #{__MODULE__} - #{inspect v}"
     end
   end

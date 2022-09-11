@@ -60,7 +60,7 @@ end
 #
 #=============================================
 defimpl Noizu.EctoEntity.Protocol, for: Tuple do
-  def universal_reference?({:ref, Noizu.DomainObject.UniversalReference, _}), do: true
+  def universal_reference?({:ref, Noizu.DomainObject.Integer.UniversalReference, _}), do: true
   def universal_reference?(_), do: false
 
   #-----------------------------
@@ -102,8 +102,8 @@ defimpl Noizu.EctoEntity.Protocol, for: Tuple do
     r = Noizu.EctoEntity.Protocol.ref(ref)
     r != ref && universal_identifier(r)
   end
-  def universal_identifier({:ref, Noizu.DomainObject.UniversalReference, _} = ref) do
-    Noizu.DomainObject.UniversalReference.universal_identifier(ref)
+  def universal_identifier({:ref, Noizu.DomainObject.Integer.UniversalReference, _} = ref) do
+    Noizu.DomainObject.Integer.UniversalReference.universal_identifier(ref)
   end
   def universal_identifier({:ref, module, _} = ref) do
     if supported?(ref) do
@@ -135,8 +135,8 @@ defimpl Noizu.EctoEntity.Protocol, for: Tuple do
       nil
     end
   end
-  def ref({:ref, Noizu.DomainObject.UniversalReference, _} = ref) do
-    Noizu.ERP.ref(Noizu.DomainObject.UniversalReference.resolve(ref))
+  def ref({:ref, Noizu.DomainObject.Integer.UniversalReference, _} = ref) do
+    Noizu.ERP.ref(Noizu.DomainObject.Integer.UniversalReference.resolve(ref))
   end
   def ref({:ref, _m, _id} = ref), do: ref
   def ref(_), do: nil
@@ -160,13 +160,13 @@ end
 #=============================================
 #
 #=============================================
-defimpl Noizu.EctoEntity.Protocol, for: [Noizu.DomainObject.UniversalReference] do
+defimpl Noizu.EctoEntity.Protocol, for: [Noizu.DomainObject.Integer.UniversalReference] do
   def universal_reference?(_), do: true
   def supported?(_), do: true
-  def ecto_identifier(entity), do: Noizu.DomainObject.UniversalReference.ecto_identifier(entity)
-  def universal_identifier(entity), do: Noizu.DomainObject.UniversalReference.universal_identifier(entity)
-  def ref(m), do: Noizu.ERP.ref(Noizu.DomainObject.UniversalReference.resolve(m))
-  def source(m), do: Noizu.DomainObject.UniversalReference.source(m)
+  def ecto_identifier(entity), do: Noizu.DomainObject.Integer.UniversalReference.ecto_identifier(entity)
+  def universal_identifier(entity), do: Noizu.DomainObject.Integer.UniversalReference.universal_identifier(entity)
+  def ref(m), do: Noizu.ERP.ref(Noizu.DomainObject.Integer.UniversalReference.resolve(m))
+  def source(m), do: Noizu.DomainObject.Integer.UniversalReference.source(m)
 end
 
 #=============================================

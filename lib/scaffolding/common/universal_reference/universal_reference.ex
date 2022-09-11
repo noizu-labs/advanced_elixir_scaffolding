@@ -3,11 +3,11 @@
 # Copyright (C) 2021  Noizu Labs, Inc. All rights reserved.
 #-------------------------------------------------------------------------------
 
-defmodule Noizu.DomainObject.UniversalReference do
+defmodule Noizu.DomainObject.Integer.UniversalReference do
   @vsn 1.0
   use Amnesia
 
-  @type t :: %Noizu.DomainObject.UniversalReference{
+  @type t :: %Noizu.DomainObject.Integer.UniversalReference{
                identifier: integer, # ref or actual universal id.
                ref: nil | tuple | any,
                # ref or actual entity
@@ -18,10 +18,8 @@ defmodule Noizu.DomainObject.UniversalReference do
     ref: nil
   ]
 
-  @table Application.get_env(:noizu_advanced_scaffolding, :universal_reference_table, Noizu.AdvancedScaffolding.Database.UniversalLookup.Table)
-  @lookup_table Application.get_env(:noizu_advanced_scaffolding, :universal_reference_lookup_table, Noizu.AdvancedScaffolding.Database.UniversalReverseLookup.Table)
-
-
+  @universal_lookup Application.get_env(:noizu_advanced_scaffolding, :universal_lookup, Noizu.DomainObject.UniversalLookup)
+  
   #---------------------------
   #
   #---------------------------
@@ -62,7 +60,7 @@ defmodule Noizu.DomainObject.UniversalReference do
   #
   #---------------------------
   def encode(%{__struct__: __MODULE__} = this), do: this
-  def encode({:ref, Noizu.DomainObject.UniversalReference, id}), do: %__MODULE__{identifier: id}
+  def encode({:ref, Noizu.DomainObject.Integer.UniversalReference, id}), do: %__MODULE__{identifier: id}
   def encode({:ref, _m, _id} = ref), do: %__MODULE__{identifier: ref, ref: ref}
   def encode("ref.universal." <> id) do
     case Integer.parse(id) do
@@ -105,9 +103,9 @@ defmodule Noizu.DomainObject.UniversalReference do
     end
   end
   def resolve(v) when is_integer(v) do
-    case @lookup_table.read!(v) do
-      %{__struct__: @lookup_table, ref: ref} -> ref
-      _ -> nil # TODO fallback to database.
+    case Noizu.DomainObject.UniversalLookup.reverse_lookup(v) do
+      {:ok, ref} -> ref
+      _ -> nil
     end
   end
   def resolve({:ref, __MODULE__, id}), do: resolve(id)
@@ -125,8 +123,8 @@ defmodule Noizu.DomainObject.UniversalReference do
   #
   #---------------------------
   def lookup({:ref, _, _id} = ref) do
-    case @table.read!(ref) do
-      %{__struct__: @table, universal_identifier: id} -> {:ref, __MODULE__, id}
+    case @universal_lookup.lookup(ref) do
+      {:ok, id} -> {:ref, __MODULE__, id}
       _ -> nil
     end
   end
