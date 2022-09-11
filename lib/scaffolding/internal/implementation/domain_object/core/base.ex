@@ -221,6 +221,11 @@ defmodule Noizu.AdvancedScaffolding.Internal.Core.Base do
             miss_ttl: @__nzdo__cache_miss_ttl,
           ]
         end
+        def __cache_configuration__(:type), do: @__nzdo__cache_type
+        def __cache_configuration__(:schema), do: @__nzdo__cache_schema
+        def __cache_configuration__(:prime), do: @__nzdo__cache_prime
+        def __cache_configuration__(:ttl), do: @__nzdo__cache_ttl
+        def __cache_configuration__(:miss_ttl), do: @__nzdo__cache_miss_ttl
         
         
         #################################################
