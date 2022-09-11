@@ -131,10 +131,10 @@ defmodule Noizu.AdvancedScaffolding.Internal.Ecto.Reference.Universal do
         :integer -> :integer
         nil -> Application.get_env(:noizu_advanced_scaffolding, :universal_reference_type, :integer)
       end
-      @handler case @type do
+      @handler (case @type do
         :uuid -> Noizu.AdvancedScaffolding.Internal.Ecto.Reference.Universal.UUIDDefault
         :integer -> Noizu.AdvancedScaffolding.Internal.Ecto.Reference.Universal.IntegerDefault
-      end
+      end)
 
       @ecto_type case unquote(ecto_type) do
         nil -> case @type do
