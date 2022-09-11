@@ -109,12 +109,14 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Entity do
             @__nzdo_persistence.options[:universal_lookup] -> def universal_identifier(ref), do: @nzdo__persistence_implementation.universal_identifier_lookup(__MODULE__, ref)
             :else -> def universal_identifier(_), do: raise "Not Supported"
           end
+          def index_identifier(ref), do: __MODULE__.id(ref)
         else
           @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
           def ecto_entity?(), do: false
           def ecto_identifier(_), do: nil
           def source(_), do: nil
           def universal_identifier(_), do: nil
+          def index_identifier(_), do: nil
         end
 
 

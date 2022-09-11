@@ -56,6 +56,11 @@ defmodule Noizu.DomainObject.Integer.UniversalReference do
   def universal_identifier(nil), do: nil
   def universal_identifier(v), do: Noizu.EctoEntity.Protocol.universal_identifier(v)
 
+  def index_identifier(v) do
+    r = resolve(v)
+    r && Noizu.EctoEntity.Protocol.index_identifier(r)
+  end
+  
   #---------------------------
   #
   #---------------------------

@@ -242,6 +242,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.SimpleObject.Base do
       def ecto_identifier(_), do: nil
       def source(_), do: nil
       def universal_identifier(_), do: nil
+      def index_identifier(_), do: nil
 
 
 

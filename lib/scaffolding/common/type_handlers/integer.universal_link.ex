@@ -3,7 +3,7 @@
 # Copyright (C) 2021 Noizu Labs, Inc. All rights reserved.
 #-------------------------------------------------------------------------------
 
-defmodule Noizu.DomainObject.UniversalLink do
+defmodule Noizu.DomainObject.Integer.UniversalLink do
 
   defmodule TypeHandler do
     require  Noizu.DomainObject

@@ -12,6 +12,7 @@ defprotocol Noizu.EctoEntity.Protocol do
   def supported?(ref)
   def ecto_identifier(ref)
   def universal_identifier(ref)
+  def index_identifier(ref)
   def ref(ref)
   def source(ref)
 end
@@ -28,6 +29,7 @@ defimpl Noizu.EctoEntity.Protocol, for: Any do
         def supported?(_), do: true
         def ecto_identifier(m), do: unquote(module).ecto_identifier(m)
         def universal_identifier(m), do: unquote(module).universal_identifier(m)
+        def index_identifier(m), do: unquote(module).index_identifier(m)
         def ref(m), do: unquote(module).ref(m)
         def source(m), do: unquote(module).source(m)
       end
@@ -39,6 +41,7 @@ defimpl Noizu.EctoEntity.Protocol, for: Any do
   def supported?(_), do: false
   def ecto_identifier(_), do: nil
   def universal_identifier(_), do: nil
+  def index_identifier(_), do: nil
   def ref(_), do: nil
   def source(_), do: nil
 end
@@ -52,6 +55,7 @@ defimpl Noizu.EctoEntity.Protocol, for: BitString do
   def supported?(sref), do: Noizu.EctoEntity.Protocol.supported?(Noizu.ERP.ref(sref))
   def ecto_identifier(sref), do: Noizu.EctoEntity.Protocol.ecto_identifier(Noizu.ERP.ref(sref))
   def universal_identifier(sref), do: Noizu.EctoEntity.Protocol.universal_identifier(Noizu.ERP.ref(sref))
+  def index_identifier(sref), do: Noizu.EctoEntity.Protocol.index_identifier(Noizu.ERP.ref(sref))
   def ref(sref), do: Noizu.EctoEntity.Protocol.ref(Noizu.ERP.ref(sref))
   def source(sref), do: Noizu.EctoEntity.Protocol.source(Noizu.ERP.ref(sref))
 end
@@ -107,24 +111,32 @@ defimpl Noizu.EctoEntity.Protocol, for: Tuple do
   end
   def universal_identifier({:ref, module, _} = ref) do
     if supported?(ref) do
-      case Noizu.AdvancedScaffolding.Database.UniversalLookup.Table.read!(ref) do
-        %{__struct__: Noizu.AdvancedScaffolding.Database.UniversalLookup.Table, universal_identifier: universal_identifier} -> universal_identifier
-        _ ->
-          case module.universal_identifier(ref) do
-            v when is_integer(v) ->
-              %Noizu.AdvancedScaffolding.Database.UniversalLookup.Table{identifier: ref, universal_identifier: v}
-              |> Noizu.AdvancedScaffolding.Database.UniversalLookup.Table.write!
-              v
-            _ ->
-              nil
-          end
-      end
+      module.universal_identifier(ref)
     else
       nil
     end
   end
   def universal_identifier(_), do: nil
 
+  #-----------------------------
+  #
+  #-----------------------------
+  def index_identifier({:ecto_identifier, _module, _} = ref) do
+    r = Noizu.EctoEntity.Protocol.ref(ref)
+    r != ref && index_identifier(r)
+  end
+  def index_identifier({:ref, Noizu.DomainObject.Integer.UniversalReference, _} = ref) do
+    Noizu.DomainObject.Integer.UniversalReference.index_identifier(ref)
+  end
+  def index_identifier({:ref, module, _} = ref) do
+    if supported?(ref) do
+      module.index_identifier(ref)
+    else
+      nil
+    end
+  end
+  def index_identifier(_), do: nil
+  
   #-----------------------------
   #
   #-----------------------------
@@ -165,8 +177,22 @@ defimpl Noizu.EctoEntity.Protocol, for: [Noizu.DomainObject.Integer.UniversalRef
   def supported?(_), do: true
   def ecto_identifier(entity), do: Noizu.DomainObject.Integer.UniversalReference.ecto_identifier(entity)
   def universal_identifier(entity), do: Noizu.DomainObject.Integer.UniversalReference.universal_identifier(entity)
+  def index_identifier(entity), do: Noizu.DomainObject.Integer.UniversalReference.index_identifier(entity)
   def ref(m), do: Noizu.ERP.ref(Noizu.DomainObject.Integer.UniversalReference.resolve(m))
   def source(m), do: Noizu.DomainObject.Integer.UniversalReference.source(m)
+end
+
+#=============================================
+#
+#=============================================
+defimpl Noizu.EctoEntity.Protocol, for: [Noizu.DomainObject.UUID.UniversalReference] do
+  def universal_reference?(_), do: true
+  def supported?(_), do: true
+  def ecto_identifier(entity), do: Noizu.DomainObject.UUID.UniversalReference.ecto_identifier(entity)
+  def universal_identifier(entity), do: Noizu.DomainObject.UUID.UniversalReference.universal_identifier(entity)
+  def index_identifier(entity), do: Noizu.DomainObject.UUID.UniversalReference.index_identifier(entity)
+  def ref(m), do: Noizu.ERP.ref(Noizu.DomainObject.UUID.UniversalReference.resolve(m))
+  def source(m), do: Noizu.DomainObject.UUID.UniversalReference.source(m)
 end
 
 #=============================================
@@ -196,11 +222,22 @@ defimpl Noizu.EctoEntity.Protocol, for: [Map] do
     end
   end
   def universal_identifier(_), do: nil
+
+
+  def index_identifier(%{__struct__: module} = m) do
+    if supported?(m) do
+      module.index_identifier(m)
+    end
+  end
+  def index_identifier(_), do: nil
+  
   def ref(%{__struct__: module} = m) do
     if supported?(m) do
       module.ref(m)
     end
   end
+  
+  
   def ref(_), do: nil
 
   def source(%{__struct__: module} = m) do
