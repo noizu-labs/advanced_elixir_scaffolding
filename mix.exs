@@ -21,7 +21,8 @@ defmodule Noizu.AdvancedScaffolding.Mixfile do
       description: "Version 3 of our Elixir Scaffolding framework",
       package: package(),
       docs: docs(),
-      xref: [exclude: [Phoenix.HTML, UUID, XmlBuilder, HtmlSanitizeEx, Ecto.CastError, Redix, Ecto.Type, Plug.Conn, Poison, Poison.Encoder, Noizu.FastGlobal.Cluster, Giza.SphinxQL]]
+    
+      xref: [exclude: [Phoenix.HTML, UUID, XmlBuilder, HtmlSanitizeEx, Ecto.CastError, Redix, Ecto.Type, Plug.Conn, Poison, Poison.Encoder, Noizu.FastGlobal.Cluster, Giza.SphinxQL, :rocksdb]]
     ]
   end # end project
 

@@ -8,7 +8,7 @@ defmodule Noizu.DomainObject.CacheHandler.Disabled do
   #------------------------------------------
   # delete_cache
   #------------------------------------------
-  def delete_cache(m, ref, context, options) do
+  def delete_cache(_m, _ref, _context, _options) do
     true
   end
 

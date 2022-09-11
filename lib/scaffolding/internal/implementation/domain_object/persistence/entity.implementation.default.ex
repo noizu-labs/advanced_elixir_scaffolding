@@ -87,7 +87,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Entity.Implementation.D
 
     struct(layer.table.__struct__(), embed_fields)
   end
-  def __as_record_type__(domain_object, layer = %{type: :redis}, entity, _context, options) do
+  def __as_record_type__(_domain_object, _layer = %{type: :redis}, entity, _context, _options) do
     strip_transient(entity)
   end
   def __as_record_type__(domain_object, layer = %{type: :ecto, table: table}, entity, _context, options) do

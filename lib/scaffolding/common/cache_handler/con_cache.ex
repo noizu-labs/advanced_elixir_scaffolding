@@ -87,12 +87,12 @@ defmodule Noizu.DomainObject.CacheHandler.ConCache do
   @TODO - Telemetry
   """
   def __cache_miss__(m, _, _, ref, context, options) do
-    with {:ok, ref} <- m.__entity__.ref_ok(ref) do
+    with {:ok, ref} <- m.__entity__().ref_ok(ref) do
       cond do
         __auto_prime_cache__(m, options) == false ->
           {:error, :do_not_prime}
         e = m.get!(ref, context, options) ->
-          {:ok, m.__entity__().__to_cache__!(ref, context, options)}
+          {:ok, m.__entity__().__to_cache__!(e, context, options)}
         :else ->
           ttl = __miss_ttl__(m, options)
           cond do

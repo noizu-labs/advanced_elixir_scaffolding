@@ -35,16 +35,14 @@ defmodule Noizu.DomainObject.CacheHandler.Redis do
     with {:ok, cache_key} <- m.cache_key(ref, context, options) do
       cond do
         redis = __cache_schema__(m, options) ->
-          if l = m.__persistence__()[:schemas][redis] do
-            stripped_entity = m.__entity__().__to_cache__!(ref, context, options)
-            # Extract TTL here.
-            ttl = __cache_ttl__(m, options)
-            cond do
-              ttl == :infinity -> redis.set_binary([cache_key, stripped_entity])
-              :else -> redis.set_binary([cache_key, stripped_entity, "EX", ttl])
-            end
-            ref
+          stripped_entity = m.__entity__().__to_cache__!(ref, context, options)
+          # Extract TTL here.
+          ttl = __cache_ttl__(m, options)
+          cond do
+            ttl == :infinity -> redis.set_binary([cache_key, stripped_entity])
+            :else -> redis.set_binary([cache_key, stripped_entity, "EX", ttl])
           end
+          ref
         :else ->
           Logger.error("[C:REDIS] REDIS NOT SPECIFIED (#{inspect m})")
           throw "[C:REDIS] REDIS NOT SPECIFIED (#{inspect m})"

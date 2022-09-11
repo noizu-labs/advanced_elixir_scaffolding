@@ -122,10 +122,10 @@ defmodule Noizu.AdvancedScaffolding.Internal.Core.Entity.Implementation.Default 
     cond do
       sref_name == :undefined -> {:error, {:sref_module_undefined, domain_object}}
       identifier ->
-        sref_identifier = case domain_object.__id_to_string__(identifier) do
-                            {:ok, v} -> {:ok, "ref.#{sref_name}.#{v}"}
-                            e -> e
-                          end
+        case domain_object.__id_to_string__(identifier) do
+          {:ok, v} -> {:ok, "ref.#{sref_name}.#{v}"}
+          e -> e
+        end
       :else -> {:error, {:identifier, nil}}
     end
   end

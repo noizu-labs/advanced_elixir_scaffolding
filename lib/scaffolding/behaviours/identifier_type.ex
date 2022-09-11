@@ -382,7 +382,7 @@ defmodule Noizu.DomainObject.List.IdentifierType do
     with {:ok, raw} <- __sref_section_regex__(c),
          {:ok, r} <- Regex.compile("^#{raw}$"),
          true <- Regex.match?(r, identifier) do
-      identifier = String.slice(identifier, 1..-2)
+      # identifier = String.slice(identifier, 1..-2)
       {:error, :nyi}
     else
       error -> {:error, {:invalid_serialized_identifier, error, identifier}}

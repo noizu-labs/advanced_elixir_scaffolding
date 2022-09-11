@@ -148,7 +148,7 @@ defmodule Noizu.DomainObject.DateTime do
 
     def import(value, type \\ :microsecond)
     def import(value, :microsecond) do
-      value = value && DateTime.truncate(value, :second)
+      value && DateTime.truncate(value, :second)
     end
 
 

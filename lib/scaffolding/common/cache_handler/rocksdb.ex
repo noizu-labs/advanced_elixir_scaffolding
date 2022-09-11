@@ -18,7 +18,7 @@ if Code.ensure_loaded?(:rocksdb) do
       end
     end
     
-    def delete(handle, key, value, options \\ []) do
+    def delete(handle, key, _value, options \\ []) do
       with {:ok, resource} <- resource_ok(handle),
            {:ok, v} <- resource && :rocksdb.delete(resource, key, options) || {:error, :no_handle} do
         {:ok, v}
@@ -82,7 +82,7 @@ if Code.ensure_loaded?(:rocksdb) do
     end
     
     
-    def terminate(reason, state) do
+    def terminate(_reason, state) do
       case state[:resource] do
         {:error, _} -> {:ok, state}
         r  ->
@@ -185,13 +185,13 @@ if Code.ensure_loaded?(:rocksdb) do
       end
     end
   
-    defp __cache_ttl__(m, options) do
-      cond do
-        v = options[:cache][:ttl] -> v
-        v = m.__noizu_info__(:cache)[:ttl] -> v
-        :else -> :inherit
-      end
-    end
+#    defp __cache_ttl__(m, options) do
+#      cond do
+#        v = options[:cache][:ttl] -> v
+#        v = m.__noizu_info__(:cache)[:ttl] -> v
+#        :else -> :inherit
+#      end
+#    end
   
     defp __miss_ttl__(m, options) do
       cond do

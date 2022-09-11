@@ -1,7 +1,7 @@
 defmodule Noizu.DomainObject.CacheHandler.FastGlobal do
   @behaviour Noizu.DomainObject.CacheHandler
   
-  def cache_key(m, ref, context, options) do
+  def cache_key(m, ref, _context, _options) do
     sref = m.__entity__.sref(ref)
     sref && :"e_c:#{sref}"
   end
