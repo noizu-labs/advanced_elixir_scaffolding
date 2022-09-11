@@ -63,8 +63,9 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Base do
 
           Module.get_attribute(__MODULE__, :__nzdo_universal_ref) ->
             e = @__nzdo__entity
+            t = Module.get_attribute(__MODULE__, :reference_type)
             defmodule Ecto.UniversalReference do
-              use Noizu.AdvancedScaffolding.Internal.Ecto.Reference.Universal, entity: e
+              use Noizu.AdvancedScaffolding.Internal.Ecto.Reference.Universal, entity: e, reference_type: t
             end
 
           Module.get_attribute(__MODULE__, :__nzdo_basic_ref) ->

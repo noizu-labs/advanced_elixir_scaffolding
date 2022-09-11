@@ -65,6 +65,7 @@ end
 #=============================================
 defimpl Noizu.EctoEntity.Protocol, for: Tuple do
   def universal_reference?({:ref, Noizu.DomainObject.Integer.UniversalReference, _}), do: true
+  def universal_reference?({:ref, Noizu.DomainObject.UUID.UniversalReference, _}), do: true
   def universal_reference?(_), do: false
 
   #-----------------------------
@@ -109,6 +110,9 @@ defimpl Noizu.EctoEntity.Protocol, for: Tuple do
   def universal_identifier({:ref, Noizu.DomainObject.Integer.UniversalReference, _} = ref) do
     Noizu.DomainObject.Integer.UniversalReference.universal_identifier(ref)
   end
+  def universal_identifier({:ref, Noizu.DomainObject.UUID.UniversalReference, _} = ref) do
+    Noizu.DomainObject.UUID.UniversalReference.universal_identifier(ref)
+  end
   def universal_identifier({:ref, module, _} = ref) do
     if supported?(ref) do
       module.universal_identifier(ref)
@@ -127,6 +131,9 @@ defimpl Noizu.EctoEntity.Protocol, for: Tuple do
   end
   def index_identifier({:ref, Noizu.DomainObject.Integer.UniversalReference, _} = ref) do
     Noizu.DomainObject.Integer.UniversalReference.index_identifier(ref)
+  end
+  def index_identifier({:ref, Noizu.DomainObject.UUID.UniversalReference, _} = ref) do
+    Noizu.DomainObject.UUID.UniversalReference.index_identifier(ref)
   end
   def index_identifier({:ref, module, _} = ref) do
     if supported?(ref) do
@@ -149,6 +156,9 @@ defimpl Noizu.EctoEntity.Protocol, for: Tuple do
   end
   def ref({:ref, Noizu.DomainObject.Integer.UniversalReference, _} = ref) do
     Noizu.ERP.ref(Noizu.DomainObject.Integer.UniversalReference.resolve(ref))
+  end
+  def ref({:ref, Noizu.DomainObject.UUID.UniversalReference, _} = ref) do
+    Noizu.ERP.ref(Noizu.DomainObject.UUID.UniversalReference.resolve(ref))
   end
   def ref({:ref, _m, _id} = ref), do: ref
   def ref(_), do: nil

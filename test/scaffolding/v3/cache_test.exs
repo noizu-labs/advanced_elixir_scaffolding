@@ -114,7 +114,6 @@ defmodule Noizu.AdvancedScaffolding.CacheTest do
   test "ConCache Cache Expiration" do
     contents = "apple.#{:os.system_time(:second)}"
     sut = %Noizu.AdvancedScaffolding.Test.Fixture.V3.ConCache.Entity{identifier: :bar, content: contents, meta: %{apple: true}}
-    cache = sut.__struct__.__noizu_info__(:cache)
     Noizu.AdvancedScaffolding.Test.Fixture.V3.ConCache.Repo.pre_cache(sut, Noizu.ElixirCore.CallingContext.system(), [ttl: 2])
     r = Noizu.AdvancedScaffolding.Test.Fixture.V3.ConCache.Repo.cache(Noizu.ERP.ref(sut), Noizu.ElixirCore.CallingContext.system(), [])
     assert r.content == contents
