@@ -191,7 +191,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Helpers do
       a__nzdo__enum_ecto_type = Noizu.AdvancedScaffolding.Internal.Helpers.extract_has_enum_attribute(:ecto_type, :value_type, :integer)
 
       # @todo unified attribute  @cache :fast_global, schema: :default, prime: true, ttl: 300, miss_ttl: 600
-      {a_cache_engine, a_cache_options} = case Noizu.AdvancedScaffolding.Internal.Helpers.extract_has_enum_attribute(:cache, :cache, :default) do
+      {a_cache_engine, a_cache_options} = case Noizu.AdvancedScaffolding.Internal.Helpers.extract_cache_attribute(:cache, :type, :default) do
                                             {engine, options} -> {engine, options}
                                             v -> {v, []}
                                           end
@@ -214,19 +214,19 @@ defmodule Noizu.AdvancedScaffolding.Internal.Helpers do
 
       a__nzdo__cache_schema = cond do
                                 Keyword.has_key?(a_cache_options, :schema) -> a_cache_options[:schema]
-                                :else -> Noizu.AdvancedScaffolding.Internal.Helpers.extract_has_enum_attribute(:cache_schema, :cache_schema, :default)
+                                :else -> Noizu.AdvancedScaffolding.Internal.Helpers.extract_cache_attribute(:cache_schema, :schema, :default)
                               end
       a__nzdo__cache_prime = cond do
                                Keyword.has_key?(a_cache_options, :prime) -> a_cache_options[:prime]
-                               :else ->Noizu.AdvancedScaffolding.Internal.Helpers.extract_has_enum_attribute(:cache_prime, :cache_prime, true)
+                               :else ->Noizu.AdvancedScaffolding.Internal.Helpers.extract_cache_attribute(:cache_prime, :prime, true)
                              end
       a__nzdo__cache_ttl = cond do
                              Keyword.has_key?(a_cache_options, :ttl) -> a_cache_options[:ttl]
-                             :else -> Noizu.AdvancedScaffolding.Internal.Helpers.extract_has_enum_attribute(:cache_ttl, :cache_ttl, 3600)
+                             :else -> Noizu.AdvancedScaffolding.Internal.Helpers.extract_cache_attribute(:cache_ttl, :ttl, 3600)
                            end
       a__nzdo__cache_miss_ttl = cond do
                                   Keyword.has_key?(a_cache_options, :miss_ttl) -> a_cache_options[:miss_ttl]
-                                  :else -> Noizu.AdvancedScaffolding.Internal.Helpers.extract_has_enum_attribute(:cache_miss_ttl, :cache_miss_ttl, 30)
+                                  :else -> Noizu.AdvancedScaffolding.Internal.Helpers.extract_cache_attribute(:cache_miss_ttl, :miss_ttl, 30)
                                 end
                                 
       @__nzdo__auto_generate a__nzdo__auto_generate
@@ -434,6 +434,22 @@ defmodule Noizu.AdvancedScaffolding.Internal.Helpers do
   end
 
 
+  #--------------------------------------------
+  # extract_cache_attribute
+  #--------------------------------------------
+  defmacro extract_cache_attribute(attribute, property \\ nil, default) do
+    property = property || attribute
+    quote do
+      cond do
+        Module.has_attribute?(__MODULE__, unquote(attribute)) -> Module.get_attribute(__MODULE__, unquote(attribute))
+        !@__nzdo__base_open? && @__nzdo__base.__cache_configuration__(unquote(property)) != nil -> @__nzdo__base.__cache_configuration__(unquote(property))
+        @__nzdo__base_open? && Module.has_attribute?(@__nzdo__base, unquote(attribute)) -> Module.get_attribute(@__nzdo__base, unquote(attribute))
+        !@__nzdo__poly_base_open? && @__nzdo__poly_base.__cache_configuration__(unquote(property)) != nil -> @__nzdo__poly_base.__cache_configuration__(unquote(property))
+        @__nzdo__poly_base_open? && Module.has_attribute?(@__nzdo__poly_base, unquote(attribute)) -> Module.get_attribute(@__nzdo__poly_base, unquote(attribute))
+        :else -> unquote(default)
+      end
+    end
+  end
 
   #--------------------------------------------
   # extract_has_json_attribute
