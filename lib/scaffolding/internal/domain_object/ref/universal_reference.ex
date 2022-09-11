@@ -126,23 +126,23 @@ defmodule Noizu.AdvancedScaffolding.Internal.Ecto.Reference.Universal do
     type = options[:reference_type]
     quote do
       @behaviour Noizu.AdvancedScaffolding.Internal.Ecto.Reference.Behaviour
-      @type case unquote(type) do
+      @type (case unquote(type) do
         :uuid -> :uuid
         :integer -> :integer
         nil -> Application.get_env(:noizu_advanced_scaffolding, :universal_reference_type, :integer)
-      end
+      end)
       @handler (case @type do
         :uuid -> Noizu.AdvancedScaffolding.Internal.Ecto.Reference.Universal.UUIDDefault
         :integer -> Noizu.AdvancedScaffolding.Internal.Ecto.Reference.Universal.IntegerDefault
       end)
 
-      @ecto_type case unquote(ecto_type) do
+      @ecto_type (case unquote(ecto_type) do
         nil -> case @type do
                  :uuid -> :uuid
                  :integer -> :integer
                end
         v -> v
-      end
+      end)
       
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       use Ecto.Type
