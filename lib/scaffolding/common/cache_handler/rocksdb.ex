@@ -278,10 +278,10 @@ else
   defmodule Noizu.DomainObject.CacheHandler.RocksDB do
     @behaviour Noizu.DomainObject.CacheHandler
     
-    def cache_key(m, ref, context, options), to: Noizu.DomainObject.CacheHandler.Disabled
-    def delete_cache(m, ref, context, options), to: Noizu.DomainObject.CacheHandler.Disabled
-    def pre_cache(m, ref, context, options), to: Noizu.DomainObject.CacheHandler.Disabled
-    def get_cache(m, ref, context, options), to: Noizu.DomainObject.CacheHandler.Disabled
+    defdelegate cache_key(m, ref, context, options), to: Noizu.DomainObject.CacheHandler.Disabled
+    defdelegate delete_cache(m, ref, context, options), to: Noizu.DomainObject.CacheHandler.Disabled
+    defdelegate pre_cache(m, ref, context, options), to: Noizu.DomainObject.CacheHandler.Disabled
+    defdelegate get_cache(m, ref, context, options), to: Noizu.DomainObject.CacheHandler.Disabled
     
   end
   
