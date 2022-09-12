@@ -123,7 +123,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Ecto.Reference.Universal do
     options = Macro.expand(options, __ENV__)
     entity = options[:entity]
     ecto_type = options[:ecto_type]
-    type = options[:reference_type]
+    reference_type = options[:reference_type]
     quote do
       @behaviour Noizu.AdvancedScaffolding.Internal.Ecto.Reference.Behaviour
 
