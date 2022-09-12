@@ -41,6 +41,9 @@ defmodule Noizu.DomainObject.UUID.UniversalReference do
   #---------------------------
   #
   #---------------------------
+  
+  def universal_identifier(%{__struct__: __MODULE__, identifier: <<v::binary-size(16)>>
+  }), do: v
   def universal_identifier(%{__struct__: __MODULE__,
     identifier: <<_,_,_,_,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,_,_,_,_,_,_,_,_>>
   } = v), do: v.identifier
@@ -51,6 +54,8 @@ defmodule Noizu.DomainObject.UUID.UniversalReference do
       :else -> nil
     end
   end
+  
+  def universal_identifier({:ref, __MODULE__, <<v::binary-size(16)>>}), do: v
   def universal_identifier({:ref, __MODULE__, <<_,_,_,_,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,_,_,_,_,_,_,_,_>> = v}), do: v
   def universal_identifier({:ref, __MODULE__, ref}) do
     Noizu.EctoEntity.Protocol.universal_identifier(ref)
@@ -78,8 +83,12 @@ defmodule Noizu.DomainObject.UUID.UniversalReference do
       ref -> %__MODULE__{identifier: ref, ref: ref}
     end
   end
-  def encode(<<_,_,_,_,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,_,_,_,_,_,_,_,_>> = v) do
+  
+  def encode(<<v::binary-size(16)>>) do
     %__MODULE__{identifier: v}
+  end
+  def encode(<<_,_,_,_,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,_,_,_,_,_,_,_,_>> = v) do
+    %__MODULE__{identifier: UUID.string_to_binary!(v)}
   end
   def encode(v = %{identifier: _, __struct__: _m}) do
     cond do
@@ -100,8 +109,17 @@ defmodule Noizu.DomainObject.UUID.UniversalReference do
       true -> resolve(this.identifier)
     end
   end
-  def resolve(v = <<_,_,_,_,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,_,_,_,_,_,_,_,_>>) do
+
+  
+
+  def resolve(<<v::binary-size(16)>>) do
     case Noizu.DomainObject.UniversalLookup.reverse_lookup(v) do
+      {:ok, ref} -> ref
+      _ -> nil
+    end
+  end
+  def resolve(v = <<_,_,_,_,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,_,_,_,_,_,_,_,_>>) do
+    case Noizu.DomainObject.UniversalLookup.reverse_lookup(UUID.string_to_binary!(v)) do
       {:ok, ref} -> ref
       _ -> nil
     end
@@ -127,34 +145,38 @@ defmodule Noizu.DomainObject.UUID.UniversalReference do
   #---------------------------
   #
   #---------------------------
-  def id(<<_,_,_,_,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,_,_,_,_,_,_,_,_>> = v), do: v
+  def id(<<v::binary-size(16)>>), do: v
+  def id(<<_,_,_,_,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,_,_,_,_,_,_,_,_>> = v), do: UUID.string_to_binary!(v)
   def id({:ref, __MODULE__, identifier}), do: identifier
   def id("ref.universal." <> <<a1,a2,a3,a4,a5,a6,a7,a8,?-,b1,b2,b3,b4,?-,c1,c2,c3,c4,?-,d1,d2,d3,d4,?-,e1,e2,e3,e4,e5,e6,e7,e8,e9,e10,e11,e12>>) do
-    <<a1,a2,a3,a4,a5,a6,a7,a8,?-,b1,b2,b3,b4,?-,c1,c2,c3,c4,?-,d1,d2,d3,d4,?-,e1,e2,e3,e4,e5,e6,e7,e8,e9,e10,e11,e12>>
+    UUID.string_to_binary!(<<a1,a2,a3,a4,a5,a6,a7,a8,?-,b1,b2,b3,b4,?-,c1,c2,c3,c4,?-,d1,d2,d3,d4,?-,e1,e2,e3,e4,e5,e6,e7,e8,e9,e10,e11,e12>>)
   end
   def id(%{__struct__: __MODULE__} = this) do
     this.identifier
   end
 
-  def ref(<<_,_,_,_,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,_,_,_,_,_,_,_,_>> = v), do: {:ref, __MODULE__, v}
+  def ref(<<v::binary-size(16)>>), do: {:ref, __MODULE__, v}
+  def ref(<<_,_,_,_,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,_,_,_,_,_,_,_,_>> = v), do: {:ref, __MODULE__, UUID.string_to_binary!(v)}
   def ref({:ref, __MODULE__, _identifier} = ref), do: ref
   def ref("ref.universal." <> <<a1,a2,a3,a4,a5,a6,a7,a8,?-,b1,b2,b3,b4,?-,c1,c2,c3,c4,?-,d1,d2,d3,d4,?-,e1,e2,e3,e4,e5,e6,e7,e8,e9,e10,e11,e12>>) do
-    {:ref, __MODULE__, <<a1,a2,a3,a4,a5,a6,a7,a8,?-,b1,b2,b3,b4,?-,c1,c2,c3,c4,?-,d1,d2,d3,d4,?-,e1,e2,e3,e4,e5,e6,e7,e8,e9,e10,e11,e12>>}
+    {:ref, __MODULE__, UUID.string_to_binary!(<<a1,a2,a3,a4,a5,a6,a7,a8,?-,b1,b2,b3,b4,?-,c1,c2,c3,c4,?-,d1,d2,d3,d4,?-,e1,e2,e3,e4,e5,e6,e7,e8,e9,e10,e11,e12>>)}
   end
   def ref(%{__struct__: __MODULE__} = this) do
     {:ref, __MODULE__, universal_identifier(this)}
   end
-  
 
+  def sref(<<v::binary-size(16)>>), do: "ref.universal.#{UUID.binary_to_string!(v)}"
   def sref(<<_,_,_,_,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,_,_,_,_,_,_,_,_>> = v), do: "ref.universal.#{v}"
   def sref({:ref, __MODULE__, _id} = ref) do
     case universal_identifier(ref) do
+      <<v::binary-size(16)>> -> "ref.universal.#{UUID.binary_to_string!(v)}"
       v = <<_,_,_,_,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,_,_,_,_,_,_,_,_>> -> "ref.universal.#{v}"
       _ -> nil
     end
   end
   def sref(%{__struct__: __MODULE__} = this) do
     case universal_identifier(this) do
+      <<v::binary-size(16)>> -> "ref.universal.#{UUID.binary_to_string!(v)}"
       v = <<_,_,_,_,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,_,_,_,_,_,_,_,_>> -> "ref.universal.#{v}"
       _ -> nil
     end

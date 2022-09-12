@@ -13,7 +13,7 @@ defmodule Noizu.DomainObject.UUID.UniversalReference.Type do
   # type
   #----------------------------
   @doc false
-  def type, do: :integer
+  def type, do: :uuid
 
   #----------------------------
   # cast
@@ -52,8 +52,9 @@ defmodule Noizu.DomainObject.UUID.UniversalReference.Type do
   end
   def dump(v) do
     case Noizu.EctoEntity.Protocol.universal_identifier(v) do
-      nil -> {:ok, 0}
-      v -> {:ok, v}
+      nil -> {:ok, nil}
+      <<v::binary-size(16)>> -> {:ok, v}
+      v = <<_,_,_,_,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,_,_,_,_,_,_,_,_>> -> {:ok, UUID.string_to_binary!(v)}
     end
   end
 
