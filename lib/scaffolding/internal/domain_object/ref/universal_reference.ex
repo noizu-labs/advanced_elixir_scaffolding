@@ -93,9 +93,9 @@ defmodule Noizu.AdvancedScaffolding.Internal.Ecto.Reference.Universal do
   
     def dump(_m, v) do
       cond do
-        v == nil -> {:ok, 0}
-        v = Noizu.EctoEntity.Protocol.universal_identifier(v) -> {:ok, v}
-        :else -> {:ok, 0}
+        v == nil -> {:ok, nil}
+        v = Noizu.EctoEntity.Protocol.universal_identifier(v) -> Ecto.UUID.dump(v)
+        :else -> {:ok, nil}
       end
     end
   
