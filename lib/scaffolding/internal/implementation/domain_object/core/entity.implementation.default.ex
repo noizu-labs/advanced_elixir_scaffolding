@@ -74,6 +74,11 @@ defmodule Noizu.AdvancedScaffolding.Internal.Core.Entity.Implementation.Default 
       :else -> {:error, {:unsupported_ref, associated_struct}}
     end
   end
+  
+  # UUID special handler
+  def ref_ok(domain_object, <<v::binary-size(16)>>), do: ref_ok({:ref, domain_object, v})
+  def ref_ok(domain_object, v = <<_,_,_,_,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,_,_,_,_,_,_,_,_>>), do: ref_ok({:ref, domain_object, UUID.string_to_binary!(v)})
+  # SREF
   def ref_ok(domain_object, ref) when is_bitstring(ref) do
     sref_name = domain_object.__sref__()
     ref = cond do
