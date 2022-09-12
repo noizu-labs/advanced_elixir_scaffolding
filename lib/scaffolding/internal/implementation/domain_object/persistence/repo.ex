@@ -197,7 +197,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo do
             :uuid ->
             sref = __noizu_info__(:sref)
             id = @__nzdo__repo_default.generate_identifier(__MODULE__)
-            UUID.uuid5(:url, "ref.#{sref}.#{id}", :raw)
+            UUID.uuid5(:url, "ref.#{sref}.#{id}")
             _ -> @__nzdo__repo_default.generate_identifier(__MODULE__)
           end
         end
@@ -206,7 +206,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo do
             :uuid ->
               sref = __noizu_info__(:sref)
               id = @__nzdo__repo_default.generate_identifier!(__MODULE__)
-              UUID.uuid5(:url, "ref.#{sref}.#{id}", :raw)
+              UUID.uuid5(:url, "ref.#{sref}.#{id}")
             _ -> @__nzdo__repo_default.generate_identifier!(__MODULE__)
           end
         end
