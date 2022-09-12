@@ -77,8 +77,11 @@ defmodule Noizu.AdvancedScaffolding.Internal.Ecto.Reference.Universal do
         {:ref, Noizu.DomainObject.UUID.UniversalReference, _id} -> {:ok, v}
         %{__struct__: ^e} -> {:ok, v}
         %{__struct__: Noizu.DomainObject.UUID.UniversalReference} -> {:ok, v}
-        v = <<_,_,_,_,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,_,_,_,_,_,_,_,_>> ->
+        <<v::binary-size(16)>> ->
           ref = e.ref({:uuid_identifier, e, v})
+          ref && {:ok, ref} || :error
+        v = <<_,_,_,_,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,_,_,_,_,_,_,_,_>> ->
+          ref = e.ref({:uuid_identifier, e, UUID.string_to_binary!(v)})
           ref && {:ok, ref} || :error
         _ -> :error
       end
@@ -110,8 +113,11 @@ defmodule Noizu.AdvancedScaffolding.Internal.Ecto.Reference.Universal do
         {:ref, Noizu.DomainObject.UUID.UniversalReference, _id} -> {:ok, v}
         %{__struct__: ^e} -> {:ok, v}
         %{__struct__: Noizu.DomainObject.UUID.UniversalReference} -> {:ok, v}
-        v = <<_,_,_,_,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,_,_,_,_,_,_,_,_>> ->
+        <<v::binary-size(16)>> ->
           ref = e.ref({:uuid_identifier, e, v})
+          ref && {:ok, ref} || :error
+        v = <<_,_,_,_,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,_,_,_,_,_,_,_,_>> ->
+          ref = e.ref({:uuid_identifier, e, UUID.string_to_binary!(v)})
           ref && {:ok, ref} || raise ArgumentError, "Unsupported #{m} - #{inspect v}"
         _ -> raise ArgumentError, "Unsupported #{m} - #{inspect v}"
       end
