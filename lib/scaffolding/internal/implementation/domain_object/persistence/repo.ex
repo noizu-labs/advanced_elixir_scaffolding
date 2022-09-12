@@ -192,8 +192,24 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo do
         end
 
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-        def generate_identifier(), do: @__nzdo__repo_default.generate_identifier(__MODULE__)
-        def generate_identifier!(), do: @__nzdo__repo_default.generate_identifier!(__MODULE__)
+        def generate_identifier() do
+          case __noizu_info__(:identifier_type) do
+            :uuid ->
+            sref = __noizu_info__(:sref)
+            id = @__nzdo__repo_default.generate_identifier(__MODULE__)
+            UUID.uuid5(:url, "ref.#{sref}.#{id}")
+            _ -> @__nzdo__repo_default.generate_identifier(__MODULE__)
+          end
+        end
+        def generate_identifier!() do
+          case __noizu_info__(:identifier_type) do
+            :uuid ->
+              sref = __noizu_info__(:sref)
+              id = @__nzdo__repo_default.generate_identifier!(__MODULE__)
+              UUID.uuid5(:url, "ref.#{sref}.#{id}")
+            _ -> @__nzdo__repo_default.generate_identifier!(__MODULE__)
+          end
+        end
 
         #=====================================================================
         # Get
