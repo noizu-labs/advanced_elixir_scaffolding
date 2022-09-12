@@ -113,7 +113,16 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Entity do
 
           @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
           cond do
-            @__nzdo_persistence.options[:universal_identifier] -> def universal_identifier(ref), do: __MODULE__.id(ref)
+            @__nzdo_persistence.options[:universal_identifier] -> def universal_identifier(ref) do
+                                                                    case __noizu_info__(:identifier_type) do
+                                                                      :uuid ->
+                                                                        case __MODULE__.id(ref) do
+                                                                          <<v::binary-size(16)>> -> UUID.binary_to_string!(v)
+                                                                          v -> v
+                                                                        end
+                                                                        _ -> __MODULE__.id(ref)
+                                                                    end
+                                                                  end
             @__nzdo_persistence.options[:universal_lookup] -> def universal_identifier(ref), do: @nzdo__persistence_implementation.universal_identifier_lookup(__MODULE__, ref)
             :else -> def universal_identifier(_), do: raise "Not Supported"
           end
