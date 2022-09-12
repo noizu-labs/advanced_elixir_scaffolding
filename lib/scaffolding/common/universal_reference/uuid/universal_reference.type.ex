@@ -53,13 +53,24 @@ defmodule Noizu.DomainObject.UUID.UniversalReference.Type do
   def dump(v) do
     case Noizu.EctoEntity.Protocol.universal_identifier(v) do
       nil -> {:ok, nil}
+      v -> Ecto.UUID.dump(v)
 #      <<v::binary-size(16)>> -> {:ok, v}
 #      v = <<_,_,_,_,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,_,_,_,_,_,_,_,_>> -> {:ok, UUID.string_to_binary!(v)}
-      <<v::binary-size(16)>> -> {:ok, UUID.binary_to_string!(v)}
-      v = <<_,_,_,_,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,_,_,_,_,_,_,_,_>> -> {:ok, v}
+#      <<v::binary-size(16)>> -> {:ok, UUID.binary_to_string!(v)}
+#      v = <<_,_,_,_,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,_,_,_,_,_,_,_,_>> -> {:ok, v}
     end
   end
 
+  def dump!(v) when is_integer(v) do
+    {:ok, v}
+  end
+  def dump!(v) do
+    case Noizu.EctoEntity.Protocol.universal_identifier(v) do
+      nil -> nil
+      v -> Ecto.UUID.dump!(v)
+    end
+  end
+  
   #----------------------------
   # load
   #----------------------------
