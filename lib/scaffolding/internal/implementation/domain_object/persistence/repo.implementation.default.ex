@@ -226,8 +226,10 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
   end
 
   def layer_get_callback(m, %{__struct__: PersistenceLayer, type: :redis} = layer, ref, context, options) when is_bitstring(ref) do
-    record = layer.schema.get(ref)
-    record && m.__entity__().__from_record__(layer, record, context, options)
+    case layer.schema.get_handler(ref, context, options) do
+      {:ok, record} -> m.__entity__().__from_record__(layer, record, context, options)
+      _ -> nil
+    end
   end
   
   def layer_get_callback(_m, _layer, _ref, _context, _options), do: nil
@@ -249,8 +251,10 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
   end
 
   def layer_get_callback!(m, %{__struct__: PersistenceLayer, type: :redis} = layer, ref, context, options) when is_bitstring(ref) do
-    record = layer.schema.get!(ref)
-    record && m.__entity__().__from_record__!(layer, record, context, options)
+    case layer.schema.get_handler!(ref, context, options) do
+      {:ok, record} -> m.__entity__().__from_record__!(layer, record, context, options)
+      _ -> nil
+    end
   end
   
   def layer_get_callback!(_m, _layer, _ref, _context, _options), do: nil

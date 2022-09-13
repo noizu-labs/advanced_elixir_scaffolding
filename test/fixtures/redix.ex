@@ -50,6 +50,23 @@ defmodule NoizuSchema.Redis do
     end
   end
   
+  def get_handler(record, _context, _options) do
+    with {:ok, sref} <- Noizu.ERP.sref_ok(record) do
+      get_binary(sref <> ".record")
+    else
+      e -> e
+    end
+  end
+  
+  def get_handler!(record, _context, _options) do
+    with {:ok, sref} <- Noizu.ERP.sref_ok(record) do
+      get_binary(sref <> ".record")
+    else
+      e -> e
+    end
+  end
+  
+  
   #------------------------
   # Pool Supervisor
   #------------------------
