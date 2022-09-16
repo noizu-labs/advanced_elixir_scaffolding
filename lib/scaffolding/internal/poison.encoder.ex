@@ -38,7 +38,12 @@ defmodule Noizu.Poison.Encoder do
                         end
     # @todo implment DO annotation support to feed in this option in entity.
     if noizu_entity.__struct__.__noizu_info__(:json_configuration)[:format_settings][json_format][:__suppress_meta__] do
-      Map.from_struct(entity)
+      case Map.from_struct(entity) do
+        v = %{identifier: <<uuid::binary-size(16)>>} ->
+          # uuid work around.
+          %{v| identifier: UUID.binary_to_string!(uuid)}
+        v -> v
+      end
       |> Enum.map(&(encode_field(noizu_entity.__struct__, json_format, &1, context, options)))
       |> Enum.filter(&(&1 != nil))
       |> List.flatten()
@@ -51,8 +56,14 @@ defmodule Noizu.Poison.Encoder do
         kind: json_format == :redis && noizu_entity.__struct__ || noizu_entity.__struct__.__kind__(),
         format: json_format,
       }
-    
-      Map.from_struct(entity)
+
+
+      case Map.from_struct(entity) do
+        v = %{identifier: <<uuid::binary-size(16)>>} ->
+          # uuid work around.
+          %{v| identifier: UUID.binary_to_string!(uuid)}
+        v -> v
+      end
       |> Enum.map(&(encode_field(noizu_entity.__struct__, json_format, &1, context, options)))
       |> Enum.filter(&(&1 != nil))
       |> List.flatten()
