@@ -154,8 +154,8 @@ defmodule Noizu.AdvancedScaffolding.Internal.Core.Entity do
             #-----------------
 
             @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-            def ref({:uuid_identifier, <<uuid::binary-size(16)>>}), do: {:ref, __MODULE__, uuid}
-            def ref({:uuid_identifier, <<_,_,_,_,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,_,_,_,_,_,_,_,_>> = uuid}), do: {:ref, __MODULE__, UUID.string_to_binary!(uuid)}
+            def ref({:uuid_identifier, __MODULE__, <<uuid::binary-size(16)>>}), do: {:ref, __MODULE__, uuid}
+            def ref({:uuid_identifier, __MODULE__, <<_,_,_,_,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,_,_,_,_,_,_,_,_>> = uuid}), do: {:ref, __MODULE__, UUID.string_to_binary!(uuid)}
             def ref("ref.#{@__nzdo__sref}." <> id) do
               identifier = case __string_to_id__(id) do
                              {:ok, v} -> v
