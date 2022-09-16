@@ -15,6 +15,10 @@ defmodule Noizu.DomainObject.UniversalLookup do
   @table Application.get_env(:noizu_advanced_scaffolding, :universal_reference_table, Noizu.AdvancedScaffolding.Database.UniversalLookup.Table)
   @lookup_table Application.get_env(:noizu_advanced_scaffolding, :universal_reference_lookup_table, Noizu.AdvancedScaffolding.Database.UniversalReverseLookup.Table)
   
+  def register(ref, uid) do
+    struct(@table, [identifier: ref, universal_identifier: uid]) |> @table.write!
+    struct(@lookup_table, [identifier: uid, ref: ref]) |> @lookup_table.write!
+  end
   
   def lookup({:ref, _, _id} = ref) do
     case @table.read!(ref) do

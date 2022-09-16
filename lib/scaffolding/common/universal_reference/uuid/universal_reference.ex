@@ -115,13 +115,13 @@ defmodule Noizu.DomainObject.UUID.UniversalReference do
   
 
   def resolve(<<v::binary-size(16)>>) do
-    case Noizu.DomainObject.UniversalLookup.reverse_lookup(UUID.binary_to_string!(v)) do
+    case @universal_lookup.reverse_lookup(UUID.binary_to_string!(v)) do
       {:ok, ref} -> ref
       _ -> nil
     end
   end
   def resolve(v = <<_,_,_,_,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,_,_,_,_,_,_,_,_>>) do
-    case Noizu.DomainObject.UniversalLookup.reverse_lookup(v) do
+    case @universal_lookup.reverse_lookup(v) do
       {:ok, ref} -> ref
       _ -> nil
     end

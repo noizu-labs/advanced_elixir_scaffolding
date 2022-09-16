@@ -108,7 +108,7 @@ defmodule Noizu.DomainObject.Integer.UniversalReference do
     end
   end
   def resolve(v) when is_integer(v) do
-    case Noizu.DomainObject.UniversalLookup.reverse_lookup(v) do
+    case @universal_lookup.reverse_lookup(v) do
       {:ok, ref} -> ref
       _ -> nil
     end

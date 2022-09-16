@@ -11,6 +11,10 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
 
   require Amnesia.Fragment
   require Logger
+
+
+  @universal_lookup Application.get_env(:noizu_advanced_scaffolding, :universal_lookup, Noizu.DomainObject.UniversalLookup)
+  
   #------------------------------------------
   # generate_identifier
   #------------------------------------------
@@ -85,6 +89,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
         nil,
         fn (layer, _) ->
           cond do
+            options[layer.schema][:fallback?] == false -> {:cont, nil}
             layer.load_fallback? ->
               cond do
                 entity = m.layer_get(layer, ref, context, options) ->
@@ -107,6 +112,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
         nil,
         fn (layer, _acc) ->
           cond do
+            options[layer.schema][:fallback?] == false -> {:cont, nil}
             layer.load_fallback? ->
               cond do
                 entity = m.layer_get!(layer, ref, context, options) ->
@@ -186,6 +192,8 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
   end
   def post_get_callback!(_m, entity, _context, _options), do: entity
 
+  
+  
   #------------------------------------------
   # Get - layer_get
   #------------------------------------------
@@ -420,7 +428,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
   #------------------------------------------
   # Create - post_create_callback
   #------------------------------------------
-  def post_create_callback(_m, %{__struct__: s} = entity, context, options) do
+  def post_create_callback(m, %{__struct__: s} = entity, context, options) do
     # finalize field with post created modifications (i.e update fields)
     entity = Enum.reduce(
       s.__noizu_info__(:field_types),
@@ -430,6 +438,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
       end
     )
 
+    register__uid(m, entity, context, options)
     spawn fn -> s.__write_indexes__(entity, context, options[:indexes]) end
     entity
   end
@@ -437,6 +446,21 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
     entity
   end
 
+  #------------------------------------------
+  # Universal Lookup
+  #------------------------------------------
+  def register__uid(_, entity, context, options) do
+    if entity.__struct__.__persistence__(:universal_identifier) do
+      # Todo we need to know if system is using int or uuid universals.
+      case Noizu.EctoEntity.Protocol.universal_identifier(entity) do
+        v when is_integer(v) -> @universal_lookup.register(Noizu.ERP.ref(entity), v)
+        <<uuid::binary-size(16)>> -> @universal_lookup.register(Noizu.ERP.ref(entity), uuid)
+        <<_,_,_,_,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,_,_,_,_,_,_,_,_>> = uuid -> @universal_lookup.register(Noizu.ERP.ref(entity), uuid)
+        _ -> :error
+      end
+    end
+  end
+  
   #------------------------------------------
   # Create - layer_create
   #------------------------------------------
@@ -607,7 +631,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
   #------------------------------------------
   # Update - post_update_callback
   #------------------------------------------
-  def post_update_callback(_m, %{__struct__: s} = entity, context, options) do
+  def post_update_callback(m, %{__struct__: s} = entity, context, options) do
 
     # finalize field with post created modifications (i.e update fields)
     entity = Enum.reduce(
@@ -617,6 +641,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
       end
     )
 
+    register__uid(m, entity, context, options)
     spawn fn -> s.__update_indexes__(entity, context, options[:indexes]) end
     entity
   end
