@@ -99,7 +99,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
             :else -> {:cont, nil}
           end
         end
-      )
+      ) || m.miss_cb(ref, context, options)
     end
   end
 
@@ -123,7 +123,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
             :else -> {:cont, nil}
           end
         end
-      )
+      ) || m.miss_cb!(ref, context, options)
     end
   end
 

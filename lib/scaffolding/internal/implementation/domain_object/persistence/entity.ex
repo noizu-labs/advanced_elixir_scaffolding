@@ -97,14 +97,26 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Entity do
           cond do
             Module.has_attribute?(__MODULE__, :__nzdo__ecto_identifier_field) -> def ecto_identifier(ref), do: @nzdo__persistence_implementation.ecto_identifier(__MODULE__, ref)
             Module.get_attribute(__MODULE__, :__nzdo__identifier_type) == :integer -> def ecto_identifier(ref), do: __MODULE__.id(ref)
-            Module.get_attribute(__MODULE__, :__nzdo__identifier_type) == :uuid -> def ecto_identifier(ref) do
-                                                                                     case __MODULE__.id(ref) do
-                                                                                       nil -> nil
-                                                                                       <<v::binary-size(16)>> -> UUID.binary_to_string!(v)
-                                                                                       v = <<_,_,_,_,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,_,_,_,_,_,_,_,_>> -> v
-                                                                                       v -> v
-                                                                                     end
-                                                                                   end
+            Module.get_attribute(__MODULE__, :__nzdo__identifier_type) == :uuid ->
+              def ecto_identifier(ref) do
+                case __MODULE__.id(ref) do
+                  nil -> nil
+                  <<v::binary-size(16)>> -> UUID.binary_to_string!(v)
+                  v = <<_,_,_,_,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,_,_,_,_,_,_,_,_>> -> v
+                  v -> v
+                end
+              end
+            Module.get_attribute(__MODULE__, :__nzdo__identifier_type) ->
+              def ecto_identifier(ref) do
+                cond do
+                  function_exported?(@__nzdo__identifier_type, :__ecto_identifier__, 1) ->
+                    case @__nzdo__identifier_type do
+                      {:ok, v} -> v
+                      error -> raise "ecto_identifier error #{inspect error}"
+                    end
+                  :else -> raise "Not Supported"
+                end
+              end
             :else -> def ecto_identifier(_), do: raise "Not Supported"
           end
 

@@ -222,6 +222,9 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo do
         def get!(ref, context), do: get!(ref, context, [])
         def get!(ref, context, options), do: @__nzdo__repo_default.get!(__MODULE__, ref, context, options)
 
+        def miss_cb(_ref, _context, _options), do: nil
+        def miss_cb!(_ref, _context, _options), do: nil
+        
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
         def post_get_callback(ref, context, options), do: @__nzdo__repo_default.post_get_callback(__MODULE__, ref, context, options)
         def post_get_callback!(ref, context, options), do: @__nzdo__repo_default.post_get_callback!(__MODULE__, ref, context, options)
@@ -428,6 +431,8 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo do
           get: 3,
           get!: 2,
           get!: 3,
+          miss_cb: 3,
+          miss_cb!: 3,
           post_get_callback: 3,
           post_get_callback!: 3,
           layer_get: 4,
