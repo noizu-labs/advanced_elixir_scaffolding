@@ -268,7 +268,7 @@ defmodule Noizu.AdvancedScaffolding.Helpers do
                 extended = Enum.reverse(extended)
                 [h | t] = extended
                 head = cond do
-                         is_atom(h) -> "^#{h.__sref__()}"
+                         is_atom(h) -> "^#{get_context_provider.sref_module(h)}"
                          h == "**" -> "^([A-Za-z_\\-0-9()\\.\\(\\)\\[\\]\\{\\}])*"
                          h == "++" -> "^([A-Za-z_\\-0-9\\.\\(\\)\\[\\]\\{\\}])+"
                          :else -> "^#{h}"
@@ -278,7 +278,7 @@ defmodule Noizu.AdvancedScaffolding.Helpers do
                         head,
                         fn (x, acc) ->
                           cond do
-                            is_atom(x) -> acc <> "\\\.#{x.__sref__()}"
+                            is_atom(x) -> acc <> "\\\.#{get_context_provider.sref_module(x)}"
                             x == "**" -> acc <> "\\\.?([A-Za-z_\\-0-9\\.\\(\\)\\[\\]\\{\\}])*"
                             x == "++" -> acc <> "\\\.([A-Za-z_\\-0-9\\.\\(\\)\\[\\]\\{\\}])+"
                             Regex.match?(~r/^\{[0-9,a-zA-Z\\(\\)\\-]+\}$/, x) -> acc <> "\\\.?([A-Za-z_\\-0-9\\(\\)]*\.)#{x}"
