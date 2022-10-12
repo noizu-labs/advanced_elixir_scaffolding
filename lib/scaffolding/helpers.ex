@@ -792,8 +792,6 @@ defmodule Noizu.AdvancedScaffolding.Helpers do
   defmodule CustomHelper do
     defmacro __using__(_ \\ nil) do
       quote do
-        import Noizu.AdvancedScaffolding.Helpers
-
         def extract_setting(command, setting, conn, params, default \\ nil, options \\ nil), do: Noizu.AdvancedScaffolding.Helpers.extract_setting(command, setting, conn, params, default, options)
         def banner_text(header, msg, len \\ 120, pad \\ 0), do: Noizu.AdvancedScaffolding.Helpers.banner_text(header, msg, len, pad)
         def request_pagination(params, default_page, default_results_per_page), do: Noizu.AdvancedScaffolding.Helpers.request_pagination(params, default_page, default_results_per_page)
