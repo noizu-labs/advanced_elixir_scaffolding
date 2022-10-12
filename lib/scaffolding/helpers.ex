@@ -244,7 +244,7 @@ defmodule Noizu.AdvancedScaffolding.Helpers do
               extended = case String.split(path, ".") do
                            [v] ->
                              e = get_context_provider.sref_to_module(String.trim(v))
-                             e && [e, "*"]
+                             e && ["*", e]
                            v when is_list(v) ->
                              Enum.reduce_while(
                                v,
