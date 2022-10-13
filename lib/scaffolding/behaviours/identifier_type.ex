@@ -567,8 +567,8 @@ defmodule Noizu.DomainObject.UUID.IdentifierType do
     case UUID.info(identifier) do
       {:ok, d} ->
         cond do
-          d[:type] == :default -> {:ok, d[:uuid]}
-          :else -> {:ok, UUID.binary_to_string!(d[:binary])}
+          d[:binary] -> {:ok, d[:binary]}
+          d[:type] == :default -> {:ok, UUID.string_to_binary!(d[:uuid])}
         end
       e -> {:error, {:serialized_identifier, {:invalid_uuid, e}, identifier}}
     end
