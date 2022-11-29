@@ -8,7 +8,77 @@ defmodule Noizu.DomainObject.CacheHandler.Redis do
       e -> e
     end
   end
-  
+
+
+
+  def __write__(cache_key, value, options \\ nil) do
+    ttl = options[:ttl] || :infinity
+    schema = options[:cache][:schema]
+    redis = cond do
+      schema in [:default, nil] -> Application.get_env(:noizu_advanced_scaffolding, :default_redis_database)
+      :else -> schema
+    end
+    cond do
+      !redis -> {:error, :invalid_redis_schema}
+      ttl == :infinity -> redis.set_binary([cache_key, value])
+      :else -> redis.set_binary([cache_key, value, "EX", ttl])
+    end |> case do
+                 {:ok, _} -> :ok
+                 error -> error
+           end
+  end
+
+  def __clear__(cache_key, options \\ nil) do
+    schema = options[:cache][:schema]
+    redis = cond do
+              schema in [:default, nil] -> Application.get_env(:noizu_advanced_scaffolding, :default_redis_database)
+              :else -> schema
+            end
+    cond do
+      !redis -> {:error, :invalid_redis_schema}
+      :else -> redis.delete(cache_key)
+    end |> case do
+                 {:ok, _} -> :ok
+                 error -> error
+           end
+  end
+
+  def __fetch__(cache_key, default \\ :no_cache, options \\ nil) do
+    schema = options[:cache][:schema]
+    redis = cond do
+              schema in [:default, nil] -> Application.get_env(:noizu_advanced_scaffolding, :default_redis_database)
+              :else -> schema
+            end
+    case redis.get_binary(cache_key) do
+      {:ok, :cache_miss} -> :cache_miss
+      {:ok, nil} -> :cache_miss
+      v -> v
+    end |> case do
+             :cache_miss ->
+               cond do
+                 default == :no_cache -> {:error, :cache_miss}
+                 :else ->
+                   value = cond do
+                             default == :no_cache -> {:error, :cache_miss}
+                             is_function(default, 0) -> default.()
+                             :else -> default
+                           end
+                   case value do
+                     {:error, :cache_miss} -> {:error, :cache_miss}
+                     {:fast_global, :no_cache, v} -> {:ok, v}
+                     {:cache, :no_cache, v} -> {:ok, v}
+                     v ->
+                       with :ok <- __write__(cache_key, value, options) do
+                         {:ok, v}
+                       end
+                   end
+               end
+             response -> response
+           end
+  end
+
+
+
   #------------------------------------------
   # delete_cache
   #------------------------------------------

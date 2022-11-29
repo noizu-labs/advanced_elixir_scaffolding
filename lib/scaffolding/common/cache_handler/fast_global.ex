@@ -1,5 +1,58 @@
 defmodule Noizu.DomainObject.CacheHandler.FastGlobal do
   @behaviour Noizu.DomainObject.CacheHandler
+
+
+  def __write__(cache_key, value, options \\ nil) do
+    cond do
+      options[:raw] == false -> Noizu.FastGlobal.V3.Cluster.put(cache_key, value, options)
+      :else -> FastGlobal.put(cache_key, value)
+    end
+  end
+
+  def __clear__(cache_key, options \\ nil) do
+    cond do
+      options[:raw] == false -> Noizu.FastGlobal.V3.Cluster.delete(cache_key, options)
+      :else -> FastGlobal.delete(cache_key)
+    end
+  end
+
+  def __fetch__(cache_key, default \\ :no_cache, options \\ nil) do
+    cond do
+      options[:raw] == false ->
+        default = cond do
+                    default == :no_cache -> {:fast_global, :no_cache, {:error, :cache_miss}}
+                    :else -> default
+                  end
+        v = Noizu.FastGlobal.V3.Cluster.get(
+          cache_key,
+          default,
+          options
+        )
+        case v do
+          {:error, :cache_miss} -> {:error, :cache_miss}
+          {:error, details} -> {:error, details}
+          v -> {:ok, v}
+        end
+      :else ->
+        case FastGlobal.get(cache_key, {:fast_global, :cache_miss}) do
+          {:fast_global, :cache_miss} ->
+            v = cond do
+                  is_function(default, 0) -> default.()
+                  default == :no_cache -> {:fast_global, :no_cache, {:error, :cache_miss}}
+                  :else -> default
+                end
+            case v do
+              {:fast_global, :no_cache, {:error, :cache_miss}} -> {:error, :cache_miss}
+              {:fast_global, :no_cache, v} -> {:ok, v}
+              v ->
+                __write__(cache_key, v, options)
+                {:ok, v}
+            end
+        end
+    end
+  end
+  
+  
   
   def cache_key(m, ref, _context, _options) do
     sref = m.__entity__.sref(ref)
@@ -10,15 +63,12 @@ defmodule Noizu.DomainObject.CacheHandler.FastGlobal do
   # delete_cache
   #------------------------------------------
   def delete_cache(m, ref, context, options) do
-    # @todo use noizu fg cluster
     cond do
-      key = m.cache_key(ref, context, options) ->
-        spawn fn ->
-          (options[:nodes] || Node.list())
-          |> Task.async_stream(fn (n) -> :rpc.cast(n, FastGlobal, :delete, [key]) end)
-          |> Enum.map(&(&1))
-        end
-        FastGlobal.delete(key)
+      cache_key = m.cache_key(ref, context, options) ->
+        Noizu.FastGlobal.V3.Cluster.delete(
+          cache_key,
+          options
+        )
       :else -> throw "Invalid Ref #{m}.delete_cache(#{inspect ref})"
     end
   end

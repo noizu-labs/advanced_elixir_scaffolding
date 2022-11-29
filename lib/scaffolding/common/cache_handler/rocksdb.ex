@@ -137,7 +137,60 @@ if Code.ensure_loaded?(:rocksdb) do
     def cache_key(m, ref, _context, _options) do
       m.__entity__.sref_ok(ref)
     end
-  
+
+
+
+    def __write__(cache_key, value, options \\ nil) do
+      schema = cond do
+        options[:cache][:schema] in [nil, :default] -> @default_schema
+        :else -> options[:cache][:schema]
+      end
+      Noizu.RocksDB.put(schema, cache_key, value, options[:rocksdb])
+    end
+
+    def __clear__(cache_key, options \\ nil) do
+      schema = cond do
+                  options[:cache][:schema] in [nil, :default] -> @default_schema
+                  :else -> options[:cache][:schema]
+                end
+      Noizu.RocksDB.delete(schema, cache_key, options[:rocksdb])
+    end
+
+    def __fetch__(cache_key, default \\ :no_cache, options \\ nil) do
+      schema = cond do
+                 options[:cache][:schema] in [nil, :default] -> @default_schema
+                 :else -> options[:cache][:schema]
+               end
+
+      case  Noizu.RocksDB.get(schema, cache_key, options[:rocksdb]) do
+        {:ok, {:cache_miss, v}} -> {:ok, :cache_miss}
+        {:ok, :cache_miss} -> {:ok, :cache_miss}
+        {:ok, nil} -> {:ok, :cache_miss}
+        {:ok, v} -> {:ok, v}
+        v -> v
+      end |> case do
+               {:ok, :cache_miss} ->
+                 cond do
+                   default == :no_cache -> {:error, :cache_miss}
+                   :else ->
+                     value = cond do
+                               is_function(default, 0) -> default.()
+                               :else -> default
+                             end
+                     case value do
+                       {:error, :cache_miss} -> {:error, :cache_miss}
+                       {:fast_global, :no_cache, v} -> {:ok, v}
+                       {:cache, :no_cache, v} -> {:ok, v}
+                       v ->
+                         with :ok <- __write__(cache_key, value, options) do
+                           {:ok, v}
+                         end
+                     end
+                 end
+               response -> response
+             end
+    end
+    
     #------------------------------------------
     # delete_cache
     #------------------------------------------
@@ -279,6 +332,11 @@ else
     @behaviour Noizu.DomainObject.CacheHandler
     
     defdelegate cache_key(m, ref, context, options), to: Noizu.DomainObject.CacheHandler.Disabled
+    
+    defdelegate __write__(key, value, options), to: Noizu.DomainObject.CacheHandler.Disabled
+    defdelegate __fetch__(key, default, options), to: Noizu.DomainObject.CacheHandler.Disabled
+    defdelegate __clear__(key, options), to: Noizu.DomainObject.CacheHandler.Disabled
+    
     defdelegate delete_cache(m, ref, context, options), to: Noizu.DomainObject.CacheHandler.Disabled
     defdelegate pre_cache(m, ref, context, options), to: Noizu.DomainObject.CacheHandler.Disabled
     defdelegate get_cache(m, ref, context, options), to: Noizu.DomainObject.CacheHandler.Disabled

@@ -1,10 +1,55 @@
 defmodule Noizu.DomainObject.CacheHandler.ConCache do
   @behaviour Noizu.DomainObject.CacheHandler
   require Logger
+
+  #-----------------------------
+  # Compile Time Constants
+  #-----------------------------
+  @default_schema Application.get_env(:noizu_advanced_scaffolding, :cache)[:default_con_cache] || ConCache.Default
+  
+  #====================================================
+  # Functions
+  #====================================================
+  
   
   def cache_key(m, ref, _context, _options) do
     m.__entity__.ref_ok(ref)
   end
+  
+  
+  def __write__(cache_key, value, options \\ nil) do
+    ttl = options[:ttl] || :inherit
+    schema = cond do
+                  options[:schema] in [:default, nil] -> @default_schema
+                  :else -> options[:schema]
+             end
+    cond do
+      ttl == :inherit -> ConCache.dirty_put(schema, cache_key, value)
+      :else -> ConCache.dirty_put(schema, cache_key, %ConCache.Item{value: value, ttl: ttl})
+    end
+  end
+  
+  def __clear__(cache_key, options \\ nil) do
+    schema = cond do
+               options[:schema] in [:default, nil] -> @default_schema
+               :else -> options[:schema]
+             end
+    ConCache.dirty_delete(schema, cache_key)
+  end
+  
+  def __fetch__(cache_key, default \\ :no_cache, options \\ nil) do
+    schema = cond do
+               options[:schema] in [:default, nil] -> @default_schema
+               :else -> options[:schema]
+             end
+    default = cond do
+                default == :no_cache -> fn -> {:error, :cache_miss} end
+                is_function(default, 0) -> default
+                :else -> fn() -> {:ok, default} end
+              end
+    ConCache.dirty_fetch_or_store(schema, cache_key, default)
+  end
+  
   
   #------------------------------------------
   # delete_cache
@@ -48,7 +93,7 @@ defmodule Noizu.DomainObject.CacheHandler.ConCache do
   end
   
   
-  @default_schema Application.get_env(:noizu_advanced_scaffolding, :cache)[:default_con_cache] || ConCache.Default
+  
   defp __cache_schema__(m, options) do
     cond do
       v = options[:cache][:schema] -> v == :default && @default_schema || v

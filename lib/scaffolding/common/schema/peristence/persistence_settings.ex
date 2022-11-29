@@ -220,9 +220,8 @@ defmodule Noizu.AdvancedScaffolding.Schema.PersistenceSettings do
                        end
 
     auto_generate = case Module.get_attribute(module, :__nzdo__auto_generate) do
-                      true -> true
-                      false -> false
-                      _ -> !enum_table
+                      nil -> !enum_table
+                      v -> v
                     end
     generate_reference_type_default = cond do
                                         enum_table -> false

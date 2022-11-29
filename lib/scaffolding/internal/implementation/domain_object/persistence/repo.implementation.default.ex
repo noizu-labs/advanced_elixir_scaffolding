@@ -412,8 +412,22 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
             :ok
         end
     end
-    # todo universal lookup logic
-    entity = update_in(entity, [Access.key(:identifier)], &(&1 || m.generate_identifier!()))
+    
+    entity = cond do
+               entity.identifier == nil ->
+                 identifier = case entity.__struct__.__persistence__(:auto_generate) do
+                   true -> m.generate_identifier!()
+                   false ->
+                     # we still generate since options[:generated_identifier] was set to true.
+                     m.generate_identifier!()
+                   :ecto -> entity
+                   {m,f,a} -> apply(m,f,a)
+                   f when is_function(f, 0) -> apply(f, [])
+                   _ -> m.generate_identifier!()
+                 end
+                 put_in(entity, [Access.key(:identifier)], identifier)
+               :else -> entity
+             end
 
     # prep/load fields so they are insertable
     Enum.reduce(
@@ -900,9 +914,8 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
   #-----------------
   # list
   #-------------------
-  def list(m, pagination, filter, _context, _options) do
-    # @todo generic logic to query mnesia or ecto, including pagination
-    struct(m, [pagination: pagination, filter: filter, entities: [], length: 0, retrieved_on: DateTime.utc_now()])
+  def list(m, pagination, filter, context, options) do
+    list!(m, pagination, filter, context, options)
   end
 
   #-----------------

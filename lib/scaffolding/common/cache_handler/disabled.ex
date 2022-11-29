@@ -1,5 +1,20 @@
 defmodule Noizu.DomainObject.CacheHandler.Disabled do
   @behaviour Noizu.DomainObject.CacheHandler
+
+
+
+  def __write__(cache_key, value, options \\ nil) do
+    :ok
+  end
+
+  def __clear__(cache_key, options \\ nil) do
+    :ok
+  end
+
+  def __fetch__(cache_key, default \\ :no_cache, options \\ nil) do
+    {:error, :cache_miss}
+  end
+  
   
   def cache_key(_m, _ref, _context, _options) do
     nil
