@@ -179,7 +179,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Table do
         end
       end
       
-      def __auto_changeset__(record, %Noizu.ElixirCore.CallingContext{} = context), do: __auto_changeset__(record, context, nil)
+      def __auto_changeset__(record, %Noizu.ElixirCore.CallingContext{} = context), do: __auto_changeset__(record, context, [])
       def __auto_changeset__(%{__struct__: __MODULE__} = record, %Noizu.ElixirCore.CallingContext{} =  context, options) do
         primary_keys = __MODULE__.__schema__(:primary_key)
         fields = Map.keys(struct(__MODULE__, [])) -- [:__struct__, :__schema__, :__meta__] -- primary_keys
