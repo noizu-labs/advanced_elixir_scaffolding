@@ -48,6 +48,7 @@ defmodule Noizu.DomainObject.Atom.IdentifierType do
         case constraint do
           :existing -> :ok
           :any -> :ok
+          nil -> :ok
           v when is_list(v) ->
             Enum.member?(v, identifier) && :ok || {:error, {:identifier, :not_in_white_list, identifier}}
           v = %MapSet{} ->
@@ -78,7 +79,7 @@ defmodule Noizu.DomainObject.Atom.IdentifierType do
   def __id_to_string__(identifier, c) when is_atom(identifier) do
     cond do
       c[:constraint] == :existing -> {:ok, Atom.to_string(identifier)}
-      c[:constraint] == nil -> {:error, :invalid_constraint}
+      c[:constraint] == nil -> {:ok, Atom.to_string(identifier)}
       constraint = c[:constriant] ->
         case constraint do
           v when is_list(v) ->
@@ -109,6 +110,7 @@ defmodule Noizu.DomainObject.Atom.IdentifierType do
         case constraint do
           :existing -> {:ok, String.to_existing_atom(identifier)}
           :any -> {:ok, String.to_atom(identifier)}
+          nil -> {:ok, String.to_atom(identifier)}
           v when is_list(v) ->
             Enum.find(v, &("#{&1}" == identifier)) && {:ok, String.to_atom(identifier)} || {:error, {:serialized_identifier, :not_in_white_list, identifier}}
           v = %MapSet{} ->

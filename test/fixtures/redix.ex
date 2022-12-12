@@ -37,6 +37,22 @@ defmodule NoizuSchema.Redis do
       set_binary([sref <> ".record", record])
     end
   end
+
+
+  def update_handler(record, _previous, _context, _options) do
+    with {:ok, sref} <- Noizu.ERP.sref_ok(record) do
+      # TODO expose ability to obtain entity specific TTL for redis archival
+      set_binary([sref <> ".record", record])
+    end
+  end
+
+  def update_handler!(record, _previous, _context, _options) do
+    with {:ok, sref} <- Noizu.ERP.sref_ok(record) do
+      # TODO expose ability to obtain entity specific TTL for redis archival
+      set_binary([sref <> ".record", record])
+    end
+  end
+  
   
   def delete_handler(record, _context, _options) do
     with {:ok, sref} <- Noizu.ERP.sref_ok(record) do

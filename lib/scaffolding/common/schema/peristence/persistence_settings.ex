@@ -116,17 +116,20 @@ defmodule Noizu.AdvancedScaffolding.Schema.PersistenceSettings do
   def __expand_persistence_layers__(nil, module), do: __expand_persistence_layers__([:mnesia], module)
   def __expand_persistence_layers__(layers, module) when is_atom(layers), do: __expand_persistence_layers__([layers], module)
   def __expand_persistence_layers__(layers, module) do
-    layers = Enum.map(
-      Enum.reverse(layers),
-      fn (layer) ->
-        case layer do
-          v when is_atom(v) -> __expand_layer__(v, module, [])
-          {v, t} when is_atom(t) -> __expand_layer__(v, t, module, [])
-          {v, o} when is_list(o) -> __expand_layer__(v, module, o)
-          {v, t, o} when is_atom(t) and is_list(o) -> __expand_layer__(v, t, module, o)
+    {layers, _} = Enum.map_reduce(
+      Enum.reverse(layers), 0,
+      fn(layer, acc) ->
+        lp = [layer_number: acc]
+        l = case layer do
+          v when is_atom(v) -> __expand_layer__(v, module, lp)
+          {v, t} when is_atom(t) -> __expand_layer__(v, t, module, lp)
+          {v, o} when is_list(o) -> __expand_layer__(v, module, o ++ lp)
+          {v, t, o} when is_atom(t) and is_list(o) -> __expand_layer__(v, t, module, o ++ lp)
         end
+        {l, acc + 1}
       end
     )
+    
     h = Module.get_attribute(module, :persistence)
     ecto_entity = cond do
                     is_list(h) && Keyword.has_key?(h, :ecto_entity) && h[:ecto_entity] != true -> h[:ecto_entity]
@@ -292,7 +295,7 @@ defmodule Noizu.AdvancedScaffolding.Schema.PersistenceSettings do
                end
 
     metadata = provider.metadata()
-
+    # @todo use a protocol here so we can extend with out touching code.
     type = case metadata do
              %{__struct__: Noizu.AdvancedScaffolding.Schema.Metadata.Ecto} -> :ecto
              %{__struct__: Noizu.AdvancedScaffolding.Schema.Metadata.Redis} -> :redis
@@ -326,15 +329,17 @@ defmodule Noizu.AdvancedScaffolding.Schema.PersistenceSettings do
                        options[:fallback?] == true -> true
                        options[:load_fallback?] == false -> false
                        options[:load_fallback?] == true -> true
-                       type == :mnesia -> true
-                       type == :ecto -> true
+                       # todo we should extend the meta data provider with a protocol that can specify default behaviour
+                       type in [:mnesia, :ecto] -> true
                        :else -> false
                      end
 
     cascade? = cond do
                  options[:cascade?] == true -> true
                  options[:cascade?] == false -> false
-                 type == :mnesia -> true
+                 # todo we should extend the meta data provider with a protocol that can specify default behaviour
+                 type in [:mnesia, :ecto] -> true
+                 options[:layer_number] == 0 -> true # We should always perform crud on the first most reference layer unless instructed not to simplify configuration.
                  :else -> false
                end
 
@@ -352,7 +357,15 @@ defmodule Noizu.AdvancedScaffolding.Schema.PersistenceSettings do
                       end
     cascade_block? = cond do
                        options[:cascade_block?] == true -> true
-                       :else -> false
+                       options[:block?] == true -> true
+                       options[:cascade_block?] == false -> false
+                       options[:block?] == false -> false
+                       :else ->
+                         # todo we should extend the meta data provider with a protocol that can specify default behaviour
+                         cond do
+                          type in [:mnesia, :ecto] -> true
+                          :else -> false
+                         end
                      end
 
     tx_block = cond do

@@ -26,6 +26,16 @@ defdatabase NoizuSchema.Database do
     table.write!(record)
   end
 
+
+  def update_handler(%{__struct__: table} = record, _previous, _context, _options) do
+    table.write(record)
+  end
+
+  def update_handler!(%{__struct__: table} = record, _previous, _context, _options) do
+    table.write!(record)
+  end
+
+
   def delete_handler(%{__struct__: table} = record, _context, _options) do
     table.delete(record.identifier)
   end

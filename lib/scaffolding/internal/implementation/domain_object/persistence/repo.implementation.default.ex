@@ -379,8 +379,12 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
     end
 
     # todo universal lookup logic
-    entity = update_in(entity, [Access.key(:identifier)], &(&1 || m.generate_identifier()))
-
+    entity = cond do
+      entity.identifier == nil ->
+        put_in(entity, [Access.key(:identifier)], m.generate_identifier())
+      :else -> entity
+    end
+    
     # prep/load fields so they are insertable
     Enum.reduce(
       entity.__struct__.__noizu_info__(:field_types),
@@ -412,8 +416,12 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
             :ok
         end
     end
-    # todo universal lookup logic
-    entity = update_in(entity, [Access.key(:identifier)], &(&1 || m.generate_identifier!()))
+    
+    entity = cond do
+               entity.identifier == nil ->
+                 put_in(entity, [Access.key(:identifier)], m.generate_identifier!())
+               :else -> entity
+             end
 
     # prep/load fields so they are insertable
     Enum.reduce(
@@ -449,7 +457,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
   #------------------------------------------
   # Universal Lookup
   #------------------------------------------
-  def register__uid(_, entity, context, options) do
+  def register__uid(_, entity, _context, _options) do
     if entity.__struct__.__persistence__(:universal_identifier) do
       # Todo we need to know if system is using int or uuid universals.
       case Noizu.EctoEntity.Protocol.universal_identifier(entity) do
@@ -674,6 +682,10 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
   def layer_update_loop(list, %{__struct__: PersistenceLayer, schema: schema} = layer, context, options) do
     case list do
       records when is_list(records) -> Enum.map(records, &(layer_update_loop(&1, layer, context, options)))
+      {:with_previous, record, previous} ->
+        options = (options || %{})
+                  |> put_in([:__previous_record__], previous)
+        schema.update_handler(record, previous, context, options)
       record = %{__struct__: _} -> schema.update_handler(record, context, options)
       _ -> :skip # @todo log
     end
@@ -682,6 +694,10 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
   def layer_update_loop!(list, %{__struct__: PersistenceLayer, schema: schema} = layer, context, options) do
     case list do
       records when is_list(records) -> Enum.map(records, &(layer_update_loop!(&1, layer, context, options)))
+      {:with_previous, record, previous} ->
+        options = (options || %{})
+                  |> put_in([:__previous_record__], previous)
+        schema.update_handler!(record, previous, context, options)
       record = %{__struct__: _} -> schema.update_handler!(record, context, options)
       _ -> :skip # @todo log
     end
@@ -858,8 +874,14 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
     layer.table.delete(entity.identifier)
     entity
   end
-  def layer_delete_callback(_m, %{__struct__: PersistenceLayer, type: :ecto} = layer, entity, _context, _options) do
-    layer.schema.delete(layer.table, entity.identifier)
+  def layer_delete_callback(m, %{__struct__: PersistenceLayer, type: :ecto} = layer, entity, context, options) do
+    primary_key = m.layer_get_identifier(layer, entity, context, options)
+    layer.schema.delete_handler(layer.table, primary_key, context, options)
+    #layer.schema.delete(layer.table, entity.identifier)
+    entity
+  end
+  def layer_delete_callback(_m, %{__struct__: PersistenceLayer, type: :redis} = layer, entity, context, options) do
+    layer.schema.delete_handler(entity, context, options)
     entity
   end
   def layer_delete_callback(_m, _layer, entity, _context, _options), do: entity
@@ -868,8 +890,14 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
     layer.table.delete!(entity.identifier)
     entity
   end
-  def layer_delete_callback!(_m, %{type: :ecto} = layer, entity, _context, _options) do
-    layer.schema.delete(layer.table, entity.identifier)
+  def layer_delete_callback!(m, %{type: :ecto} = layer, entity, context, options) do
+    primary_key = m.layer_get_identifier(layer, entity, context, options)
+    layer.schema.delete_handler!(layer.table, primary_key, context, options)
+    #layer.schema.delete(layer.table, entity.identifier)
+    entity
+  end
+  def layer_delete_callback!(_m, %{__struct__: PersistenceLayer, type: :redis} = layer, entity, context, options) do
+    layer.schema.delete_handler!(entity, context, options)
     entity
   end
   def layer_delete_callback!(_m, %{__struct__: PersistenceLayer} = _layer, entity, _context, _options), do: entity

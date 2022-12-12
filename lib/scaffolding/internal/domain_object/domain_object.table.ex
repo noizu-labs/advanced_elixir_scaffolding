@@ -10,8 +10,8 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Table do
     @callback new() :: any
     @callback new(any) :: any
     @callback validate_changeset(any, any, any) :: any
-    @callback changeset(any, any) :: any
-    @callback changeset(any, any, any) :: any
+    @callback __auto_changeset__(any, any) :: any
+    @callback __auto_changeset__(any, any, any) :: any
     @callback __noizu_info__() :: any
     @callback __noizu_info__(any) :: any
 
@@ -169,33 +169,53 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Table do
       #-------------------------------
       # changeset
       #-------------------------------
-      def changeset(record, context, options \\ nil)
-      def changeset(%{__struct__: __MODULE__} = record, context, options) do
-        fields = Map.keys(struct(__MODULE__, [])) -- [:__struct__, :__schema__, :__meta__, :id, :identifier]
+      def __fetch_existing__(repo, primary_keys, record) do
+        case primary_keys do
+          [] -> throw "__auto_changeset__ unable to handle table with out primary keys defined."
+          [key] -> repo.get(__MODULE__, get_in(record, [Access.key(key)]))
+          v when is_list(v) ->
+            keys = Enum.map(v, &({&1, get_in(record, [Access.key(&1)])}))
+            repo.get_by(__MODULE__, keys)
+        end
+      end
+      
+      def __auto_changeset__(record, %Noizu.ElixirCore.CallingContext{} = context), do: __auto_changeset__(record, context, nil)
+      def __auto_changeset__(%{__struct__: __MODULE__} = record, %Noizu.ElixirCore.CallingContext{} =  context, options) do
+        primary_keys = __MODULE__.__schema__(:primary_key)
+        fields = Map.keys(struct(__MODULE__, [])) -- [:__struct__, :__schema__, :__meta__] -- primary_keys
         repo = __MODULE__.__persistence__().tables[__MODULE__].schema
-        current = repo.get(__MODULE__, Map.get(record, :identifier) || Map.get(record, :id))
+        if current = __fetch_existing__(repo, primary_keys, record) do
+          current
+          |> cast(Map.from_struct(record), fields)
+          |> validate_changeset(context, options)
+        else
+          {:error, :previous_record_not_found}
+        end
+      end
+      def __auto_changeset__(record, %Noizu.ElixirCore.CallingContext{} = context, options) when is_list(record) or is_map(record) do
+        primary_keys = __MODULE__.__schema__(:primary_key)
+        fields = Map.keys(struct(__MODULE__, [])) -- [:__struct__, :__schema__, :__meta__] -- primary_keys
+        repo = __MODULE__.__persistence__().tables[__MODULE__].schema
+        if current = __fetch_existing__(repo, primary_keys, record) do
+          current
+          |> cast(Map.from_struct(record), fields)
+          |> validate_changeset(context, options)
+        else
+          {:error, :previous_record_not_found}
+        end
+      end
+
+      def __auto_changeset__(%{__struct__: __MODULE__} = current, %{__struct__: __MODULE__} = record, %Noizu.ElixirCore.CallingContext{} = context, options) do
+        primary_keys = __MODULE__.__schema__(:primary_key)
+        fields = Map.keys(struct(__MODULE__, [])) -- [:__struct__, :__schema__, :__meta__] -- primary_keys
         current
         |> cast(Map.from_struct(record), fields)
         |> validate_changeset(context, options)
       end
-      def changeset(record, context, options) when is_list(record) or is_map(record) do
-        fields = Map.keys(struct(__MODULE__, [])) -- [:__struct__, :__schema__, :__meta__, :id, :identifier]
-        repo = __MODULE__.__persistence__().tables[__MODULE__].schema
-        current = repo.get(__MODULE__, get_in(record, [:identifier]) || get_in(record, [:id]))
-        current
-        |> cast(record, fields)
-        |> validate_changeset(context, options)
-      end
 
-      def changeset(%{__struct__: __MODULE__} = current, %{__struct__: __MODULE__} = record, context, options) do
-        fields = Map.keys(struct(__MODULE__, [])) -- [:__struct__, :__schema__, :__meta__, :id, :identifier]
-        current
-        |> cast(Map.from_struct(record), fields)
-        |> validate_changeset(context, options)
-      end
-
-      def changeset(%{__struct__: __MODULE__} = current,  record, context, options)  when is_list(record) or is_map(record) do
-        fields = Map.keys(struct(__MODULE__, [])) -- [:__struct__, :__schema__, :__meta__, :id, :identifier]
+      def __auto_changeset__(%{__struct__: __MODULE__} = current,  record, %Noizu.ElixirCore.CallingContext{} = context, options)  when is_list(record) or is_map(record) do
+        primary_keys = __MODULE__.__schema__(:primary_key)
+        fields = Map.keys(struct(__MODULE__, [])) -- [:__struct__, :__schema__, :__meta__] -- primary_keys
         current
         |> cast(record, fields)
         |> validate_changeset(context, options)
@@ -334,8 +354,10 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Table do
         new: 0,
         new: 1,
         validate_changeset: 3,
-        changeset: 2,
-        changeset: 3,
+        __fetch_existing__: 3,
+        __auto_changeset__: 2,
+        __auto_changeset__: 3,
+        __auto_changeset__: 4,
         __noizu_info__: 0,
         __noizu_info__: 1,
         __persistence__: 0,
