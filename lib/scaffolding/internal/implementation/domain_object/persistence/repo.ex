@@ -260,8 +260,8 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo do
         def emit_telemetry?(type, _, _, options) do
           c = __persistence__(:telemetry)
           cond do
-            options[:emity_telemetry] -> true
-            context.options[:emit_telemetry] -> true
+            options[:emit_telemetry?] -> true
+            context.options[:emit_telemetry?] -> true
             !c[:enabled] -> false
             type in [:create, :update, :delete, :create!, :update!, :delete!] || (type in [:get,:get!]) && c[:reads] ->
               cond do
@@ -447,7 +447,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo do
           generate_identifier: 0,
           generate_identifier!: 0,
 
-          emity_telemetry?: 4,
+          emit_telemetry?: 4,
           telemetry_event: 4,
         
           cache_key: 3,
