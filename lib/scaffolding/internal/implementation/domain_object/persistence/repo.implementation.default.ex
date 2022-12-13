@@ -84,6 +84,8 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
   def get(m, ref, context, options) do
     ref = m.__entity__().ref(ref)
     if ref do
+      emit = m.emit_telemetry?(:get, ref, context, options)
+      emit && :telemetry.emit(m.telemetry_event(:get, ref, context, options), %{count: 1}, %{mod: m})
       Enum.reduce_while(
         m.__entity__().__persistence__(:layers),
         nil,
@@ -107,6 +109,9 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
     options = put_in(options || %{}, [:transaction!], true)
     ref = m.__entity__().ref(ref)
     if ref do
+      emit = m.emit_telemetry?(:get!, ref, context, options)
+      emit && :telemetry.emit(m.telemetry_event(:get!, ref, context, options), %{count: 1}, %{mod: m})
+  
       Enum.reduce_while(
         m.__entity__().__persistence__(:layers),
         nil,
@@ -284,7 +289,9 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
   # Create
   #=====================================================================
   def create(m, entity, context, options) do
+    emit = m.emit_telemetry?(:create, entity, context, options)
     try do
+      emit && :telemetry.emit(m.telemetry_event(:create, entity, context, options), %{count: 1}, %{mod: m})
       settings = m.__persistence__()
       entity = m.pre_create_callback(entity, context, options)
       entity = Enum.reduce(
@@ -308,19 +315,24 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
       )
       m.post_create_callback(entity, context, options)
     rescue e ->
-      Logger.error("[#{m}.create] rescue|\n#{inspect entity}\n---- #{Exception.format(:error, e, __STACKTRACE__)}\n-------------------------")
+      Logger.warn("[#{m}.create] rescue|\n#{inspect entity}\n---- #{Exception.format(:error, e, __STACKTRACE__)}\n-------------------------")
+      emit && :telemetry.emit(m.telemetry_event(:create, entity, context, options), %{count: 1}, %{mod: m, error: true})
       entity
     catch :exit, e ->
-      Logger.error("[#{m}.create] exit|\n#{inspect entity}\n---- #{Exception.format(:error, e, __STACKTRACE__)}\n-------------------------")
+      Logger.warn("[#{m}.create] exit|\n#{inspect entity}\n---- #{Exception.format(:error, e, __STACKTRACE__)}\n-------------------------")
+      emit && :telemetry.emit(m.telemetry_event(:create, entity, context, options), %{count: 1}, %{mod: m, error: true})
       entity
       e ->
-        Logger.error("[#{m}.create] catch|\n#{inspect entity}\n---- #{Exception.format(:error, e, __STACKTRACE__)}\n-------------------------")
+        Logger.warn("[#{m}.create] catch|\n#{inspect entity}\n---- #{Exception.format(:error, e, __STACKTRACE__)}\n-------------------------")
+        emit && :telemetry.emit(m.telemetry_event(:create, entity, context, options), %{count: 1}, %{mod: m, error: true})
         entity
     end
   end
 
   def create!(m, entity, context, options) do
+    emit = m.emit_telemetry?(:create!, entity, context, options)
     try do
+      emit && :telemetry.emit(m.telemetry_event(:create!, entity, context, options), %{count: 1}, %{mod: m})
       options = put_in(options || %{}, [:transaction!], true)
       settings = m.__persistence__()
       entity = m.pre_create_callback!(entity, context, options)
@@ -342,13 +354,16 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
       )
       m.post_create_callback!(entity, context, options)
     rescue e ->
-      Logger.error("[#{m}.create!] rescue|\n#{inspect entity}\n---- #{Exception.format(:error, e, __STACKTRACE__)}\n-------------------------")
+      Logger.warn("[#{m}.create!] rescue|\n#{inspect entity}\n---- #{Exception.format(:error, e, __STACKTRACE__)}\n-------------------------")
+      emit && :telemetry.emit(m.telemetry_event(:create!, entity, context, options), %{count: 1}, %{mod: m, error: true})
       entity
     catch :exit, e ->
-      Logger.error("[#{m}.create!] exit|\n#{inspect entity}\n---- #{Exception.format(:error, e, __STACKTRACE__)}\n-------------------------")
+      Logger.warn("[#{m}.create!] exit|\n#{inspect entity}\n---- #{Exception.format(:error, e, __STACKTRACE__)}\n-------------------------")
+      emit && :telemetry.emit(m.telemetry_event(:create!, entity, context, options), %{count: 1}, %{mod: m, error: true})
       entity
       e ->
-        Logger.error("[#{m}.create!] catch|\n#{inspect entity}\n---- #{Exception.format(:error, e, __STACKTRACE__)}\n-------------------------")
+        Logger.warn("[#{m}.create!] catch|\n#{inspect entity}\n---- #{Exception.format(:error, e, __STACKTRACE__)}\n-------------------------")
+        emit && :telemetry.emit(m.telemetry_event(:create!, entity, context, options), %{count: 1}, %{mod: m, error: true})
         entity
     end
   end
@@ -558,6 +573,9 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
   # Update
   #=====================================================================
   def update(m, entity, context, options) do
+    emit = m.emit_telemetry?(:update, entity, context, options)
+    emit && :telemetry.emit(m.telemetry_event(:update, entity, context, options), %{count: 1}, %{mod: m})
+    
     settings = m.__persistence__()
     entity = m.pre_update_callback(entity, context, options)
     entity = Enum.reduce(
@@ -729,6 +747,9 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
   # Delete
   #=====================================================================
   def delete(m, entity, context, options) do
+    emit = m.emit_telemetry?(:delete, entity, context, options)
+    emit && :telemetry.emit(m.telemetry_event(:delete, entity, context, options), %{count: 1}, %{mod: m})
+    
     settings = m.__persistence__()
     entity = m.pre_delete_callback(entity, context, options)
     entity = Enum.reduce(
@@ -754,6 +775,8 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo.Implementation.Def
   end
 
   def delete!(m, entity, context, options) do
+    emit = m.emit_telemetry?(:delete!, entity, context, options)
+    emit && :telemetry.emit(m.telemetry_event(:delete!, entity, context, options), %{count: 1}, %{mod: m})
     options = put_in(options || %{}, [:transaction!], true)
     settings = m.__persistence__()
     entity = m.pre_delete_callback!(entity, context, options)

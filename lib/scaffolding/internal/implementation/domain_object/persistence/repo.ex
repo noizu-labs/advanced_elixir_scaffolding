@@ -254,8 +254,34 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo do
         end
 
         #=====================================================================
+        # Telemetry
+        #=====================================================================
+        @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+        def emit_telemetry?(type, _, _, options) do
+          c = __persistence__(:telemetry)
+          cond do
+            options[:emity_telemetry] -> true
+            context.options[:emit_telemetry] -> true
+            !c[:enabled] -> false
+            type in [:create, :update, :delete, :create!, :update!, :delete!] || (type in [:get,:get!]) && c[:reads] ->
+              cond do
+                c[:sample_rate] >= 1000 -> true
+                :rand.uniform(1000) <= c[:sample_rate] -> true
+                :else -> false
+              end
+            :else -> false
+          end
+        end
+        
+        @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+        def telemetry_event(type, _, _, _) do
+          [:persistence, :event, type]
+        end
+
+        #=====================================================================
         # Create
         #=====================================================================
+  
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
         def create(entity, context), do: create(entity, context, [])
         def create(entity, context, options), do: @__nzdo__repo_default.create(__MODULE__, entity, context, options)
@@ -421,6 +447,9 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo do
           generate_identifier: 0,
           generate_identifier!: 0,
 
+          emity_telemetry?: 4,
+          telemetry_event: 4,
+        
           cache_key: 3,
           cache: 2,
           cache: 3,

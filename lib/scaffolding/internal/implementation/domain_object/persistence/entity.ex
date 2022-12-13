@@ -225,10 +225,11 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Entity do
            Entity persistence settings (various databases read or written to when updating/fetching a domain object entity.)"
         """
         def __persistence__(:all) do
-          [:enum_table, :auto_generate, :universal_identifier, :universal_lookup, :reference_type, :layers, :schemas, :tables, :ecto_entity, :options]
+          [:telemetry, :enum_table, :auto_generate, :universal_identifier, :universal_lookup, :reference_type, :layers, :schemas, :tables, :ecto_entity, :options]
           |> Enum.map(&({&1, __persistence__(&1)}))
           |> Map.new()
         end
+        def __persistence__(:telemetry), do: @__nzdo__telemetry
         def __persistence__(:ecto_type), do: @__nzdo__enum_ecto_type
         def __persistence__(:enum_table), do: @__nzdo_persistence.options.enum_table
         def __persistence__(:auto_generate), do: @__nzdo_persistence.options.auto_generate

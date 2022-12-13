@@ -212,6 +212,35 @@ defmodule Noizu.AdvancedScaffolding.Internal.Helpers do
                               v -> v
                             end
 
+
+      a__nzdo__telemetry = cond do
+                             Module.has_attribute?(__MODULE__, :telemetry) ->
+                               case Module.get_attribute(__MODULE__, :telemetry) do
+                                 true ->
+                                   Application.get_env(:noizu_advanced_scaffolding, :default_enabled_telemetry, [enabled: true, sample_rate: 250, reads: false])
+                                 :enabled -> [enabled: true, sample_rate: 250, reads: false]
+                                 :light -> [enabled: true, sample_rate: 50, reads: false]
+                                 :diagnostic -> [enabled: true, sample_rate: 1000, reads: true]
+                                 {:enabled, opts} -> [enabled: true, sample_rate: opts[:sample_rate] || 250, reads: opts[:reads] || false]
+                                 false -> [enabled: false, sample_rate: 0, reads: false]
+                                 _ -> Application.get_env(:noizu_advanced_scaffolding, :default_telemetry, [enabled: false, sample_rate: 0, reads: false])
+                               end
+                               v = unquote(options[:telemetry]) ->
+                                 case v do
+                                   true ->
+                                     Application.get_env(:noizu_advanced_scaffolding, :default_enabled_telemetry, [enabled: true, sample_rate: 250, reads: false])
+                                   :enabled -> [enabled: true, sample_rate: 250, reads: false]
+                                   :light -> [enabled: true, sample_rate: 50, reads: false]
+                                   :diagnostic -> [enabled: true, sample_rate: 1000, reads: true]
+                                   {:enabled, opts} -> [enabled: true, sample_rate: opts[:sample_rate] || 250, reads: opts[:reads] || false]
+                                   false -> [enabled: false, sample_rate: 0, reads: false]
+                                   _ -> Application.get_env(:noizu_advanced_scaffolding, :default_telemetry, [enabled: false, sample_rate: 0, reads: false])
+                                 end
+                             :else ->
+                               Application.get_env(:noizu_advanced_scaffolding, :default_telemetry, [enabled: false, sample_rate: 0, reads: false])
+                           end
+      @__nzdo__telemetry a__nzdo__telemetry
+      
       a__nzdo__cache_schema = cond do
                                 Keyword.has_key?(a_cache_options, :schema) -> a_cache_options[:schema]
                                 :else -> Noizu.AdvancedScaffolding.Internal.Helpers.extract_cache_attribute(:cache_schema, :schema, :default)

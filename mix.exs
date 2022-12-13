@@ -6,7 +6,7 @@
 defmodule Noizu.AdvancedScaffolding.Mixfile do
   use Mix.Project
 
-  @version "1.2.13"
+  @version "1.2.14"
   @source_url "https://github.com/noizu-labs/advanced_elixir_scaffolding"
 
   def project do
@@ -63,6 +63,7 @@ defmodule Noizu.AdvancedScaffolding.Mixfile do
       {:semaphore, "~> 1.0"}, # https://github.com/discordapp/semaphore
       {:timex, "~> 3.7"},
       {:decimal, "~> 2.0.0"},
+      {:telemetry, "~> 1.1.0", optional: true},
     ]
   end # end deps
 
