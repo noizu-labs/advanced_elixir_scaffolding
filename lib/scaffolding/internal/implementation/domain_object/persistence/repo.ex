@@ -257,27 +257,48 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo do
         # Telemetry
         #=====================================================================
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+        @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
         def emit_telemetry?(type, _, context, options) do
-          c = __persistence__(:telemetry)
           cond do
-            options[:emit_telemetry?] -> true
-            context && context.options[:emit_telemetry?] -> true
-            !c[:enabled] -> false
-            type in [:create, :update, :delete, :create!, :update!, :delete!] || (type in [:get,:get!]) && c[:reads] ->
+            get_in(options || [], [:emit_telemtry?]) != nil -> options[:emit_telemtry?]
+            get_in(context && context.options || [], [:emit_telemtry?]) != nil -> options[:emit_telemtry?]
+            :else ->
+              c = __persistence__(:telemetry)
               cond do
-                c[:sample_rate] >= 1000 -> true
-                :rand.uniform(1000) <= c[:sample_rate] -> true
+                c[:enabled] in [true, :enabled] ->
+                  case c[:events][type] do
+                    false -> false
+                    true -> c[:sample_rate]
+                    v when is_integer(v) -> v
+                    _ -> false
+                  end
                 :else -> false
               end
-            :else -> false
-          end
+          end |> case do
+                   false -> false
+                   :disabled -> false
+                   true -> 1
+                   :enabled -> 1
+                   v when is_integer(v) ->
+                     cond do
+                       v >= 1000 -> 1
+                       :rand.uniform(1000) <= v ->
+                         r = rem(1000, v)
+                         a = cond do
+                               r == 0 -> 0
+                               :rand.uniform(100) <= ((1000*r)/v) -> 1
+                               :else -> 0
+                             end
+                         div(1000, v) + a
+                       :else -> false
+                     end
+                 end
         end
-        
+
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
         def telemetry_event(type, _, _, _) do
           [:persistence, :event, type]
         end
-
         #=====================================================================
         # Create
         #=====================================================================

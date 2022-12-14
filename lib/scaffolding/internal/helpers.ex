@@ -213,33 +213,34 @@ defmodule Noizu.AdvancedScaffolding.Internal.Helpers do
                             end
 
 
+      @__default_telemetry [enabled: false, sample_rate: 0, events: [get: false, get!: false, cache: false, list: false, list!: false, match: false, match!: false]]
+      @__default_enabled_telemetry [enabled: false, sample_rate: 100, events: [get: 10, get!: 10, cache: 5, list: 10, list!: 10, match: 10, match!: 10]]
+      @__default_light_telemetry [enabled: true, sample_rate: 50, events: [get: false, get!: false, cache: false, list: false, list!: false, match: false, match!: false]]
+      @__default_heavy_telemetry [enabled: false, sample_rate: 250, events: [get: 25, get!: 25, cache: 5, list: 25, list!: 25, match: 25, match!: 25]]
+      @__default_diagnostic_telemetry [enabled: true, sample_rate: 1000, events: [get: true, get!: true, cache: true, list: true, list!: true, match: true, match!: true]]
+      @__default_disabled_telemetry [enabled: false, sample_rate: 0, events: [get: false, get!: false, cache: false, list: false, list!: false, match: false, match!: false]]
       a__nzdo__telemetry = cond do
-                             Module.has_attribute?(__MODULE__, :telemetry) ->
-                               case Module.get_attribute(__MODULE__, :telemetry) do
-                                 true ->
-                                   Application.get_env(:noizu_advanced_scaffolding, :default_enabled_telemetry, [enabled: true, sample_rate: 250, reads: false])
-                                 :enabled -> [enabled: true, sample_rate: 250, reads: false]
-                                 :light -> [enabled: true, sample_rate: 50, reads: false]
-                                 :diagnostic -> [enabled: true, sample_rate: 1000, reads: true]
-                                 {:enabled, opts} -> [enabled: true, sample_rate: opts[:sample_rate] || 250, reads: opts[:reads] || false]
-                                 false -> [enabled: false, sample_rate: 0, reads: false]
-                                 _ -> Application.get_env(:noizu_advanced_scaffolding, :default_telemetry, [enabled: false, sample_rate: 0, reads: false])
-                               end
-                               v = unquote(options[:telemetry]) ->
-                                 case v do
-                                   true ->
-                                     Application.get_env(:noizu_advanced_scaffolding, :default_enabled_telemetry, [enabled: true, sample_rate: 250, reads: false])
-                                   :enabled -> [enabled: true, sample_rate: 250, reads: false]
-                                   :light -> [enabled: true, sample_rate: 50, reads: false]
-                                   :diagnostic -> [enabled: true, sample_rate: 1000, reads: true]
-                                   {:enabled, opts} -> [enabled: true, sample_rate: opts[:sample_rate] || 250, reads: opts[:reads] || false]
-                                   false -> [enabled: false, sample_rate: 0, reads: false]
-                                   _ -> Application.get_env(:noizu_advanced_scaffolding, :default_telemetry, [enabled: false, sample_rate: 0, reads: false])
-                                 end
-                             :else ->
-                               Application.get_env(:noizu_advanced_scaffolding, :default_telemetry, [enabled: false, sample_rate: 0, reads: false])
+                             Module.has_attribute?(__MODULE__, :telemetry) -> {:ok, Module.get_attribute(__MODULE__, :telemetry)}
+                             unquote(Enum.member?(options,:telemetry)) -> {:ok, unquote(get_in(options, [:telemetry]))}
+                             :else -> nil
                            end
+                           |> case do
+                                nil -> Application.get_env(:noizu_scaffolding, :telemetry)[:default] || @__default_telemetry
+                                {:ok, v} when v in [true, :enabled] -> Application.get_env(:noizu_scaffolding, :telemetry)[:enabled] || @__default_enabled_telemetry
+                                {:ok, :light} -> Application.get_env(:noizu_scaffolding, :telemetry)[:light] || @__default_light_telemetry
+                                {:ok, :heavy} -> Application.get_env(:noizu_scaffolding, :telemetry)[:heavy] || @__default_heavy_telemetry
+                                {:ok, :diagnostic} -> Application.get_env(:noizu_scaffolding, :telemetry)[:diagnostic] || @__default_diagnostic_telemetry
+                                {:ok, false} -> Application.get_env(:noizu_scaffolding, :telemetry)[:disabled] || @__default_disabled_telemetry
+                                {:ok, :disabled} -> Application.get_env(:noizu_scaffolding, :telemetry)[:disabled] || @__default_disabled_telemetry
+                                {:ok, v} when is_list(v)->
+                                  defaults = Application.get_env(:noizu_scaffolding, :telemetry)[:enabled] || @__default_enabled_telemetry
+                                  events = Keyword.merge(defaults[:events] || [], v[:events] || [])
+                                  sample_rate = v[:sample_rate] || defaults[:sample_rate] || @__default_enabled_telemetry[:sample_rate]
+                                  enabled = if Enum.member?(v, :enabled), do: v[:enabled], else: defaults[:enabled] || false
+                                  [enabled: enabled, sample_rate: sample_rate, events: events]
+                              end
       @__nzdo__telemetry a__nzdo__telemetry
+      
       
       a__nzdo__cache_schema = cond do
                                 Keyword.has_key?(a_cache_options, :schema) -> a_cache_options[:schema]

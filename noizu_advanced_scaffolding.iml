@@ -78,6 +78,7 @@
       <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/rocksdb" />
       <excludeFolder url="file://$MODULE_DIR$/_build/test/lib/rocksdb" />
       <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/telemetry" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/test/lib/telemetry" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="ecto_sql" level="project" />
