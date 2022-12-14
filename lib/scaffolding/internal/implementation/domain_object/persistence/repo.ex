@@ -270,7 +270,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Persistence.Repo do
                     false -> false
                     true -> c[:sample_rate]
                     v when is_integer(v) -> v
-                    _ -> false
+                    _ -> c[:sample_rate]
                   end
                 :else -> false
               end
