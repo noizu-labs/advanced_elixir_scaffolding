@@ -44,9 +44,14 @@ defmodule Noizu.DomainObject.CacheHandler.FastGlobal do
   def get_cache(m, ref, context, options) do
     cond do
       cache_key = m.cache_key(ref, context, options) ->
+        emit = m.emit_telemetry?(:cache, ref, context, options)
+        emit && :telemetry.execute(m.telemetry_event(:cache, ref, context, options), %{count: emit}, %{mod: m, handler:  __MODULE__})
+  
+  
         v = Noizu.FastGlobal.V3.Cluster.get(
           cache_key,
           fn () ->
+            emit && :telemetry.execute(m.telemetry_event(:cache_miss, ref, context, options), %{count: emit}, %{mod: m, handler:  __MODULE__})
             cond do
               entity = m.get!(ref, context, options) ->
                 m.__entity__().__to_cache__!(entity, context, options)

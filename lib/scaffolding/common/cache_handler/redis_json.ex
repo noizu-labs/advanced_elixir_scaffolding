@@ -115,18 +115,25 @@ defmodule Noizu.DomainObject.CacheHandler.RedisJson do
     with {:ok, cache_key} <- m.cache_key(ref, context, options) do
       cond do
         redis = __cache_schema__(m, options) ->
+          emit = m.emit_telemetry?(:cache, ref, context, options)
+          emit && :telemetry.execute(m.telemetry_event(:cache, ref, context, options), %{count: emit}, %{mod: m, handler:  __MODULE__})
+          
           case redis.get_json(cache_key) do
             {:ok, ":nil"} -> nil
-            {:ok, nil} -> __cache_miss__(m, redis, cache_key, ref, context, options)
+            {:ok, nil} ->
+              emit && :telemetry.execute(m.telemetry_event(:cache_miss, ref, context, options), %{count: emit}, %{mod: m, handler:  __MODULE__})
+              __cache_miss__(m, redis, cache_key, ref, context, options)
             {:ok, json} ->
               case m.__entity__().__from_cache__!(json, context, options) do
                 {:cache, directive} when directive in [:refresh, :expired] ->
+                  emit && :telemetry.execute(m.telemetry_event(:cache_miss, ref, context, options), %{count: emit}, %{mod: m, handler:  __MODULE__})
                   __cache_miss__(m, redis, cache_key, ref, context, options)
                 {:cache, _} -> nil
                 {:error, _} -> nil
                 v -> v
               end
             _ ->
+              emit && :telemetry.execute(m.telemetry_event(:cache_miss, ref, context, options), %{count: emit}, %{mod: m, handler:  __MODULE__})
               __cache_miss__(m, redis, cache_key, ref, context, options)
           end
         :else ->

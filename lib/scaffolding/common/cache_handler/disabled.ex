@@ -24,6 +24,10 @@ defmodule Noizu.DomainObject.CacheHandler.Disabled do
   #------------------------------------------
   def get_cache(_m, nil, _context, _options), do: nil
   def get_cache(m, ref, context, options) do
+    emit = m.emit_telemetry?(:cache, ref, context, options)
+    emit && :telemetry.execute(m.telemetry_event(:cache, ref, context, options), %{count: emit}, %{mod: m, handler:  __MODULE__})
+    emit && :telemetry.execute(m.telemetry_event(:cache_miss, ref, context, options), %{count: emit}, %{mod: m, handler:  __MODULE__})
+    
     m.get!(ref, context, options)
   end
 end

@@ -111,7 +111,10 @@ defmodule Noizu.DomainObject.CacheHandler.ConCache do
     with {:ok, cache_key} <- m.cache_key(ref, context, options) do
       cond do
         schema = __cache_schema__(m, options) ->
+          emit = m.emit_telemetry?(:cache, ref, context, options)
+          emit && :telemetry.execute(m.telemetry_event(:cache, ref, context, options), %{count: emit}, %{mod: m, handler:  __MODULE__})
           ConCache.dirty_fetch_or_store(schema, cache_key, fn() ->
+            emit && :telemetry.execute(m.telemetry_event(:cache_miss, ref, context, options), %{count: emit}, %{mod: m, handler:  __MODULE__})
             __cache_miss__(m, schema, cache_key, ref, context, options)
           end) |> case do
                     {:ok, :cache_miss} -> nil
@@ -119,6 +122,14 @@ defmodule Noizu.DomainObject.CacheHandler.ConCache do
                       case m.__entity__().__from_cache__!(v, context, options) do
                         {:cache, directive} when directive in [:refresh, :expired] ->
                           ConCache.dirty_delete(schema, cache_key)
+                          emit && :telemetry.execute(m.telemetry_event(:cache_miss, ref, context, options), %{count: emit}, %{mod: m, handler:  __MODULE__})
+                          case __cache_miss__(m, schema, cache_key, ref, context, options) do
+                            {:ok, %ConCache.Item{value: :cache_miss}} -> nil
+                            {:ok, :cache_miss} -> nil
+                            {:ok, %ConCache.Item{value: v}} -> v
+                            {:ok, v} -> v
+                            _ -> nil
+                          end
                         {:cache, _} -> nil
                         {:error, _} -> nil
                         v -> v

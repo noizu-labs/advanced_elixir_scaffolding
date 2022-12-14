@@ -244,15 +244,21 @@ if Code.ensure_loaded?(:rocksdb) do
       with {:ok, cache_key} <- m.cache_key(ref, context, options) do
         cond do
           schema = __cache_schema__(m, options) ->
-          
+            emit = m.emit_telemetry?(:cache, ref, context, options)
+            emit && :telemetry.execute(m.telemetry_event(:cache, ref, context, options), %{count: emit}, %{mod: m, handler:  __MODULE__})
+            
             case  Noizu.RocksDB.get(schema, cache_key, options[:rocksdb]) do
               {:ok, {:cache_miss, v}} ->
                 cond do
-                  v < :os.system_time(:second) -> __cache_miss__(m, schema, cache_key, ref, context, options)
+                  v < :os.system_time(:second) ->
+                    emit && :telemetry.execute(m.telemetry_event(:cache_miss, ref, context, options), %{count: emit}, %{mod: m, handler:  __MODULE__})
+                    __cache_miss__(m, schema, cache_key, ref, context, options)
                   :else -> {:ok, :cache_miss}
                 end
               {:ok, :cache_miss} -> {:ok, :cache_miss}
-              {:ok, nil} -> __cache_miss__(m, schema, cache_key, ref, context, options)
+              {:ok, nil} ->
+                emit && :telemetry.execute(m.telemetry_event(:cache_miss, ref, context, options), %{count: emit}, %{mod: m, handler:  __MODULE__})
+                __cache_miss__(m, schema, cache_key, ref, context, options)
               {:ok, v} -> {:ok, v}
               v -> v
             end |> case do
