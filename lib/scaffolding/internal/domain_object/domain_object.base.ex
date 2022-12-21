@@ -484,12 +484,14 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Base do
         end
     end
 
-    case env.module.__repo__().__nzdo__derive__() do
-      [] -> :ok
-      v when is_list(v) ->
-        for p <- v do
-          Protocol.derive(p, env.module.__repo__(), [])
-        end
+    if env.module.__base__() == env.module.__poly_base__() do
+      case env.module.__repo__().__nzdo__derive__() do
+        [] -> :ok
+        v when is_list(v) ->
+          for p <- v do
+            Protocol.derive(p, env.module.__repo__(), [])
+          end
+      end
     end
     
     :ok
