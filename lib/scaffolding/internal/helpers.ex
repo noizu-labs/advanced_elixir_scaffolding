@@ -5,8 +5,204 @@
 
 
 defmodule Noizu.AdvancedScaffolding.Internal.Helpers do
-
-
+  
+  
+  
+  #--------------------------------------------
+  #
+  #--------------------------------------------
+  defmacro __transaction_block__(_options \\ [], [do: block]) do
+    quote do
+      #@file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+      case @__nzdo_top_layer_tx_block do
+        :none ->
+          unquote(block)
+        :tx ->
+          Amnesia.transaction do
+            try do
+              unquote(block)
+            rescue e ->
+              Logger.error("TXN #{__MODULE__} - rescue #{Exception.format(:error, e, __STACKTRACE__)}")
+            catch
+              :exit, e ->
+                Logger.error("TXN #{__MODULE__} - exit #{Exception.format(:error, e, __STACKTRACE__)}")
+              e ->
+                Logger.error("TXN #{__MODULE__} - catch #{Exception.format(:error, e, __STACKTRACE__)}")
+            end
+          end
+        :async ->
+          Amnesia.async do
+            try do
+              unquote(block)
+            rescue e ->
+              Logger.error("TXN #{__MODULE__} - rescue #{Exception.format(:error, e, __STACKTRACE__)}")
+            catch
+              :exit, e ->
+                Logger.error("TXN #{__MODULE__} - exit #{Exception.format(:error, e, __STACKTRACE__)}")
+              e ->
+                Logger.error("TXN #{__MODULE__} - catch #{Exception.format(:error, e, __STACKTRACE__)}")
+            end
+          end
+        :sync ->
+          Amnesia.sync do
+            try do
+              unquote(block)
+            rescue e ->
+              Logger.error("TXN #{__MODULE__} - rescue #{Exception.format(:error, e, __STACKTRACE__)}")
+            catch
+              :exit, e ->
+                Logger.error("TXN #{__MODULE__} - exit #{Exception.format(:error, e, __STACKTRACE__)}")
+              e ->
+                Logger.error("TXN #{__MODULE__} - catch #{Exception.format(:error, e, __STACKTRACE__)}")
+            end
+          end
+        :fragment_tx ->
+          Amnesia.Fragment.transaction do
+            try do
+              unquote(block)
+            rescue e ->
+              Logger.error("TXN #{__MODULE__} - rescue #{Exception.format(:error, e, __STACKTRACE__)}")
+            catch
+              :exit, e ->
+                Logger.error("TXN #{__MODULE__} - exit #{Exception.format(:error, e, __STACKTRACE__)}")
+              e ->
+                Logger.error("TXN #{__MODULE__} - catch #{Exception.format(:error, e, __STACKTRACE__)}")
+            end
+          end
+        :fragment_async ->
+          Amnesia.Fragment.async do
+            try do
+              unquote(block)
+            rescue e ->
+              Logger.error("TXN #{__MODULE__} - rescue #{Exception.format(:error, e, __STACKTRACE__)}")
+            catch
+              :exit, e ->
+                Logger.error("TXN #{__MODULE__} - exit #{Exception.format(:error, e, __STACKTRACE__)}")
+              e ->
+                Logger.error("TXN #{__MODULE__} - catch #{Exception.format(:error, e, __STACKTRACE__)}")
+            end
+          end
+        :fragment_sync ->
+          Amnesia.Fragment.sync do
+            try do
+              unquote(block)
+            rescue e ->
+              Logger.error("TXN #{__MODULE__} - rescue #{Exception.format(:error, e, __STACKTRACE__)}")
+            catch
+              :exit, e ->
+                Logger.error("TXN #{__MODULE__} - exit #{Exception.format(:error, e, __STACKTRACE__)}")
+              e ->
+                Logger.error("TXN #{__MODULE__} - catch #{Exception.format(:error, e, __STACKTRACE__)}")
+            end
+          end
+        _ ->
+          unquote(block)
+      end
+    end
+  end
+  
+  #--------------------------------------------
+  #
+  #--------------------------------------------
+  defmacro __layer_transaction_block__(layer, options \\ [], [do: block]) do
+    Noizu.AdvancedScaffolding.Internal.Helpers.__layer_transaction_block__d(__CALLER__, layer, options, block)
+  end
+  
+  #--------------------------------------------
+  #
+  #--------------------------------------------
+  def __layer_transaction_block__d(_caller, layer, _options, block) do
+    quote do
+      #@file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+      case is_map(unquote(layer)) && unquote(layer).tx_block do
+        :none ->
+          unquote(block)
+        :tx ->
+          Amnesia.transaction do
+            try do
+              unquote(block)
+            rescue e ->
+              Logger.error("TXN #{__MODULE__} - rescue #{Exception.format(:error, e, __STACKTRACE__)}")
+            catch
+              :exit, e ->
+                Logger.error("TXN #{__MODULE__} - exit #{Exception.format(:error, e, __STACKTRACE__)}")
+              e ->
+                Logger.error("TXN #{__MODULE__} - catch #{Exception.format(:error, e, __STACKTRACE__)}")
+            end
+          end
+        :async ->
+          Amnesia.async do
+            try do
+              unquote(block)
+            rescue e ->
+              Logger.error("TXN #{__MODULE__} - rescue #{Exception.format(:error, e, __STACKTRACE__)}")
+            catch
+              :exit, e ->
+                Logger.error("TXN #{__MODULE__} - exit #{Exception.format(:error, e, __STACKTRACE__)}")
+              e ->
+                Logger.error("TXN #{__MODULE__} - catch #{Exception.format(:error, e, __STACKTRACE__)}")
+            end
+          end
+        :sync ->
+          Amnesia.sync do
+            try do
+              unquote(block)
+            rescue e ->
+              Logger.error("TXN #{__MODULE__} - rescue #{Exception.format(:error, e, __STACKTRACE__)}")
+            catch
+              :exit, e ->
+                Logger.error("TXN #{__MODULE__} - exit #{Exception.format(:error, e, __STACKTRACE__)}")
+              e ->
+                Logger.error("TXN #{__MODULE__} - catch #{Exception.format(:error, e, __STACKTRACE__)}")
+            end
+          end
+        :fragment_tx ->
+          Amnesia.Fragment.transaction do
+            try do
+              unquote(block)
+            rescue e ->
+              Logger.error("TXN #{__MODULE__} - rescue #{Exception.format(:error, e, __STACKTRACE__)}")
+            catch
+              :exit, e ->
+                Logger.error("TXN #{__MODULE__} - exit #{Exception.format(:error, e, __STACKTRACE__)}")
+              e ->
+                Logger.error("TXN #{__MODULE__} - catch #{Exception.format(:error, e, __STACKTRACE__)}")
+            end
+          end
+        :fragment_async ->
+          Amnesia.Fragment.async do
+            try do
+              unquote(block)
+            rescue e ->
+              Logger.error("TXN #{__MODULE__} - rescue #{Exception.format(:error, e, __STACKTRACE__)}")
+            catch
+              :exit, e ->
+                Logger.error("TXN #{__MODULE__} - exit #{Exception.format(:error, e, __STACKTRACE__)}")
+              e ->
+                Logger.error("TXN #{__MODULE__} - catch #{Exception.format(:error, e, __STACKTRACE__)}")
+            end
+          end
+        :fragment_sync ->
+          Amnesia.Fragment.sync do
+            try do
+              unquote(block)
+            rescue e ->
+              Logger.error("TXN #{__MODULE__} - rescue #{Exception.format(:error, e, __STACKTRACE__)}")
+            catch
+              :exit, e ->
+                Logger.error("TXN #{__MODULE__} - exit #{Exception.format(:error, e, __STACKTRACE__)}")
+              e ->
+                Logger.error("TXN #{__MODULE__} - catch #{Exception.format(:error, e, __STACKTRACE__)}")
+            end
+          end
+        _ ->
+          unquote(block)
+      end
+    end
+  end
+  
+  
+  
   @doc """
   Load settings for SimpleObject from passed in options, inline @attributes and its base module's attributes or config methods (if already compiled)
   """
@@ -159,9 +355,9 @@ defmodule Noizu.AdvancedScaffolding.Internal.Helpers do
       #----------------------
       # Load Sphinx Settings from base.
       #----------------------
-      @__nzdo__indexes Noizu.AdvancedScaffolding.Internal.Helpers.extract_transform_attribute(:index, :indexing, {Noizu.AdvancedScaffolding.Internal.Index.Implementation.Default, :__expand_indexes__, [@__nzdo__base]}, [])
+      @__nzdo__indexes Noizu.AdvancedScaffolding.Internal.Helpers.extract_transform_attribute(:index, :indexing, {Noizu.AdvancedScaffolding.Internal.DomainObject.Index.Default, :__expand_indexes__, [@__nzdo__base]}, [])
       @__nzdo__index_list Enum.map(@__nzdo__indexes, fn ({k, _v}) -> k end)
-      index_mod = Noizu.AdvancedScaffolding.Internal.Index.Implementation.Default.__domain_object_indexer__(@__nzdo__base)
+      index_mod = Noizu.AdvancedScaffolding.Internal.DomainObject.Index.Default.__domain_object_indexer__(@__nzdo__base)
       index_mod = cond do
                     @__nzdo__indexes[index_mod] -> index_mod
                     :else -> false

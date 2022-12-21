@@ -217,7 +217,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.SimpleObject.Base do
       alias Noizu.AdvancedScaffolding.Schema.PersistenceLayer
       @__nzdo__persistence_imp Noizu.AdvancedScaffolding.Internal.SimpleObject.Base.Default
       @__nzdo__internal_imp Noizu.AdvancedScaffolding.Internal.DomainObject.Entity.Default
-      @__nzdo__core_imp Noizu.AdvancedScaffolding.Internal.Core.Entity.Implementation.Default
+      @__nzdo__core_imp Noizu.AdvancedScaffolding.Internal.DomainObject.Entity.Default
       @__nzdo__index_imp Noizu.AdvancedScaffolding.Internal.DomainObject.Entity.Default
       @__nzso_kind unquote(kind) || (Module.has_attribute?(__MODULE__, :kind) && Module.get_attribute(__MODULE__, :kind)) || __MODULE__
 
@@ -247,10 +247,10 @@ defmodule Noizu.AdvancedScaffolding.Internal.SimpleObject.Base do
 
 
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-      def __strip_pii__(entity, level), do: Noizu.AdvancedScaffolding.Internal.Json.Entity.Implementation.Default.__strip_pii__(__MODULE__, entity, level)
+      def __strip_pii__(entity, level), do: Noizu.AdvancedScaffolding.Internal.DomainObject.Entity.Default.__strip_pii__(__MODULE__, entity, level)
 
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-      def __strip_inspect__(entity, opts), do: Noizu.AdvancedScaffolding.Internal.Inspect.Entity.Implementation.Default.__strip_inspect__(__MODULE__, entity, opts)
+      def __strip_inspect__(entity, opts), do: Noizu.AdvancedScaffolding.Internal.DomainObject.Entity.Default.__strip_inspect__(__MODULE__, entity, opts)
 
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def __valid__(%{__struct__: __MODULE__} = entity, context, options \\ nil), do: @__nzdo__core_imp.__valid__(__MODULE__, entity, context, options)

@@ -41,7 +41,7 @@ defmodule Noizu.AdvancedScaffolding.Mixfile do
   def application do
     [
       applications: [:logger],
-      extra_applications: [:con_cache, :fastglobal, :semaphore, :noizu_core, :poison, :amnesia, :noizu_mnesia_versioning, :decimal, :timex]
+      extra_applications: [:con_cache, :fastglobal, :semaphore, :noizu_core, :poison, :amnesia, :noizu_mnesia_versioning, :decimal, :timex, :telemetry]
     ]
   end # end application
 
@@ -63,7 +63,7 @@ defmodule Noizu.AdvancedScaffolding.Mixfile do
       {:semaphore, "~> 1.0"}, # https://github.com/discordapp/semaphore
       {:timex, "~> 3.7"},
       {:decimal, "~> 2.0.0"},
-      {:telemetry, "~> 1.1.0", optional: true},
+      {:telemetry, "~> 1.1.0"},
     ]
   end # end deps
 
