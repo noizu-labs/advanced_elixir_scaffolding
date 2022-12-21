@@ -7,6 +7,7 @@
 defmodule Noizu.AdvancedScaffolding.Schema.Metadata.Other do
   @moduledoc """
   Generic Metadata for non Redis/ecto/mnesia persistence layers.
+  @todo instead of a default object we should rely on protocols or simply require any struct used here provides the database, type, and repo params.
   """
 
   @vsn 1.0

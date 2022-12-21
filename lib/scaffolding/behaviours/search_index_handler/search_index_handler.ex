@@ -5,7 +5,9 @@
 
 defmodule Noizu.DomainObject.SearchIndexHandler do
   @moduledoc """
-  Behaviour for converting field types into search index format.
+  Behaviour for converting DomainObject.Entity fields to search engine format.
+  
+  
   """
 
   defmodule Behaviour do

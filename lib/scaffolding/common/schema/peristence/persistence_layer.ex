@@ -9,6 +9,8 @@ defmodule Noizu.AdvancedScaffolding.Schema.PersistenceLayer do
   Data structure for defining a persistence layer used by a domain object entity.
   It contains transaction requirement rules, rules for blocking/non blocking updates (e.g. if you may write to redis in a new thread. while you might need to confirm a successful
   mysql table write before proceeding due to foreign key constraints, etc.
+  
+  @todo switch to defrecord for faster operations, lower overhead.
   """
 
   @vsn 1.0

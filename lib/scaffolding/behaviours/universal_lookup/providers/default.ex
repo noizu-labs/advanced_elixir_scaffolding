@@ -3,15 +3,7 @@
 # Copyright (C) 2022 Noizu Labs Inc. All rights reserved.
 #-------------------------------------------------------------------------------
 
-
-defmodule Noizu.DomainObject.UniversalLookupBehaviour do
-  @callback lookup(any) :: any
-  @callback reverse_lookup(any) :: any
-end
-
 defmodule Noizu.DomainObject.UniversalLookup do
-  
-  
   @table Application.get_env(:noizu_advanced_scaffolding, :universal_reference_table, Noizu.AdvancedScaffolding.Database.UniversalLookup.Table)
   @lookup_table Application.get_env(:noizu_advanced_scaffolding, :universal_reference_lookup_table, Noizu.AdvancedScaffolding.Database.UniversalReverseLookup.Table)
   
