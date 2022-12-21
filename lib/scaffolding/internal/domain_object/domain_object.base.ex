@@ -80,6 +80,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Base do
                                               end
 
     quote do
+      __nzdo_prof__s00 = :os.system_time(:millisecond)
       #---------------------
       # Insure Single Call
       #---------------------
@@ -99,7 +100,8 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Base do
       @after_compile Noizu.AdvancedScaffolding.Internal.DomainObject.Base
       
       unquote(extension_block_a)
-
+      __nzdo_prof__e00 = :os.system_time(:millisecond)
+      if ((__nzdo_prof__e00 - __nzdo_prof__s00) > 500), do: IO.puts "#{__MODULE__} - slow compile time #{(__nzdo_prof__e00 - __nzdo_prof__s00)} ms"
     end
   end
 
@@ -479,6 +481,14 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Base do
       v when is_list(v) ->
         for p <- v do
           Protocol.derive(p, env.module.__entity__(), [])
+        end
+    end
+
+    case env.module.__repo__().__nzdo__derive__() do
+      [] -> :ok
+      v when is_list(v) ->
+        for p <- v do
+          Protocol.derive(p, env.module.__repo__(), [])
         end
     end
     

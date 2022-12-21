@@ -1240,17 +1240,17 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Repo do
 
 
     generate = quote unquote: false do
-                 @derive @__nzdo__derive
+                 #@derive @__nzdo__derive
+                 def __nzdo__derive__(), do: @__nzdo__derive
                  defstruct @__nzdo__fields
                end
 
     quote do
+      __nzdo_prof__s02 = :os.system_time(:millisecond)
+      
       unquote(process_config)
       unquote(generate)
-
-
       unquote(implementation)
-
       unquote(extension_block_c)
 
       # Post User Logic Hook and checks.
@@ -1258,6 +1258,10 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Repo do
       @after_compile Noizu.AdvancedScaffolding.Internal.DomainObject.Repo
 
       unquote(extension_block_d)
+
+      __nzdo_prof__e02 = :os.system_time(:millisecond)
+      if ((__nzdo_prof__e02 - __nzdo_prof__s02) > 500), do: IO.puts "#{__MODULE__} - slow compile time #{(__nzdo_prof__e02 - __nzdo_prof__s02)} ms"
+      
       @file __ENV__.file
     end
   end

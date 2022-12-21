@@ -801,6 +801,8 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Entity do
                  defstruct @__nzdo__fields
                end
     quote do
+      __nzdo_prof__s01 = :os.system_time(:millisecond)
+      
       @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
       unquote(process_config)
 
@@ -818,6 +820,10 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Entity do
 
       @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
       unquote(extension_block_d)
+
+      __nzdo_prof__e01 = :os.system_time(:millisecond)
+      if ((__nzdo_prof__e01 - __nzdo_prof__s01) > 500), do: IO.puts "#{__MODULE__}:#{unquote(__ENV__.line)} - slow compile time #{(__nzdo_prof__e01 - __nzdo_prof__s01)} ms"
+      
       @file __ENV__.file
     end
   end
@@ -895,13 +901,15 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Entity do
       alias Noizu.AdvancedScaffolding.Schema.PersistenceLayer
       @behaviour Noizu.AdvancedScaffolding.Internal.DomainObject.Entity.Behaviour
       
+      
+      
       #---------------------------------------------------------------------------------------------
       # core
       #---------------------------------------------------------------------------------------------
       require Logger
       @nzdo__core_implementation unquote(core_implementation)
       @__nzdo__implementation unquote(core_implementation)
-    
+
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def __sref_prefix__, do: "ref.#{@__nzdo__sref}."
     
@@ -929,7 +937,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Entity do
       def __sref__(), do: @__nzdo__base.__sref__()
       def __kind__(), do: @__nzdo__base.__kind__()
       def __erp__(), do: @__nzdo__base.__erp__()
-    
+
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def __valid_identifier__(identifier) do
         Noizu.DomainObject.IdentifierTypeResolver.__valid_identifier__(identifier, __noizu_info__(:identifier_type))
@@ -960,8 +968,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Entity do
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       @deprecated "Noizu.ERP.record! is no longer used, V3 entities use __to_record__(table, entity, context, options) for casting to different persistence layers"
       def record!(_ref, _options \\ nil), do: raise "Deprecated"
-    
-    
+
       cond do
         is_bitstring(@__nzdo__sref) ->
           @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
@@ -1036,7 +1043,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Entity do
           def entity!(ref, options \\ nil), do: @__nzdo__implementation.entity!(__MODULE__, ref, options)
     
       end
-    
+
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def id_ok(o) do
         r = id(o)
@@ -1069,7 +1076,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Entity do
       def sref_ok(ref) do
         @__nzdo__implementation.sref_ok(__MODULE__, ref)
       end
-    
+
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def entity_ok(o, options \\ %{}) do
         r = entity(o, options)
@@ -1145,7 +1152,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Entity do
         version_change!: 3,
         version_change!: 4,
       ]
-  
+
       #---------------------------------------------------------------------------------------------
       # Persistence
       #---------------------------------------------------------------------------------------------
@@ -1236,8 +1243,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Entity do
         def universal_identifier(_), do: nil
         def index_identifier(_), do: nil
       end
-
-
+      
       defoverridable [
         ecto_entity?: 0,
         ecto_identifier: 1,
@@ -1264,7 +1270,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Entity do
         __from_cache__!: 3,
         __to_cache__!: 3,
       ]
-      
+
       #---------------------------------------------------------------------------------------------
       # Index
       #---------------------------------------------------------------------------------------------
@@ -1316,7 +1322,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Entity do
         __delete_indexes__: 2,
         __delete_indexes__: 3,
       ]
-  
+
       #---------------------------------------------------------------------------------------------
       # Json
       #---------------------------------------------------------------------------------------------
@@ -1359,11 +1365,8 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Entity do
       #---------------
       # Inspect - @TODO use derive mechanism here not direct defimpl
       #---------------
-      if unquote(inspect_provider) do
-        defimpl Inspect do
-          def inspect(entity, opts), do: unquote(inspect_provider).inspect(entity, opts)
-        end
-      end
+      def __inspect_provider__(), do: unquote(inspect_provider)
+      
 
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def __strip_inspect__(entity, opts), do: @__nzdo__inspect_implementation.__strip_inspect__(__MODULE__, entity, opts)
@@ -1371,8 +1374,6 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Entity do
       defoverridable [
         __strip_inspect__: 2,
       ]
-
-
     end
   end
 
@@ -1671,9 +1672,15 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Entity do
   end
 
 
-  def __after_compile__(_env, _bytecode) do
+  def __after_compile__(env, _bytecode) do
     # Validate Generated Object
-    :ok
+    if p = env.module.__inspect_provider__() do
+      quote do
+        defimpl Inspect do
+          def inspect(entity, opts), do: unquote(p).inspect(entity, opts)
+        end
+      end
+    end
   end
   
   
