@@ -469,9 +469,19 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Base do
     end
   end
 
-
-  def __after_compile__(_env, _bytecode) do
+  def __after_compile__(env, _bytecode) do
     # Validate Generated Object
+    require Protocol
+    
+    # @note this won't work as correctly for polymorphic (multiple sub entity) modules.
+    case env.module.__entity__().__nzdo__derive__() do
+      [] -> :ok
+      v when is_list(v) ->
+        for p <- v do
+          Protocol.derive(p, env.module.__entity__(), [])
+        end
+    end
+    
     :ok
   end
   

@@ -1441,7 +1441,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Repo do
 
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def cache_key(ref, context, options) do
-        h = __MODULE__.__entity__.__noizu_info__(:cache)[:type]
+        h = __entity__().__noizu_info__(:cache)[:type]
         h.cache_key(__MODULE__, ref, context, options)
       end
 
@@ -1449,7 +1449,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Repo do
       def pre_cache(ref, context), do: pre_cache(ref, context, [])
       def pre_cache(ref, context, options) do
         #, do: @__nzdo__repo_default.cache(__MODULE__, ref, context, options)
-        h = __MODULE__.__entity__.__noizu_info__(:cache)[:type]
+        h = __entity__().__noizu_info__(:cache)[:type]
         h.pre_cache(__MODULE__, ref, context, options)
       end
 
@@ -1461,7 +1461,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Repo do
       def cache(ref, context), do: cache(ref, context, [])
       def cache(ref, context, options) do
         #, do: @__nzdo__repo_default.cache(__MODULE__, ref, context, options)
-        h = __MODULE__.__entity__.__noizu_info__(:cache)[:type]
+        h = __entity__().__noizu_info__(:cache)[:type]
         h.get_cache(__MODULE__, ref, context, options)
       end
 
@@ -1469,7 +1469,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Repo do
       def delete_cache(ref, context), do: delete_cache(ref, context, [])
       #def delete_cache(ref, context, options), do: @__nzdo__repo_default.delete_cache(__MODULE__, ref, context, options)
       def delete_cache(ref, context, options) do
-        h = __MODULE__.__entity__.__noizu_info__(:cache)[:type]
+        h = __entity__().__noizu_info__(:cache)[:type]
         h.delete_cache(__MODULE__, ref, context, options)
       end
 

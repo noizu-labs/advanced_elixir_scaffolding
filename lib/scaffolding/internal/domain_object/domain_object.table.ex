@@ -181,9 +181,9 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Table do
       
       def __auto_changeset__(record, %Noizu.ElixirCore.CallingContext{} = context), do: __auto_changeset__(record, context, [])
       def __auto_changeset__(%{__struct__: __MODULE__} = record, %Noizu.ElixirCore.CallingContext{} =  context, options) do
-        primary_keys = __MODULE__.__schema__(:primary_key)
+        primary_keys = __schema__(:primary_key)
         fields = Map.keys(struct(__MODULE__, [])) -- [:__struct__, :__schema__, :__meta__] -- primary_keys
-        repo = __MODULE__.__persistence__().tables[__MODULE__].schema
+        repo = __persistence__().tables[__MODULE__].schema
         if current = __fetch_existing__(repo, primary_keys, record) do
           current
           |> cast(Map.from_struct(record), fields)
@@ -193,9 +193,9 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Table do
         end
       end
       def __auto_changeset__(record, %Noizu.ElixirCore.CallingContext{} = context, options) when is_list(record) or is_map(record) do
-        primary_keys = __MODULE__.__schema__(:primary_key)
+        primary_keys = __schema__(:primary_key)
         fields = Map.keys(struct(__MODULE__, [])) -- [:__struct__, :__schema__, :__meta__] -- primary_keys
-        repo = __MODULE__.__persistence__().tables[__MODULE__].schema
+        repo = __persistence__().tables[__MODULE__].schema
         if current = __fetch_existing__(repo, primary_keys, record) do
           current
           |> cast(Map.from_struct(record), fields)
@@ -206,7 +206,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Table do
       end
 
       def __auto_changeset__(%{__struct__: __MODULE__} = current, %{__struct__: __MODULE__} = record, %Noizu.ElixirCore.CallingContext{} = context, options) do
-        primary_keys = __MODULE__.__schema__(:primary_key)
+        primary_keys = __schema__(:primary_key)
         fields = Map.keys(struct(__MODULE__, [])) -- [:__struct__, :__schema__, :__meta__] -- primary_keys
         current
         |> cast(Map.from_struct(record), fields)
@@ -214,7 +214,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Table do
       end
 
       def __auto_changeset__(%{__struct__: __MODULE__} = current,  record, %Noizu.ElixirCore.CallingContext{} = context, options)  when is_list(record) or is_map(record) do
-        primary_keys = __MODULE__.__schema__(:primary_key)
+        primary_keys = __schema__(:primary_key)
         fields = Map.keys(struct(__MODULE__, [])) -- [:__struct__, :__schema__, :__meta__] -- primary_keys
         current
         |> cast(record, fields)

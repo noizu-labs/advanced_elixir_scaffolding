@@ -796,10 +796,10 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Entity do
                      end
 
     generate = quote unquote: false do
-                 @derive @__nzdo__derive
+                 #@derive @__nzdo__derive
+                 def __nzdo__derive__(), do: @__nzdo__derive
                  defstruct @__nzdo__fields
                end
-
     quote do
       @file unquote(__ENV__.file) <> "(#{unquote(__ENV__.line)})"
       unquote(process_config)
@@ -965,7 +965,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Entity do
       cond do
         is_bitstring(@__nzdo__sref) ->
           @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-          def id("ref.#{@__nzdo__sref}" <> _ = ref), do: __MODULE__.id(__MODULE__.ref(ref))
+          def id("ref.#{@__nzdo__sref}" <> _ = v), do: id(ref(v))
           def id(ref), do: @__nzdo__implementation.id(__MODULE__, ref)
           # ref
           #-----------------
@@ -1004,12 +1004,12 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Entity do
           # entity
           #-----------------
           @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-          def entity("ref.#{@__nzdo__sref}" <> _ = ref), do: __MODULE__.entity(__MODULE__.ref(ref))
+          def entity("ref.#{@__nzdo__sref}" <> _ = v), do: entity(ref(v))
           def entity(ref, options \\ nil), do: @__nzdo__implementation.entity(__MODULE__, ref, options)
           # entity!
           #-----------------
           @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-          def entity!("ref.#{@__nzdo__sref}" <> _ = ref), do: __MODULE__.entity!(__MODULE__.ref(ref))
+          def entity!("ref.#{@__nzdo__sref}" <> _ = v), do: entity!(ref(v))
           def entity!(ref, options \\ nil), do: @__nzdo__implementation.entity!(__MODULE__, ref, options)
       
       
@@ -1185,10 +1185,10 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Entity do
         def ecto_identifier({:ecto_identifier, __MODULE__, v}), do: v
         cond do
           Module.has_attribute?(__MODULE__, :__nzdo__ecto_identifier_field) -> def ecto_identifier(ref), do: @nzdo__persistence_implementation.ecto_identifier(__MODULE__, ref)
-          Module.get_attribute(__MODULE__, :__nzdo__identifier_type) == :integer -> def ecto_identifier(ref), do: __MODULE__.id(ref)
+          Module.get_attribute(__MODULE__, :__nzdo__identifier_type) == :integer -> def ecto_identifier(ref), do: id(ref)
           Module.get_attribute(__MODULE__, :__nzdo__identifier_type) == :uuid ->
             def ecto_identifier(ref) do
-              case __MODULE__.id(ref) do
+              case id(ref) do
                 nil -> nil
                 <<v::binary-size(16)>> -> UUID.binary_to_string!(v)
                 v = <<_,_,_,_,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,?-,_,_,_,_,_,_,_,_,_,_,_,_>> -> v
@@ -1217,17 +1217,17 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Entity do
           @__nzdo_persistence.options[:universal_identifier] -> def universal_identifier(ref) do
                                                                   case __noizu_info__(:identifier_type) do
                                                                     :uuid ->
-                                                                      case __MODULE__.id(ref) do
+                                                                      case id(ref) do
                                                                         <<v::binary-size(16)>> -> UUID.binary_to_string!(v)
                                                                         v -> v
                                                                       end
-                                                                    _ -> __MODULE__.id(ref)
+                                                                    _ -> id(ref)
                                                                   end
                                                                 end
           @__nzdo_persistence.options[:universal_lookup] -> def universal_identifier(ref), do: @nzdo__persistence_implementation.universal_identifier_lookup(__MODULE__, ref)
           :else -> def universal_identifier(_), do: raise "Not Supported"
         end
-        def index_identifier(ref), do: __MODULE__.id(ref)
+        def index_identifier(ref), do: id(ref)
       else
         @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
         def ecto_entity?(), do: false
