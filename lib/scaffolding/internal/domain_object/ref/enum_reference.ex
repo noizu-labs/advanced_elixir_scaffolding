@@ -76,14 +76,21 @@ defmodule Noizu.AdvancedScaffolding.Internal.Ecto.Reference.Enum do
     base = options[:base]
     ecto_type = options[:ecto_type] || :integer
 
-    quote do
+    quote bind_quoted: [
+            caller_file: __CALLER__.file,
+            caller_line: __CALLER__.line,
+            options: options,
+            entity: entity,
+            base: base,
+            ecto_type: ecto_type
+          ] do
       @behaviour Noizu.AdvancedScaffolding.Internal.Ecto.Reference.Behaviour
-      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+      @file caller_file <> ":#{caller_line}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       use Ecto.Type
 
-      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-      @ref_entity unquote(entity)
-      @enum_mod (case unquote(base) do
+      @file caller_file <> ":#{caller_line}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+      @ref_entity entity
+      @enum_mod (case base do
                    false ->
                      Module.concat(
                        (
@@ -108,24 +115,24 @@ defmodule Noizu.AdvancedScaffolding.Internal.Ecto.Reference.Enum do
                      raise "#{__MODULE__} invalid base option"
                  end)
 
-      @ecto_type unquote(ecto_type)
+      @ecto_type ecto_type
 
       #----------------------------
       # type
       #----------------------------
-      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+      @file caller_file <> ":#{caller_line}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def type, do: @ecto_type
 
       #----------------------------
       # __entity__
       #----------------------------
-      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+      @file caller_file <> ":#{caller_line}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def __entity__, do: @ref_entity
       def __ecto_type__, do: @enum_mod
       #----------------------------
       # cast
       #----------------------------
-      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+      @file caller_file <> ":#{caller_line}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       @doc """
       Casts to Ref.
       """
@@ -134,7 +141,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Ecto.Reference.Enum do
       #----------------------------
       # cast!
       #----------------------------
-      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+      @file caller_file <> ":#{caller_line}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       @doc """
       Same as `cast/1` but raises `Ecto.CastError` on invalid arguments.
       """
@@ -143,14 +150,14 @@ defmodule Noizu.AdvancedScaffolding.Internal.Ecto.Reference.Enum do
       #----------------------------
       # dump
       #----------------------------
-      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+      @file caller_file <> ":#{caller_line}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       @doc false
       def dump(v), do: Noizu.AdvancedScaffolding.Internal.Ecto.Reference.Enum.Default.dump(__MODULE__, v)
 
       #----------------------------
       # load
       #----------------------------
-      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+      @file caller_file <> ":#{caller_line}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def load(v), do: Noizu.AdvancedScaffolding.Internal.Ecto.Reference.Enum.Default.load(__MODULE__, v)
     end
   end

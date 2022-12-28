@@ -713,19 +713,11 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Index do
 
   end
   
-  defmacro noizu_index(options \\ [], [do: block]) do
-    options = Macro.expand(options, __ENV__)
-    Noizu.AdvancedScaffolding.Internal.DomainObject.Index.__noizu_index__(__CALLER__, options, block)
-  end
-  
-  #--------------------------------------------
-  #
-  #--------------------------------------------
-  def __noizu_index__(caller, options, block) do
-    options = Macro.expand(options, __ENV__)
+  defmacro __using__(options) do
+    options = Macro.expand(options, __CALLER__)
     configuration = Noizu.AdvancedScaffolding.Internal.DomainObject.Index.__configure__(options)
     implementation = Noizu.AdvancedScaffolding.Internal.DomainObject.Index.__implement__(options)
-    
+  
     #===----
     # Extension
     #===----
@@ -743,31 +735,31 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Index do
     process_config = quote do
                        @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
                        import Noizu.ElixirCore.Guards
-      
+    
                        #---------------------
                        # Insure Single Call
                        #---------------------
                        @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-                       Noizu.AdvancedScaffolding.Internal.Helpers.insure_single_use(:__nzdo__index_defined, unquote(caller))
-      
+                       Noizu.AdvancedScaffolding.Internal.Helpers.insure_single_use(:__nzdo__index_defined, unquote(__CALLER__))
+    
                        #---------------------
                        # Configure
                        #----------------------
                        @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
                        unquote(configuration)
                      end
-    
+  
     #===----
     # Implementation
     #===----
     quote do
-      
+    
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       unquote(process_config)
-      
+    
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       unquote(implementation)
-      
+    
       #----------------------
       # User block section (define, fields, constraints, json_mapping rules, etc.)
       #----------------------
@@ -775,26 +767,23 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Index do
       try do
         unquote(extension_block_a)
         unquote(extension_block_b)
-        unquote(block)
+        #unquote(block)
       after
         :ok
       end
-      
+    
       unquote(extension_block_c)
-      
+    
       # Post User Logic Hook and checks.
       @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       @before_compile Noizu.AdvancedScaffolding.Internal.DomainObject.Index
       @after_compile Noizu.AdvancedScaffolding.Internal.DomainObject.Index
-      
+    
       unquote(extension_block_d)
-      
+    
       @file __ENV__.file
     end
   end
-
-
-
 
 
   def __configure__(options) do

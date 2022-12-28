@@ -358,8 +358,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Base do
     
       if has_list do
         defmodule Ecto.EnumType do
-          require Noizu.AdvancedScaffolding.Internal.Ecto.EnumType
-          Noizu.AdvancedScaffolding.Internal.Ecto.EnumType.enum_type()
+          use Noizu.AdvancedScaffolding.Internal.Ecto.EnumType
         end
         def atoms(), do: @__nzdo__enum_type.atom_to_enum()
       end
@@ -432,12 +431,10 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Base do
       if Module.has_attribute?(__MODULE__, :__nzdo__inline_index) && Module.get_attribute(__MODULE__, :__nzdo__inline_index) do
         defmodule Index do
           @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-          require unquote(nzdo__index_implementation)
-    
-          @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-          unquote(nzdo__index_implementation).noizu_index(entity: unquote(nzdo__entity), inline: true) do
-          end
-    
+          use unquote(nzdo__index_implementation),
+              entity: unquote(nzdo__entity),
+              inline: true
+
           @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
           def __base__(), do: unquote(nzdo__base)
         end

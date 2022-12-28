@@ -130,23 +130,31 @@ defmodule Noizu.AdvancedScaffolding.Internal.Ecto.Reference.Universal do
     entity = options[:entity]
     ecto_type = options[:ecto_type]
     reference_type = options[:reference_type]
-    quote do
+
+    quote bind_quoted: [
+            caller_file: __CALLER__.file,
+            caller_line: __CALLER__.line,
+            options: options,
+            entity: entity,
+            reference_type: reference_type,
+            ecto_type: ecto_type
+          ] do
       @behaviour Noizu.AdvancedScaffolding.Internal.Ecto.Reference.Behaviour
 
-      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-      @reference_type (case unquote(reference_type) do
+      @file caller_file <> ":#{caller_line}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+      @reference_type (case reference_type do
                          nil -> Application.get_env(:noizu_advanced_scaffolding, :universal_reference_type, :integer)
                          v when is_atom(v) -> v
                        end)
 
-      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+      @file caller_file <> ":#{caller_line}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       @handler (case @reference_type do
                   :uuid -> Noizu.AdvancedScaffolding.Internal.Ecto.Reference.Universal.UUIDDefault
                   :integer -> Noizu.AdvancedScaffolding.Internal.Ecto.Reference.Universal.IntegerDefault
                 end)
 
-      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-      @ecto_type (case unquote(ecto_type) do
+      @file caller_file <> ":#{caller_line}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+      @ecto_type (case ecto_type do
                     nil -> case @reference_type do
                              :uuid -> :uuid
                              :integer -> :integer
@@ -154,26 +162,26 @@ defmodule Noizu.AdvancedScaffolding.Internal.Ecto.Reference.Universal do
                     v -> v
                   end)
 
-      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+      @file caller_file <> ":#{caller_line}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       use Ecto.Type
-      @ref_entity unquote(entity)
+      @ref_entity entity
 
       #----------------------------
       # type
       #----------------------------
-      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+      @file caller_file <> ":#{caller_line}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def type, do: @ecto_type
 
       #----------------------------
       # __entity__
       #----------------------------
-      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+      @file caller_file <> ":#{caller_line}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def __entity__, do: @ref_entity
 
       #----------------------------
       # cast
       #----------------------------
-      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+      @file caller_file <> ":#{caller_line}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       @doc """
       Casts to Ref.
       """
@@ -182,7 +190,7 @@ defmodule Noizu.AdvancedScaffolding.Internal.Ecto.Reference.Universal do
       #----------------------------
       # cast!
       #----------------------------
-      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+      @file caller_file <> ":#{caller_line}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       @doc """
       Same as `cast/1` but raises `Ecto.CastError` on invalid arguments.
       """
@@ -191,14 +199,14 @@ defmodule Noizu.AdvancedScaffolding.Internal.Ecto.Reference.Universal do
       #----------------------------
       # dump
       #----------------------------
-      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+      @file caller_file <> ":#{caller_line}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       @doc false
       def dump(v), do: @handler.dump(__MODULE__, v)
 
       #----------------------------
       # load
       #----------------------------
-      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+      @file caller_file <> ":#{caller_line}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def load(v), do: @handler.load(__MODULE__, v)
     end
   end

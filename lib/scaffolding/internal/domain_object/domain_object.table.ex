@@ -140,7 +140,12 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Table do
                                  :else -> true
                                end)
       if @__nzdo__enum_list do
-        @__nzdo__enum_default_value unquote(default_value) || Module.get_attribute(__MODULE__, :default_value) || :none
+        @__nzdo__enum_default_value (cond do
+                                       v = unquote(default_value) -> v
+                                       v = Module.get_attribute(__MODULE__, :default_value) -> v
+                                       is_list(@__nzdo__enum_list) -> List.first(@__nzdo__enum_list) |> elem(0)
+                                       :else -> :none
+                                     end)
         @__nzdo__enum_ecto_type unquote(ecto_type) || Module.get_attribute(__MODULE__, :ecto_type) || :integer
       end
 

@@ -190,7 +190,8 @@ defmodule Noizu.AdvancedScaffolding.IdentifierTypeTest do
     {:ok, sref} = Noizu.AdvancedScaffolding.Test.Fixture.V3.TypeTestUUID.Entity.sref_ok(sut)
     assert sref == "ref.tt-uuid.cd156571-f5db-474c-95e0-4a0581f55214"
     ref = Noizu.AdvancedScaffolding.Test.Fixture.V3.TypeTestUUID.Entity.ref(sref)
-    assert ref == {:ref, Noizu.AdvancedScaffolding.Test.Fixture.V3.TypeTestUUID.Entity, "cd156571-f5db-474c-95e0-4a0581f55214"}
+    uuid = UUID.string_to_binary!("cd156571-f5db-474c-95e0-4a0581f55214")
+    assert ref == {:ref, Noizu.AdvancedScaffolding.Test.Fixture.V3.TypeTestUUID.Entity, uuid}
     :ok = Noizu.AdvancedScaffolding.Test.Fixture.V3.TypeTestUUID.Entity.__valid_identifier__("cd156571-f5db-474c-95e0-4a0581f55214")
   end
 

@@ -71,48 +71,37 @@ defmodule Noizu.AdvancedScaffolding.Internal.Ecto.EnumType do
 
   end
 
-  defmacro enum_type(options \\ nil) do
-    options = Macro.expand(options, __ENV__)
-    Noizu.AdvancedScaffolding.Internal.Ecto.EnumType.__enum_type__(options)
-  end
-
-  def __enum_type__(_options) do
-    quote do
-      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+  defmacro __using__(_ \\ nil) do
+    domain_object = Module.split(__CALLER__.module) |> Enum.slice(0 .. -3) |> Module.concat
+    quote bind_quoted: [caller_file: __CALLER__.file, caller_line: __CALLER__.line, domain_object: domain_object] do
+      @file caller_file <> ":#{caller_line}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       use Ecto.Type
-
-      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-      domain_object = Module.split(__MODULE__) |> Enum.slice(0 .. -3) |> Module.concat
+      
+      @file caller_file <> ":#{caller_line}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       @__nzdo__base domain_object
-      {values, default_value, ecto_type} = case Module.get_attribute(domain_object, :__nzdo__enum_list) do
-                                             {v, o} ->
-                                               {
-                                                 v,
-                                                 o[:default_value] || Module.get_attribute(domain_object , :__nzdo__enum_default_value) || :none,
-                                                 o[:ecto_type] || Module.get_attribute(domain_object, :__nzdo__enum_ecto_type) || :integer
-                                               }
-                                             v when is_list(v) ->
-                                               {
-                                                 v,
-                                                 Module.get_attribute(domain_object, :__nzdo__enum_default_value) || :none,
-                                                 Module.get_attribute(domain_object, :__nzdo__enum_ecto_type) || :integer
-                                               }
-                                             :callback ->
-                                               {
-                                                 :callback,
-                                                 Module.get_attribute(domain_object, :__nzdo__enum_default_value) || :none,
-                                                 Module.get_attribute(domain_object, :__nzdo__enum_ecto_type) || :integer
-                                               }
-                                           end
-
-     @ecto_type ecto_type || :integer
-      @default_value default_value || :none
-
-      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+      {values, o} = case Module.get_attribute(domain_object, :__nzdo__enum_list) do
+                {v,o} -> {v,o}
+                nil -> {[{:none, 0}], nil}
+                v -> {v, nil}
+              end
+      @default_value (cond do
+                        v = o[:default_value] -> v
+                        v = Module.get_attribute(domain_object , :__nzdo__enum_default_value) -> v
+                        is_list(values) ->
+                          cond do
+                            Enum.member?(values, :none) -> :none
+                            Enum.member?(values, :unknown) -> :unknown
+                            :else -> List.first(values) |> elem(0)
+                          end
+                        :else -> :none
+                      end)
+      @ecto_type (o[:ecto_type] || Module.get_attribute(domain_object, :__nzdo__enum_ecto_type) || :integer)
+      
+      @file caller_file <> ":#{caller_line}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def default_value(), do: @default_value
-
+    
       if values == :callback do
-        @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+        @file caller_file <> ":#{caller_line}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
         def description(enum), do: @__nzdo__base.description(enum)
         def atom_to_enum(), do: @__nzdo__base.atom_to_enum()
         def atom_to_enum(k), do: @__nzdo__base.atom_to_enum(k)
@@ -121,8 +110,8 @@ defmodule Noizu.AdvancedScaffolding.Internal.Ecto.EnumType do
         def json_to_atom(), do: @__nzdo__base.json_to_atom()
         def json_to_atom(k), do: @__nzdo__base.json_to_atom(k)
       else
-        @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
-        raw_atom_list = (values || [{:none, 0}])
+        @file caller_file <> ":#{caller_line}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+        raw_atom_list = values
                         |> Enum.map(
                              fn
                                ({k,{v,d}}) -> {k, v, "#{d}"}
@@ -131,24 +120,24 @@ defmodule Noizu.AdvancedScaffolding.Internal.Ecto.EnumType do
                            )
         @atom_to_enum Enum.map(raw_atom_list, fn({k,v,_}) -> {k,v} end) |> Map.new()
         @atom_descriptions Enum.map(raw_atom_list, fn({k,_,d}) -> d && {k,d} end) |> Enum.filter(&(&1)) |> Map.new()
-
+      
         @enum_to_atom Enum.map(@atom_to_enum, fn ({a, e}) -> {e, a} end)
                       |> Map.new()
         @json_to_atom Enum.map(@atom_to_enum, fn ({a, _e}) -> {"#{a}", a} end)
                       |> Map.new()
 
-        @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+        @file caller_file <> ":#{caller_line}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
         def description(enum) when is_atom(enum) do
           Map.has_key?(@atom_to_enum, enum) && (@atom_descriptions[enum] || "no description") || throw "#{enum} is not a member of #{__MODULE__}"
         end
 
-        @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+        @file caller_file <> ":#{caller_line}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
         def description(enum) when is_integer(enum) do
           enum = @enum_to_atom[enum] || throw "#{enum} enum not found in #{__MODULE__}"
           @atom_descriptions[enum] || "no description - #{enum}"
         end
 
-        @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+        @file caller_file <> ":#{caller_line}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
         def atom_to_enum(), do: @atom_to_enum
         def atom_to_enum(k), do: atom_to_enum()[k]
         def enum_to_atom(), do: @enum_to_atom
@@ -161,32 +150,27 @@ defmodule Noizu.AdvancedScaffolding.Internal.Ecto.EnumType do
 
 
 
-      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+      @file caller_file <> ":#{caller_line}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       @doc false
       def type, do: @ecto_type
 
-      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+      @file caller_file <> ":#{caller_line}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       @doc """
       Casts to Enum.
       """
       def cast(v), do: Noizu.AdvancedScaffolding.Internal.Ecto.EnumType.Default.cast(__MODULE__, v)
 
-      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+      @file caller_file <> ":#{caller_line}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       @doc """
       Same as `cast/1` but raises `Ecto.CastError` on invalid arguments.
       """
       def cast!(v), do: Noizu.AdvancedScaffolding.Internal.Ecto.EnumType.Default.cast!(__MODULE__, v)
 
-      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+      @file caller_file <> ":#{caller_line}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def dump(v), do: Noizu.AdvancedScaffolding.Internal.Ecto.EnumType.Default.dump(__MODULE__, v)
 
-      @file unquote(__ENV__.file) <> ":#{unquote(__ENV__.line)}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
+      @file caller_file <> ":#{caller_line}" <> "(via #{__ENV__.file}:#{__ENV__.line})"
       def load(v), do: Noizu.AdvancedScaffolding.Internal.Ecto.EnumType.Default.load(__MODULE__, v)
     end
-  end
-
-  defmacro __using__(options \\ nil) do
-    options = Macro.expand(options, __ENV__)
-    Noizu.AdvancedScaffolding.Internal.Ecto.EnumType.__enum_type__(options)
   end
 end

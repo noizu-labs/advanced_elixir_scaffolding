@@ -383,7 +383,12 @@ defmodule Noizu.AdvancedScaffolding.Internal.Helpers do
 
       a__nzdo__auto_generate = Noizu.AdvancedScaffolding.Internal.Helpers.extract_has_persistence_attribute(:auto_generate, nil)
       a__nzdo__enum_list = unquote(enum_list) || Noizu.AdvancedScaffolding.Internal.Helpers.extract_has_enum_attribute(:enum_list, :list, false)
-      a__nzdo__enum_default_value  = Noizu.AdvancedScaffolding.Internal.Helpers.extract_has_enum_attribute(:default_value, :default, :none)
+      a__nzdo__enum_default_value = cond do
+                                      v = Noizu.AdvancedScaffolding.Internal.Helpers.extract_has_enum_attribute(:default_value, :default, nil) -> v
+                                      is_list(a__nzdo__enum_list) -> List.first(a__nzdo__enum_list) |> elem(0)
+                                      :else -> :none
+                                    end
+        
       a__nzdo__enum_ecto_type = Noizu.AdvancedScaffolding.Internal.Helpers.extract_has_enum_attribute(:ecto_type, :value_type, :integer)
 
       # @todo unified attribute  @cache :fast_global, schema: :default, prime: true, ttl: 300, miss_ttl: 600

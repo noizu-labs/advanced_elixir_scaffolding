@@ -135,20 +135,7 @@ defmodule Noizu.DomainObject do
     #          end
     Noizu.DomainObject.SearchIndexHandler.__noizu_sphinx_handler__(__CALLER__, options)
   end
-
-  #--------------------------------------------
-  # noizu_index
-  #--------------------------------------------
-  @doc """
-  Module for handling saving to/ updating/tracking and creating Sphinx record types.
-  Provides methods for creating xml schema definitions, real time definitions, config snippets,
-  internal book keeping (for tracking if a record is realtime, delta, primary index), etc.
-  """
-  defmacro noizu_index(options \\ [], [do: block]) do
-    #options = Macro.expand(options, __ENV__)
-    Noizu.AdvancedScaffolding.Internal.DomainObject.Index.__noizu_index__(__CALLER__, options, block)
-  end
-
+  
   #--------------------------------------------
   # noizu_repo
   #--------------------------------------------

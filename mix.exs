@@ -6,7 +6,7 @@
 defmodule Noizu.AdvancedScaffolding.Mixfile do
   use Mix.Project
 
-  @version "1.2.20"
+  @version "1.2.21"
   @source_url "https://github.com/noizu-labs/advanced_elixir_scaffolding"
 
   def project do
