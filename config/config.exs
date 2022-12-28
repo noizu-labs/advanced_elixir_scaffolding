@@ -11,3 +11,6 @@
 import Config
 
 #config :ex_doc, :markdown_processor, ExDoc.Markdown.Hoedown
+
+config :junit_formatter,
+       report_file: "results.xml"

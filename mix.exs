@@ -21,8 +21,22 @@ defmodule Noizu.AdvancedScaffolding.Mixfile do
       description: "Version 3 of our Elixir Scaffolding framework",
       package: package(),
       docs: docs(),
-    
-      xref: [exclude: [Phoenix.HTML, UUID, XmlBuilder, HtmlSanitizeEx, Ecto.CastError, Redix, Ecto.Type, Plug.Conn, Poison, Poison.Encoder, Noizu.FastGlobal.Cluster, Giza.SphinxQL, :rocksdb]]
+      xref: [exclude: [Phoenix.HTML, UUID, XmlBuilder, HtmlSanitizeEx, Ecto.CastError, Redix, Ecto.Type, Plug.Conn, Poison, Poison.Encoder, Noizu.FastGlobal.Cluster, Giza.SphinxQL, :rocksdb]],
+      test_coverage: [
+        summary: [
+          threshold: 10
+        ],
+        ignore_modules: [
+          ~r/^Noizu\.ERP\..*/,
+          ~r/^Noizu\.AdvancedScaffolding\.Internal\..*/,
+          ~r/^Noizu\.Permission\.Protocol}\..*/,
+          ~r/^Noizu\.EctoEntity\.Protocol\..*/,
+          ~r/^Noizu\.Entity\.Protocol\..*/,
+          ~r/^Noizu\.RestrictedAccess\.Protocol\..*/,
+          ~r/^Poison\.Encoder\.Noizu\..*/,
+          ~r/^Noizu\.AdvancedScaffolding\.Test\..*/
+        ]
+      ]
     ]
   end # end project
 
@@ -64,6 +78,7 @@ defmodule Noizu.AdvancedScaffolding.Mixfile do
       {:timex, "~> 3.7"},
       {:decimal, "~> 2.0.0"},
       {:telemetry, "~> 1.1.0"},
+      {:junit_formatter, "~> 3.3", only: [:test]},
     ]
   end # end deps
 

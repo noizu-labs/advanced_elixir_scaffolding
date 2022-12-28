@@ -6,6 +6,7 @@
 # http://elixir-lang.org/docs/stable/ex_unit/ExUnit.html#start/1
 
 
+ExUnit.configure formatters: [JUnitFormatter, ExUnit.CLIFormatter]
 
 # Danger Will Robinson.
 alias NoizuSchema.Database.AdvancedScaffolding.Test.Fixture.V3.Foo.Table, as: FooV3Table

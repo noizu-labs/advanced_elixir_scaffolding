@@ -1,4 +1,5 @@
-# Noizu.AdvancedScaffolding
+Noizu.AdvancedScaffolding [![CircleCI](https://dl.circleci.com/status-badge/img/gh/noizu-labs/advanced_elixir_scaffolding/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/noizu-labs/advanced_elixir_scaffolding/tree/master)
+==============================
 
 This library provides some general tools to reduce some boiler plate code around working with objects, performing CRUD, auditing changes, performing basic authorization checks, and working with entity references (foreign keys). It includes various concepts previously applied to some of our private projects including blade of eternity, lacrosse alerts, and solace club.
 

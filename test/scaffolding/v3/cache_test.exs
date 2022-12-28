@@ -21,6 +21,7 @@ defmodule Noizu.AdvancedScaffolding.CacheTest do
   
   @tag :v3
   @tag :cache
+  @tag :requires_redis
   test "Redis Cache" do
     contents = "apple.#{:os.system_time(:second)}"
     sut = %Noizu.AdvancedScaffolding.Test.Fixture.V3.RedisCache.Entity{identifier: :bar, content: contents, meta: %{apple: true}}
@@ -42,6 +43,7 @@ defmodule Noizu.AdvancedScaffolding.CacheTest do
 
   @tag :v3
   @tag :cache
+  @tag :requires_redis
   test "Redis Cache Settings" do
     sut = Noizu.AdvancedScaffolding.Test.Fixture.V3.RedisCache.Entity.__noizu_info__(:cache)
     assert sut[:type] == Noizu.DomainObject.CacheHandler.Redis
@@ -55,6 +57,7 @@ defmodule Noizu.AdvancedScaffolding.CacheTest do
 
   @tag :v3
   @tag :cache
+  @tag :requires_redis
   test "Redis.Json Cache" do
     contents = "apple.#{:os.system_time(:second)}"
     sut = %Noizu.AdvancedScaffolding.Test.Fixture.V3.RedisJsonCache.Entity{identifier: :bar, content: contents, meta: %{apple: true}}
@@ -76,6 +79,7 @@ defmodule Noizu.AdvancedScaffolding.CacheTest do
 
   @tag :v3
   @tag :cache
+  @tag :requires_redis
   test "Redis.Json Cache Settings" do
     sut = Noizu.AdvancedScaffolding.Test.Fixture.V3.RedisJsonCache.Entity.__noizu_info__(:cache)
     assert sut[:type] == Noizu.DomainObject.CacheHandler.RedisJson
