@@ -23,7 +23,7 @@ defmodule Noizu.DomainObject.CacheHandler do
   ```
   
   # Provided CacheHandlers handlers
-  - `:fast_global` Noizu.FastGlobal.V3.Cluster (default)
+  - `:fast_global` Noizu.FastGlobal.Cluster (default)
   - `:con_cache` ets backed ConCache handler
   - `:disabled` no handler
   - `:redis` uses erlang term serialization

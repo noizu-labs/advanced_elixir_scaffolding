@@ -15,7 +15,7 @@ defmodule Noizu.AdvancedScaffolding.Support.SchemaProvider do
   # ChangeSets
   #-----------------------------------------------------------------------------
   def change_sets do
-    Noizu.AdvancedScaffolding.Support.Schema.Core.change_sets() ++ Noizu.FastGlobal.V3.ChangeSet.change_sets()
+    Noizu.AdvancedScaffolding.Support.Schema.Core.change_sets()
   end
 
 end # End Mix.Task.Migrate

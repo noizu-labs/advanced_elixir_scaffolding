@@ -5,7 +5,8 @@
 
 # http://elixir-lang.org/docs/stable/ex_unit/ExUnit.html#start/1
 
-
+Application.ensure_started(:semaphore)
+Application.ensure_started(:fast_global)
 ExUnit.configure formatters: [JUnitFormatter, ExUnit.CLIFormatter]
 
 # Danger Will Robinson.
@@ -18,7 +19,8 @@ alias Noizu.AdvancedScaffolding.Database.NmidV3Generator.Table, as: NmidV3Genera
 Amnesia.Schema.create()
 Amnesia.start
 
-{:ok, sup} = Supervisor.start_link([], [strategy: :one_for_one, name: Test.Supervisor, strategy: :permanent])
+children = [{Task.Supervisor, name: Noizu.FastGlobal.Cluster}]
+{:ok, sup} = Supervisor.start_link(children, [strategy: :one_for_one, name: Test.Supervisor, strategy: :one_for_one])
 Supervisor.start_child(sup, NoizuSchema.Redis.child_spec(nil))
 Supervisor.start_child(sup, {ConCache, [name: ConCache.Default, ttl_check_interval: :timer.seconds(1), global_ttl: :timer.seconds(600)]})
 
