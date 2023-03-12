@@ -912,14 +912,14 @@ defmodule Noizu.AdvancedScaffolding.Internal.DomainObject.Repo do
     #------------------------------------------
     # Update - layer_update_callback
     #------------------------------------------
-    def layer_update_callback(m, %{__struct__: PersistenceLayer, type: type} = layer, entity, context, options) when type == :mnesia or type == :ecto do
+    def layer_update_callback(m, %{__struct__: PersistenceLayer, type: type} = layer, entity, context, options) when type in [:mnesia, :ecto, :redis] do
       m.__entity__().__as_record__(layer, entity, context, options)
       |> layer_update_loop(layer, context, options)
       entity
     end
     def layer_update_callback(_m, %{__struct__: PersistenceLayer} = _layer, entity, _context, _options), do: entity
 
-    def layer_update_callback!(m, %{__struct__: PersistenceLayer, type: type} = layer, entity, context, options) when type == :mnesia or type == :ecto do
+    def layer_update_callback!(m, %{__struct__: PersistenceLayer, type: type} = layer, entity, context, options) when type in [:mnesia, :ecto, :redis] do
       m.__entity__().__as_record__!(layer, entity, context, options)
       |> layer_update_loop!(layer, context, options)
       entity

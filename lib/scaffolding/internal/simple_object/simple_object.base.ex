@@ -81,7 +81,12 @@ defmodule Noizu.AdvancedScaffolding.Internal.SimpleObject.Base do
       |> Enum.filter(&(&1))
       |> layer.table.__struct__()
     end
-
+    def __as_record_type__(_domain_object, _layer = %{type: :redis}, entity, _context, _options) do
+      entity
+    end
+    def __as_record_type__(_domain_object, _layer = %{type: :mnesia}, entity, _context, _options) do
+      entity
+    end
     def __as_record_type__(_domain_object, %{__struct__: PersistenceLayer} = _layer, _identifier, _entity, _context, _options), do: nil
 
     def __as_record_type__!(domain_object, layer, identifier, entity, context, options), do: domain_object.__as_record_type__(layer, identifier, entity, context, options)
