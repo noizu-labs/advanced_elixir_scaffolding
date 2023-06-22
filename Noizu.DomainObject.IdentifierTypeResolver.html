@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.25.5">
+    <meta name="project" content="Noizu.AdvancedScaffolding v1.2.23">
+
+    <title>Noizu.DomainObject.IdentifierTypeResolver — Noizu.AdvancedScaffolding v1.2.23</title>
+    <link rel="stylesheet" href="dist/elixir-d1506dba1db7cdc5483e.css" />
+
+    <script src="dist/sidebar_items-3d772270ac.js"></script>
+
+      <script src="docs_config.js"></script>
+
+    <script async src="dist/app-7b632b26f13d5e0d20e1.js"></script>
+
+
+  </head>
+  <body data-type="modules">
+    <script>
+
+      try {
+        if (localStorage.getItem('night-mode') === 'true') {
+          document.body.classList.add('night-mode');
+        }
+      } catch (error) { }
+    </script>
+
+<div class="main">
+
+<button class="sidebar-button sidebar-toggle">
+  <span class="icon-menu" title="Collapse/expand sidebar"></span>
+</button>
+
+<section class="sidebar">
+  <form class="sidebar-search" action="search.html">
+    <button type="submit" class="search-button" aria-label="Submit Search">
+      <span class="icon-search" aria-hidden="true" title="Submit search"></span>
+    </button>
+    <button type="button" tabindex="-1" class="search-close-button" aria-label="Cancel Search">
+      <span class="icon-cross" aria-hidden="true" title="Cancel search"></span>
+    </button>
+    <label class="search-label">
+      <input name="q" type="text" class="search-input" placeholder="Search..." aria-label="Input your search terms" autocomplete="off" />
+    </label>
+  </form>
+
+  <div class="autocomplete">
+    <div class="autocomplete-results">
+    </div>
+  </div>
+
+  <div class="sidebar-header">
+    <div class="sidebar-projectDetails">
+      <a href="readme.html" class="sidebar-projectName">
+Noizu.AdvancedScaffolding
+      </a>
+      <strong class="sidebar-projectVersion">
+        v1.2.23
+      </strong>
+    </div>
+
+  </div>
+
+  <ul class="sidebar-listNav">
+    <li><a id="extras-list-link" href="#full-list">Pages</a></li>
+
+      <li><a id="modules-list-link" href="#full-list">Modules</a></li>
+
+
+  </ul>
+  <div class="gradient"></div>
+  <ul id="full-list" class="sidebar-fullList"></ul>
+</section>
+
+<section class="content">
+  <div class="content-outer">
+    <div id="content" class="content-inner">
+
+      <h1>
+Noizu.DomainObject.IdentifierTypeResolver <small class="app-vsn">(Noizu.AdvancedScaffolding v1.2.23)</small>
+
+          <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/identifier_type/resolver.ex#L6" title="View Source" class="view-source" rel="help">
+            <span class="icon-code" aria-hidden="true"></span>
+            <span class="sr-only">View Source</span>
+          </a>
+
+      </h1>
+
+
+        <section id="moduledoc">
+<p>The <a href="Noizu.DomainObject.IdentifierTypeResolver.html#content"><code class="inline">Noizu.DomainObject.IdentifierTypeResolver</code></a> module provides plumbing and default logic for built-in type handlers
+in the Noizu.DomainObject framework.</p><p>This module acts as a resolver for identifier type handlers, allowing dynamic resolution of the appropriate handler
+for a given identifier type.</p><h1>Functions</h1><ul><li><a href="#__valid_identifier__/2"><code class="inline">__valid_identifier__/2</code></a>: Calls the appropriate handler's <a href="#__valid_identifier__/2"><code class="inline">__valid_identifier__/2</code></a> function.</li><li><a href="#__sref_section_regex__/1"><code class="inline">__sref_section_regex__/1</code></a>: Calls the appropriate handler's <a href="#__sref_section_regex__/1"><code class="inline">__sref_section_regex__/1</code></a> function.</li><li><a href="#__id_to_string__/2"><code class="inline">__id_to_string__/2</code></a>: Calls the appropriate handler's <a href="#__id_to_string__/2"><code class="inline">__id_to_string__/2</code></a> function.</li><li><a href="#__string_to_id__/2"><code class="inline">__string_to_id__/2</code></a>: Calls the appropriate handler's <a href="#__string_to_id__/2"><code class="inline">__string_to_id__/2</code></a> function.</li><li><a href="#__built_in_identifier_type__/0"><code class="inline">__built_in_identifier_type__/0</code></a>: Returns a map of built-in identifier types and their corresponding handlers.</li><li><a href="#__registered_identifier_types__/0"><code class="inline">__registered_identifier_types__/0</code></a>: Returns the map of registered identifier types and their handlers.</li><li><a href="#provider_configuration/1"><code class="inline">provider_configuration/1</code></a>: Retrieves the configuration for a given identifier type.</li><li><code class="inline">resolver/3</code>: Resolves and executes the appropriate handler function for the given action, identifier type, and arguments.</li></ul>
+        </section>
+
+
+        <section id="summary" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#summary">
+              <span class="icon-link" aria-hidden="true"></span>
+              <span class="sr-only">Link to this section</span>
+            </a>
+            Summary
+          </h1>
+
+  <div class="summary-functions summary">
+    <h2>
+      <a href="#functions">Functions</a>
+    </h2>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#__built_in_identifier_type__/0">__built_in_identifier_type__()</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>Returns a map of built-in identifier types and their corresponding handlers.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#__id_to_string__/2">__id_to_string__(identifier, t)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>Calls the appropriate handler's <a href="#__id_to_string__/2"><code class="inline">__id_to_string__/2</code></a> function.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#__registered_identifier_types__/0">__registered_identifier_types__()</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>@todo Should be prepared at runtime/compile time.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#__sref_section_regex__/1">__sref_section_regex__(t)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>Calls the appropriate handler's <a href="#__sref_section_regex__/1"><code class="inline">__sref_section_regex__/1</code></a> function.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#__string_to_id__/2">__string_to_id__(serialized_identifier, t)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>Calls the appropriate handler's <a href="#__string_to_id__/2"><code class="inline">__string_to_id__/2</code></a> function.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#__valid_identifier__/2">__valid_identifier__(identifier, t)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>Calls the appropriate handler's <a href="#__valid_identifier__/2"><code class="inline">__valid_identifier__/2</code></a> function.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#provider_configuration/1">provider_configuration(t)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>Retrieves the configuration for a given identifier type.</p></div>
+
+</div>
+
+  </div>
+
+        </section>
+
+
+        <section id="functions" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#functions">
+              <span class="icon-link" aria-hidden="true"></span>
+              <span class="sr-only">Link to this section</span>
+            </a>
+Functions
+          </h1>
+          <div class="functions-list">
+<section class="detail" id="__built_in_identifier_type__/0">
+
+  <div class="detail-header">
+    <a href="#__built_in_identifier_type__/0" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">__built_in_identifier_type__()</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/identifier_type/resolver.ex#L81" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Returns a map of built-in identifier types and their corresponding handlers.</p><h2 id="__built_in_identifier_type__/0-returns" class="section-heading">
+  <a href="#__built_in_identifier_type__/0-returns" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Returns
+</h2>
+<ul><li>A map of built-in identifier types and their corresponding handler modules.</li></ul>
+  </section>
+</section>
+<section class="detail" id="__id_to_string__/2">
+
+  <div class="detail-header">
+    <a href="#__id_to_string__/2" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">__id_to_string__(identifier, t)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/identifier_type/resolver.ex#L60" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Calls the appropriate handler's <a href="#__id_to_string__/2"><code class="inline">__id_to_string__/2</code></a> function.</p><h2 id="__id_to_string__/2-params" class="section-heading">
+  <a href="#__id_to_string__/2-params" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Params
+</h2>
+<ul><li>identifier: The identifier value.</li><li>t: The identifier type.</li></ul><h2 id="__id_to_string__/2-returns" class="section-heading">
+  <a href="#__id_to_string__/2-returns" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Returns
+</h2>
+<ul><li>The result of the <a href="#__id_to_string__/2"><code class="inline">__id_to_string__/2</code></a> function of the appropriate handler.</li></ul>
+  </section>
+</section>
+<section class="detail" id="__registered_identifier_types__/0">
+
+  <div class="detail-header">
+    <a href="#__registered_identifier_types__/0" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">__registered_identifier_types__()</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/identifier_type/resolver.ex#L105" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>@todo Should be prepared at runtime/compile time.</p>
+  </section>
+</section>
+<section class="detail" id="__sref_section_regex__/1">
+
+  <div class="detail-header">
+    <a href="#__sref_section_regex__/1" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">__sref_section_regex__(t)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/identifier_type/resolver.ex#L47" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Calls the appropriate handler's <a href="#__sref_section_regex__/1"><code class="inline">__sref_section_regex__/1</code></a> function.</p><h2 id="__sref_section_regex__/1-params" class="section-heading">
+  <a href="#__sref_section_regex__/1-params" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Params
+</h2>
+<ul><li>t: The identifier type.</li></ul><h2 id="__sref_section_regex__/1-returns" class="section-heading">
+  <a href="#__sref_section_regex__/1-returns" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Returns
+</h2>
+<ul><li>The result of the <a href="#__sref_section_regex__/1"><code class="inline">__sref_section_regex__/1</code></a> function of the appropriate handler.</li></ul>
+  </section>
+</section>
+<section class="detail" id="__string_to_id__/2">
+
+  <div class="detail-header">
+    <a href="#__string_to_id__/2" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">__string_to_id__(serialized_identifier, t)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/identifier_type/resolver.ex#L72" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Calls the appropriate handler's <a href="#__string_to_id__/2"><code class="inline">__string_to_id__/2</code></a> function.</p><h2 id="__string_to_id__/2-params" class="section-heading">
+  <a href="#__string_to_id__/2-params" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Params
+</h2>
+<ul><li>serialized_identifier: The serialized identifier value.</li><li>t: The identifier type.</li></ul><h2 id="__string_to_id__/2-returns" class="section-heading">
+  <a href="#__string_to_id__/2-returns" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Returns
+</h2>
+<ul><li>The result of the <a href="#__string_to_id__/2"><code class="inline">__string_to_id__/2</code></a> function of the appropriate handler.</li></ul>
+  </section>
+</section>
+<section class="detail" id="__valid_identifier__/2">
+
+  <div class="detail-header">
+    <a href="#__valid_identifier__/2" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">__valid_identifier__(identifier, t)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/identifier_type/resolver.ex#L35" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Calls the appropriate handler's <a href="#__valid_identifier__/2"><code class="inline">__valid_identifier__/2</code></a> function.</p><h2 id="__valid_identifier__/2-params" class="section-heading">
+  <a href="#__valid_identifier__/2-params" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Params
+</h2>
+<ul><li>identifier: The identifier value.</li><li>t: The identifier type.</li></ul><h2 id="__valid_identifier__/2-returns" class="section-heading">
+  <a href="#__valid_identifier__/2-returns" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Returns
+</h2>
+<ul><li>The result of the <a href="#__valid_identifier__/2"><code class="inline">__valid_identifier__/2</code></a> function of the appropriate handler.</li></ul>
+  </section>
+</section>
+<section class="detail" id="provider_configuration/1">
+
+  <div class="detail-header">
+    <a href="#provider_configuration/1" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">provider_configuration(t)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/identifier_type/resolver.ex#L119" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Retrieves the configuration for a given identifier type.</p><h2 id="provider_configuration/1-params" class="section-heading">
+  <a href="#provider_configuration/1-params" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Params
+</h2>
+<ul><li>t: The identifier type.</li></ul><h2 id="provider_configuration/1-returns" class="section-heading">
+  <a href="#provider_configuration/1-returns" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Returns
+</h2>
+<ul><li>{p, c}: The handler module and its configuration.</li></ul>
+  </section>
+</section>
+
+          </div>
+        </section>
+
+      <footer class="footer">
+
+        <p>
+          Find it on Hex:
+          <a href="https://hex.pm/packages/noizu_advanced_scaffolding/1.2.23" class="line footer-hex-package">Package</a>
+          <a href="https://preview.hex.pm/preview/noizu_advanced_scaffolding/1.2.23" class="line">Preview</a>
+
+            <a href="https://preview.hex.pm/preview/noizu_advanced_scaffolding/1.2.23/show/lib/scaffolding/behaviours/identifier_type/resolver.ex">(current file)</a>
+
+        </p>
+
+        <p>
+          <span class="line">
+            Built using
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener">ExDoc</a> (v0.25.5) for the
+            <a href="https://elixir-lang.org" title="Elixir" target="_blank">Elixir programming language</a>.
+          </span>
+          <span class="line">
+            Designed by
+            <a href="https://twitter.com/dignifiedquire" target="_blank" rel="noopener" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+          </span>
+        </p>
+        <p>
+
+            <a href="api-reference.html" title="API reference" class="line footer-button">API Reference</a>
+
+          <button class="line footer-button display-shortcuts-help">
+            Display keyboard shortcuts
+          </button>
+          <button class="line footer-button night-mode-toggle">
+            Toggle night mode
+          </button>
+          <button class="line footer-button display-quick-switch">
+            Go to a HexDocs package
+          </button>
+          <button class="line footer-button tooltips-toggle">
+            <span class="tooltips-option-disable">Disable tooltips</span>
+            <span class="tooltips-option-enable">Enable tooltips</span>
+          </button>
+        </p>
+      </footer>
+    </div>
+  </div>
+</section>
+</div>
+
+
+  </body>
+</html>

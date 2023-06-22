@@ -4,17 +4,17 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="ExDoc v0.25.1">
-    <meta name="project" content="Noizu.AdvancedScaffolding v1.0.1">
+    <meta name="generator" content="ExDoc v0.25.5">
+    <meta name="project" content="Noizu.AdvancedScaffolding v1.2.23">
 
-    <title>Noizu.AdvancedScaffolding.Sphinx.Type.NullableInteger — Noizu.AdvancedScaffolding v1.0.1</title>
-    <link rel="stylesheet" href="dist/elixir-a172fe91e725dcb259e2.css" />
+    <title>Noizu.AdvancedScaffolding.Sphinx.Type.NullableInteger — Noizu.AdvancedScaffolding v1.2.23</title>
+    <link rel="stylesheet" href="dist/elixir-d1506dba1db7cdc5483e.css" />
 
-    <script src="dist/sidebar_items-e170f11184.js"></script>
+    <script src="dist/sidebar_items-3d772270ac.js"></script>
 
       <script src="docs_config.js"></script>
 
-    <script async src="dist/app-f27ff079945e43879c46.js"></script>
+    <script async src="dist/app-7b632b26f13d5e0d20e1.js"></script>
 
 
   </head>
@@ -58,7 +58,7 @@
 Noizu.AdvancedScaffolding
       </a>
       <strong class="sidebar-projectVersion">
-        v1.0.1
+        v1.2.23
       </strong>
     </div>
 
@@ -80,9 +80,9 @@ Noizu.AdvancedScaffolding
     <div id="content" class="content-inner">
 
       <h1>
-Noizu.AdvancedScaffolding.Sphinx.Type.NullableInteger <small class="app-vsn">(Noizu.AdvancedScaffolding v1.0.1)</small>
+Noizu.AdvancedScaffolding.Sphinx.Type.NullableInteger <small class="app-vsn">(Noizu.AdvancedScaffolding v1.2.23)</small>
 
-          <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/sphinx/nullable_integer.ex#L1" title="View Source" class="view-source" rel="help">
+          <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/search_index_handler/sphinx/nullable_integer.ex#L7" title="View Source" class="view-source" rel="help">
             <span class="icon-code" aria-hidden="true"></span>
             <span class="sr-only">View Source</span>
           </a>
@@ -150,7 +150,7 @@ For example if a field expands to subfields in our <strong>sphinx_expand_field</
 
   </div>
 
-    <div class="summary-synopsis"><p>(Sub)field sphinx field type: :attr<em>bigint, :attr<em>uint, :attr_multi64, etc.
+    <div class="summary-synopsis"><p>(Sub)field sphinx field type: :attr<em>bigint, :attr<em>uint, :attr_multi_64, etc.
 If we break a DomainObject.Entity field into multiple sub fields for sphinx we may inspect the per subfield <code class="inline">indexing</code> attribute here.
 For example if a field expands to subfields in our __sphinx_expand_field</em></em> method we may inject a :sub attribute in that method specifying the name of each specific subfield.
 <code class="inline">[{:&quot;#{field}_my_sub_field&quot;, @handler, put_in(indexing, [:sub], :my_sub_field)}]</code></p></div>
@@ -203,7 +203,7 @@ For example if a field expands to subfields in our <strong>sphinx_expand_field</
 
   </div>
 
-    <div class="summary-synopsis"><p>Same as <a href="#cast/1"><code class="inline">cast/1</code></a> but raises <a href="https://hexdocs.pm/ecto/3.6.2/Ecto.CastError.html"><code class="inline">Ecto.CastError</code></a> on invalid arguments.</p></div>
+    <div class="summary-synopsis"><p>Same as <a href="#cast/1"><code class="inline">cast/1</code></a> but raises <a href="https://hexdocs.pm/ecto/3.7.2/Ecto.CastError.html"><code class="inline">Ecto.CastError</code></a> on invalid arguments.</p></div>
 
 </div>
 <div class="summary-row">
@@ -212,7 +212,7 @@ For example if a field expands to subfields in our <strong>sphinx_expand_field</
 
   </div>
 
-    <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/ecto/3.6.2/Ecto.Type.html#c:embed_as/1"><code class="inline">Ecto.Type.embed_as/1</code></a>.</p></div>
+    <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/ecto/3.7.2/Ecto.Type.html#c:embed_as/1"><code class="inline">Ecto.Type.embed_as/1</code></a>.</p></div>
 
 </div>
 <div class="summary-row">
@@ -221,7 +221,16 @@ For example if a field expands to subfields in our <strong>sphinx_expand_field</
 
   </div>
 
-    <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/ecto/3.6.2/Ecto.Type.html#c:equal?/2"><code class="inline">Ecto.Type.equal?/2</code></a>.</p></div>
+    <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/ecto/3.7.2/Ecto.Type.html#c:equal?/2"><code class="inline">Ecto.Type.equal?/2</code></a>.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#has_query_permission?/5">has_query_permission?(index, field, filter, context, options)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>Callback implementation for <a href="Noizu.DomainObject.SearchIndexHandler.Behaviour.html#c:has_query_permission?/5"><code class="inline">Noizu.DomainObject.SearchIndexHandler.Behaviour.has_query_permission?/5</code></a>.</p></div>
 
 </div>
 <div class="summary-row">
@@ -230,7 +239,7 @@ For example if a field expands to subfields in our <strong>sphinx_expand_field</
 
   </div>
 
-    <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/ecto/3.6.2/Ecto.Type.html#c:load/1"><code class="inline">Ecto.Type.load/1</code></a>.</p></div>
+    <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/ecto/3.7.2/Ecto.Type.html#c:load/1"><code class="inline">Ecto.Type.load/1</code></a>.</p></div>
 
 </div>
 
@@ -257,7 +266,7 @@ Functions
     </a>
     <h1 class="signature">__sphinx_bits__(field, indexing, settings)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/sphinx/nullable_integer.ex#L8" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/search_index_handler/sphinx/nullable_integer.ex#L14" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -282,7 +291,7 @@ For example if a field expands to subfields in our <strong>sphinx_expand_field</
     </a>
     <h1 class="signature">__sphinx_default__(field, indexing, settings)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/sphinx/nullable_integer.ex#L8" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/search_index_handler/sphinx/nullable_integer.ex#L14" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -307,7 +316,7 @@ For example if a field expands to subfields in our <strong>sphinx_expand_field</
     </a>
     <h1 class="signature">__sphinx_encoded__(field, entity, indexing, settings)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/sphinx/nullable_integer.ex#L8" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/search_index_handler/sphinx/nullable_integer.ex#L14" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -332,7 +341,7 @@ For example if a field expands to subfields in our <strong>sphinx_expand_field</
     </a>
     <h1 class="signature">__sphinx_encoding__(field, indexing, settings)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/sphinx/nullable_integer.ex#L8" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/search_index_handler/sphinx/nullable_integer.ex#L14" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -342,7 +351,7 @@ For example if a field expands to subfields in our <strong>sphinx_expand_field</
 
   <section class="docstring">
 
-<p>(Sub)field sphinx field type: :attr<em>bigint, :attr<em>uint, :attr_multi64, etc.
+<p>(Sub)field sphinx field type: :attr<em>bigint, :attr<em>uint, :attr_multi_64, etc.
 If we break a DomainObject.Entity field into multiple sub fields for sphinx we may inspect the per subfield <code class="inline">indexing</code> attribute here.
 For example if a field expands to subfields in our __sphinx_expand_field</em></em> method we may inject a :sub attribute in that method specifying the name of each specific subfield.
 <code class="inline">[{:&quot;#{field}_my_sub_field&quot;, @handler, put_in(indexing, [:sub], :my_sub_field)}]</code></p>
@@ -357,7 +366,7 @@ For example if a field expands to subfields in our __sphinx_expand_field</em></e
     </a>
     <h1 class="signature">__sphinx_expand_field__(field, indexing, settings)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/sphinx/nullable_integer.ex#L8" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/search_index_handler/sphinx/nullable_integer.ex#L14" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -381,7 +390,7 @@ to allow searching our index for best friend by first name, last name or full na
     </a>
     <h1 class="signature">__sphinx_field__()</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/sphinx/nullable_integer.ex#L8" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/search_index_handler/sphinx/nullable_integer.ex#L14" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -403,7 +412,7 @@ to allow searching our index for best friend by first name, last name or full na
     </a>
     <h1 class="signature">__sphinx_has_default__(field, indexing, settings)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/sphinx/nullable_integer.ex#L8" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/search_index_handler/sphinx/nullable_integer.ex#L14" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -428,7 +437,7 @@ For example if a field expands to subfields in our <strong>sphinx_expand_field</
     </a>
     <h1 class="signature">cast(v)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/sphinx/nullable_integer.ex#L22" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/search_index_handler/sphinx/nullable_integer.ex#L28" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -450,7 +459,7 @@ For example if a field expands to subfields in our <strong>sphinx_expand_field</
     </a>
     <h1 class="signature">cast!(value)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/sphinx/nullable_integer.ex#L40" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/search_index_handler/sphinx/nullable_integer.ex#L46" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -460,7 +469,7 @@ For example if a field expands to subfields in our <strong>sphinx_expand_field</
 
   <section class="docstring">
 
-<p>Same as <a href="#cast/1"><code class="inline">cast/1</code></a> but raises <a href="https://hexdocs.pm/ecto/3.6.2/Ecto.CastError.html"><code class="inline">Ecto.CastError</code></a> on invalid arguments.</p>
+<p>Same as <a href="#cast/1"><code class="inline">cast/1</code></a> but raises <a href="https://hexdocs.pm/ecto/3.7.2/Ecto.CastError.html"><code class="inline">Ecto.CastError</code></a> on invalid arguments.</p>
   </section>
 </section>
 <section class="detail" id="embed_as/1">
@@ -472,7 +481,7 @@ For example if a field expands to subfields in our <strong>sphinx_expand_field</
     </a>
     <h1 class="signature">embed_as(_)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/sphinx/nullable_integer.ex#L5" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/search_index_handler/sphinx/nullable_integer.ex#L11" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -482,7 +491,7 @@ For example if a field expands to subfields in our <strong>sphinx_expand_field</
 
   <section class="docstring">
 
-<p>Callback implementation for <a href="https://hexdocs.pm/ecto/3.6.2/Ecto.Type.html#c:embed_as/1"><code class="inline">Ecto.Type.embed_as/1</code></a>.</p>
+<p>Callback implementation for <a href="https://hexdocs.pm/ecto/3.7.2/Ecto.Type.html#c:embed_as/1"><code class="inline">Ecto.Type.embed_as/1</code></a>.</p>
   </section>
 </section>
 <section class="detail" id="equal?/2">
@@ -494,7 +503,7 @@ For example if a field expands to subfields in our <strong>sphinx_expand_field</
     </a>
     <h1 class="signature">equal?(term1, term2)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/sphinx/nullable_integer.ex#L5" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/search_index_handler/sphinx/nullable_integer.ex#L11" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -504,7 +513,29 @@ For example if a field expands to subfields in our <strong>sphinx_expand_field</
 
   <section class="docstring">
 
-<p>Callback implementation for <a href="https://hexdocs.pm/ecto/3.6.2/Ecto.Type.html#c:equal?/2"><code class="inline">Ecto.Type.equal?/2</code></a>.</p>
+<p>Callback implementation for <a href="https://hexdocs.pm/ecto/3.7.2/Ecto.Type.html#c:equal?/2"><code class="inline">Ecto.Type.equal?/2</code></a>.</p>
+  </section>
+</section>
+<section class="detail" id="has_query_permission?/5">
+
+  <div class="detail-header">
+    <a href="#has_query_permission?/5" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">has_query_permission?(index, field, filter, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/search_index_handler/sphinx/nullable_integer.ex#L14" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Callback implementation for <a href="Noizu.DomainObject.SearchIndexHandler.Behaviour.html#c:has_query_permission?/5"><code class="inline">Noizu.DomainObject.SearchIndexHandler.Behaviour.has_query_permission?/5</code></a>.</p>
   </section>
 </section>
 <section class="detail" id="load/1">
@@ -516,7 +547,7 @@ For example if a field expands to subfields in our <strong>sphinx_expand_field</
     </a>
     <h1 class="signature">load(v)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/sphinx/nullable_integer.ex#L69" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/search_index_handler/sphinx/nullable_integer.ex#L75" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -526,7 +557,7 @@ For example if a field expands to subfields in our <strong>sphinx_expand_field</
 
   <section class="docstring">
 
-<p>Callback implementation for <a href="https://hexdocs.pm/ecto/3.6.2/Ecto.Type.html#c:load/1"><code class="inline">Ecto.Type.load/1</code></a>.</p>
+<p>Callback implementation for <a href="https://hexdocs.pm/ecto/3.7.2/Ecto.Type.html#c:load/1"><code class="inline">Ecto.Type.load/1</code></a>.</p>
   </section>
 </section>
 
@@ -534,10 +565,20 @@ For example if a field expands to subfields in our <strong>sphinx_expand_field</
         </section>
 
       <footer class="footer">
+
+        <p>
+          Find it on Hex:
+          <a href="https://hex.pm/packages/noizu_advanced_scaffolding/1.2.23" class="line footer-hex-package">Package</a>
+          <a href="https://preview.hex.pm/preview/noizu_advanced_scaffolding/1.2.23" class="line">Preview</a>
+
+            <a href="https://preview.hex.pm/preview/noizu_advanced_scaffolding/1.2.23/show/lib/scaffolding/behaviours/search_index_handler/sphinx/nullable_integer.ex">(current file)</a>
+
+        </p>
+
         <p>
           <span class="line">
             Built using
-            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener">ExDoc</a> (v0.25.1) for the
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener">ExDoc</a> (v0.25.5) for the
             <a href="https://elixir-lang.org" title="Elixir" target="_blank">Elixir programming language</a>.
           </span>
           <span class="line">

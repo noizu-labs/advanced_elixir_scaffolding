@@ -1,0 +1,1943 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.25.5">
+    <meta name="project" content="Noizu.AdvancedScaffolding v1.2.23">
+
+    <title>Noizu.AdvancedScaffolding.Internal.DomainObject.Repo.Default — Noizu.AdvancedScaffolding v1.2.23</title>
+    <link rel="stylesheet" href="dist/elixir-d1506dba1db7cdc5483e.css" />
+
+    <script src="dist/sidebar_items-3d772270ac.js"></script>
+
+      <script src="docs_config.js"></script>
+
+    <script async src="dist/app-7b632b26f13d5e0d20e1.js"></script>
+
+
+  </head>
+  <body data-type="modules">
+    <script>
+
+      try {
+        if (localStorage.getItem('night-mode') === 'true') {
+          document.body.classList.add('night-mode');
+        }
+      } catch (error) { }
+    </script>
+
+<div class="main">
+
+<button class="sidebar-button sidebar-toggle">
+  <span class="icon-menu" title="Collapse/expand sidebar"></span>
+</button>
+
+<section class="sidebar">
+  <form class="sidebar-search" action="search.html">
+    <button type="submit" class="search-button" aria-label="Submit Search">
+      <span class="icon-search" aria-hidden="true" title="Submit search"></span>
+    </button>
+    <button type="button" tabindex="-1" class="search-close-button" aria-label="Cancel Search">
+      <span class="icon-cross" aria-hidden="true" title="Cancel search"></span>
+    </button>
+    <label class="search-label">
+      <input name="q" type="text" class="search-input" placeholder="Search..." aria-label="Input your search terms" autocomplete="off" />
+    </label>
+  </form>
+
+  <div class="autocomplete">
+    <div class="autocomplete-results">
+    </div>
+  </div>
+
+  <div class="sidebar-header">
+    <div class="sidebar-projectDetails">
+      <a href="readme.html" class="sidebar-projectName">
+Noizu.AdvancedScaffolding
+      </a>
+      <strong class="sidebar-projectVersion">
+        v1.2.23
+      </strong>
+    </div>
+
+  </div>
+
+  <ul class="sidebar-listNav">
+    <li><a id="extras-list-link" href="#full-list">Pages</a></li>
+
+      <li><a id="modules-list-link" href="#full-list">Modules</a></li>
+
+
+  </ul>
+  <div class="gradient"></div>
+  <ul id="full-list" class="sidebar-fullList"></ul>
+</section>
+
+<section class="content">
+  <div class="content-outer">
+    <div id="content" class="content-inner">
+
+      <h1>
+Noizu.AdvancedScaffolding.Internal.DomainObject.Repo.Default <small class="app-vsn">(Noizu.AdvancedScaffolding v1.2.23)</small>
+
+          <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L143" title="View Source" class="view-source" rel="help">
+            <span class="icon-code" aria-hidden="true"></span>
+            <span class="sr-only">View Source</span>
+          </a>
+
+      </h1>
+
+
+
+        <section id="summary" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#summary">
+              <span class="icon-link" aria-hidden="true"></span>
+              <span class="sr-only">Link to this section</span>
+            </a>
+            Summary
+          </h1>
+
+  <div class="summary-functions summary">
+    <h2>
+      <a href="#functions">Functions</a>
+    </h2>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#cache/4">cache(m, ref, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#clear_list_cache!/4">clear_list_cache!(m, filter, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#create/4">create(m, entity, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#create!/4">create!(m, entity, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#delete/4">delete(m, entity, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#delete!/4">delete!(m, entity, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#delete_cache/4">delete_cache(m, ref, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#generate_identifier/1">generate_identifier(m)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#generate_identifier!/1">generate_identifier!(m)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#get/4">get(m, ref, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#get!/4">get!(m, ref, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#has_permission!/4">has_permission!(m, permission, arg3, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#has_permission!/5">has_permission!(m, repo, permission, arg4, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#has_permission?/4">has_permission?(m, permission, arg3, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#has_permission?/5">has_permission?(m, repo, permission, arg4, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#layer_create/5">layer_create(m, layer, entity, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#layer_create!/5">layer_create!(m, layer, entity, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#layer_create_callback/5">layer_create_callback(m, layer, entity, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#layer_create_callback!/5">layer_create_callback!(m, layer, entity, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#layer_create_loop/4">layer_create_loop(list, layer, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#layer_create_loop!/4">layer_create_loop!(list, layer, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#layer_delete/5">layer_delete(m, layer, entity, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#layer_delete!/5">layer_delete!(m, layer, entity, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#layer_delete_callback/5">layer_delete_callback(m, layer, entity, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#layer_delete_callback!/5">layer_delete_callback!(m, layer, entity, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#layer_get/5">layer_get(m, layer, ref, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#layer_get!/5">layer_get!(m, layer, ref, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#layer_get_callback/5">layer_get_callback(m, layer, ref, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#layer_get_callback!/5">layer_get_callback!(m, layer, ref, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#layer_get_identifier/5">layer_get_identifier(m, arg2, ref, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#layer_post_create_callback/5">layer_post_create_callback(m, layer, entity, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#layer_post_delete_callback/5">layer_post_delete_callback(m, layer, entity, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#layer_post_get_callback/5">layer_post_get_callback(m, layer, entity, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#layer_post_update_callback/5">layer_post_update_callback(m, layer, entity, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#layer_pre_create_callback/5">layer_pre_create_callback(m, layer, entity, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#layer_pre_delete_callback/5">layer_pre_delete_callback(m, layer, entity, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#layer_pre_update_callback/5">layer_pre_update_callback(m, layer, entity, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#layer_update/5">layer_update(m, layer, entity, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#layer_update!/5">layer_update!(m, layer, entity, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#layer_update_callback/5">layer_update_callback(m, layer, entity, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#layer_update_callback!/5">layer_update_callback!(m, layer, entity, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#layer_update_loop/4">layer_update_loop(list, layer, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#layer_update_loop!/4">layer_update_loop!(list, layer, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#list/5">list(m, pagination, filter, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#list!/5">list!(m, pagination, filter, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#list_cache!/5">list_cache!(m, pagination, filter, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#post_create_callback/4">post_create_callback(m, entity, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#post_delete_callback/4">post_delete_callback(m, entity, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#post_delete_callback!/4">post_delete_callback!(m, entity, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#post_get_callback/4">post_get_callback(m, entity, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#post_get_callback!/4">post_get_callback!(m, entity, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#post_update_callback/4">post_update_callback(m, entity, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#pre_create_callback/4">pre_create_callback(m, entity, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#pre_create_callback!/4">pre_create_callback!(m, entity, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#pre_delete_callback/4">pre_delete_callback(m, ref, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#pre_delete_callback!/4">pre_delete_callback!(m, ref, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#pre_update_callback/4">pre_update_callback(m, entity, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#pre_update_callback!/4">pre_update_callback!(m, entity, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#register__uid/4">register__uid(_, entity, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#update/4">update(m, entity, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#update!/4">update!(m, entity, context, options)</a>
+
+  </div>
+
+</div>
+
+  </div>
+
+        </section>
+
+
+        <section id="functions" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#functions">
+              <span class="icon-link" aria-hidden="true"></span>
+              <span class="sr-only">Link to this section</span>
+            </a>
+Functions
+          </h1>
+          <div class="functions-list">
+<section class="detail" id="cache/4">
+
+  <div class="detail-header">
+    <a href="#cache/4" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">cache(m, ref, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L234" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="clear_list_cache!/4">
+
+  <div class="detail-header">
+    <a href="#clear_list_cache!/4" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">clear_list_cache!(m, filter, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L1150" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="create/4">
+
+  <div class="detail-header">
+    <a href="#create/4" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">create(m, entity, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L482" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="create!/4">
+
+  <div class="detail-header">
+    <a href="#create!/4" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">create!(m, entity, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L520" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="delete/4">
+
+  <div class="detail-header">
+    <a href="#delete/4" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">delete(m, entity, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L937" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="delete!/4">
+
+  <div class="detail-header">
+    <a href="#delete!/4" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">delete!(m, entity, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L965" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="delete_cache/4">
+
+  <div class="detail-header">
+    <a href="#delete_cache/4" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">delete_cache(m, ref, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L217" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="generate_identifier/1">
+
+  <div class="detail-header">
+    <a href="#generate_identifier/1" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">generate_identifier(m)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L210" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="generate_identifier!/1">
+
+  <div class="detail-header">
+    <a href="#generate_identifier!/1" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">generate_identifier!(m)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L206" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="get/4">
+
+  <div class="detail-header">
+    <a href="#get/4" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">get(m, ref, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L268" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="get!/4">
+
+  <div class="detail-header">
+    <a href="#get!/4" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">get!(m, ref, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L297" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="has_permission!/4">
+
+  <div class="detail-header">
+    <a href="#has_permission!/4" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">has_permission!(m, permission, arg3, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L189" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="has_permission!/5">
+
+  <div class="detail-header">
+    <a href="#has_permission!/5" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">has_permission!(m, repo, permission, arg4, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L171" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="has_permission?/4">
+
+  <div class="detail-header">
+    <a href="#has_permission?/4" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">has_permission?(m, permission, arg3, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L181" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="has_permission?/5">
+
+  <div class="detail-header">
+    <a href="#has_permission?/5" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">has_permission?(m, repo, permission, arg4, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L163" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="layer_create/5">
+
+  <div class="detail-header">
+    <a href="#layer_create/5" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">layer_create(m, layer, entity, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L675" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="layer_create!/5">
+
+  <div class="detail-header">
+    <a href="#layer_create!/5" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">layer_create!(m, layer, entity, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L684" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="layer_create_callback/5">
+
+  <div class="detail-header">
+    <a href="#layer_create_callback/5" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">layer_create_callback(m, layer, entity, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L722" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="layer_create_callback!/5">
+
+  <div class="detail-header">
+    <a href="#layer_create_callback!/5" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">layer_create_callback!(m, layer, entity, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L737" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="layer_create_loop/4">
+
+  <div class="detail-header">
+    <a href="#layer_create_loop/4" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">layer_create_loop(list, layer, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L701" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="layer_create_loop!/4">
+
+  <div class="detail-header">
+    <a href="#layer_create_loop!/4" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">layer_create_loop!(list, layer, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L710" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="layer_delete/5">
+
+  <div class="detail-header">
+    <a href="#layer_delete/5" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">layer_delete(m, layer, entity, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L1065" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="layer_delete!/5">
+
+  <div class="detail-header">
+    <a href="#layer_delete!/5" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">layer_delete!(m, layer, entity, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L1070" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="layer_delete_callback/5">
+
+  <div class="detail-header">
+    <a href="#layer_delete_callback/5" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">layer_delete_callback(m, layer, entity, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L1084" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="layer_delete_callback!/5">
+
+  <div class="detail-header">
+    <a href="#layer_delete_callback!/5" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">layer_delete_callback!(m, layer, entity, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L1100" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="layer_get/5">
+
+  <div class="detail-header">
+    <a href="#layer_get/5" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">layer_get(m, layer, ref, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L396" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="layer_get!/5">
+
+  <div class="detail-header">
+    <a href="#layer_get!/5" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">layer_get!(m, layer, ref, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L405" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="layer_get_callback/5">
+
+  <div class="detail-header">
+    <a href="#layer_get_callback/5" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">layer_get_callback(m, layer, ref, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L417" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="layer_get_callback!/5">
+
+  <div class="detail-header">
+    <a href="#layer_get_callback!/5" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">layer_get_callback!(m, layer, ref, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L442" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="layer_get_identifier/5">
+
+  <div class="detail-header">
+    <a href="#layer_get_identifier/5" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">layer_get_identifier(m, arg2, ref, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L469" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="layer_post_create_callback/5">
+
+  <div class="detail-header">
+    <a href="#layer_post_create_callback/5" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">layer_post_create_callback(m, layer, entity, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L755" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="layer_post_delete_callback/5">
+
+  <div class="detail-header">
+    <a href="#layer_post_delete_callback/5" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">layer_post_delete_callback(m, layer, entity, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L1119" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="layer_post_get_callback/5">
+
+  <div class="detail-header">
+    <a href="#layer_post_get_callback/5" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">layer_post_get_callback(m, layer, entity, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L477" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="layer_post_update_callback/5">
+
+  <div class="detail-header">
+    <a href="#layer_post_update_callback/5" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">layer_post_update_callback(m, layer, entity, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L932" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="layer_pre_create_callback/5">
+
+  <div class="detail-header">
+    <a href="#layer_pre_create_callback/5" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">layer_pre_create_callback(m, layer, entity, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L696" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="layer_pre_delete_callback/5">
+
+  <div class="detail-header">
+    <a href="#layer_pre_delete_callback/5" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">layer_pre_delete_callback(m, layer, entity, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L1079" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="layer_pre_update_callback/5">
+
+  <div class="detail-header">
+    <a href="#layer_pre_update_callback/5" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">layer_pre_update_callback(m, layer, entity, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L883" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="layer_update/5">
+
+  <div class="detail-header">
+    <a href="#layer_update/5" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">layer_update(m, layer, entity, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L869" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="layer_update!/5">
+
+  <div class="detail-header">
+    <a href="#layer_update!/5" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">layer_update!(m, layer, entity, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L874" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="layer_update_callback/5">
+
+  <div class="detail-header">
+    <a href="#layer_update_callback/5" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">layer_update_callback(m, layer, entity, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L915" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="layer_update_callback!/5">
+
+  <div class="detail-header">
+    <a href="#layer_update_callback!/5" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">layer_update_callback!(m, layer, entity, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L922" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="layer_update_loop/4">
+
+  <div class="detail-header">
+    <a href="#layer_update_loop/4" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">layer_update_loop(list, layer, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L888" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="layer_update_loop!/4">
+
+  <div class="detail-header">
+    <a href="#layer_update_loop!/4" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">layer_update_loop!(list, layer, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L900" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="list/5">
+
+  <div class="detail-header">
+    <a href="#list/5" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">list(m, pagination, filter, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L1124" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="list!/5">
+
+  <div class="detail-header">
+    <a href="#list!/5" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">list!(m, pagination, filter, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L1135" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="list_cache!/5">
+
+  <div class="detail-header">
+    <a href="#list_cache!/5" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">list_cache!(m, pagination, filter, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L1143" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="post_create_callback/4">
+
+  <div class="detail-header">
+    <a href="#post_create_callback/4" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">post_create_callback(m, entity, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L639" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="post_delete_callback/4">
+
+  <div class="detail-header">
+    <a href="#post_delete_callback/4" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">post_delete_callback(m, entity, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L1035" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="post_delete_callback!/4">
+
+  <div class="detail-header">
+    <a href="#post_delete_callback!/4" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">post_delete_callback!(m, entity, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L1049" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="post_get_callback/4">
+
+  <div class="detail-header">
+    <a href="#post_get_callback/4" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">post_get_callback(m, entity, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L329" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="post_get_callback!/4">
+
+  <div class="detail-header">
+    <a href="#post_get_callback!/4" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">post_get_callback!(m, entity, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L360" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="post_update_callback/4">
+
+  <div class="detail-header">
+    <a href="#post_update_callback/4" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">post_update_callback(m, entity, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L848" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="pre_create_callback/4">
+
+  <div class="detail-header">
+    <a href="#pre_create_callback/4" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">pre_create_callback(m, entity, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L559" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="pre_create_callback!/4">
+
+  <div class="detail-header">
+    <a href="#pre_create_callback!/4" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">pre_create_callback!(m, entity, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L598" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="pre_delete_callback/4">
+
+  <div class="detail-header">
+    <a href="#pre_delete_callback/4" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">pre_delete_callback(m, ref, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L995" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="pre_delete_callback!/4">
+
+  <div class="detail-header">
+    <a href="#pre_delete_callback!/4" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">pre_delete_callback!(m, ref, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L1014" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="pre_update_callback/4">
+
+  <div class="detail-header">
+    <a href="#pre_update_callback/4" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">pre_update_callback(m, entity, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L819" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="pre_update_callback!/4">
+
+  <div class="detail-header">
+    <a href="#pre_update_callback!/4" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">pre_update_callback!(m, entity, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L832" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="register__uid/4">
+
+  <div class="detail-header">
+    <a href="#register__uid/4" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">register__uid(_, entity, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L660" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="update/4">
+
+  <div class="detail-header">
+    <a href="#update/4" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">update(m, entity, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L760" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="update!/4">
+
+  <div class="detail-header">
+    <a href="#update!/4" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">update!(m, entity, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/internal/domain_object/domain_object.repo.ex#L788" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+
+          </div>
+        </section>
+
+      <footer class="footer">
+
+        <p>
+          Find it on Hex:
+          <a href="https://hex.pm/packages/noizu_advanced_scaffolding/1.2.23" class="line footer-hex-package">Package</a>
+          <a href="https://preview.hex.pm/preview/noizu_advanced_scaffolding/1.2.23" class="line">Preview</a>
+
+            <a href="https://preview.hex.pm/preview/noizu_advanced_scaffolding/1.2.23/show/lib/scaffolding/internal/domain_object/domain_object.repo.ex">(current file)</a>
+
+        </p>
+
+        <p>
+          <span class="line">
+            Built using
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener">ExDoc</a> (v0.25.5) for the
+            <a href="https://elixir-lang.org" title="Elixir" target="_blank">Elixir programming language</a>.
+          </span>
+          <span class="line">
+            Designed by
+            <a href="https://twitter.com/dignifiedquire" target="_blank" rel="noopener" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+          </span>
+        </p>
+        <p>
+
+            <a href="api-reference.html" title="API reference" class="line footer-button">API Reference</a>
+
+          <button class="line footer-button display-shortcuts-help">
+            Display keyboard shortcuts
+          </button>
+          <button class="line footer-button night-mode-toggle">
+            Toggle night mode
+          </button>
+          <button class="line footer-button display-quick-switch">
+            Go to a HexDocs package
+          </button>
+          <button class="line footer-button tooltips-toggle">
+            <span class="tooltips-option-disable">Disable tooltips</span>
+            <span class="tooltips-option-enable">Enable tooltips</span>
+          </button>
+        </p>
+      </footer>
+    </div>
+  </div>
+</section>
+</div>
+
+
+  </body>
+</html>

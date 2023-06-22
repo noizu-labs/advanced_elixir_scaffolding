@@ -4,17 +4,17 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="ExDoc v0.25.1">
-    <meta name="project" content="Noizu.AdvancedScaffolding v1.0.1">
+    <meta name="generator" content="ExDoc v0.25.5">
+    <meta name="project" content="Noizu.AdvancedScaffolding v1.2.23">
 
-    <title>Noizu.AdvancedScaffolding.Helpers — Noizu.AdvancedScaffolding v1.0.1</title>
-    <link rel="stylesheet" href="dist/elixir-a172fe91e725dcb259e2.css" />
+    <title>Noizu.AdvancedScaffolding.Helpers — Noizu.AdvancedScaffolding v1.2.23</title>
+    <link rel="stylesheet" href="dist/elixir-d1506dba1db7cdc5483e.css" />
 
-    <script src="dist/sidebar_items-e170f11184.js"></script>
+    <script src="dist/sidebar_items-3d772270ac.js"></script>
 
       <script src="docs_config.js"></script>
 
-    <script async src="dist/app-f27ff079945e43879c46.js"></script>
+    <script async src="dist/app-7b632b26f13d5e0d20e1.js"></script>
 
 
   </head>
@@ -58,7 +58,7 @@
 Noizu.AdvancedScaffolding
       </a>
       <strong class="sidebar-projectVersion">
-        v1.0.1
+        v1.2.23
       </strong>
     </div>
 
@@ -80,7 +80,7 @@ Noizu.AdvancedScaffolding
     <div id="content" class="content-inner">
 
       <h1>
-Noizu.AdvancedScaffolding.Helpers <small class="app-vsn">(Noizu.AdvancedScaffolding v1.0.1)</small>
+Noizu.AdvancedScaffolding.Helpers <small class="app-vsn">(Noizu.AdvancedScaffolding v1.2.23)</small>
 
           <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/helpers.ex#L6" title="View Source" class="view-source" rel="help">
             <span class="icon-code" aria-hidden="true"></span>
@@ -215,6 +215,13 @@ Noizu.AdvancedScaffolding.Helpers <small class="app-vsn">(Noizu.AdvancedScaffold
 </div>
 <div class="summary-row">
   <div class="summary-signature">
+    <a href="#extract_setting/6">extract_setting(command, setting, conn, params, default \\ nil, options \\ nil)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
     <a href="#force_put/3">force_put(entity, p, v)</a>
 
   </div>
@@ -257,6 +264,13 @@ Noizu.AdvancedScaffolding.Helpers <small class="app-vsn">(Noizu.AdvancedScaffold
   </div>
 
     <div class="summary-synopsis"><p>Return query page (e.g. run next(query) until reaching desired page.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#request_pagination/3">request_pagination(params, default_page, default_results_per_page)</a>
+
+  </div>
 
 </div>
 
@@ -352,7 +366,7 @@ Functions
     </a>
     <h1 class="signature">__update_expand_options__(entity, options)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/helpers.ex#L484" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/helpers.ex#L487" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -374,7 +388,7 @@ Functions
     </a>
     <h1 class="signature">__update_options__(entity, options)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/helpers.ex#L446" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/helpers.ex#L449" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -396,7 +410,7 @@ Functions
     </a>
     <h1 class="signature">__update_options__(entity, context, options)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/helpers.ex#L464" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/helpers.ex#L467" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -418,7 +432,7 @@ Functions
     </a>
     <h1 class="signature">__update_options__json_format__(entity, options)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/helpers.ex#L515" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/helpers.ex#L518" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -442,7 +456,7 @@ Functions
     </a>
     <h1 class="signature">api_response(conn, response, context, options \\ [])</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/helpers.ex#L395" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/helpers.ex#L398" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -549,6 +563,32 @@ Functions
 
   </section>
 </section>
+<section class="detail" id="extract_setting/6">
+
+    <span id="extract_setting/4"></span>
+
+    <span id="extract_setting/5"></span>
+
+  <div class="detail-header">
+    <a href="#extract_setting/6" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">extract_setting(command, setting, conn, params, default \\ nil, options \\ nil)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/helpers.ex#L564" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
 <section class="detail" id="force_put/3">
 
   <div class="detail-header">
@@ -558,7 +598,7 @@ Functions
     </a>
     <h1 class="signature">force_put(entity, p, v)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/helpers.ex#L366" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/helpers.ex#L369" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -603,7 +643,7 @@ Functions
     </a>
     <h1 class="signature">get_ip(conn)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/helpers.ex#L326" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/helpers.ex#L329" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -660,15 +700,47 @@ Functions
 <p>Return query page (e.g. run next(query) until reaching desired page.</p>
   </section>
 </section>
+<section class="detail" id="request_pagination/3">
+
+  <div class="detail-header">
+    <a href="#request_pagination/3" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">request_pagination(params, default_page, default_results_per_page)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/helpers.ex#L539" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
 
           </div>
         </section>
 
       <footer class="footer">
+
+        <p>
+          Find it on Hex:
+          <a href="https://hex.pm/packages/noizu_advanced_scaffolding/1.2.23" class="line footer-hex-package">Package</a>
+          <a href="https://preview.hex.pm/preview/noizu_advanced_scaffolding/1.2.23" class="line">Preview</a>
+
+            <a href="https://preview.hex.pm/preview/noizu_advanced_scaffolding/1.2.23/show/lib/scaffolding/helpers.ex">(current file)</a>
+
+        </p>
+
         <p>
           <span class="line">
             Built using
-            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener">ExDoc</a> (v0.25.1) for the
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener">ExDoc</a> (v0.25.5) for the
             <a href="https://elixir-lang.org" title="Elixir" target="_blank">Elixir programming language</a>.
           </span>
           <span class="line">

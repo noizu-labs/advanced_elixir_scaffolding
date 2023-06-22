@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.25.5">
+    <meta name="project" content="Noizu.AdvancedScaffolding v1.2.23">
+
+    <title>Noizu.RocksDB — Noizu.AdvancedScaffolding v1.2.23</title>
+    <link rel="stylesheet" href="dist/elixir-d1506dba1db7cdc5483e.css" />
+
+    <script src="dist/sidebar_items-3d772270ac.js"></script>
+
+      <script src="docs_config.js"></script>
+
+    <script async src="dist/app-7b632b26f13d5e0d20e1.js"></script>
+
+
+  </head>
+  <body data-type="modules">
+    <script>
+
+      try {
+        if (localStorage.getItem('night-mode') === 'true') {
+          document.body.classList.add('night-mode');
+        }
+      } catch (error) { }
+    </script>
+
+<div class="main">
+
+<button class="sidebar-button sidebar-toggle">
+  <span class="icon-menu" title="Collapse/expand sidebar"></span>
+</button>
+
+<section class="sidebar">
+  <form class="sidebar-search" action="search.html">
+    <button type="submit" class="search-button" aria-label="Submit Search">
+      <span class="icon-search" aria-hidden="true" title="Submit search"></span>
+    </button>
+    <button type="button" tabindex="-1" class="search-close-button" aria-label="Cancel Search">
+      <span class="icon-cross" aria-hidden="true" title="Cancel search"></span>
+    </button>
+    <label class="search-label">
+      <input name="q" type="text" class="search-input" placeholder="Search..." aria-label="Input your search terms" autocomplete="off" />
+    </label>
+  </form>
+
+  <div class="autocomplete">
+    <div class="autocomplete-results">
+    </div>
+  </div>
+
+  <div class="sidebar-header">
+    <div class="sidebar-projectDetails">
+      <a href="readme.html" class="sidebar-projectName">
+Noizu.AdvancedScaffolding
+      </a>
+      <strong class="sidebar-projectVersion">
+        v1.2.23
+      </strong>
+    </div>
+
+  </div>
+
+  <ul class="sidebar-listNav">
+    <li><a id="extras-list-link" href="#full-list">Pages</a></li>
+
+      <li><a id="modules-list-link" href="#full-list">Modules</a></li>
+
+
+  </ul>
+  <div class="gradient"></div>
+  <ul id="full-list" class="sidebar-fullList"></ul>
+</section>
+
+<section class="content">
+  <div class="content-outer">
+    <div id="content" class="content-inner">
+
+      <h1>
+Noizu.RocksDB <small class="app-vsn">(Noizu.AdvancedScaffolding v1.2.23)</small>
+
+          <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/cache_handler/providers/rocksdb.ex#L3" title="View Source" class="view-source" rel="help">
+            <span class="icon-code" aria-hidden="true"></span>
+            <span class="sr-only">View Source</span>
+          </a>
+
+      </h1>
+
+
+        <section id="moduledoc">
+<p>The <a href="Noizu.RocksDB.html#content"><code class="inline">Noizu.RocksDB</code></a> module provides functions for interacting with a RocksDB database.</p><h1>Functions</h1><ul><li><a href="#resource_ok/1"><code class="inline">resource_ok/1</code></a>: Checks if the RocksDB resource handle is valid.</li><li><a href="#get/3"><code class="inline">get/3</code></a>: Retrieves a value from the RocksDB database.</li><li><a href="#delete/4"><code class="inline">delete/4</code></a>: Deletes a key-value pair from the RocksDB database.</li><li><a href="#put/4"><code class="inline">put/4</code></a>: Inserts or updates a key-value pair in the RocksDB database.</li></ul>
+        </section>
+
+
+        <section id="summary" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#summary">
+              <span class="icon-link" aria-hidden="true"></span>
+              <span class="sr-only">Link to this section</span>
+            </a>
+            Summary
+          </h1>
+
+  <div class="summary-functions summary">
+    <h2>
+      <a href="#functions">Functions</a>
+    </h2>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#delete/4">delete(handle, key, value, options \\ [])</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>Deletes a key-value pair from the RocksDB database.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#get/3">get(handle, key, options \\ [])</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>Retrieves a value from the RocksDB database.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#put/4">put(handle, key, value, options \\ [])</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>Inserts or updates a key-value pair in the RocksDB database.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#resource_ok/1">resource_ok(handle)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>Checks if the RocksDB resource handle is valid.</p></div>
+
+</div>
+
+  </div>
+
+        </section>
+
+
+        <section id="functions" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#functions">
+              <span class="icon-link" aria-hidden="true"></span>
+              <span class="sr-only">Link to this section</span>
+            </a>
+Functions
+          </h1>
+          <div class="functions-list">
+<section class="detail" id="delete/4">
+
+    <span id="delete/3"></span>
+
+  <div class="detail-header">
+    <a href="#delete/4" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">delete(handle, key, value, options \\ [])</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/cache_handler/providers/rocksdb.ex#L85" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <h2>Specs</h2>
+      <div class="specs">
+
+          <pre>delete(<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/Keyword.html#t:t/0">Keyword.t</a>()) :: {:ok, <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()} | {:error, <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()}</pre>
+
+      </div>
+
+<p>Deletes a key-value pair from the RocksDB database.</p><h2 id="delete/4-params" class="section-heading">
+  <a href="#delete/4-params" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Params
+</h2>
+<ul><li>handle: The resource handle.</li><li>key: The key of the pair to delete.</li><li>value: value of the key (unused)</li><li>options: A keyword list of options.</li></ul><h2 id="delete/4-returns" class="section-heading">
+  <a href="#delete/4-returns" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Returns
+</h2>
+<ul><li>: The deleted value.</li><li>: The resource handle is not valid.</li><li>error: An error that may occur during deletion.</li></ul>
+  </section>
+</section>
+<section class="detail" id="get/3">
+
+    <span id="get/2"></span>
+
+  <div class="detail-header">
+    <a href="#get/3" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">get(handle, key, options \\ [])</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/cache_handler/providers/rocksdb.ex#L56" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <h2>Specs</h2>
+      <div class="specs">
+
+          <pre>get(<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/Keyword.html#t:t/0">Keyword.t</a>()) :: {:ok, <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()} | {:error, <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()}</pre>
+
+      </div>
+
+<p>Retrieves a value from the RocksDB database.</p><h2 id="get/3-params" class="section-heading">
+  <a href="#get/3-params" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Params
+</h2>
+<ul><li>handle: The resource handle.</li><li>key: The key to retrieve the value for.</li><li>options: A keyword list of options.</li></ul><h2 id="get/3-returns" class="section-heading">
+  <a href="#get/3-returns" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Returns
+</h2>
+<ul><li>: The retrieved value.</li><li>: The resource handle is not valid.</li><li>error: An error that may occur during value retrieval.</li></ul>
+  </section>
+</section>
+<section class="detail" id="put/4">
+
+    <span id="put/3"></span>
+
+  <div class="detail-header">
+    <a href="#put/4" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">put(handle, key, value, options \\ [])</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/cache_handler/providers/rocksdb.ex#L114" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <h2>Specs</h2>
+      <div class="specs">
+
+          <pre>put(<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/Keyword.html#t:t/0">Keyword.t</a>()) :: {:ok, <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()} | {:error, <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()}</pre>
+
+      </div>
+
+<p>Inserts or updates a key-value pair in the RocksDB database.</p><h2 id="put/4-params" class="section-heading">
+  <a href="#put/4-params" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Params
+</h2>
+<ul><li>handle: The resource handle.</li><li>key: The key of the pair to insert/update.</li><li>value: The value to insert/update.</li><li>options: A keyword list of options.</li></ul><h2 id="put/4-returns" class="section-heading">
+  <a href="#put/4-returns" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Returns
+</h2>
+<ul><li>: The inserted/updated value.</li><li>: The resource handle is not valid.</li><li>error: An error that may occur during insertion/updating.</li></ul>
+  </section>
+</section>
+<section class="detail" id="resource_ok/1">
+
+  <div class="detail-header">
+    <a href="#resource_ok/1" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">resource_ok(handle)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/cache_handler/providers/rocksdb.ex#L30" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <h2>Specs</h2>
+      <div class="specs">
+
+          <pre>resource_ok(<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()) :: {:ok, <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()} | {:error, <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()}</pre>
+
+      </div>
+
+<p>Checks if the RocksDB resource handle is valid.</p><h2 id="resource_ok/1-params" class="section-heading">
+  <a href="#resource_ok/1-params" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Params
+</h2>
+<ul><li>handle: The resource handle.</li></ul><h2 id="resource_ok/1-returns" class="section-heading">
+  <a href="#resource_ok/1-returns" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Returns
+</h2>
+<ul><li>: The RocksDB resource if it is valid.</li><li>: The resource handle is not valid.</li><li>: An error reason for the failure.</li></ul>
+  </section>
+</section>
+
+          </div>
+        </section>
+
+      <footer class="footer">
+
+        <p>
+          Find it on Hex:
+          <a href="https://hex.pm/packages/noizu_advanced_scaffolding/1.2.23" class="line footer-hex-package">Package</a>
+          <a href="https://preview.hex.pm/preview/noizu_advanced_scaffolding/1.2.23" class="line">Preview</a>
+
+            <a href="https://preview.hex.pm/preview/noizu_advanced_scaffolding/1.2.23/show/lib/scaffolding/behaviours/cache_handler/providers/rocksdb.ex">(current file)</a>
+
+        </p>
+
+        <p>
+          <span class="line">
+            Built using
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener">ExDoc</a> (v0.25.5) for the
+            <a href="https://elixir-lang.org" title="Elixir" target="_blank">Elixir programming language</a>.
+          </span>
+          <span class="line">
+            Designed by
+            <a href="https://twitter.com/dignifiedquire" target="_blank" rel="noopener" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+          </span>
+        </p>
+        <p>
+
+            <a href="api-reference.html" title="API reference" class="line footer-button">API Reference</a>
+
+          <button class="line footer-button display-shortcuts-help">
+            Display keyboard shortcuts
+          </button>
+          <button class="line footer-button night-mode-toggle">
+            Toggle night mode
+          </button>
+          <button class="line footer-button display-quick-switch">
+            Go to a HexDocs package
+          </button>
+          <button class="line footer-button tooltips-toggle">
+            <span class="tooltips-option-disable">Disable tooltips</span>
+            <span class="tooltips-option-enable">Enable tooltips</span>
+          </button>
+        </p>
+      </footer>
+    </div>
+  </div>
+</section>
+</div>
+
+
+  </body>
+</html>

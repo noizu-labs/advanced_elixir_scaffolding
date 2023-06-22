@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.25.5">
+    <meta name="project" content="Noizu.AdvancedScaffolding v1.2.23">
+
+    <title>Noizu.DomainObject.CacheHandler — Noizu.AdvancedScaffolding v1.2.23</title>
+    <link rel="stylesheet" href="dist/elixir-d1506dba1db7cdc5483e.css" />
+
+    <script src="dist/sidebar_items-3d772270ac.js"></script>
+
+      <script src="docs_config.js"></script>
+
+    <script async src="dist/app-7b632b26f13d5e0d20e1.js"></script>
+
+
+  </head>
+  <body data-type="modules">
+    <script>
+
+      try {
+        if (localStorage.getItem('night-mode') === 'true') {
+          document.body.classList.add('night-mode');
+        }
+      } catch (error) { }
+    </script>
+
+<div class="main">
+
+<button class="sidebar-button sidebar-toggle">
+  <span class="icon-menu" title="Collapse/expand sidebar"></span>
+</button>
+
+<section class="sidebar">
+  <form class="sidebar-search" action="search.html">
+    <button type="submit" class="search-button" aria-label="Submit Search">
+      <span class="icon-search" aria-hidden="true" title="Submit search"></span>
+    </button>
+    <button type="button" tabindex="-1" class="search-close-button" aria-label="Cancel Search">
+      <span class="icon-cross" aria-hidden="true" title="Cancel search"></span>
+    </button>
+    <label class="search-label">
+      <input name="q" type="text" class="search-input" placeholder="Search..." aria-label="Input your search terms" autocomplete="off" />
+    </label>
+  </form>
+
+  <div class="autocomplete">
+    <div class="autocomplete-results">
+    </div>
+  </div>
+
+  <div class="sidebar-header">
+    <div class="sidebar-projectDetails">
+      <a href="readme.html" class="sidebar-projectName">
+Noizu.AdvancedScaffolding
+      </a>
+      <strong class="sidebar-projectVersion">
+        v1.2.23
+      </strong>
+    </div>
+
+  </div>
+
+  <ul class="sidebar-listNav">
+    <li><a id="extras-list-link" href="#full-list">Pages</a></li>
+
+      <li><a id="modules-list-link" href="#full-list">Modules</a></li>
+
+
+  </ul>
+  <div class="gradient"></div>
+  <ul id="full-list" class="sidebar-fullList"></ul>
+</section>
+
+<section class="content">
+  <div class="content-outer">
+    <div id="content" class="content-inner">
+
+      <h1>
+Noizu.DomainObject.CacheHandler <small>behaviour</small> <small class="app-vsn">(Noizu.AdvancedScaffolding v1.2.23)</small>
+
+          <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/cache_handler/cache_handler.ex#L7" title="View Source" class="view-source" rel="help">
+            <span class="icon-code" aria-hidden="true"></span>
+            <span class="sr-only">View Source</span>
+          </a>
+
+      </h1>
+
+
+        <section id="moduledoc">
+<h1>CacheHandler Behaviour</h1><p>The CacheHandler Behavior defines how to check, update and clear cached DomainObject values to a specific cache mechanisms.
+The DomainObject.Repo uses a module providing this behavior to implement it's <code class="inline">cache/3</code>, <code class="inline">delete_cache/3</code> and <code class="inline">pre_cache/3</code> methods.</p><p>FastGlobal will be used by default if the cache is not explicitly disabled or set in the DomainObject body using the <code class="inline">@cache</code> attribute.
+You may extend with your own implementation as needed. Simply put your provider's module name in the Handler portion of the <code class="inline">@cache</code> attribute.</p><h1>Format</h1><pre><code class="makeup elixir"><span class="na">@cache</span><span class="w"> </span><span class="ss">:disabled</span><span class="w">
+</span><span class="na">@cache</span><span class="w"> </span><span class="nc">Handler</span><span class="w"> </span><span class="c1"># use default options</span><span class="w">
+</span><span class="na">@cache</span><span class="w"> </span><span class="p" data-group-id="3059862540-1">{</span><span class="nc">Handler</span><span class="p">,</span><span class="w"> </span><span class="nc">Options</span><span class="p" data-group-id="3059862540-1">}</span></code></pre><h1>Provided CacheHandlers handlers</h1><ul><li><code class="inline">:fast_global</code> Noizu.FastGlobal.Cluster (default)</li><li><code class="inline">:con_cache</code> ets backed ConCache handler</li><li><code class="inline">:disabled</code> no handler</li><li><code class="inline">:redis</code> uses erlang term serialization</li><li><code class="inline">:redis_json</code> uses json serialization</li><li><code class="inline">:rocksdb</code> facebook rocksdb kv database backed cache handler.</li></ul><h1>Default Cache Options</h1><ul><li><code class="inline">prime</code> automatically populate cache on Repo.cache miss.</li><li><code class="inline">ttl</code> default ttl for cache entries</li><li><code class="inline">miss_ttl</code> default ttl for error/cache-miss cache entries.</li></ul><h1>Example</h1><pre><code class="makeup elixir"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">MyDO</span><span class="w"> </span><span class="k" data-group-id="5427972213-1">do</span><span class="w">
+  </span><span class="c1">#...</span><span class="w">
+  </span><span class="na">@cache</span><span class="w"> </span><span class="p" data-group-id="5427972213-2">{</span><span class="ss">:redis</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="5427972213-3">[</span><span class="ss">prime</span><span class="p">:</span><span class="w"> </span><span class="no">true</span><span class="p">,</span><span class="w"> </span><span class="ss">ttl</span><span class="p">:</span><span class="w"> </span><span class="mi">123</span><span class="p">,</span><span class="w"> </span><span class="ss">miss_ttl</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p" data-group-id="5427972213-3">]</span><span class="p" data-group-id="5427972213-2">}</span><span class="w">
+  </span><span class="kd">defmodule</span><span class="w"> </span><span class="nc">Entity</span><span class="w"> </span><span class="k" data-group-id="5427972213-4">do</span><span class="w">
+    </span><span class="c1">#...</span><span class="w">
+  </span><span class="k" data-group-id="5427972213-4">end</span><span class="w">
+
+  </span><span class="kd">defmodule</span><span class="w"> </span><span class="nc">Repo</span><span class="w"> </span><span class="k" data-group-id="5427972213-5">do</span><span class="w">
+    </span><span class="c1">#...</span><span class="w">
+  </span><span class="k" data-group-id="5427972213-5">end</span><span class="w">
+</span><span class="k" data-group-id="5427972213-1">end</span><span class="w">
+
+</span><span class="c1"># Interact</span><span class="w">
+</span><span class="nc">MyDO.Repo</span><span class="o">.</span><span class="n">cache</span><span class="p" data-group-id="5427972213-6">(</span><span class="mi">1234</span><span class="p">,</span><span class="w"> </span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="n">options</span><span class="p" data-group-id="5427972213-6">)</span><span class="w">
+</span><span class="nc">MyDO.Repo</span><span class="o">.</span><span class="n">delete_cache</span><span class="p" data-group-id="5427972213-7">(</span><span class="mi">1234</span><span class="p">,</span><span class="w"> </span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="n">options</span><span class="p" data-group-id="5427972213-7">)</span><span class="w">
+</span><span class="nc">MyDO.Repo</span><span class="o">.</span><span class="n">pre_cache</span><span class="p" data-group-id="5427972213-8">(</span><span class="n">object</span><span class="p">,</span><span class="w"> </span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="n">options</span><span class="p" data-group-id="5427972213-8">)</span></code></pre>
+        </section>
+
+
+        <section id="summary" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#summary">
+              <span class="icon-link" aria-hidden="true"></span>
+              <span class="sr-only">Link to this section</span>
+            </a>
+            Summary
+          </h1>
+
+  <div class="summary-callbacks summary">
+    <h2>
+      <a href="#callbacks">Callbacks</a>
+    </h2>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#c:cache_key/4">cache_key(m, ref, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#c:delete_cache/4">delete_cache(m, ref, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#c:get_cache/4">get_cache(m, ref, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#c:pre_cache/4">pre_cache(m, ref, context, options)</a>
+
+  </div>
+
+</div>
+
+  </div>
+
+        </section>
+
+
+        <section id="callbacks" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#callbacks">
+              <span class="icon-link" aria-hidden="true"></span>
+              <span class="sr-only">Link to this section</span>
+            </a>
+Callbacks
+          </h1>
+          <div class="callbacks-list">
+<section class="detail" id="c:cache_key/4">
+
+  <div class="detail-header">
+    <a href="#c:cache_key/4" class="detail-link" title="Link to this callback">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this callback</span>
+    </a>
+    <h1 class="signature">cache_key(m, ref, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/cache_handler/cache_handler.ex#L63" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <h2>Specs</h2>
+      <div class="specs">
+
+          <pre>cache_key(m :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), ref :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), context :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), options :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()) :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()</pre>
+
+      </div>
+
+
+  </section>
+</section>
+<section class="detail" id="c:delete_cache/4">
+
+  <div class="detail-header">
+    <a href="#c:delete_cache/4" class="detail-link" title="Link to this callback">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this callback</span>
+    </a>
+    <h1 class="signature">delete_cache(m, ref, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/cache_handler/cache_handler.ex#L60" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <h2>Specs</h2>
+      <div class="specs">
+
+          <pre>delete_cache(m :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), ref :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), context :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), options :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()) ::
+  <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()</pre>
+
+      </div>
+
+
+  </section>
+</section>
+<section class="detail" id="c:get_cache/4">
+
+  <div class="detail-header">
+    <a href="#c:get_cache/4" class="detail-link" title="Link to this callback">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this callback</span>
+    </a>
+    <h1 class="signature">get_cache(m, ref, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/cache_handler/cache_handler.ex#L62" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <h2>Specs</h2>
+      <div class="specs">
+
+          <pre>get_cache(m :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), ref :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), context :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), options :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()) :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()</pre>
+
+      </div>
+
+
+  </section>
+</section>
+<section class="detail" id="c:pre_cache/4">
+
+  <div class="detail-header">
+    <a href="#c:pre_cache/4" class="detail-link" title="Link to this callback">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this callback</span>
+    </a>
+    <h1 class="signature">pre_cache(m, ref, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/cache_handler/cache_handler.ex#L61" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <h2>Specs</h2>
+      <div class="specs">
+
+          <pre>pre_cache(m :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), ref :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), context :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), options :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()) :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()</pre>
+
+      </div>
+
+
+  </section>
+</section>
+
+          </div>
+        </section>
+
+      <footer class="footer">
+
+        <p>
+          Find it on Hex:
+          <a href="https://hex.pm/packages/noizu_advanced_scaffolding/1.2.23" class="line footer-hex-package">Package</a>
+          <a href="https://preview.hex.pm/preview/noizu_advanced_scaffolding/1.2.23" class="line">Preview</a>
+
+            <a href="https://preview.hex.pm/preview/noizu_advanced_scaffolding/1.2.23/show/lib/scaffolding/behaviours/cache_handler/cache_handler.ex">(current file)</a>
+
+        </p>
+
+        <p>
+          <span class="line">
+            Built using
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener">ExDoc</a> (v0.25.5) for the
+            <a href="https://elixir-lang.org" title="Elixir" target="_blank">Elixir programming language</a>.
+          </span>
+          <span class="line">
+            Designed by
+            <a href="https://twitter.com/dignifiedquire" target="_blank" rel="noopener" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+          </span>
+        </p>
+        <p>
+
+            <a href="api-reference.html" title="API reference" class="line footer-button">API Reference</a>
+
+          <button class="line footer-button display-shortcuts-help">
+            Display keyboard shortcuts
+          </button>
+          <button class="line footer-button night-mode-toggle">
+            Toggle night mode
+          </button>
+          <button class="line footer-button display-quick-switch">
+            Go to a HexDocs package
+          </button>
+          <button class="line footer-button tooltips-toggle">
+            <span class="tooltips-option-disable">Disable tooltips</span>
+            <span class="tooltips-option-enable">Enable tooltips</span>
+          </button>
+        </p>
+      </footer>
+    </div>
+  </div>
+</section>
+</div>
+
+
+  </body>
+</html>

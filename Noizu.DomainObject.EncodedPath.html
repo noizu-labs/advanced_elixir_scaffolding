@@ -4,17 +4,17 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="ExDoc v0.25.1">
-    <meta name="project" content="Noizu.AdvancedScaffolding v1.0.1">
+    <meta name="generator" content="ExDoc v0.25.5">
+    <meta name="project" content="Noizu.AdvancedScaffolding v1.2.23">
 
-    <title>Noizu.DomainObject.EncodedPath — Noizu.AdvancedScaffolding v1.0.1</title>
-    <link rel="stylesheet" href="dist/elixir-a172fe91e725dcb259e2.css" />
+    <title>Noizu.DomainObject.EncodedPath — Noizu.AdvancedScaffolding v1.2.23</title>
+    <link rel="stylesheet" href="dist/elixir-d1506dba1db7cdc5483e.css" />
 
-    <script src="dist/sidebar_items-e170f11184.js"></script>
+    <script src="dist/sidebar_items-3d772270ac.js"></script>
 
       <script src="docs_config.js"></script>
 
-    <script async src="dist/app-f27ff079945e43879c46.js"></script>
+    <script async src="dist/app-7b632b26f13d5e0d20e1.js"></script>
 
 
   </head>
@@ -58,7 +58,7 @@
 Noizu.AdvancedScaffolding
       </a>
       <strong class="sidebar-projectVersion">
-        v1.0.1
+        v1.2.23
       </strong>
     </div>
 
@@ -80,9 +80,9 @@ Noizu.AdvancedScaffolding
     <div id="content" class="content-inner">
 
       <h1>
-Noizu.DomainObject.EncodedPath <small class="app-vsn">(Noizu.AdvancedScaffolding v1.0.1)</small>
+Noizu.DomainObject.EncodedPath <small class="app-vsn">(Noizu.AdvancedScaffolding v1.2.23)</small>
 
-          <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/type_handlers/path_encoding.ex#L6" title="View Source" class="view-source" rel="help">
+          <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/path_encoding.ex#L6" title="View Source" class="view-source" rel="help">
             <span class="icon-code" aria-hidden="true"></span>
             <span class="sr-only">View Source</span>
           </a>
@@ -99,20 +99,6 @@ Noizu.DomainObject.EncodedPath <small class="app-vsn">(Noizu.AdvancedScaffolding
             </a>
             Summary
           </h1>
-
-  <div class="summary-types summary">
-    <h2>
-      <a href="#types">Types</a>
-    </h2>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#t:t/0">t()</a>
-
-  </div>
-
-</div>
-
-  </div>
 
   <div class="summary-functions summary">
     <h2>
@@ -162,7 +148,35 @@ Noizu.DomainObject.EncodedPath <small class="app-vsn">(Noizu.AdvancedScaffolding
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#from_json/1">from_json(json)</a>
+    <a href="#ecto_entity?/0">ecto_entity?()</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#ecto_identifier/1">ecto_identifier(_)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#from_json/4">from_json(format, json, context, options \\ nil)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#index_identifier/1">index_identifier(_)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#inner_from_json/1">inner_from_json(json)</a>
 
   </div>
 
@@ -211,6 +225,20 @@ Noizu.DomainObject.EncodedPath <small class="app-vsn">(Noizu.AdvancedScaffolding
 </div>
 <div class="summary-row">
   <div class="summary-signature">
+    <a href="#source/1">source(_)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#universal_identifier/1">universal_identifier(_)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
     <a href="#vsn/0">vsn()</a>
 
   </div>
@@ -221,54 +249,6 @@ Noizu.DomainObject.EncodedPath <small class="app-vsn">(Noizu.AdvancedScaffolding
 
         </section>
 
-
-        <section id="types" class="details-list">
-          <h1 class="section-heading">
-            <a class="hover-link" href="#types">
-              <span class="icon-link" aria-hidden="true"></span>
-              <span class="sr-only">Link to this section</span>
-            </a>
-Types
-          </h1>
-          <div class="types-list">
-<section class="detail" id="t:t/0">
-
-  <div class="detail-header">
-    <a href="#t:t/0" class="detail-link" title="Link to this type">
-      <span class="icon-link" aria-hidden="true"></span>
-      <span class="sr-only">Link to this type</span>
-    </a>
-    <h1 class="signature">t()</h1>
-
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/type_handlers/path_encoding.ex#L8" class="view-source" rel="help" title="View Source">
-       <span class="icon-code" aria-hidden="true"></span>
-       <span class="sr-only">View Source</span>
-     </a>
-
-
-  </div>
-
-  <section class="docstring">
-
-      <h2>Specs</h2>
-      <div class="specs">
-
-          <pre>t() :: %Noizu.DomainObject.EncodedPath{
-  depth: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">integer</a>(),
-  materialized_path: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">tuple</a>(),
-  matrix: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">tuple</a>(),
-  path: <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">list</a>(),
-  vsn: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">float</a>()
-}</pre>
-
-      </div>
-
-
-  </section>
-</section>
-
-          </div>
-        </section>
 
         <section id="functions" class="details-list">
           <h1 class="section-heading">
@@ -288,7 +268,7 @@ Functions
     </a>
     <h1 class="signature">convert_matrix_to_path(m)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/type_handlers/path_encoding.ex#L90" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/path_encoding.ex#L84" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -310,7 +290,7 @@ Functions
     </a>
     <h1 class="signature">convert_matrix_to_path(m, acc)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/type_handlers/path_encoding.ex#L94" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/path_encoding.ex#L88" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -332,7 +312,7 @@ Functions
     </a>
     <h1 class="signature">convert_path_to_matrix(path)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/type_handlers/path_encoding.ex#L76" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/path_encoding.ex#L70" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -354,7 +334,7 @@ Functions
     </a>
     <h1 class="signature">convert_path_to_tuple(path)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/type_handlers/path_encoding.ex#L131" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/path_encoding.ex#L125" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -376,7 +356,7 @@ Functions
     </a>
     <h1 class="signature">convert_tuple_to_path(path)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/type_handlers/path_encoding.ex#L118" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/path_encoding.ex#L112" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -398,7 +378,7 @@ Functions
     </a>
     <h1 class="signature">convert_tuple_to_path(arg, acc)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/type_handlers/path_encoding.ex#L122" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/path_encoding.ex#L116" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -411,16 +391,106 @@ Functions
 
   </section>
 </section>
-<section class="detail" id="from_json/1">
+<section class="detail" id="ecto_entity?/0">
 
   <div class="detail-header">
-    <a href="#from_json/1" class="detail-link" title="Link to this function">
+    <a href="#ecto_entity?/0" class="detail-link" title="Link to this function">
       <span class="icon-link" aria-hidden="true"></span>
       <span class="sr-only">Link to this function</span>
     </a>
-    <h1 class="signature">from_json(json)</h1>
+    <h1 class="signature">ecto_entity?()</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/type_handlers/path_encoding.ex#L168" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/path_encoding.ex#L10" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="ecto_identifier/1">
+
+  <div class="detail-header">
+    <a href="#ecto_identifier/1" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">ecto_identifier(_)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/path_encoding.ex#L10" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="from_json/4">
+
+    <span id="from_json/3"></span>
+
+  <div class="detail-header">
+    <a href="#from_json/4" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">from_json(format, json, context, options \\ nil)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/path_encoding.ex#L162" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="index_identifier/1">
+
+  <div class="detail-header">
+    <a href="#index_identifier/1" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">index_identifier(_)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/path_encoding.ex#L10" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="inner_from_json/1">
+
+  <div class="detail-header">
+    <a href="#inner_from_json/1" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">inner_from_json(json)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/path_encoding.ex#L169" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -442,7 +512,7 @@ Functions
     </a>
     <h1 class="signature">leaf_node(map)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/type_handlers/path_encoding.ex#L69" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/path_encoding.ex#L63" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -464,7 +534,7 @@ Functions
     </a>
     <h1 class="signature">multiply_matrix(map1, map2)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/type_handlers/path_encoding.ex#L57" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/path_encoding.ex#L51" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -486,7 +556,7 @@ Functions
     </a>
     <h1 class="signature">new(m)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/type_handlers/path_encoding.ex#L140" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/path_encoding.ex#L134" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -508,7 +578,7 @@ Functions
     </a>
     <h1 class="signature">parent_path(this)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/type_handlers/path_encoding.ex#L31" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/path_encoding.ex#L25" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -530,7 +600,7 @@ Functions
     </a>
     <h1 class="signature">path_string(this)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/type_handlers/path_encoding.ex#L36" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/path_encoding.ex#L30" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -552,7 +622,51 @@ Functions
     </a>
     <h1 class="signature">position_matrix(position)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/type_handlers/path_encoding.ex#L44" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/path_encoding.ex#L38" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="source/1">
+
+  <div class="detail-header">
+    <a href="#source/1" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">source(_)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/path_encoding.ex#L10" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="universal_identifier/1">
+
+  <div class="detail-header">
+    <a href="#universal_identifier/1" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">universal_identifier(_)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/path_encoding.ex#L10" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -574,7 +688,7 @@ Functions
     </a>
     <h1 class="signature">vsn()</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/type_handlers/path_encoding.ex#L198" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/path_encoding.ex#L6" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -592,10 +706,20 @@ Functions
         </section>
 
       <footer class="footer">
+
+        <p>
+          Find it on Hex:
+          <a href="https://hex.pm/packages/noizu_advanced_scaffolding/1.2.23" class="line footer-hex-package">Package</a>
+          <a href="https://preview.hex.pm/preview/noizu_advanced_scaffolding/1.2.23" class="line">Preview</a>
+
+            <a href="https://preview.hex.pm/preview/noizu_advanced_scaffolding/1.2.23/show/lib/scaffolding/behaviours/type_handler/providers/path_encoding.ex">(current file)</a>
+
+        </p>
+
         <p>
           <span class="line">
             Built using
-            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener">ExDoc</a> (v0.25.1) for the
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener">ExDoc</a> (v0.25.5) for the
             <a href="https://elixir-lang.org" title="Elixir" target="_blank">Elixir programming language</a>.
           </span>
           <span class="line">

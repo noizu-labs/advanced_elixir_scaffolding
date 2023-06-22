@@ -4,17 +4,17 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="ExDoc v0.25.1">
-    <meta name="project" content="Noizu.AdvancedScaffolding v1.0.1">
+    <meta name="generator" content="ExDoc v0.25.5">
+    <meta name="project" content="Noizu.AdvancedScaffolding v1.2.23">
 
-    <title>Noizu.DomainObject.TypeHandler.Behaviour — Noizu.AdvancedScaffolding v1.0.1</title>
-    <link rel="stylesheet" href="dist/elixir-a172fe91e725dcb259e2.css" />
+    <title>Noizu.DomainObject.TypeHandler.Behaviour — Noizu.AdvancedScaffolding v1.2.23</title>
+    <link rel="stylesheet" href="dist/elixir-d1506dba1db7cdc5483e.css" />
 
-    <script src="dist/sidebar_items-e170f11184.js"></script>
+    <script src="dist/sidebar_items-3d772270ac.js"></script>
 
       <script src="docs_config.js"></script>
 
-    <script async src="dist/app-f27ff079945e43879c46.js"></script>
+    <script async src="dist/app-7b632b26f13d5e0d20e1.js"></script>
 
 
   </head>
@@ -58,7 +58,7 @@
 Noizu.AdvancedScaffolding
       </a>
       <strong class="sidebar-projectVersion">
-        v1.0.1
+        v1.2.23
       </strong>
     </div>
 
@@ -80,9 +80,9 @@ Noizu.AdvancedScaffolding
     <div id="content" class="content-inner">
 
       <h1>
-Noizu.DomainObject.TypeHandler.Behaviour <small>behaviour</small> <small class="app-vsn">(Noizu.AdvancedScaffolding v1.0.1)</small>
+Noizu.DomainObject.TypeHandler.Behaviour <small>behaviour</small> <small class="app-vsn">(Noizu.AdvancedScaffolding v1.2.23)</small>
 
-          <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler.ex#L19" title="View Source" class="view-source" rel="help">
+          <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/type_handler.ex#L25" title="View Source" class="view-source" rel="help">
             <span class="icon-code" aria-hidden="true"></span>
             <span class="sr-only">View Source</span>
           </a>
@@ -110,12 +110,16 @@ Noizu.DomainObject.TypeHandler.Behaviour <small>behaviour</small> <small class="
 
   </div>
 
+    <div class="summary-synopsis"><p>Format instance of type for Inspect output. - strip fields, simplify object, etc.</p></div>
+
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#c:cast/7">cast(any, any, any, any, any, any, any)</a>
+    <a href="#c:cast/6">cast(any, any, any, any, any, any)</a>
 
   </div>
+
+    <div class="summary-synopsis"><p>Cast database record fields back into entity.field of this type. For example, to reconstruct a TimeStamp entity by grabbing the RDMS table's created_on, modified_on, deleted_on fields.</p></div>
 
 </div>
 <div class="summary-row">
@@ -124,12 +128,41 @@ Noizu.DomainObject.TypeHandler.Behaviour <small>behaviour</small> <small class="
 
   </div>
 
+    <div class="summary-synopsis"><p>Determine if two instances of this type match. Possibly ignoring erroneous fields such as time stamps/transient fields, etc.</p></div>
+
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#c:dump/6">dump(any, any, any, any, any, any)</a>
+    <a href="#c:dump/7">dump(any, any, any, any, any, any, any)</a>
 
   </div>
+
+    <div class="summary-synopsis"><p>Cast database record fields to database/persistence format.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#c:from_json/5">from_json(format, field, json, context, options)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#c:post_create_callback/4">post_create_callback(any, any, any, any)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>Post create callback. Post entity creation callback. If, for example, we wish to save this field to its own tables after creating the records for the entity containing this field.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#c:post_create_callback!/4">post_create_callback!(any, any, any, any)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>(Dirty) Post create callback. Post entity creation callback. If, for example, we wish to save this field to its own tables after creating the records for the entity containing this field.</p></div>
 
 </div>
 <div class="summary-row">
@@ -138,12 +171,50 @@ Noizu.DomainObject.TypeHandler.Behaviour <small>behaviour</small> <small class="
 
   </div>
 
+    <div class="summary-synopsis"><p>Post delete callback for entity fields of this type.</p></div>
+
 </div>
 <div class="summary-row">
   <div class="summary-signature">
     <a href="#c:post_delete_callback!/4">post_delete_callback!(any, any, any, any)</a>
 
   </div>
+
+    <div class="summary-synopsis"><p>(Dirty) Post delete callback for entity fields of this type.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#c:post_get_callback/4">post_get_callback(any, any, any, any)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>Post get callback, to allow, for example, injecting data into a transient field or running additional queries needed to populate a domain object entity field.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#c:post_get_callback!/4">post_get_callback!(any, any, any, any)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#c:post_update_callback/4">post_update_callback(any, any, any, any)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>Post update callback for entity fields of this type.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#c:post_update_callback!/4">post_update_callback!(any, any, any, any)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>(Dirty) Post update callback for entity fields of this type.</p></div>
 
 </div>
 <div class="summary-row">
@@ -152,12 +223,36 @@ Noizu.DomainObject.TypeHandler.Behaviour <small>behaviour</small> <small class="
 
   </div>
 
+    <div class="summary-synopsis"><p>Pre create callback. Users may have provided a simplified representation of this type, that we need to expand into the correct type and or possibly expand and write to the database before
+proceeding to create the entity that contains this field.</p></div>
+
 </div>
 <div class="summary-row">
   <div class="summary-signature">
     <a href="#c:pre_create_callback!/4">pre_create_callback!(any, any, any, any)</a>
 
   </div>
+
+    <div class="summary-synopsis"><p>(Dirty) Pre create callback. Users may have provided a simplified representation of this type, that we need to expand into the correct type and or possibly expand and write to the database before
+proceeding to create the entity that contains this field.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#c:pre_delete_callback/4">pre_delete_callback(any, any, any, any)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>Pre delete callback for entity fields of this type.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#c:pre_delete_callback!/4">pre_delete_callback!(any, any, any, any)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>(Dirty) Pre delete callback for entity fields of this type.</p></div>
 
 </div>
 <div class="summary-row">
@@ -166,6 +261,8 @@ Noizu.DomainObject.TypeHandler.Behaviour <small>behaviour</small> <small class="
 
   </div>
 
+    <div class="summary-synopsis"><p>Pre update callback for entity fields of this type.</p></div>
+
 </div>
 <div class="summary-row">
   <div class="summary-signature">
@@ -173,12 +270,16 @@ Noizu.DomainObject.TypeHandler.Behaviour <small>behaviour</small> <small class="
 
   </div>
 
+    <div class="summary-synopsis"><p>(Dirty) Pre update callback for entity fields of this type.</p></div>
+
 </div>
 <div class="summary-row">
   <div class="summary-signature">
     <a href="#c:sync/3">sync(any, any, any)</a>
 
   </div>
+
+    <div class="summary-synopsis"><p>Merge existing and updated instance of type.</p></div>
 
 </div>
 <div class="summary-row">
@@ -193,6 +294,8 @@ Noizu.DomainObject.TypeHandler.Behaviour <small>behaviour</small> <small class="
     <a href="#c:sync!/3">sync!(any, any, any)</a>
 
   </div>
+
+    <div class="summary-synopsis"><p>Merge existing and updated instance of type.</p></div>
 
 </div>
 <div class="summary-row">
@@ -226,7 +329,7 @@ Callbacks
     </a>
     <h1 class="signature">__strip_inspect__(any, any, any)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler.ex#L27" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/type_handler.ex#L47" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -243,19 +346,19 @@ Callbacks
 
       </div>
 
-
+<p>Format instance of type for Inspect output. - strip fields, simplify object, etc.</p>
   </section>
 </section>
-<section class="detail" id="c:cast/7">
+<section class="detail" id="c:cast/6">
 
   <div class="detail-header">
-    <a href="#c:cast/7" class="detail-link" title="Link to this callback">
+    <a href="#c:cast/6" class="detail-link" title="Link to this callback">
       <span class="icon-link" aria-hidden="true"></span>
       <span class="sr-only">Link to this callback</span>
     </a>
-    <h1 class="signature">cast(any, any, any, any, any, any, any)</h1>
+    <h1 class="signature">cast(any, any, any, any, any, any)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler.ex#L38" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/type_handler.ex#L132" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -268,11 +371,11 @@ Callbacks
       <h2>Specs</h2>
       <div class="specs">
 
-          <pre>cast(<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()) :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()</pre>
+          <pre>cast(<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()) :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()</pre>
 
       </div>
 
-
+<p>Cast database record fields back into entity.field of this type. For example, to reconstruct a TimeStamp entity by grabbing the RDMS table's created_on, modified_on, deleted_on fields.</p>
   </section>
 </section>
 <section class="detail" id="c:compare/2">
@@ -284,7 +387,7 @@ Callbacks
     </a>
     <h1 class="signature">compare(any, any)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler.ex#L20" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/type_handler.ex#L30" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -301,19 +404,19 @@ Callbacks
 
       </div>
 
-
+<p>Determine if two instances of this type match. Possibly ignoring erroneous fields such as time stamps/transient fields, etc.</p>
   </section>
 </section>
-<section class="detail" id="c:dump/6">
+<section class="detail" id="c:dump/7">
 
   <div class="detail-header">
-    <a href="#c:dump/6" class="detail-link" title="Link to this callback">
+    <a href="#c:dump/7" class="detail-link" title="Link to this callback">
       <span class="icon-link" aria-hidden="true"></span>
       <span class="sr-only">Link to this callback</span>
     </a>
-    <h1 class="signature">dump(any, any, any, any, any, any)</h1>
+    <h1 class="signature">dump(any, any, any, any, any, any, any)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler.ex#L39" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/type_handler.ex#L126" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -326,11 +429,105 @@ Callbacks
       <h2>Specs</h2>
       <div class="specs">
 
-          <pre>dump(<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()) :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()</pre>
+          <pre>dump(<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()) :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()</pre>
+
+      </div>
+
+<p>Cast database record fields to database/persistence format.</p>
+  </section>
+</section>
+<section class="detail" id="c:from_json/5">
+
+  <div class="detail-header">
+    <a href="#c:from_json/5" class="detail-link" title="Link to this callback">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this callback</span>
+    </a>
+    <h1 class="signature">from_json(format, field, json, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/type_handler.ex#L134" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <h2>Specs</h2>
+      <div class="specs">
+
+          <pre>from_json(
+  format :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(),
+  field :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">atom</a>(),
+  json :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(),
+  context :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(),
+  options :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()
+) ::
+  <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">map</a>() | nil</pre>
 
       </div>
 
 
+  </section>
+</section>
+<section class="detail" id="c:post_create_callback/4">
+
+  <div class="detail-header">
+    <a href="#c:post_create_callback/4" class="detail-link" title="Link to this callback">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this callback</span>
+    </a>
+    <h1 class="signature">post_create_callback(any, any, any, any)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/type_handler.ex#L73" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <h2>Specs</h2>
+      <div class="specs">
+
+          <pre>post_create_callback(<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()) :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()</pre>
+
+      </div>
+
+<p>Post create callback. Post entity creation callback. If, for example, we wish to save this field to its own tables after creating the records for the entity containing this field.</p>
+  </section>
+</section>
+<section class="detail" id="c:post_create_callback!/4">
+
+  <div class="detail-header">
+    <a href="#c:post_create_callback!/4" class="detail-link" title="Link to this callback">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this callback</span>
+    </a>
+    <h1 class="signature">post_create_callback!(any, any, any, any)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/type_handler.ex#L78" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <h2>Specs</h2>
+      <div class="specs">
+
+          <pre>post_create_callback!(<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()) :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()</pre>
+
+      </div>
+
+<p>(Dirty) Post create callback. Post entity creation callback. If, for example, we wish to save this field to its own tables after creating the records for the entity containing this field.</p>
   </section>
 </section>
 <section class="detail" id="c:post_delete_callback/4">
@@ -342,7 +539,7 @@ Callbacks
     </a>
     <h1 class="signature">post_delete_callback(any, any, any, any)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler.ex#L35" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/type_handler.ex#L116" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -359,7 +556,7 @@ Callbacks
 
       </div>
 
-
+<p>Post delete callback for entity fields of this type.</p>
   </section>
 </section>
 <section class="detail" id="c:post_delete_callback!/4">
@@ -371,7 +568,7 @@ Callbacks
     </a>
     <h1 class="signature">post_delete_callback!(any, any, any, any)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler.ex#L36" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/type_handler.ex#L121" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -388,7 +585,123 @@ Callbacks
 
       </div>
 
+<p>(Dirty) Post delete callback for entity fields of this type.</p>
+  </section>
+</section>
+<section class="detail" id="c:post_get_callback/4">
 
+  <div class="detail-header">
+    <a href="#c:post_get_callback/4" class="detail-link" title="Link to this callback">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this callback</span>
+    </a>
+    <h1 class="signature">post_get_callback(any, any, any, any)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/type_handler.ex#L53" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <h2>Specs</h2>
+      <div class="specs">
+
+          <pre>post_get_callback(<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()) :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()</pre>
+
+      </div>
+
+<p>Post get callback, to allow, for example, injecting data into a transient field or running additional queries needed to populate a domain object entity field.</p>
+  </section>
+</section>
+<section class="detail" id="c:post_get_callback!/4">
+
+  <div class="detail-header">
+    <a href="#c:post_get_callback!/4" class="detail-link" title="Link to this callback">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this callback</span>
+    </a>
+    <h1 class="signature">post_get_callback!(any, any, any, any)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/type_handler.ex#L54" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <h2>Specs</h2>
+      <div class="specs">
+
+          <pre>post_get_callback!(<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()) :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()</pre>
+
+      </div>
+
+
+  </section>
+</section>
+<section class="detail" id="c:post_update_callback/4">
+
+  <div class="detail-header">
+    <a href="#c:post_update_callback/4" class="detail-link" title="Link to this callback">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this callback</span>
+    </a>
+    <h1 class="signature">post_update_callback(any, any, any, any)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/type_handler.ex#L95" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <h2>Specs</h2>
+      <div class="specs">
+
+          <pre>post_update_callback(<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()) :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()</pre>
+
+      </div>
+
+<p>Post update callback for entity fields of this type.</p>
+  </section>
+</section>
+<section class="detail" id="c:post_update_callback!/4">
+
+  <div class="detail-header">
+    <a href="#c:post_update_callback!/4" class="detail-link" title="Link to this callback">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this callback</span>
+    </a>
+    <h1 class="signature">post_update_callback!(any, any, any, any)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/type_handler.ex#L100" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <h2>Specs</h2>
+      <div class="specs">
+
+          <pre>post_update_callback!(<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()) :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()</pre>
+
+      </div>
+
+<p>(Dirty) Post update callback for entity fields of this type.</p>
   </section>
 </section>
 <section class="detail" id="c:pre_create_callback/4">
@@ -400,7 +713,7 @@ Callbacks
     </a>
     <h1 class="signature">pre_create_callback(any, any, any, any)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler.ex#L29" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/type_handler.ex#L61" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -417,7 +730,8 @@ Callbacks
 
       </div>
 
-
+<p>Pre create callback. Users may have provided a simplified representation of this type, that we need to expand into the correct type and or possibly expand and write to the database before
+proceeding to create the entity that contains this field.</p>
   </section>
 </section>
 <section class="detail" id="c:pre_create_callback!/4">
@@ -429,7 +743,7 @@ Callbacks
     </a>
     <h1 class="signature">pre_create_callback!(any, any, any, any)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler.ex#L30" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/type_handler.ex#L67" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -446,7 +760,66 @@ Callbacks
 
       </div>
 
+<p>(Dirty) Pre create callback. Users may have provided a simplified representation of this type, that we need to expand into the correct type and or possibly expand and write to the database before
+proceeding to create the entity that contains this field.</p>
+  </section>
+</section>
+<section class="detail" id="c:pre_delete_callback/4">
 
+  <div class="detail-header">
+    <a href="#c:pre_delete_callback/4" class="detail-link" title="Link to this callback">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this callback</span>
+    </a>
+    <h1 class="signature">pre_delete_callback(any, any, any, any)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/type_handler.ex#L105" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <h2>Specs</h2>
+      <div class="specs">
+
+          <pre>pre_delete_callback(<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()) :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()</pre>
+
+      </div>
+
+<p>Pre delete callback for entity fields of this type.</p>
+  </section>
+</section>
+<section class="detail" id="c:pre_delete_callback!/4">
+
+  <div class="detail-header">
+    <a href="#c:pre_delete_callback!/4" class="detail-link" title="Link to this callback">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this callback</span>
+    </a>
+    <h1 class="signature">pre_delete_callback!(any, any, any, any)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/type_handler.ex#L110" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <h2>Specs</h2>
+      <div class="specs">
+
+          <pre>pre_delete_callback!(<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()) :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()</pre>
+
+      </div>
+
+<p>(Dirty) Pre delete callback for entity fields of this type.</p>
   </section>
 </section>
 <section class="detail" id="c:pre_update_callback/4">
@@ -458,7 +831,7 @@ Callbacks
     </a>
     <h1 class="signature">pre_update_callback(any, any, any, any)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler.ex#L32" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/type_handler.ex#L84" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -475,7 +848,7 @@ Callbacks
 
       </div>
 
-
+<p>Pre update callback for entity fields of this type.</p>
   </section>
 </section>
 <section class="detail" id="c:pre_update_callback!/4">
@@ -487,7 +860,7 @@ Callbacks
     </a>
     <h1 class="signature">pre_update_callback!(any, any, any, any)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler.ex#L33" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/type_handler.ex#L90" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -504,7 +877,7 @@ Callbacks
 
       </div>
 
-
+<p>(Dirty) Pre update callback for entity fields of this type.</p>
   </section>
 </section>
 <section class="detail" id="c:sync/3">
@@ -516,7 +889,7 @@ Callbacks
     </a>
     <h1 class="signature">sync(any, any, any)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler.ex#L22" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/type_handler.ex#L35" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -533,7 +906,7 @@ Callbacks
 
       </div>
 
-
+<p>Merge existing and updated instance of type.</p>
   </section>
 </section>
 <section class="detail" id="c:sync/4">
@@ -545,7 +918,7 @@ Callbacks
     </a>
     <h1 class="signature">sync(any, any, any, any)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler.ex#L23" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/type_handler.ex#L36" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -574,7 +947,7 @@ Callbacks
     </a>
     <h1 class="signature">sync!(any, any, any)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler.ex#L24" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/type_handler.ex#L41" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -591,7 +964,7 @@ Callbacks
 
       </div>
 
-
+<p>Merge existing and updated instance of type.</p>
   </section>
 </section>
 <section class="detail" id="c:sync!/4">
@@ -603,7 +976,7 @@ Callbacks
     </a>
     <h1 class="signature">sync!(any, any, any, any)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler.ex#L25" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/type_handler.ex#L42" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -628,10 +1001,20 @@ Callbacks
         </section>
 
       <footer class="footer">
+
+        <p>
+          Find it on Hex:
+          <a href="https://hex.pm/packages/noizu_advanced_scaffolding/1.2.23" class="line footer-hex-package">Package</a>
+          <a href="https://preview.hex.pm/preview/noizu_advanced_scaffolding/1.2.23" class="line">Preview</a>
+
+            <a href="https://preview.hex.pm/preview/noizu_advanced_scaffolding/1.2.23/show/lib/scaffolding/behaviours/type_handler/type_handler.ex">(current file)</a>
+
+        </p>
+
         <p>
           <span class="line">
             Built using
-            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener">ExDoc</a> (v0.25.1) for the
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener">ExDoc</a> (v0.25.5) for the
             <a href="https://elixir-lang.org" title="Elixir" target="_blank">Elixir programming language</a>.
           </span>
           <span class="line">

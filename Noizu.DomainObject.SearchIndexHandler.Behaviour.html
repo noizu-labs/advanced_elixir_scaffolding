@@ -4,17 +4,17 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="ExDoc v0.25.1">
-    <meta name="project" content="Noizu.AdvancedScaffolding v1.0.1">
+    <meta name="generator" content="ExDoc v0.25.5">
+    <meta name="project" content="Noizu.AdvancedScaffolding v1.2.23">
 
-    <title>Noizu.DomainObject.SearchIndexHandler.Behaviour — Noizu.AdvancedScaffolding v1.0.1</title>
-    <link rel="stylesheet" href="dist/elixir-a172fe91e725dcb259e2.css" />
+    <title>Noizu.DomainObject.SearchIndexHandler.Behaviour — Noizu.AdvancedScaffolding v1.2.23</title>
+    <link rel="stylesheet" href="dist/elixir-d1506dba1db7cdc5483e.css" />
 
-    <script src="dist/sidebar_items-e170f11184.js"></script>
+    <script src="dist/sidebar_items-3d772270ac.js"></script>
 
       <script src="docs_config.js"></script>
 
-    <script async src="dist/app-f27ff079945e43879c46.js"></script>
+    <script async src="dist/app-7b632b26f13d5e0d20e1.js"></script>
 
 
   </head>
@@ -58,7 +58,7 @@
 Noizu.AdvancedScaffolding
       </a>
       <strong class="sidebar-projectVersion">
-        v1.0.1
+        v1.2.23
       </strong>
     </div>
 
@@ -80,9 +80,9 @@ Noizu.AdvancedScaffolding
     <div id="content" class="content-inner">
 
       <h1>
-Noizu.DomainObject.SearchIndexHandler.Behaviour <small>behaviour</small> <small class="app-vsn">(Noizu.AdvancedScaffolding v1.0.1)</small>
+Noizu.DomainObject.SearchIndexHandler.Behaviour <small>behaviour</small> <small class="app-vsn">(Noizu.AdvancedScaffolding v1.2.23)</small>
 
-          <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/search_index_handler.ex#L7" title="View Source" class="view-source" rel="help">
+          <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/search_index_handler/search_index_handler.ex#L31" title="View Source" class="view-source" rel="help">
             <span class="icon-code" aria-hidden="true"></span>
             <span class="sr-only">View Source</span>
           </a>
@@ -118,6 +118,13 @@ Noizu.DomainObject.SearchIndexHandler.Behaviour <small>behaviour</small> <small 
     <h2>
       <a href="#callbacks">Callbacks</a>
     </h2>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#c:__search_clauses__/6">__search_clauses__(index, settings, conn, params, context, options)</a>
+
+  </div>
+
+</div>
 <div class="summary-row">
   <div class="summary-signature">
     <a href="#c:__sphinx_bits__/3">__sphinx_bits__(field, indexing, settings)</a>
@@ -167,6 +174,13 @@ Noizu.DomainObject.SearchIndexHandler.Behaviour <small>behaviour</small> <small 
   </div>
 
 </div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#c:has_query_permission?/5">has_query_permission?(index, field, filter, context, options)</a>
+
+  </div>
+
+</div>
 
   </div>
 
@@ -191,7 +205,7 @@ Types
     </a>
     <h1 class="signature">sphinx_encoding()</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/search_index_handler.ex#L8" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/search_index_handler/search_index_handler.ex#L32" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -211,7 +225,7 @@ Types
   | :attr_bigint
   | :attr_bool
   | :attr_multi
-  | :attr_multi64
+  | :attr_multi_64
   | :attr_timestamp
   | :attr_float
   | <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">atom</a>()</pre>
@@ -234,6 +248,42 @@ Types
 Callbacks
           </h1>
           <div class="callbacks-list">
+<section class="detail" id="c:__search_clauses__/6">
+
+  <div class="detail-header">
+    <a href="#c:__search_clauses__/6" class="detail-link" title="Link to this callback">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this callback</span>
+    </a>
+    <h1 class="signature">__search_clauses__(index, settings, conn, params, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/search_index_handler/search_index_handler.ex#L38" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <h2>Specs</h2>
+      <div class="specs">
+
+          <pre>__search_clauses__(
+  index :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(),
+  settings :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">tuple</a>(),
+  conn :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(),
+  params :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">map</a>(),
+  context :: <a href="https://hexdocs.pm/noizu_core/1.0.21/Noizu.ElixirCore.CallingContext.html#t:t/0">Noizu.ElixirCore.CallingContext.t</a>(),
+  options :: <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">list</a>() | <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">map</a>()
+) :: [<a href="Noizu.AdvancedScaffolding.Types.html#t:query_clause/0">Noizu.AdvancedScaffolding.Types.query_clause</a>()] | {:error, <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()}</pre>
+
+      </div>
+
+
+  </section>
+</section>
 <section class="detail" id="c:__sphinx_bits__/3">
 
   <div class="detail-header">
@@ -243,7 +293,7 @@ Callbacks
     </a>
     <h1 class="signature">__sphinx_bits__(field, indexing, settings)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/search_index_handler.ex#L13" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/search_index_handler/search_index_handler.ex#L45" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -273,7 +323,7 @@ Callbacks
     </a>
     <h1 class="signature">__sphinx_default__(field, indexing, settings)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/search_index_handler.ex#L12" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/search_index_handler/search_index_handler.ex#L44" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -303,7 +353,7 @@ Callbacks
     </a>
     <h1 class="signature">__sphinx_encoded__(field, entity, indexing, settings)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/search_index_handler.ex#L15" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/search_index_handler/search_index_handler.ex#L47" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -321,7 +371,8 @@ Callbacks
   entity :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(),
   indexing :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">map</a>(),
   settings :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">map</a>()
-) :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()</pre>
+) ::
+  <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()</pre>
 
       </div>
 
@@ -337,7 +388,7 @@ Callbacks
     </a>
     <h1 class="signature">__sphinx_encoding__(field, indexing, settings)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/search_index_handler.ex#L14" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/search_index_handler/search_index_handler.ex#L46" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -367,7 +418,7 @@ Callbacks
     </a>
     <h1 class="signature">__sphinx_expand_field__(field, indexing, settings)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/search_index_handler.ex#L10" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/search_index_handler/search_index_handler.ex#L42" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -397,7 +448,7 @@ Callbacks
     </a>
     <h1 class="signature">__sphinx_field__()</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/search_index_handler.ex#L9" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/search_index_handler/search_index_handler.ex#L41" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -426,7 +477,7 @@ Callbacks
     </a>
     <h1 class="signature">__sphinx_has_default__(field, indexing, settings)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/search_index_handler.ex#L11" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/search_index_handler/search_index_handler.ex#L43" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -447,15 +498,60 @@ Callbacks
 
   </section>
 </section>
+<section class="detail" id="c:has_query_permission?/5">
+
+  <div class="detail-header">
+    <a href="#c:has_query_permission?/5" class="detail-link" title="Link to this callback">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this callback</span>
+    </a>
+    <h1 class="signature">has_query_permission?(index, field, filter, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/search_index_handler/search_index_handler.ex#L36" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <h2>Specs</h2>
+      <div class="specs">
+
+          <pre>has_query_permission?(
+  index :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(),
+  field :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">atom</a>(),
+  filter :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">atom</a>() | <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">tuple</a>(),
+  context :: <a href="https://hexdocs.pm/noizu_core/1.0.21/Noizu.ElixirCore.CallingContext.html#t:t/0">Noizu.ElixirCore.CallingContext.t</a>(),
+  options :: <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">list</a>() | <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">map</a>()
+) :: true | false</pre>
+
+      </div>
+
+
+  </section>
+</section>
 
           </div>
         </section>
 
       <footer class="footer">
+
+        <p>
+          Find it on Hex:
+          <a href="https://hex.pm/packages/noizu_advanced_scaffolding/1.2.23" class="line footer-hex-package">Package</a>
+          <a href="https://preview.hex.pm/preview/noizu_advanced_scaffolding/1.2.23" class="line">Preview</a>
+
+            <a href="https://preview.hex.pm/preview/noizu_advanced_scaffolding/1.2.23/show/lib/scaffolding/behaviours/search_index_handler/search_index_handler.ex">(current file)</a>
+
+        </p>
+
         <p>
           <span class="line">
             Built using
-            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener">ExDoc</a> (v0.25.1) for the
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener">ExDoc</a> (v0.25.5) for the
             <a href="https://elixir-lang.org" title="Elixir" target="_blank">Elixir programming language</a>.
           </span>
           <span class="line">

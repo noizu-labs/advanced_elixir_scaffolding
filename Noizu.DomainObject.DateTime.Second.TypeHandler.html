@@ -4,17 +4,17 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="ExDoc v0.25.1">
-    <meta name="project" content="Noizu.AdvancedScaffolding v1.0.1">
+    <meta name="generator" content="ExDoc v0.25.5">
+    <meta name="project" content="Noizu.AdvancedScaffolding v1.2.23">
 
-    <title>Noizu.DomainObject.DateTime.Second.TypeHandler — Noizu.AdvancedScaffolding v1.0.1</title>
-    <link rel="stylesheet" href="dist/elixir-a172fe91e725dcb259e2.css" />
+    <title>Noizu.DomainObject.DateTime.Second.TypeHandler — Noizu.AdvancedScaffolding v1.2.23</title>
+    <link rel="stylesheet" href="dist/elixir-d1506dba1db7cdc5483e.css" />
 
-    <script src="dist/sidebar_items-e170f11184.js"></script>
+    <script src="dist/sidebar_items-3d772270ac.js"></script>
 
       <script src="docs_config.js"></script>
 
-    <script async src="dist/app-f27ff079945e43879c46.js"></script>
+    <script async src="dist/app-7b632b26f13d5e0d20e1.js"></script>
 
 
   </head>
@@ -58,7 +58,7 @@
 Noizu.AdvancedScaffolding
       </a>
       <strong class="sidebar-projectVersion">
-        v1.0.1
+        v1.2.23
       </strong>
     </div>
 
@@ -80,9 +80,9 @@ Noizu.AdvancedScaffolding
     <div id="content" class="content-inner">
 
       <h1>
-Noizu.DomainObject.DateTime.Second.TypeHandler <small class="app-vsn">(Noizu.AdvancedScaffolding v1.0.1)</small>
+Noizu.DomainObject.DateTime.Second.TypeHandler <small class="app-vsn">(Noizu.AdvancedScaffolding v1.2.23)</small>
 
-          <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/type_handlers/date_time.ex#L62" title="View Source" class="view-source" rel="help">
+          <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/date_time.ex#L143" title="View Source" class="view-source" rel="help">
             <span class="icon-code" aria-hidden="true"></span>
             <span class="sr-only">View Source</span>
           </a>
@@ -146,7 +146,7 @@ For example if a field expands to subfields in our <strong>sphinx_expand_field</
 
   </div>
 
-    <div class="summary-synopsis"><p>(Sub)field sphinx field type: :attr<em>bigint, :attr<em>uint, :attr_multi64, etc.
+    <div class="summary-synopsis"><p>(Sub)field sphinx field type: :attr<em>bigint, :attr<em>uint, :attr_multi_64, etc.
 If we break a DomainObject.Entity field into multiple sub fields for sphinx we may inspect the per subfield <code class="inline">indexing</code> attribute here.
 For example if a field expands to subfields in our __sphinx_expand_field</em></em> method we may inject a :sub attribute in that method specifying the name of each specific subfield.
 <code class="inline">[{:&quot;#{field}_my_sub_field&quot;, @handler, put_in(indexing, [:sub], :my_sub_field)}]</code></p></div>
@@ -195,13 +195,12 @@ For example if a field expands to subfields in our <strong>sphinx_expand_field</
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#cast/7">cast(field, segment, value, type, arg5, context, options)</a>
+    <a href="#cast/6">cast(field, record, type, layer, context, options)</a>
 
   </div>
 
     <div class="summary-synopsis"><p>Cast database record fields back into entity.field of this type.
-For example to reconstruct a TimeStamp entity by grabbing the RDMS table's created_on, modified_on, deleted_on fields.
-@note the system incorrectly uses cast to cast to database format not from format and needs to be patched to match the convention used by Ecto.Type</p></div>
+For example to reconstruct a TimeStamp entity by grabbing the RDMS table's created_on, modified_on, deleted_on fields.</p></div>
 
 </div>
 <div class="summary-row">
@@ -215,12 +214,29 @@ For example to reconstruct a TimeStamp entity by grabbing the RDMS table's creat
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#dump/6">dump(field, record, type, layer, context, options)</a>
+    <a href="#dump/7">dump(field, segment, value, type, arg5, context, options)</a>
 
   </div>
 
-    <div class="summary-synopsis"><p>Cast database record fields to database format.
-@note the system incorrectly uses dump to convert from database to entity.field format when it should be using dump to send to the database and cast to read from it.</p></div>
+    <div class="summary-synopsis"><p>Cast database record fields to database format.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#from_json/5">from_json(format, field, json, context, options)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>Callback implementation for <a href="Noizu.DomainObject.TypeHandler.Behaviour.html#c:from_json/5"><code class="inline">Noizu.DomainObject.TypeHandler.Behaviour.from_json/5</code></a>.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#has_query_permission?/5">has_query_permission?(index, field, filter, context, options)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>Callback implementation for <a href="Noizu.DomainObject.SearchIndexHandler.Behaviour.html#c:has_query_permission?/5"><code class="inline">Noizu.DomainObject.SearchIndexHandler.Behaviour.has_query_permission?/5</code></a>.</p></div>
 
 </div>
 <div class="summary-row">
@@ -380,6 +396,13 @@ proceeding to create the entity that contains this field.</p></div>
     <div class="summary-synopsis"><p>  Merge existing and updated instance of type.</p></div>
 
 </div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#to_json/6">to_json(json_format, as_field, value, settings, context, options)</a>
+
+  </div>
+
+</div>
 
   </div>
 
@@ -404,7 +427,7 @@ Functions
     </a>
     <h1 class="signature">__sphinx_bits__(field, indexing, settings)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/type_handlers/date_time.ex#L96" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/date_time.ex#L264" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -429,7 +452,7 @@ For example if a field expands to subfields in our <strong>sphinx_expand_field</
     </a>
     <h1 class="signature">__sphinx_default__(field, indexing, settings)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/type_handlers/date_time.ex#L95" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/date_time.ex#L263" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -454,7 +477,7 @@ For example if a field expands to subfields in our <strong>sphinx_expand_field</
     </a>
     <h1 class="signature">__sphinx_encoded__(field, entity, indexing, settings)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/type_handlers/date_time.ex#L98" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/date_time.ex#L266" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -479,7 +502,7 @@ For example if a field expands to subfields in our <strong>sphinx_expand_field</
     </a>
     <h1 class="signature">__sphinx_encoding__(field, indexing, settings)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/type_handlers/date_time.ex#L97" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/date_time.ex#L265" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -489,7 +512,7 @@ For example if a field expands to subfields in our <strong>sphinx_expand_field</
 
   <section class="docstring">
 
-<p>(Sub)field sphinx field type: :attr<em>bigint, :attr<em>uint, :attr_multi64, etc.
+<p>(Sub)field sphinx field type: :attr<em>bigint, :attr<em>uint, :attr_multi_64, etc.
 If we break a DomainObject.Entity field into multiple sub fields for sphinx we may inspect the per subfield <code class="inline">indexing</code> attribute here.
 For example if a field expands to subfields in our __sphinx_expand_field</em></em> method we may inject a :sub attribute in that method specifying the name of each specific subfield.
 <code class="inline">[{:&quot;#{field}_my_sub_field&quot;, @handler, put_in(indexing, [:sub], :my_sub_field)}]</code></p>
@@ -504,7 +527,7 @@ For example if a field expands to subfields in our __sphinx_expand_field</em></e
     </a>
     <h1 class="signature">__sphinx_expand_field__(field, indexing, settings)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/type_handlers/date_time.ex#L93" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/date_time.ex#L261" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -528,7 +551,7 @@ to allow searching our index for best friend by first name, last name or full na
     </a>
     <h1 class="signature">__sphinx_field__()</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/type_handlers/date_time.ex#L92" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/date_time.ex#L260" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -550,7 +573,7 @@ to allow searching our index for best friend by first name, last name or full na
     </a>
     <h1 class="signature">__sphinx_has_default__(field, indexing, settings)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/type_handlers/date_time.ex#L94" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/date_time.ex#L262" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -575,7 +598,7 @@ For example if a field expands to subfields in our <strong>sphinx_expand_field</
     </a>
     <h1 class="signature">__strip_inspect__(field, value, opts)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/type_handlers/date_time.ex#L64" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/date_time.ex#L145" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -588,16 +611,16 @@ For example if a field expands to subfields in our <strong>sphinx_expand_field</
 <p>  Format instance of type for Inspect output. - strip fields, simplify object, etc.</p>
   </section>
 </section>
-<section class="detail" id="cast/7">
+<section class="detail" id="cast/6">
 
   <div class="detail-header">
-    <a href="#cast/7" class="detail-link" title="Link to this function">
+    <a href="#cast/6" class="detail-link" title="Link to this function">
       <span class="icon-link" aria-hidden="true"></span>
       <span class="sr-only">Link to this function</span>
     </a>
-    <h1 class="signature">cast(field, segment, value, type, arg5, context, options)</h1>
+    <h1 class="signature">cast(field, record, type, layer, context, options)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/type_handlers/date_time.ex#L83" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/date_time.ex#L145" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -608,8 +631,7 @@ For example if a field expands to subfields in our <strong>sphinx_expand_field</
   <section class="docstring">
 
 <p>Cast database record fields back into entity.field of this type.
-For example to reconstruct a TimeStamp entity by grabbing the RDMS table's created_on, modified_on, deleted_on fields.
-@note the system incorrectly uses cast to cast to database format not from format and needs to be patched to match the convention used by Ecto.Type</p>
+For example to reconstruct a TimeStamp entity by grabbing the RDMS table's created_on, modified_on, deleted_on fields.</p>
   </section>
 </section>
 <section class="detail" id="compare/2">
@@ -621,7 +643,7 @@ For example to reconstruct a TimeStamp entity by grabbing the RDMS table's creat
     </a>
     <h1 class="signature">compare(a, b)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/type_handlers/date_time.ex#L64" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/date_time.ex#L145" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -634,16 +656,16 @@ For example to reconstruct a TimeStamp entity by grabbing the RDMS table's creat
 <p>  Determine if two instances of this type match. Possibly ignoring erroneous fields such as time stamps/transient fields, etc.</p>
   </section>
 </section>
-<section class="detail" id="dump/6">
+<section class="detail" id="dump/7">
 
   <div class="detail-header">
-    <a href="#dump/6" class="detail-link" title="Link to this function">
+    <a href="#dump/7" class="detail-link" title="Link to this function">
       <span class="icon-link" aria-hidden="true"></span>
       <span class="sr-only">Link to this function</span>
     </a>
-    <h1 class="signature">dump(field, record, type, layer, context, options)</h1>
+    <h1 class="signature">dump(field, segment, value, type, arg5, context, options)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/type_handlers/date_time.ex#L64" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/date_time.ex#L166" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -653,8 +675,51 @@ For example to reconstruct a TimeStamp entity by grabbing the RDMS table's creat
 
   <section class="docstring">
 
-<p>Cast database record fields to database format.
-@note the system incorrectly uses dump to convert from database to entity.field format when it should be using dump to send to the database and cast to read from it.</p>
+<p>Cast database record fields to database format.</p>
+  </section>
+</section>
+<section class="detail" id="from_json/5">
+
+  <div class="detail-header">
+    <a href="#from_json/5" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">from_json(format, field, json, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/date_time.ex#L174" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Callback implementation for <a href="Noizu.DomainObject.TypeHandler.Behaviour.html#c:from_json/5"><code class="inline">Noizu.DomainObject.TypeHandler.Behaviour.from_json/5</code></a>.</p>
+  </section>
+</section>
+<section class="detail" id="has_query_permission?/5">
+
+  <div class="detail-header">
+    <a href="#has_query_permission?/5" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">has_query_permission?(index, field, filter, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/date_time.ex#L146" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Callback implementation for <a href="Noizu.DomainObject.SearchIndexHandler.Behaviour.html#c:has_query_permission?/5"><code class="inline">Noizu.DomainObject.SearchIndexHandler.Behaviour.has_query_permission?/5</code></a>.</p>
   </section>
 </section>
 <section class="detail" id="import/2">
@@ -668,7 +733,7 @@ For example to reconstruct a TimeStamp entity by grabbing the RDMS table's creat
     </a>
     <h1 class="signature">import(value, type \\ :microsecond)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/type_handlers/date_time.ex#L68" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/date_time.ex#L149" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -690,7 +755,7 @@ For example to reconstruct a TimeStamp entity by grabbing the RDMS table's creat
     </a>
     <h1 class="signature">post_create_callback(field, entity, context, options)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/type_handlers/date_time.ex#L64" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/date_time.ex#L145" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -713,7 +778,7 @@ Post entity creation callback . If, for example, we wish to save this field to i
     </a>
     <h1 class="signature">post_create_callback!(field, entity, context, options)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/type_handlers/date_time.ex#L64" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/date_time.ex#L145" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -736,7 +801,7 @@ Post entity creation callback . If, for example, we wish to save this field to i
     </a>
     <h1 class="signature">post_delete_callback(field, entity, context, options)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/type_handlers/date_time.ex#L78" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/date_time.ex#L161" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -758,7 +823,7 @@ Post entity creation callback . If, for example, we wish to save this field to i
     </a>
     <h1 class="signature">post_delete_callback!(field, entity, context, options)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/type_handlers/date_time.ex#L64" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/date_time.ex#L145" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -780,7 +845,7 @@ Post entity creation callback . If, for example, we wish to save this field to i
     </a>
     <h1 class="signature">post_get_callback(field, entity, context, options)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/type_handlers/date_time.ex#L64" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/date_time.ex#L145" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -802,7 +867,7 @@ Post entity creation callback . If, for example, we wish to save this field to i
     </a>
     <h1 class="signature">post_get_callback!(field, entity, context, options)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/type_handlers/date_time.ex#L64" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/date_time.ex#L145" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -824,7 +889,7 @@ Post entity creation callback . If, for example, we wish to save this field to i
     </a>
     <h1 class="signature">post_update_callback(field, entity, context, options)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/type_handlers/date_time.ex#L64" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/date_time.ex#L145" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -846,7 +911,7 @@ Post entity creation callback . If, for example, we wish to save this field to i
     </a>
     <h1 class="signature">post_update_callback!(field, entity, context, options)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/type_handlers/date_time.ex#L64" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/date_time.ex#L145" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -868,7 +933,7 @@ Post entity creation callback . If, for example, we wish to save this field to i
     </a>
     <h1 class="signature">pre_create_callback(field, entity, context, options)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/type_handlers/date_time.ex#L72" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/date_time.ex#L155" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -892,7 +957,7 @@ proceeding to create the entity that contains this field.</p>
     </a>
     <h1 class="signature">pre_create_callback!(field, entity, context, options)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/type_handlers/date_time.ex#L81" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/date_time.ex#L164" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -916,7 +981,7 @@ proceeding to create the entity that contains this field.</p>
     </a>
     <h1 class="signature">pre_delete_callback(field, entity, context, options)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/type_handlers/date_time.ex#L64" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/date_time.ex#L145" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -938,7 +1003,7 @@ proceeding to create the entity that contains this field.</p>
     </a>
     <h1 class="signature">pre_delete_callback!(field, entity, context, options)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/type_handlers/date_time.ex#L64" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/date_time.ex#L145" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -960,7 +1025,7 @@ proceeding to create the entity that contains this field.</p>
     </a>
     <h1 class="signature">pre_update_callback(field, entity, context, options)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/type_handlers/date_time.ex#L75" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/date_time.ex#L158" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -982,7 +1047,7 @@ proceeding to create the entity that contains this field.</p>
     </a>
     <h1 class="signature">pre_update_callback!(field, entity, context, options)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/type_handlers/date_time.ex#L64" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/date_time.ex#L145" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -1006,7 +1071,7 @@ proceeding to create the entity that contains this field.</p>
     </a>
     <h1 class="signature">sync(existing, update, context, options \\ nil)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/type_handlers/date_time.ex#L64" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/date_time.ex#L145" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -1030,7 +1095,7 @@ proceeding to create the entity that contains this field.</p>
     </a>
     <h1 class="signature">sync!(existing, update, context, options \\ nil)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/common/type_handlers/date_time.ex#L64" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/date_time.ex#L145" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -1043,15 +1108,47 @@ proceeding to create the entity that contains this field.</p>
 <p>  Merge existing and updated instance of type.</p>
   </section>
 </section>
+<section class="detail" id="to_json/6">
+
+  <div class="detail-header">
+    <a href="#to_json/6" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">to_json(json_format, as_field, value, settings, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/date_time.ex#L145" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
 
           </div>
         </section>
 
       <footer class="footer">
+
+        <p>
+          Find it on Hex:
+          <a href="https://hex.pm/packages/noizu_advanced_scaffolding/1.2.23" class="line footer-hex-package">Package</a>
+          <a href="https://preview.hex.pm/preview/noizu_advanced_scaffolding/1.2.23" class="line">Preview</a>
+
+            <a href="https://preview.hex.pm/preview/noizu_advanced_scaffolding/1.2.23/show/lib/scaffolding/behaviours/type_handler/providers/date_time.ex">(current file)</a>
+
+        </p>
+
         <p>
           <span class="line">
             Built using
-            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener">ExDoc</a> (v0.25.1) for the
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener">ExDoc</a> (v0.25.5) for the
             <a href="https://elixir-lang.org" title="Elixir" target="_blank">Elixir programming language</a>.
           </span>
           <span class="line">

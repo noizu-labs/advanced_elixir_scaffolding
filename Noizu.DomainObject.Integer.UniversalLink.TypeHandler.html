@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.25.5">
+    <meta name="project" content="Noizu.AdvancedScaffolding v1.2.23">
+
+    <title>Noizu.DomainObject.Integer.UniversalLink.TypeHandler — Noizu.AdvancedScaffolding v1.2.23</title>
+    <link rel="stylesheet" href="dist/elixir-d1506dba1db7cdc5483e.css" />
+
+    <script src="dist/sidebar_items-3d772270ac.js"></script>
+
+      <script src="docs_config.js"></script>
+
+    <script async src="dist/app-7b632b26f13d5e0d20e1.js"></script>
+
+
+  </head>
+  <body data-type="modules">
+    <script>
+
+      try {
+        if (localStorage.getItem('night-mode') === 'true') {
+          document.body.classList.add('night-mode');
+        }
+      } catch (error) { }
+    </script>
+
+<div class="main">
+
+<button class="sidebar-button sidebar-toggle">
+  <span class="icon-menu" title="Collapse/expand sidebar"></span>
+</button>
+
+<section class="sidebar">
+  <form class="sidebar-search" action="search.html">
+    <button type="submit" class="search-button" aria-label="Submit Search">
+      <span class="icon-search" aria-hidden="true" title="Submit search"></span>
+    </button>
+    <button type="button" tabindex="-1" class="search-close-button" aria-label="Cancel Search">
+      <span class="icon-cross" aria-hidden="true" title="Cancel search"></span>
+    </button>
+    <label class="search-label">
+      <input name="q" type="text" class="search-input" placeholder="Search..." aria-label="Input your search terms" autocomplete="off" />
+    </label>
+  </form>
+
+  <div class="autocomplete">
+    <div class="autocomplete-results">
+    </div>
+  </div>
+
+  <div class="sidebar-header">
+    <div class="sidebar-projectDetails">
+      <a href="readme.html" class="sidebar-projectName">
+Noizu.AdvancedScaffolding
+      </a>
+      <strong class="sidebar-projectVersion">
+        v1.2.23
+      </strong>
+    </div>
+
+  </div>
+
+  <ul class="sidebar-listNav">
+    <li><a id="extras-list-link" href="#full-list">Pages</a></li>
+
+      <li><a id="modules-list-link" href="#full-list">Modules</a></li>
+
+
+  </ul>
+  <div class="gradient"></div>
+  <ul id="full-list" class="sidebar-fullList"></ul>
+</section>
+
+<section class="content">
+  <div class="content-outer">
+    <div id="content" class="content-inner">
+
+      <h1>
+Noizu.DomainObject.Integer.UniversalLink.TypeHandler <small class="app-vsn">(Noizu.AdvancedScaffolding v1.2.23)</small>
+
+          <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/integer.universal_link.ex#L8" title="View Source" class="view-source" rel="help">
+            <span class="icon-code" aria-hidden="true"></span>
+            <span class="sr-only">View Source</span>
+          </a>
+
+      </h1>
+
+
+
+        <section id="summary" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#summary">
+              <span class="icon-link" aria-hidden="true"></span>
+              <span class="sr-only">Link to this section</span>
+            </a>
+            Summary
+          </h1>
+
+  <div class="summary-functions summary">
+    <h2>
+      <a href="#functions">Functions</a>
+    </h2>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#__sphinx_bits__/3">__sphinx_bits__(field, indexing, settings)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>Integer bitwidth for (Sub)field.
+If we break a DomainObject.Entity field into multiple sub fields for sphinx we may inspect the per subfield <code class="inline">indexing</code> attribute here.
+For example if a field expands to subfields in our <strong>sphinx_expand_field</strong> method we may inject a :sub attribute in that method specifying the name of each specific subfield.
+<code class="inline">[{:&quot;#{field}_my_sub_field&quot;, @handler, put_in(indexing, [:sub], :my_sub_field)}]</code></p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#__sphinx_default__/3">__sphinx_default__(field, indexing, settings)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>Default value for (Sub)field.
+If we break a DomainObject.Entity field into multiple sub fields for sphinx we may inspect the per subfield <code class="inline">indexing</code> attribute here.
+For example if a field expands to subfields in our <strong>sphinx_expand_field</strong> method we may inject a :sub attribute in that method specifying the name of each specific subfield.
+<code class="inline">[{:&quot;#{field}_my_sub_field&quot;, @handler, put_in(indexing, [:sub], :my_sub_field)}]</code></p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#__sphinx_encoded__/4">__sphinx_encoded__(field, entity, indexing, settings)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>Cast (sub)field to format understood by sphinx. E.g. convert Enum atoms to their numeric value. Replace refs/entities with their universal numeric id
+If we break a DomainObject.Entity field into multiple sub fields for sphinx we may inspect the per subfield <code class="inline">indexing</code> attribute here.
+For example if a field expands to subfields in our <strong>sphinx_expand_field</strong> method we may inject a :sub attribute in that method specifying the name of each specific subfield.
+<code class="inline">[{:&quot;#{field}_my_sub_field&quot;, @handler, put_in(indexing, [:sub], :my_sub_field)}]</code></p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#__sphinx_encoding__/3">__sphinx_encoding__(field, indexing, settings)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>(Sub)field sphinx field type: :attr<em>bigint, :attr<em>uint, :attr_multi_64, etc.
+If we break a DomainObject.Entity field into multiple sub fields for sphinx we may inspect the per subfield <code class="inline">indexing</code> attribute here.
+For example if a field expands to subfields in our __sphinx_expand_field</em></em> method we may inject a :sub attribute in that method specifying the name of each specific subfield.
+<code class="inline">[{:&quot;#{field}_my_sub_field&quot;, @handler, put_in(indexing, [:sub], :my_sub_field)}]</code></p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#__sphinx_expand_field__/3">__sphinx_expand_field__(field, indexing, settings)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>Expand field from DomainObject.Entity into the list of index fields needed by sphinx.
+E.g. best_friend_name: %{first: f, last: l} could map to [best_friend_name_first, best_friend_name_last, best_friend_name_full]
+to allow searching our index for best friend by first name, last name or full name.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#__sphinx_field__/0">__sphinx_field__()</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>is this module a sphinx_field handler?</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#__sphinx_has_default__/3">__sphinx_has_default__(field, indexing, settings)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>Does this (sub)field have a default value?.
+If we break a DomainObject.Entity field into multiple sub fields for sphinx we may inspect the per subfield <code class="inline">indexing</code> attribute here.
+For example if a field expands to subfields in our <strong>sphinx_expand_field</strong> method we may inject a :sub attribute in that method specifying the name of each specific subfield.
+<code class="inline">[{:&quot;#{field}_my_sub_field&quot;, @handler, put_in(indexing, [:sub], :my_sub_field)}]</code></p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#__strip_inspect__/3">__strip_inspect__(field, value, opts)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>  Format instance of type for Inspect output. - strip fields, simplify object, etc.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#cast/6">cast(field, record, type, layer, context, options)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>Cast database record fields back into entity.field of this type.
+For example to reconstruct a TimeStamp entity by grabbing the RDMS table's created_on, modified_on, deleted_on fields.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#compare/2">compare(a, b)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>  Determine if two instances of this type match. Possibly ignoring erroneous fields such as time stamps/transient fields, etc.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#dump/7">dump(field, segment, value, type, arg5, context, options)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>Cast database record fields to database format.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#from_json/5">from_json(format, field, json, context, options)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>Callback implementation for <a href="Noizu.DomainObject.TypeHandler.Behaviour.html#c:from_json/5"><code class="inline">Noizu.DomainObject.TypeHandler.Behaviour.from_json/5</code></a>.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#has_query_permission?/5">has_query_permission?(index, field, filter, context, options)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>Callback implementation for <a href="Noizu.DomainObject.SearchIndexHandler.Behaviour.html#c:has_query_permission?/5"><code class="inline">Noizu.DomainObject.SearchIndexHandler.Behaviour.has_query_permission?/5</code></a>.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#post_create_callback/4">post_create_callback(field, entity, context, options)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>post create callback.
+Post entity creation callback . If, for example, we wish to save this field to its own tables after creating the records for the entity containing this field</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#post_create_callback!/4">post_create_callback!(field, entity, context, options)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>(Dirty) post create callback.
+Post entity creation callback . If, for example, we wish to save this field to its own tables after creating the records for the entity containing this field</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#post_delete_callback/4">post_delete_callback(field, entity, context, options)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>post delete callback for entity fields of this type.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#post_delete_callback!/4">post_delete_callback!(field, entity, context, options)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>(Dirty) post delete callback for entity fields of this type.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#post_get_callback/4">post_get_callback(field, entity, context, options)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>Post get callback, to allow, for example, injecting data into a transient field or running additional queries needed to populate a domain object entity field.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#post_get_callback!/4">post_get_callback!(field, entity, context, options)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>(Dirty) Post get callback, to allow, for example, injecting data into a transient field or running additional queries needed to populate a domain object entity field.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#post_update_callback/4">post_update_callback(field, entity, context, options)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>post update callback for entity fields of this type.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#post_update_callback!/4">post_update_callback!(field, entity, context, options)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>(Dirty) post update callback for entity fields of this type.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#pre_create_callback/4">pre_create_callback(field, entity, context, options)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>pre create callback.
+Users may have provided a simplified representation of this type, that we need to expand into the correct type and or possibly expand and write to the database before
+proceeding to create the entity that contains this field.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#pre_create_callback!/4">pre_create_callback!(field, entity, context, options)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>(Dirty) pre create callback.
+Users may have provided a simplified representation of this type, that we need to expand into the correct type and or possibly expand and write to the database before
+proceeding to create the entity that contains this field.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#pre_delete_callback/4">pre_delete_callback(field, entity, context, options)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>pre delete callback for entity fields of this type.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#pre_delete_callback!/4">pre_delete_callback!(field, entity, context, options)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>(Dirty) pre delete callback for entity fields of this type.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#pre_update_callback/4">pre_update_callback(field, entity, context, options)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>pre update callback for entity fields of this type.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#pre_update_callback!/4">pre_update_callback!(field, entity, context, options)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>(Dirty) pre update callback for entity fields of this type.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#sync/4">sync(existing, update, context, options \\ nil)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>  Merge existing and updated instance of type.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#sync!/4">sync!(existing, update, context, options \\ nil)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>  Merge existing and updated instance of type.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#to_json/6">to_json(json_format, as_field, value, settings, context, options)</a>
+
+  </div>
+
+</div>
+
+  </div>
+
+        </section>
+
+
+        <section id="functions" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#functions">
+              <span class="icon-link" aria-hidden="true"></span>
+              <span class="sr-only">Link to this section</span>
+            </a>
+Functions
+          </h1>
+          <div class="functions-list">
+<section class="detail" id="__sphinx_bits__/3">
+
+  <div class="detail-header">
+    <a href="#__sphinx_bits__/3" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">__sphinx_bits__(field, indexing, settings)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/integer.universal_link.ex#L90" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Integer bitwidth for (Sub)field.
+If we break a DomainObject.Entity field into multiple sub fields for sphinx we may inspect the per subfield <code class="inline">indexing</code> attribute here.
+For example if a field expands to subfields in our <strong>sphinx_expand_field</strong> method we may inject a :sub attribute in that method specifying the name of each specific subfield.
+<code class="inline">[{:&quot;#{field}_my_sub_field&quot;, @handler, put_in(indexing, [:sub], :my_sub_field)}]</code></p>
+  </section>
+</section>
+<section class="detail" id="__sphinx_default__/3">
+
+  <div class="detail-header">
+    <a href="#__sphinx_default__/3" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">__sphinx_default__(field, indexing, settings)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/integer.universal_link.ex#L11" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Default value for (Sub)field.
+If we break a DomainObject.Entity field into multiple sub fields for sphinx we may inspect the per subfield <code class="inline">indexing</code> attribute here.
+For example if a field expands to subfields in our <strong>sphinx_expand_field</strong> method we may inject a :sub attribute in that method specifying the name of each specific subfield.
+<code class="inline">[{:&quot;#{field}_my_sub_field&quot;, @handler, put_in(indexing, [:sub], :my_sub_field)}]</code></p>
+  </section>
+</section>
+<section class="detail" id="__sphinx_encoded__/4">
+
+  <div class="detail-header">
+    <a href="#__sphinx_encoded__/4" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">__sphinx_encoded__(field, entity, indexing, settings)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/integer.universal_link.ex#L97" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Cast (sub)field to format understood by sphinx. E.g. convert Enum atoms to their numeric value. Replace refs/entities with their universal numeric id
+If we break a DomainObject.Entity field into multiple sub fields for sphinx we may inspect the per subfield <code class="inline">indexing</code> attribute here.
+For example if a field expands to subfields in our <strong>sphinx_expand_field</strong> method we may inject a :sub attribute in that method specifying the name of each specific subfield.
+<code class="inline">[{:&quot;#{field}_my_sub_field&quot;, @handler, put_in(indexing, [:sub], :my_sub_field)}]</code></p>
+  </section>
+</section>
+<section class="detail" id="__sphinx_encoding__/3">
+
+  <div class="detail-header">
+    <a href="#__sphinx_encoding__/3" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">__sphinx_encoding__(field, indexing, settings)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/integer.universal_link.ex#L91" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>(Sub)field sphinx field type: :attr<em>bigint, :attr<em>uint, :attr_multi_64, etc.
+If we break a DomainObject.Entity field into multiple sub fields for sphinx we may inspect the per subfield <code class="inline">indexing</code> attribute here.
+For example if a field expands to subfields in our __sphinx_expand_field</em></em> method we may inject a :sub attribute in that method specifying the name of each specific subfield.
+<code class="inline">[{:&quot;#{field}_my_sub_field&quot;, @handler, put_in(indexing, [:sub], :my_sub_field)}]</code></p>
+  </section>
+</section>
+<section class="detail" id="__sphinx_expand_field__/3">
+
+  <div class="detail-header">
+    <a href="#__sphinx_expand_field__/3" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">__sphinx_expand_field__(field, indexing, settings)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/integer.universal_link.ex#L83" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Expand field from DomainObject.Entity into the list of index fields needed by sphinx.
+E.g. best_friend_name: %{first: f, last: l} could map to [best_friend_name_first, best_friend_name_last, best_friend_name_full]
+to allow searching our index for best friend by first name, last name or full name.</p>
+  </section>
+</section>
+<section class="detail" id="__sphinx_field__/0">
+
+  <div class="detail-header">
+    <a href="#__sphinx_field__/0" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">__sphinx_field__()</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/integer.universal_link.ex#L82" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>is this module a sphinx_field handler?</p>
+  </section>
+</section>
+<section class="detail" id="__sphinx_has_default__/3">
+
+  <div class="detail-header">
+    <a href="#__sphinx_has_default__/3" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">__sphinx_has_default__(field, indexing, settings)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/integer.universal_link.ex#L11" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Does this (sub)field have a default value?.
+If we break a DomainObject.Entity field into multiple sub fields for sphinx we may inspect the per subfield <code class="inline">indexing</code> attribute here.
+For example if a field expands to subfields in our <strong>sphinx_expand_field</strong> method we may inject a :sub attribute in that method specifying the name of each specific subfield.
+<code class="inline">[{:&quot;#{field}_my_sub_field&quot;, @handler, put_in(indexing, [:sub], :my_sub_field)}]</code></p>
+  </section>
+</section>
+<section class="detail" id="__strip_inspect__/3">
+
+  <div class="detail-header">
+    <a href="#__strip_inspect__/3" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">__strip_inspect__(field, value, opts)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/integer.universal_link.ex#L10" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>  Format instance of type for Inspect output. - strip fields, simplify object, etc.</p>
+  </section>
+</section>
+<section class="detail" id="cast/6">
+
+  <div class="detail-header">
+    <a href="#cast/6" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">cast(field, record, type, layer, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/integer.universal_link.ex#L52" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Cast database record fields back into entity.field of this type.
+For example to reconstruct a TimeStamp entity by grabbing the RDMS table's created_on, modified_on, deleted_on fields.</p>
+  </section>
+</section>
+<section class="detail" id="compare/2">
+
+  <div class="detail-header">
+    <a href="#compare/2" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">compare(a, b)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/integer.universal_link.ex#L10" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>  Determine if two instances of this type match. Possibly ignoring erroneous fields such as time stamps/transient fields, etc.</p>
+  </section>
+</section>
+<section class="detail" id="dump/7">
+
+  <div class="detail-header">
+    <a href="#dump/7" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">dump(field, segment, value, type, arg5, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/integer.universal_link.ex#L22" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Cast database record fields to database format.</p>
+  </section>
+</section>
+<section class="detail" id="from_json/5">
+
+  <div class="detail-header">
+    <a href="#from_json/5" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">from_json(format, field, json, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/integer.universal_link.ex#L66" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Callback implementation for <a href="Noizu.DomainObject.TypeHandler.Behaviour.html#c:from_json/5"><code class="inline">Noizu.DomainObject.TypeHandler.Behaviour.from_json/5</code></a>.</p>
+  </section>
+</section>
+<section class="detail" id="has_query_permission?/5">
+
+  <div class="detail-header">
+    <a href="#has_query_permission?/5" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">has_query_permission?(index, field, filter, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/integer.universal_link.ex#L11" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Callback implementation for <a href="Noizu.DomainObject.SearchIndexHandler.Behaviour.html#c:has_query_permission?/5"><code class="inline">Noizu.DomainObject.SearchIndexHandler.Behaviour.has_query_permission?/5</code></a>.</p>
+  </section>
+</section>
+<section class="detail" id="post_create_callback/4">
+
+  <div class="detail-header">
+    <a href="#post_create_callback/4" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">post_create_callback(field, entity, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/integer.universal_link.ex#L10" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>post create callback.
+Post entity creation callback . If, for example, we wish to save this field to its own tables after creating the records for the entity containing this field</p>
+  </section>
+</section>
+<section class="detail" id="post_create_callback!/4">
+
+  <div class="detail-header">
+    <a href="#post_create_callback!/4" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">post_create_callback!(field, entity, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/integer.universal_link.ex#L10" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>(Dirty) post create callback.
+Post entity creation callback . If, for example, we wish to save this field to its own tables after creating the records for the entity containing this field</p>
+  </section>
+</section>
+<section class="detail" id="post_delete_callback/4">
+
+  <div class="detail-header">
+    <a href="#post_delete_callback/4" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">post_delete_callback(field, entity, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/integer.universal_link.ex#L10" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>post delete callback for entity fields of this type.</p>
+  </section>
+</section>
+<section class="detail" id="post_delete_callback!/4">
+
+  <div class="detail-header">
+    <a href="#post_delete_callback!/4" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">post_delete_callback!(field, entity, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/integer.universal_link.ex#L10" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>(Dirty) post delete callback for entity fields of this type.</p>
+  </section>
+</section>
+<section class="detail" id="post_get_callback/4">
+
+  <div class="detail-header">
+    <a href="#post_get_callback/4" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">post_get_callback(field, entity, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/integer.universal_link.ex#L10" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Post get callback, to allow, for example, injecting data into a transient field or running additional queries needed to populate a domain object entity field.</p>
+  </section>
+</section>
+<section class="detail" id="post_get_callback!/4">
+
+  <div class="detail-header">
+    <a href="#post_get_callback!/4" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">post_get_callback!(field, entity, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/integer.universal_link.ex#L10" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>(Dirty) Post get callback, to allow, for example, injecting data into a transient field or running additional queries needed to populate a domain object entity field.</p>
+  </section>
+</section>
+<section class="detail" id="post_update_callback/4">
+
+  <div class="detail-header">
+    <a href="#post_update_callback/4" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">post_update_callback(field, entity, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/integer.universal_link.ex#L10" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>post update callback for entity fields of this type.</p>
+  </section>
+</section>
+<section class="detail" id="post_update_callback!/4">
+
+  <div class="detail-header">
+    <a href="#post_update_callback!/4" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">post_update_callback!(field, entity, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/integer.universal_link.ex#L10" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>(Dirty) post update callback for entity fields of this type.</p>
+  </section>
+</section>
+<section class="detail" id="pre_create_callback/4">
+
+  <div class="detail-header">
+    <a href="#pre_create_callback/4" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">pre_create_callback(field, entity, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/integer.universal_link.ex#L16" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>pre create callback.
+Users may have provided a simplified representation of this type, that we need to expand into the correct type and or possibly expand and write to the database before
+proceeding to create the entity that contains this field.</p>
+  </section>
+</section>
+<section class="detail" id="pre_create_callback!/4">
+
+  <div class="detail-header">
+    <a href="#pre_create_callback!/4" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">pre_create_callback!(field, entity, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/integer.universal_link.ex#L17" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>(Dirty) pre create callback.
+Users may have provided a simplified representation of this type, that we need to expand into the correct type and or possibly expand and write to the database before
+proceeding to create the entity that contains this field.</p>
+  </section>
+</section>
+<section class="detail" id="pre_delete_callback/4">
+
+  <div class="detail-header">
+    <a href="#pre_delete_callback/4" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">pre_delete_callback(field, entity, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/integer.universal_link.ex#L10" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>pre delete callback for entity fields of this type.</p>
+  </section>
+</section>
+<section class="detail" id="pre_delete_callback!/4">
+
+  <div class="detail-header">
+    <a href="#pre_delete_callback!/4" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">pre_delete_callback!(field, entity, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/integer.universal_link.ex#L10" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>(Dirty) pre delete callback for entity fields of this type.</p>
+  </section>
+</section>
+<section class="detail" id="pre_update_callback/4">
+
+  <div class="detail-header">
+    <a href="#pre_update_callback/4" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">pre_update_callback(field, entity, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/integer.universal_link.ex#L10" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>pre update callback for entity fields of this type.</p>
+  </section>
+</section>
+<section class="detail" id="pre_update_callback!/4">
+
+  <div class="detail-header">
+    <a href="#pre_update_callback!/4" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">pre_update_callback!(field, entity, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/integer.universal_link.ex#L10" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>(Dirty) pre update callback for entity fields of this type.</p>
+  </section>
+</section>
+<section class="detail" id="sync/4">
+
+    <span id="sync/3"></span>
+
+  <div class="detail-header">
+    <a href="#sync/4" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">sync(existing, update, context, options \\ nil)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/integer.universal_link.ex#L10" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>  Merge existing and updated instance of type.</p>
+  </section>
+</section>
+<section class="detail" id="sync!/4">
+
+    <span id="sync!/3"></span>
+
+  <div class="detail-header">
+    <a href="#sync!/4" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">sync!(existing, update, context, options \\ nil)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/integer.universal_link.ex#L10" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>  Merge existing and updated instance of type.</p>
+  </section>
+</section>
+<section class="detail" id="to_json/6">
+
+  <div class="detail-header">
+    <a href="#to_json/6" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">to_json(json_format, as_field, value, settings, context, options)</h1>
+
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/type_handler/providers/integer.universal_link.ex#L10" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+
+          </div>
+        </section>
+
+      <footer class="footer">
+
+        <p>
+          Find it on Hex:
+          <a href="https://hex.pm/packages/noizu_advanced_scaffolding/1.2.23" class="line footer-hex-package">Package</a>
+          <a href="https://preview.hex.pm/preview/noizu_advanced_scaffolding/1.2.23" class="line">Preview</a>
+
+            <a href="https://preview.hex.pm/preview/noizu_advanced_scaffolding/1.2.23/show/lib/scaffolding/behaviours/type_handler/providers/integer.universal_link.ex">(current file)</a>
+
+        </p>
+
+        <p>
+          <span class="line">
+            Built using
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener">ExDoc</a> (v0.25.5) for the
+            <a href="https://elixir-lang.org" title="Elixir" target="_blank">Elixir programming language</a>.
+          </span>
+          <span class="line">
+            Designed by
+            <a href="https://twitter.com/dignifiedquire" target="_blank" rel="noopener" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+          </span>
+        </p>
+        <p>
+
+            <a href="api-reference.html" title="API reference" class="line footer-button">API Reference</a>
+
+          <button class="line footer-button display-shortcuts-help">
+            Display keyboard shortcuts
+          </button>
+          <button class="line footer-button night-mode-toggle">
+            Toggle night mode
+          </button>
+          <button class="line footer-button display-quick-switch">
+            Go to a HexDocs package
+          </button>
+          <button class="line footer-button tooltips-toggle">
+            <span class="tooltips-option-disable">Disable tooltips</span>
+            <span class="tooltips-option-enable">Enable tooltips</span>
+          </button>
+        </p>
+      </footer>
+    </div>
+  </div>
+</section>
+</div>
+
+
+  </body>
+</html>

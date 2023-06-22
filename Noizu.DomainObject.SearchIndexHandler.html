@@ -4,17 +4,17 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="ExDoc v0.25.1">
-    <meta name="project" content="Noizu.AdvancedScaffolding v1.0.1">
+    <meta name="generator" content="ExDoc v0.25.5">
+    <meta name="project" content="Noizu.AdvancedScaffolding v1.2.23">
 
-    <title>Noizu.DomainObject.SearchIndexHandler — Noizu.AdvancedScaffolding v1.0.1</title>
-    <link rel="stylesheet" href="dist/elixir-a172fe91e725dcb259e2.css" />
+    <title>Noizu.DomainObject.SearchIndexHandler — Noizu.AdvancedScaffolding v1.2.23</title>
+    <link rel="stylesheet" href="dist/elixir-d1506dba1db7cdc5483e.css" />
 
-    <script src="dist/sidebar_items-e170f11184.js"></script>
+    <script src="dist/sidebar_items-3d772270ac.js"></script>
 
       <script src="docs_config.js"></script>
 
-    <script async src="dist/app-f27ff079945e43879c46.js"></script>
+    <script async src="dist/app-7b632b26f13d5e0d20e1.js"></script>
 
 
   </head>
@@ -58,7 +58,7 @@
 Noizu.AdvancedScaffolding
       </a>
       <strong class="sidebar-projectVersion">
-        v1.0.1
+        v1.2.23
       </strong>
     </div>
 
@@ -80,9 +80,9 @@ Noizu.AdvancedScaffolding
     <div id="content" class="content-inner">
 
       <h1>
-Noizu.DomainObject.SearchIndexHandler <small class="app-vsn">(Noizu.AdvancedScaffolding v1.0.1)</small>
+Noizu.DomainObject.SearchIndexHandler <small class="app-vsn">(Noizu.AdvancedScaffolding v1.2.23)</small>
 
-          <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/search_index_handler.ex#L1" title="View Source" class="view-source" rel="help">
+          <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/search_index_handler/search_index_handler.ex#L6" title="View Source" class="view-source" rel="help">
             <span class="icon-code" aria-hidden="true"></span>
             <span class="sr-only">View Source</span>
           </a>
@@ -91,7 +91,9 @@ Noizu.DomainObject.SearchIndexHandler <small class="app-vsn">(Noizu.AdvancedScaf
 
 
         <section id="moduledoc">
-<p>Behaviour for converting field types into search index format.</p>
+<p>Behaviour for converting DomainObject.Entity fields to search engine format.
+This module provides a behaviour and implementation for handling search indexing on domain objects.
+It defines a set of callbacks for encoding and expanding fields, and handling permissions and search clauses.</p><h1>Notes</h1><p>The <code class="inline">SearchIndexHandler</code> is responsible for handling search indexing on domain objects within the Noizu Elixir ecosystem. It is particularly useful when integrating a search engine like Sphinx to provide efficient and relevant search results for your application's data.</p><p>Here's a breakdown of what the <code class="inline">SearchIndexHandler</code> does:</p><ol><li><p><strong>How it works</strong>: It defines a behavior (<a href="Noizu.DomainObject.SearchIndexHandler.Behaviour.html"><code class="inline">Noizu.DomainObject.SearchIndexHandler.Behaviour</code></a>) that requires implementing modules to provide specific callbacks. These callbacks are responsible for converting DomainObject.Entity fields to a format compatible with the search engine, handling permissions, and constructing search clauses.</p></li><li><p><strong>What it does</strong>: The <code class="inline">SearchIndexHandler</code> achieves the following functionalities:</p></li></ol><ul><li>Expands domain object entity fields to match the search engine's index fields.</li><li>Provides default values and field types for search engine compatibility.</li><li>Encodes fields to a format understood by the search engine.</li><li>Handles query permissions, determining if a specific field and filter combination is allowed for querying in a given context and options.</li><li>Constructs search clauses with permission filters applied.</li></ul><ol start="3"><li><strong>Why it's useful</strong>: By implementing the <code class="inline">SearchIndexHandler</code> behavior in your modules, you can efficiently convert your application's data (DomainObject.Entity fields) to a format that can be indexed and queried by a search engine like Sphinx. This enables you to provide relevant and accurate search results in your application, improving user experience and overall functionality.</li></ol><p>In summary, the <code class="inline">SearchIndexHandler</code> is a crucial component for integrating search functionality within an Elixir application. It handles the conversion of domain object data to a search engine-friendly format, manages query permissions, and constructs search clauses while adhering to the defined behavior.</p>
         </section>
 
 
@@ -141,7 +143,7 @@ Functions
     </a>
     <h1 class="signature">__noizu_sphinx_handler__(caller, options)</h1>
 
-      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/search_index_handler.ex#L24" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/noizu-lab/advanced_elixir_scaffolding/blob/master/lib/scaffolding/behaviours/search_index_handler/search_index_handler.ex#L56" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -159,10 +161,20 @@ Functions
         </section>
 
       <footer class="footer">
+
+        <p>
+          Find it on Hex:
+          <a href="https://hex.pm/packages/noizu_advanced_scaffolding/1.2.23" class="line footer-hex-package">Package</a>
+          <a href="https://preview.hex.pm/preview/noizu_advanced_scaffolding/1.2.23" class="line">Preview</a>
+
+            <a href="https://preview.hex.pm/preview/noizu_advanced_scaffolding/1.2.23/show/lib/scaffolding/behaviours/search_index_handler/search_index_handler.ex">(current file)</a>
+
+        </p>
+
         <p>
           <span class="line">
             Built using
-            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener">ExDoc</a> (v0.25.1) for the
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener">ExDoc</a> (v0.25.5) for the
             <a href="https://elixir-lang.org" title="Elixir" target="_blank">Elixir programming language</a>.
           </span>
           <span class="line">
