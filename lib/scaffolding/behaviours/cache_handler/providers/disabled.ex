@@ -95,7 +95,7 @@ defmodule Noizu.DomainObject.CacheHandler.Disabled do
   - nil: Caching is disabled, so no cache entry is retrieved.
   """
   @spec get_cache(module(), nil, any(), Keyword.t()) :: nil
-  def get_cache(m, nil, context, options)
+  def get_cache(m, ref, context, options)
   def get_cache(_m, nil, _context, _options), do: nil
   def get_cache(m, ref, context, options) do
     emit = m.emit_telemetry?(:cache, ref, context, options)

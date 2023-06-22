@@ -282,7 +282,7 @@ if Code.ensure_loaded?(:rocksdb) do
     - {:error, reason}: An error reason for the failure.
     """
     @spec start_link({[map()], Keyword.t()}) :: :ok | {:error, any()}
-    def start_link({children, options})
+    def start_link(options)
     def start_link({children, options}) do
       Supervisor.start_link(__MODULE__, {children, options}, name: __MODULE__)
     end
@@ -301,7 +301,7 @@ if Code.ensure_loaded?(:rocksdb) do
     - {:error, any()}: An error that may occur during initialization.
     """
     @spec init(any()) :: {:ok, any()} | {:error, any()}
-    def init({children, options})
+    def init(state)
     def init({children, options}) do
       :ets.new(:rocksdb_resource_lookup, [:public, :named_table, :set, read_concurrency: true])
 
