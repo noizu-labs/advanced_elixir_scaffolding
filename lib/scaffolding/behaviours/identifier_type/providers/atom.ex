@@ -4,11 +4,56 @@
 #-------------------------------------------------------------------------------
 
 defmodule Noizu.DomainObject.Atom.IdentifierType do
+  @moduledoc """
+  The `Noizu.DomainObject.Atom.IdentifierType` module implements the `Noizu.DomainObject.IdentifierTypeBehaviour`
+  behaviour for handling atom-based identifier types in the Noizu.DomainObject framework.
+
+  This module provides functions for validating, encoding, and decoding atom-based identifiers. It also includes
+  functionality for preparing regex snippets for matching identifiers.
+
+  # Callbacks
+  - `type/0`: Returns the type of the identifier.
+  - `__valid_identifier__/2`: Checks if a provided value is correct for the identifier type.
+  - `__sref_section_regex__/1`: Prepares a regex snippet for matching the identifier.
+  - `__id_to_string__/2`: Encodes a valid identifier into a string for sref encoding.
+  - `__string_to_id__/2`: Decodes a string into the identifier type.
+  """
+
   @behaviour Noizu.DomainObject.IdentifierTypeBehaviour
-  
+
   def __noizu_info__(:type), do: :identifier_type
+
+
+  #------------------------------------------
+  # __noizu_info__/0
+  #------------------------------------------
+  @doc """
+  Returns the type of the identifier.
+
+  ## Returns
+  - :identifier_type: The type of the identifier.
+  """
+  @impl true
+  @spec type() :: atom
   def type(), do: :atom
-  
+
+  #------------------------------------------
+  # __valid_identifier__
+  #------------------------------------------
+  @doc """
+  Checks if the provided value is correct for the identifier type.
+
+  ## Params
+  - identifier: The identifier value to check.
+  - c: The identifier configuration.
+
+  ## Returns
+  - :ok: If the identifier value is correct.
+  - {:error, reason}: If the identifier value is incorrect, with the reason for the failure.
+  """
+  @impl true
+  @spec __valid_identifier__(any(), any()) :: :ok | {:error, any()}
+  def __valid_identifier__(identifier, c)
   def __valid_identifier__(identifier, c) do
     cond do
       !is_atom(identifier) -> {:error, {:identifier, :expected_atom}}
@@ -29,7 +74,22 @@ defmodule Noizu.DomainObject.Atom.IdentifierType do
       :else -> :ok
     end
   end
-  
+
+  #------------------------------------------
+  # __sref_section_regex__
+  #------------------------------------------
+  @doc """
+  Prepares a regex snippet for matching the identifier.
+
+  ## Params
+  - c: The identifier configuration.
+
+  ## Returns
+  - {:ok, regex}: If the regex snippet is prepared successfully.
+  - {:error, reason}: If there is an error preparing the regex snippet, with the reason for the failure.
+  """
+  @impl true
+  @spec __sref_section_regex__(any()) :: {:ok, String.t} | {:error, any()}
   def __sref_section_regex__(c) do
     v = cond do
           is_list(c[:constraint]) -> Enum.join(c[:constraint], "|")
@@ -37,7 +97,24 @@ defmodule Noizu.DomainObject.Atom.IdentifierType do
         end
     {:ok, v}
   end
-  
+
+
+  #------------------------------------------
+  # __id_to_string__
+  #------------------------------------------
+  @doc """
+  Encodes a valid identifier into a string for sref encoding.
+
+  ## Params
+  - identifier: The valid identifier value to encode.
+  - c: The identifier configuration.
+
+  ## Returns
+  - {:ok, encoded_string}: If the identifier is encoded successfully.
+  - {:error, reason}: If there is an error encoding the identifier, with the reason for the failure.
+  """
+  @impl true
+  @spec __id_to_string__(nil | atom, any()) :: {:ok, String.t} | {:error, any()}
   def __id_to_string__(nil, c) do
     cond do
       c[:nil?] -> {:ok, Atom.to_string(nil)}
@@ -67,10 +144,24 @@ defmodule Noizu.DomainObject.Atom.IdentifierType do
     end
   end
   def __id_to_string__(identifier, _c), do: {:error, {:identifier, :expected_atom, identifier}}
-  
-  
-  
-  
+
+
+  #------------------------------------------
+  # __string_to_id__
+  #------------------------------------------
+  @doc """
+  Decodes a string into the identifier type.
+
+  ## Params
+  - identifier: The string to decode into the identifier type.
+  - c: The identifier configuration.
+
+  ## Returns
+  - {:ok, identifier}: If the string is decoded successfully into the identifier type.
+  - {:error, reason}: If there is an error decoding the string, with the reason for the failure.
+  """
+  @impl true
+  @spec __string_to_id__(String.t, any()) :: {:ok, any()} | {:error, any()}
   def __string_to_id__(identifier, _c) when not is_bitstring(identifier), do: {:error, {:serialized_identifier, :not_string, identifier}}
   def __string_to_id__(identifier, c) do
     cond do

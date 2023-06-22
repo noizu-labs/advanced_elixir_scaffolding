@@ -23,28 +23,115 @@ defmodule Noizu.DomainObject.TypeHandler do
 
 
   defmodule Behaviour do
-  @callback compare(any, any) :: :eq | :neq | :lt | :gt
 
-  @callback sync(any, any, any) :: any
-  @callback sync(any, any, any, any) :: any
-  @callback sync!(any, any, any) :: any
-  @callback sync!(any, any, any, any) :: any
+    @doc """
+    Determine if two instances of this type match. Possibly ignoring erroneous fields such as time stamps/transient fields, etc.
+    """
+    @callback compare(any, any) :: :eq | :neq | :lt | :gt
 
-  @callback __strip_inspect__(any, any, any) :: any
+    @doc """
+    Merge existing and updated instance of type.
+    """
+    @callback sync(any, any, any) :: any
+    @callback sync(any, any, any, any) :: any
 
-  @callback pre_create_callback(any, any, any, any) :: any
-  @callback pre_create_callback!(any, any, any, any) :: any
+    @doc """
+    Merge existing and updated instance of type.
+    """
+    @callback sync!(any, any, any) :: any
+    @callback sync!(any, any, any, any) :: any
 
-  @callback pre_update_callback(any, any, any, any) :: any
-  @callback pre_update_callback!(any, any, any, any) :: any
+    @doc """
+    Format instance of type for Inspect output. - strip fields, simplify object, etc.
+    """
+    @callback __strip_inspect__(any, any, any) :: any
 
-  @callback post_delete_callback(any, any, any, any) :: any
-  @callback post_delete_callback!(any, any, any, any) :: any
 
-  @callback dump(any, any, any, any, any, any, any) :: any
-  @callback cast(any, any, any, any, any, any) :: any
+    @doc """
+    Post get callback, to allow, for example, injecting data into a transient field or running additional queries needed to populate a domain object entity field.
+    """
+    @callback post_get_callback(any, any, any, any) :: any
+    @callback post_get_callback!(any, any, any, any) :: any
 
-  @callback from_json(format :: any, field :: atom,  json :: any, context :: any, options :: any) :: map() | nil
+
+    @doc """
+    Pre create callback. Users may have provided a simplified representation of this type, that we need to expand into the correct type and or possibly expand and write to the database before
+    proceeding to create the entity that contains this field.
+    """
+    @callback pre_create_callback(any, any, any, any) :: any
+
+    @doc """
+    (Dirty) Pre create callback. Users may have provided a simplified representation of this type, that we need to expand into the correct type and or possibly expand and write to the database before
+    proceeding to create the entity that contains this field.
+    """
+    @callback pre_create_callback!(any, any, any, any) :: any
+
+
+    @doc """
+    Post create callback. Post entity creation callback. If, for example, we wish to save this field to its own tables after creating the records for the entity containing this field.
+    """
+    @callback post_create_callback(any, any, any, any) :: any
+
+    @doc """
+    (Dirty) Post create callback. Post entity creation callback. If, for example, we wish to save this field to its own tables after creating the records for the entity containing this field.
+    """
+    @callback post_create_callback!(any, any, any, any) :: any
+
+
+    @doc """
+    Pre update callback for entity fields of this type.
+    """
+    @callback pre_update_callback(any, any, any, any) :: any
+
+
+    @doc """
+    (Dirty) Pre update callback for entity fields of this type.
+    """
+    @callback pre_update_callback!(any, any, any, any) :: any
+
+    @doc """
+    Post update callback for entity fields of this type.
+    """
+    @callback post_update_callback(any, any, any, any) :: any
+
+    @doc """
+    (Dirty) Post update callback for entity fields of this type.
+    """
+    @callback post_update_callback!(any, any, any, any) :: any
+
+    @doc """
+    Pre delete callback for entity fields of this type.
+    """
+    @callback pre_delete_callback(any, any, any, any) :: any
+
+    @doc """
+    (Dirty) Pre delete callback for entity fields of this type.
+    """
+    @callback pre_delete_callback!(any, any, any, any) :: any
+
+
+    @doc """
+    Post delete callback for entity fields of this type.
+    """
+    @callback post_delete_callback(any, any, any, any) :: any
+
+    @doc """
+    (Dirty) Post delete callback for entity fields of this type.
+    """
+    @callback post_delete_callback!(any, any, any, any) :: any
+
+    @doc """
+    Cast database record fields to database/persistence format.
+    """
+    @callback dump(any, any, any, any, any, any, any) :: any
+
+
+    @doc """
+    Cast database record fields back into entity.field of this type. For example, to reconstruct a TimeStamp entity by grabbing the RDMS table's created_on, modified_on, deleted_on fields.
+    """
+    @callback cast(any, any, any, any, any, any) :: any
+
+    @callback from_json(format :: any, field :: atom,  json :: any, context :: any, options :: any) :: map() | nil
 
   end
 

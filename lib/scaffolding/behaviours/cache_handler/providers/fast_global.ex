@@ -1,14 +1,48 @@
 defmodule Noizu.DomainObject.CacheHandler.FastGlobal do
   @behaviour Noizu.DomainObject.CacheHandler
-  
+
+  #------------------------------------------
+  # cache_key
+  #------------------------------------------
+  @doc """
+  Generates a cache key based on the given DomainObject, ref, context, and options.
+
+  ## Params
+  - m: The DomainObject module.
+  - ref: The reference to the DomainObject.
+  - context: The request context.
+  - options: A keyword list of options.
+
+  ## Returns
+  - sref: The serialized reference of the DomainObject, used as the cache key.
+  - nil: The cache key could not be generated.
+  """
+  @spec cache_key(module(), any(), any(), Keyword.t()) :: atom() | nil
+  def cache_key(m, ref, context, options)
   def cache_key(m, ref, _context, _options) do
     sref = m.__entity__.sref(ref)
     sref && :"e_c:#{sref}"
   end
-  
+
+
   #------------------------------------------
   # delete_cache
   #------------------------------------------
+  @doc """
+  Deletes a cache entry for the given DomainObject, ref, context, and options.
+
+  ## Params
+  - m: The DomainObject module.
+  - ref: The reference to the DomainObject.
+  - context: The request context.
+  - options: A keyword list of options.
+
+  ## Returns
+  - :ok: The cache entry was deleted successfully.
+  - error: An error that may occur during cache deletion.
+  """
+  @spec delete_cache(module(), any(), any(), Keyword.t()) :: :ok | any()
+  def delete_cache(m, ref, context, options)
   def delete_cache(m, ref, context, options) do
     # @todo use noizu fg cluster
     cond do
@@ -23,6 +57,23 @@ defmodule Noizu.DomainObject.CacheHandler.FastGlobal do
     end
   end
 
+  #------------------------------------------
+  # pre_cache
+  #------------------------------------------
+  @doc """
+  Pre-caches a DomainObject with the given ref, context, and options.
+
+  ## Params
+  - m: The DomainObject module.
+  - ref: The reference to the DomainObject.
+  - context: The request context.
+  - options: A keyword list of options.
+
+  ## Returns
+  - ref: The reference to the pre-cached DomainObject.
+  """
+  @spec pre_cache(module(), any(), any(), Keyword.t()) :: any()
+  def pre_cache(m, ref, context, options)
   def pre_cache(_m, nil, _context, _options), do: nil
   def pre_cache(m, ref, context, options) do
     cond do
@@ -36,10 +87,24 @@ defmodule Noizu.DomainObject.CacheHandler.FastGlobal do
       :else -> throw "#{m}.cache invalid ref #{inspect ref}"
     end
   end
-  
+
   #------------------------------------------
   # get_cache
   #------------------------------------------
+  @doc """
+  Retrieves a cached DomainObject with the given ref, context, and options.
+
+  ## Params
+  - m: The DomainObject module.
+  - ref: The reference to the DomainObject.
+  - context: The request context.
+  - options: A keyword list of options.
+
+  ## Returns
+  - The cached DomainObject.
+  """
+  @spec get_cache(module(), any(), any(), Keyword.t()) :: any()
+  def get_cache(m, ref, context, options)
   def get_cache(_m, nil, _context, _options), do: nil
   def get_cache(m, ref, context, options) do
     cond do

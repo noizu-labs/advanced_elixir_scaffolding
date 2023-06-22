@@ -7,6 +7,7 @@
 defmodule Noizu.AdvancedScaffolding.Sphinx.Type.Bool do
   @moduledoc """
   Encode/Decode Bool value for Sphinx Database.
+  This module provides an Ecto.Type implementation for handling boolean values in the context of the Sphinx search engine. It is responsible for casting, loading, and dumping boolean values while adhering to the format understood by Sphinx.
   """
   use Ecto.Type
   require Noizu.DomainObject
@@ -19,6 +20,10 @@ defmodule Noizu.AdvancedScaffolding.Sphinx.Type.Bool do
   @boolean_true MapSet.new(["TRUE", "True", "true", "T", "t", "on", "On", "ON", "Y", "y", "YES", "yes", "Yes", true, 1])
   @boolean_false MapSet.new(["FALSE", "False", "false", "F", "f", "off", "Off", "OFF", "NO", "N", "n", "no", "No", false, 0])
 
+  @doc """
+  Constructs search clauses based on field values.
+  This function is responsible for generating search clauses for the given field and parameters. It takes into account the field's structure and ensures that the generated clauses are compatible with the Sphinx search engine.
+  """
   def __search_clauses__(_index, {field, _settings}, conn, params, _context, options) do
     search = case field do
                {p, f} -> "#{p}.#{f}"
@@ -50,7 +55,8 @@ defmodule Noizu.AdvancedScaffolding.Sphinx.Type.Bool do
   # cast
   #----------------------------
   @doc """
-  Casts to Ref.
+  Casts the given value to a boolean.
+  This function takes an input value and attempts to convert it into a boolean value. It supports various string representations as well as numeric representations for true and false.
   """
   def cast(v) do
     case v do
@@ -63,8 +69,10 @@ defmodule Noizu.AdvancedScaffolding.Sphinx.Type.Bool do
   #----------------------------
   # cast!
   #----------------------------
+
   @doc """
   Same as `cast/1` but raises `Ecto.CastError` on invalid arguments.
+  This function works similarly to `cast/1`, but it raises an `Ecto.CastError` exception if the given value cannot be converted into a boolean value.
   """
   def cast!(value) do
     case cast(value) do
@@ -76,7 +84,7 @@ defmodule Noizu.AdvancedScaffolding.Sphinx.Type.Bool do
   #----------------------------
   # dump
   #----------------------------
-  @doc false
+
   def dump(v) do
     case v do
       0 -> {:ok, false}
@@ -87,6 +95,10 @@ defmodule Noizu.AdvancedScaffolding.Sphinx.Type.Bool do
   #----------------------------
   # load
   #----------------------------
+  @doc """
+  Loads the given value as a boolean.
+  This function takes an input value and converts it into a boolean value if possible. It supports various string representations as well as numeric representations for true and false.
+  """
   def load(v) do
     case v do
       0 -> {:ok, false}

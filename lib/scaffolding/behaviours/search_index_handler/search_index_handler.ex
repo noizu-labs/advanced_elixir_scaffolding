@@ -6,8 +6,26 @@
 defmodule Noizu.DomainObject.SearchIndexHandler do
   @moduledoc """
   Behaviour for converting DomainObject.Entity fields to search engine format.
-  
-  
+  This module provides a behaviour and implementation for handling search indexing on domain objects.
+  It defines a set of callbacks for encoding and expanding fields, and handling permissions and search clauses.
+
+  # Notes
+  The `SearchIndexHandler` is responsible for handling search indexing on domain objects within the Noizu Elixir ecosystem. It is particularly useful when integrating a search engine like Sphinx to provide efficient and relevant search results for your application's data.
+
+  Here's a breakdown of what the `SearchIndexHandler` does:
+
+  1. **How it works**: It defines a behavior (`Noizu.DomainObject.SearchIndexHandler.Behaviour`) that requires implementing modules to provide specific callbacks. These callbacks are responsible for converting DomainObject.Entity fields to a format compatible with the search engine, handling permissions, and constructing search clauses.
+
+  2. **What it does**: The `SearchIndexHandler` achieves the following functionalities:
+   - Expands domain object entity fields to match the search engine's index fields.
+   - Provides default values and field types for search engine compatibility.
+   - Encodes fields to a format understood by the search engine.
+   - Handles query permissions, determining if a specific field and filter combination is allowed for querying in a given context and options.
+   - Constructs search clauses with permission filters applied.
+
+  3. **Why it's useful**: By implementing the `SearchIndexHandler` behavior in your modules, you can efficiently convert your application's data (DomainObject.Entity fields) to a format that can be indexed and queried by a search engine like Sphinx. This enables you to provide relevant and accurate search results in your application, improving user experience and overall functionality.
+
+  In summary, the `SearchIndexHandler` is a crucial component for integrating search functionality within an Elixir application. It handles the conversion of domain object data to a search engine-friendly format, manages query permissions, and constructs search clauses while adhering to the defined behavior.
   """
 
   defmodule Behaviour do

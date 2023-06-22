@@ -7,13 +7,18 @@ defmodule Noizu.DomainObject.IdentifierTypeBehaviour do
   @moduledoc """
   IdentifierType Behavior
   ====================
-  
-  Entity handlers for ecto/identifier keys, specified with the DomainObject.Entity identifier macro.
-  - sref encoding,
-  - validation
-  - casting to redis/rdms appropriate format
-  - etc.
-  
+
+  The `Noizu.DomainObject.IdentifierTypeBehaviour` module defines the behaviour for identifier types used in the
+  Noizu.DomainObject framework. It provides functions for encoding, decoding, validating, and preparing regex patterns
+  for identifier types.
+
+  # Callbacks
+  - `type/0`: Returns the type of the identifier.
+  - `__valid_identifier__/2`: Checks if a provided value is correct for the identifier type.
+  - `__sref_section_regex__/1`: Prepares a regex snippet for matching the identifier.
+  - `__id_to_string__/2`: Encodes a valid identifier into a string for sref encoding.
+  - `__string_to_id__/2`: Decodes a string into the identifier type.
+
   ## Example
   ```elixir
   defmodule DomainObject do
@@ -25,40 +30,57 @@ defmodule Noizu.DomainObject.IdentifierTypeBehaviour do
     end
   end
   ```
-  
+
   ## Example
   ```elixir
-  defmodule DomainObject do
-    defmodule Entity do
-      Noizu.DomainObject.noizu_entity() do
-        identifier My.CustomIdentifierType
-        public_field :content
-      end
+  defmodule MyDomainObject do
+  defmodule Entity do
+    @behaviour Noizu.DomainObject.IdentifierTypeBehaviour
+
+    @impl true
+    def type, do: :atom
+
+    @impl true
+    def __valid_identifier__(identifier, configuration) do
+      # Implementation logic
+    end
+
+    @impl true
+    def __sref_section_regex__(configuration) do
+      # Implementation logic
+    end
+
+    @impl true
+    def __id_to_string__(identifier, configuration) do
+      # Implementation logic
+    end
+
+    @impl true
+    def __string_to_id__(string, configuration) do
+      # Implementation logic
     end
   end
+  end
   ```
-  
-  
-  
   """
-  
+
   @callback type() :: atom
-  
+
   @doc """
   Check if provided value is correct for identifier type.
   """
   @callback __valid_identifier__(identifier :: any, configuration :: any) :: :ok | {:error, any}
-  
+
   @doc """
   Prepare regex snippet for matching identifier
   """
   @callback __sref_section_regex__(configuration :: any) :: {:ok, String.t} | {:error, any}
-  
+
   @doc """
   Encode valid identifier in string form for sref encoding.
   """
   @callback __id_to_string__(identifier :: any, configuration :: any) :: {:ok, String.t} | {:error, any}
-  
+
   @doc """
   Decode string into identifier type.
   """

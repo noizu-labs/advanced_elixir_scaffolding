@@ -52,7 +52,9 @@ defmodule Noizu.AdvancedScaffolding.Sphinx.Type.Float do
   #----------------------------
   # dump
   #----------------------------
-  @doc false
+  @doc """
+  Encode the input value to a compatible format for storing in Sphinx Database.
+  """
   def dump(v) do
     case v do
       nil -> {:ok, -9999.513672}
@@ -69,6 +71,9 @@ defmodule Noizu.AdvancedScaffolding.Sphinx.Type.Float do
   #----------------------------
   # load
   #----------------------------
+  @doc """
+  Decode the stored value from Sphinx Database to an Elixir-friendly format.
+  """
   def load(v) do
     case v do
       nil -> {:ok, nil}
